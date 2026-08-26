@@ -21,163 +21,174 @@
     .stockout-alert { animation: stockout-pulse 0.8s infinite ease-in-out; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col p-3 md:p-4 select-none overflow-x-hidden">
 
-  <!-- ======================================================================= -->
-  <!-- TOPBAR: LOGO, RELÓGIO CONTÍNUO, FINANÇAS, ATALHOS                       -->
-  <!-- ======================================================================= -->
-  <header class="bg-slate-900/95 border border-slate-800 rounded-2xl px-5 py-3 flex flex-wrap items-center justify-between shadow-2xl mb-3 max-w-[1400px] mx-auto w-full gap-3">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/40 flex items-center justify-center text-lg">🏛️</div>
+<body class="bg-slate-950 text-slate-100 font-sans h-screen w-screen overflow-hidden select-none relative m-0 p-0">
+
+  <!-- 1. FULLSCREEN CANVAS LAYER -->
+  <div id="canvas-container" class="absolute inset-0 w-full h-full z-0 overflow-hidden bg-slate-950">
+    <canvas id="iso-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+    <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-900/96 border border-slate-700 rounded-xl px-3 py-2 shadow-2xl text-[11px] font-mono z-20"></div>
+  </div>
+
+  <!-- 2. TOP FLOATING HUD BAR (CAPITALISM LAB STYLE) -->
+  <header class="absolute top-2 left-2 right-2 z-30 flex items-center justify-between gap-2 pointer-events-none">
+    
+    <!-- Top Left: Logo & City Jump -->
+    <div class="pointer-events-auto flex items-center gap-2 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-3 py-1.5 shadow-2xl">
+      <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/40 flex items-center justify-center text-sm">🏛️</div>
       <div>
-        <div class="flex items-center gap-2">
-          <h1 class="text-base font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
-          <span class="text-[9px] bg-emerald-950 text-emerald-300 font-mono px-1.5 py-0.5 rounded border border-emerald-800/60 uppercase">Sim Engine v0.7 · 100% Catálogo</span>
+        <div class="flex items-center gap-1.5">
+          <h1 class="text-xs font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
+          <span class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.7</span>
         </div>
-        <span class="text-[11px] text-slate-400">Mineração, Agropecuária, Indústria Pesada & Varejo Especializado</span>
+      </div>
+      <!-- CIDADES / ATALHOS -->
+      <div class="flex items-center gap-1 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-2">
+        <button onclick="jumpToCity('nova_atenas')" class="px-2 py-0.5 rounded text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ Atenas</button>
+        <button onclick="jumpToCity('porto_real')" class="px-2 py-0.5 rounded text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real (Porto)">🚢 P. Real</button>
+        <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-2 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Polo Industrial">🏭 Montargis <span id="lock-montargis">🔒</span></button>
+        <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-2 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Cinturão Agrícola">🌾 Várzea <span id="lock-varzea">🔒</span></button>
       </div>
     </div>
 
-    <!-- RELÓGIO E VELOCIDADES -->
-    <div class="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-1 gap-1.5">
-      <div class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-center min-w-[130px]">
-        <span class="text-[9px] text-slate-500 block uppercase font-mono tracking-wider">Data do Jogo</span>
-        <span id="clock-date" class="text-xs font-bold text-amber-400 font-mono">Dia 01 / Mês 01 / Ano 1</span>
-      </div>
-      <div class="flex gap-0.5">
-        <button id="btn-p"  onclick="setSpeed(0)" class="px-2 py-1 rounded-lg text-xs font-bold font-mono flex items-center gap-1 bg-amber-500/20 text-amber-300 border border-amber-500/40">⏸ Pausa</button>
-        <button id="btn-1x" onclick="setSpeed(1)" class="px-2 py-1 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800">▶ 1x</button>
-        <button id="btn-2x" onclick="setSpeed(2)" class="px-2 py-1 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800">⏩ 2x</button>
-        <button id="btn-5x" onclick="setSpeed(5)" class="px-2 py-1 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800">⚡ 5x</button>
-      </div>
+    <!-- Top Center: Lenses & Zoom -->
+    <div class="pointer-events-auto hidden md:flex items-center gap-1 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2.5 py-1.5 shadow-2xl font-mono text-[10px]">
+      <span class="text-slate-500 px-1">Lentes:</span>
+      <button id="hm-terrain" onclick="setHeatmap('terrain')" class="px-2 py-0.5 rounded font-bold bg-slate-800 text-slate-200">Terreno</button>
+      <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">🔥 Tráfego</button>
+      <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">👥 Pop.</button>
+      <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">🏪 Varejo</button>
+      <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">⚓ Portos</button>
+      <button id="hm-ind"     onclick="setHeatmap('ind')"     class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">🏭 Indústria</button>
+      <button id="hm-media"   onclick="setHeatmap('media')"   class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">📡 Mídia</button>
+      <div class="h-4 w-px bg-slate-700 mx-1"></div>
+      <button onclick="changeZoom(-0.2)" class="w-5 h-5 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold" title="Zoom Out (Q / -)">−</button>
+      <button onclick="resetCamera()"    class="px-1.5 h-5 rounded bg-slate-950 border border-slate-800 text-slate-400 text-[9px]">Centro</button>
+      <button onclick="changeZoom(0.2)"  class="w-5 h-5 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold" title="Zoom In (E / +)">+</button>
     </div>
 
-    <!-- FINANÇAS & ATALHO DE MARKETING -->
-    <div class="flex items-center gap-4">
-      <button onclick="openMarketingCentralModal()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-3 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 shadow-lg transition">
-        <span>📢 Central de Marketing</span>
-        <span id="active-campaigns-badge" class="bg-indigo-700 px-1.5 py-0.2 rounded text-[10px] text-white">0</span>
-      </button>
-      <div class="text-right border-l border-slate-800 pl-3">
-        <span class="text-[10px] text-slate-400 block font-mono">Caixa Disponível</span>
-        <span id="corp-cash" class="text-xl font-mono font-black text-emerald-400">$100,000.00</span>
+    <!-- Top Right: Relógio, Finanças & Gavetas Flutuantes -->
+    <div class="pointer-events-auto flex items-center gap-2 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-3 py-1.5 shadow-2xl">
+      <!-- Relógio & Velocidades -->
+      <div class="flex items-center gap-1 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono">
+        <span id="clock-date" class="px-2 font-bold text-amber-400">Dia 01 / Mês 01</span>
+        <button id="btn-p"  onclick="setSpeed(0)" class="px-1.5 py-0.5 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">⏸</button>
+        <button id="btn-1x" onclick="setSpeed(1)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800">1x</button>
+        <button id="btn-2x" onclick="setSpeed(2)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800">2x</button>
+        <button id="btn-5x" onclick="setSpeed(5)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800">5x</button>
       </div>
-      <div class="text-right border-l border-slate-800 pl-3">
-        <span class="text-[10px] text-slate-400 block font-mono">Lucro do Mês</span>
-        <span id="month-profit" class="text-lg font-mono font-bold text-slate-400">$0.00</span>
+
+      <!-- Finanças -->
+      <div class="border-l border-slate-800 pl-2 font-mono text-right">
+        <span class="text-[8px] text-slate-400 block uppercase leading-none">Caixa</span>
+        <span id="corp-cash" class="text-xs font-black text-emerald-400 leading-tight">$100,000.00</span>
+      </div>
+      <div class="border-l border-slate-800 pl-2 font-mono text-right">
+        <span class="text-[8px] text-slate-400 block uppercase leading-none">Lucro Mês</span>
+        <span id="month-profit" class="text-xs font-bold text-slate-300 leading-tight">$0.00</span>
+      </div>
+
+      <!-- Gavetas Flutuantes -->
+      <div class="flex items-center gap-1 border-l border-slate-800 pl-2">
+        <button onclick="toggleDREModal()" class="bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition" title="Demonstrativo de Resultados do Exercício">
+          📊 DRE
+        </button>
+        <button onclick="toggleDiaryModal()" class="bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition" title="Diário de Bordo & Log em Tempo Real">
+          📑 Diário
+        </button>
+        <button onclick="openMarketingCentralModal()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition" title="Central de Publicidade">
+          📢 <span id="active-campaigns-badge" class="bg-indigo-700 px-1 rounded text-[8px] text-white">0</span>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- ======================================================================= -->
-  <!-- MAIN: CANVAS ISOMÉTRICO (ESQ) + PAINEL DE GESTÃO (DIR)                  -->
-  <!-- ======================================================================= -->
-  <main class="grid grid-cols-12 gap-3 max-w-[1400px] mx-auto w-full flex-1">
+  <!-- 3. BOTTOM-LEFT HUD (RADAR MINIMAP & CONTROLS) -->
+  <div class="absolute bottom-3 left-3 z-30 flex flex-col gap-1 pointer-events-none">
+    <div class="pointer-events-auto bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl p-1.5 shadow-2xl">
+      <canvas id="minimap-canvas" width="128" height="128" class="rounded-lg border border-slate-800 cursor-crosshair block" title="Clique no radar para teletransportar a câmera"></canvas>
+    </div>
+    <div class="bg-slate-900/85 backdrop-blur-sm border border-slate-800/80 rounded-lg px-2 py-1 text-[9px] font-mono text-slate-400 pointer-events-none">
+      🎮 <strong>WASD</strong>: Mover · 🔍 <strong>Scroll / Q-E</strong>: Zoom · 🖱 <strong>Clique</strong>: Lote / Prédio
+    </div>
+  </div>
 
-    <!-- ESQUERDA: MAPA + CONTROLES + INSPETOR DE TILE (8 COLUNAS) -->
-    <section class="col-span-12 lg:col-span-8 flex flex-col gap-2.5">
+  <!-- 4. BOTTOM-CENTER HUD (INSPETOR RÁPIDO DO LOTE SOB O MOUSE / SELECIONADO) -->
+  <div id="tile-inspector-pill" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 pointer-events-auto bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-4 py-1.5 shadow-2xl font-mono text-xs text-slate-300 flex items-center gap-4 transition-all">
+    <span class="text-slate-400">Clique em qualquer lote ou prédio no mapa para gerir</span>
+  </div>
 
-      <!-- CONTROLES DO MAPA -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
-        <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
-          🗺️ Arquipélago de Neo Capital
-          <span class="text-[10px] text-emerald-400 font-mono bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">128×128 Isométrico · 4 Cidades</span>
-        </span>
-                <!-- CIDADES / ATALHOS -->
-        <div class="flex items-center gap-1 bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] font-mono">
-          <span class="text-slate-500 px-1">Cidades:</span>
-          <button onclick="jumpToCity('nova_atenas')" class="px-2 py-0.5 rounded-md text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ Nova Atenas</button>
-          <button onclick="jumpToCity('porto_real')" class="px-2 py-0.5 rounded-md text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real (Porto)">🚢 Porto Real</button>
-          <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-2 py-0.5 rounded-md text-slate-400 hover:bg-slate-800" title="Polo Industrial">🏭 Montargis <span id="lock-montargis">🔒</span></button>
-          <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-2 py-0.5 rounded-md text-slate-400 hover:bg-slate-800" title="Cinturão Agrícola">🌾 Várzea <span id="lock-varzea">🔒</span></button>
-        </div>
-        <!-- LENTES -->
-        <div class="flex items-center gap-1 bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] font-mono">
-          <span class="text-slate-500 px-1">Lente:</span>
-          <button id="hm-terrain" onclick="setHeatmap('terrain')" class="px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-200">Terreno</button>
-          <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🔥 Tráfego</button>
-          <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">👥 Pop.</button>
-          <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🏪 Varejo</button>
-          <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">⚓ Portos</button>
-          <button id="hm-ind"     onclick="setHeatmap('ind')"     class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🏭 Indústria</button>
-          <button id="hm-media"   onclick="setHeatmap('media')"   class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">📡 Mídia</button>
-        </div>
-        <!-- ZOOM -->
-        <div class="flex items-center gap-1 font-mono text-xs">
-          <button onclick="changeZoom(-0.2)" class="w-6 h-6 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold">−</button>
-          <button onclick="resetCamera()"    class="px-2 h-6 rounded bg-slate-950 border border-slate-800 text-slate-400 text-[10px]">Centro</button>
-          <button onclick="changeZoom(0.2)"  class="w-6 h-6 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold" title="Aumentar Zoom (E / +)">+</button>
-          <button id="btn-theater-mode" onclick="toggleTheaterMode()" class="px-2 h-6 rounded bg-emerald-950/90 border border-emerald-700/60 text-emerald-300 text-[10px] font-bold hover:bg-emerald-900 transition flex items-center gap-1" title="Maximizar Área do Mapa (Ocultar Menus laterais)">⛶ Expandir Mapa</button>
+  <!-- 5. FLOATING MANAGEMENT CARD (JANELA FLUTUANTE DE GESTÃO - ESTILO CAPITALISM) -->
+  <div id="floating-facility-window" class="fixed top-14 right-3 bottom-3 w-[430px] z-40 bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-200">
+    <!-- Header do Card -->
+    <div class="bg-slate-800/90 border-b border-slate-700 px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div id="facility-icon" class="w-8 h-8 rounded-xl bg-emerald-950 border border-emerald-700/60 flex items-center justify-center text-base">🏢</div>
+        <div>
+          <h2 id="facility-title" class="text-xs font-bold text-emerald-300">Gestão de Instalação</h2>
+          <span id="facility-subtitle" class="text-[10px] text-slate-400 block">Lote (0, 0)</span>
         </div>
       </div>
+      <div class="flex items-center gap-2">
+        <span id="facility-rent-badge" class="text-[10px] font-bold text-rose-400 font-mono bg-rose-950/60 px-1.5 py-0.5 rounded border border-rose-800 hidden"></span>
+        <button onclick="closeFloatingFacilityWindow()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center" title="Fechar Janela (Esc)">✕</button>
+      </div>
+    </div>
+    
+    <!-- Conteúdo Dinâmico Rolável -->
+    <div id="facility-content-panel" class="p-4 space-y-3 flex-1 overflow-y-auto custom-scrollbar"></div>
 
-      <!-- CANVAS ISOMÉTRICO -->
-      <div class="relative bg-slate-950 rounded-xl border border-slate-800 shadow-2xl overflow-hidden flex-1 min-h-[520px] max-h-[660px]">
-        <canvas id="iso-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
-        <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-900/96 border border-slate-700 rounded-xl px-3 py-2 shadow-2xl text-[11px] font-mono z-20"></div>
-        <div class="absolute bottom-2 left-2 bg-slate-900/75 border border-slate-800 rounded-lg px-2.5 py-1 text-[10px] font-mono text-slate-500 pointer-events-none">
-          🎮 <strong>WASD / Setas:</strong> Mover Câmera · 🔍 <strong>Scroll / Q-E:</strong> Zoom · 🖱 <strong>Arrastar / Clique:</strong> Inspecionar Lote · ⛶ <strong>F:</strong> Expandir Mapa
+    <!-- Rodapé Fixo de Ações (Venda, Demolição & Adição) -->
+    <div id="facility-action-row" class="p-3 bg-slate-950 border-t border-slate-800 flex flex-col gap-2"></div>
+  </div>
+
+  <!-- 6. GAVETA FLUTUANTE DRE -->
+  <div id="dre-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
+      <div class="bg-slate-800 px-5 py-3 border-b border-slate-700 flex items-center justify-between">
+        <h3 class="text-sm font-bold text-emerald-400 flex items-center gap-2">📊 Demonstrativo de Resultados (DRE Consolidada)</h3>
+        <button onclick="toggleDREModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
+      </div>
+      <div class="p-5 space-y-3 font-mono text-xs">
+        <div class="flex justify-between text-slate-300 py-1 border-b border-slate-800">
+          <span>(+) Receita Bruta (Varejo):</span>
+          <strong id="dre-gross-sales" class="text-emerald-400">+$0.00</strong>
+        </div>
+        <div class="flex justify-between text-slate-400 py-1 border-b border-slate-800">
+          <span>(-) Custo das Mercadorias (CPV + Frete):</span>
+          <strong id="dre-cogs" class="text-rose-400">-$0.00</strong>
+        </div>
+        <div class="flex justify-between text-slate-400 py-1 border-b border-slate-800">
+          <span>(-) Aluguéis & Fixos (Lojas + Indústrias):</span>
+          <strong id="dre-rent" class="text-rose-400">-$0.00</strong>
+        </div>
+        <div class="flex justify-between text-slate-400 py-1 border-b border-slate-800">
+          <span>(-) Publicidade & Campanhas de Marketing:</span>
+          <strong id="dre-marketing" class="text-rose-400">-$0.00</strong>
+        </div>
+        <div class="border-t-2 border-slate-700 pt-3 flex justify-between text-sm font-bold bg-slate-950/60 p-3 rounded-xl">
+          <span>LUCRO LÍQUIDO CONSOLIDADO:</span>
+          <strong id="dre-net-profit" class="text-emerald-300">$0.00</strong>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- INSPETOR DO LOTE SELECIONADO -->
-      <div id="tile-inspector" class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 shadow-lg min-h-[60px]">
-        <p class="text-xs text-slate-500 font-mono">Clique em um lote no mapa para inspecioná-lo.</p>
+  <!-- 7. GAVETA FLUTUANTE DIÁRIO DE BORDO -->
+  <div id="diary-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
+      <div class="bg-slate-800 px-5 py-3 border-b border-slate-700 flex items-center justify-between">
+        <h3 class="text-sm font-bold text-cyan-400 flex items-center gap-2">📑 Diário de Bordo & Registro de Operações</h3>
+        <button onclick="toggleDiaryModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
       </div>
-    </section>
-
-    <!-- DIREITA: GESTÃO (LOJA / MINA / FAZENDA / FÁBRICA) + DRE + DIÁRIO (4 COLUNAS) -->
-    <section class="col-span-12 lg:col-span-4 flex flex-col gap-2.5">
-
-      <!-- PAINEL DE GESTÃO DA INSTALAÇÃO ATIVA -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 shadow-xl flex flex-col gap-2.5">
-        <div class="flex items-center justify-between pb-2 border-b border-slate-800 flex-wrap gap-2">
-          <div>
-            <h2 id="facility-title" class="text-xs font-bold text-emerald-300">🏢 Selecione uma instalação no mapa</h2>
-            <span id="facility-subtitle" class="text-[11px] text-slate-400">Clique na sua loja, mina, fazenda ou fábrica para gerir.</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span id="facility-rent-badge" class="text-[10px] font-bold text-rose-400 font-mono hidden"></span>
-          </div>
-        </div>
-
-        <div id="facility-content-panel" class="space-y-2 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
-          <p class="text-[11px] text-slate-500 font-mono text-center py-4">Nenhuma instalação ativa selecionada.</p>
-        </div>
-
-        <div id="facility-action-row" class="hidden pt-1 border-t border-slate-800"></div>
-      </div>
-
-      <!-- DRE MENSAL -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 shadow-xl">
-        <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-2 pb-2 border-b border-slate-800 flex items-center justify-between">
-          <span>📑 DRE Consolidada do Mês</span>
-          <span id="dre-month-label" class="text-[10px] text-slate-400 font-mono font-normal">Mês 01</span>
-        </h3>
-        <div class="space-y-1 text-[11px] font-mono">
-          <div class="flex justify-between text-slate-200"><span>(+) Receita Bruta (Varejo):</span><span id="dre-revenue" class="text-emerald-400 font-bold">$0.00</span></div>
-          <div class="flex justify-between text-slate-400"><span>(-) Custo Mercadorias (CPV + Frete):</span><span id="dre-cogs" class="text-rose-400">-$0.00</span></div>
-          <div class="flex justify-between text-slate-400"><span>(-) Aluguéis & Fixos (Lojas + Indústrias):</span><span id="dre-fixed" class="text-rose-400">-$0.00</span></div>
-          <div class="flex justify-between text-slate-400"><span>(-) Publicidade & Marketing:</span><span id="dre-marketing" class="text-indigo-400">-$0.00</span></div>
-          <div class="flex justify-between items-center bg-slate-950 rounded-lg p-2 border-t border-slate-800 mt-1">
-            <span class="text-slate-300 font-bold text-xs">LUCRO LÍQUIDO CONSOLIDADO:</span>
-            <span id="dre-net-profit" class="text-sm font-black text-slate-400">$0.00</span>
-          </div>
+      <div class="p-4">
+        <div id="game-log-floating" class="space-y-1.5 font-mono text-[11px] max-h-96 overflow-y-auto custom-scrollbar pr-1">
+          <div class="text-slate-500">OIKONOMIA v0.7 inicializado em modo tela cheia com motor de cadeia produtiva completa.</div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- DIÁRIO DE BORDO -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex-1 flex flex-col">
-        <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
-          <span>📜 Diário de Bordo & Operações</span>
-          <span class="text-[9px] text-slate-500 font-normal">Eventos em Tempo Real</span>
-        </h3>
-        <div id="game-logs" class="flex-1 min-h-[85px] max-h-[115px] overflow-y-auto space-y-0.5 text-[11px] font-mono text-slate-400 custom-scrollbar">
-          <div class="text-slate-500">OIKONOMIA v0.7 inicializado com catálogo de 100% de produtos, mineração e 8 redes especializadas.</div>
-        </div>
-      </div>
-    </section>
-  </main>
 
   <!-- ======================================================================= -->
   <!-- MODAL 1: WIZARD DE ABERTURA DE LOJA ESPECIALIZADA                       -->
@@ -2730,7 +2741,8 @@
         }
         if (btn) btn.innerHTML = '⛶ Expandir Mapa';
       }
-      setTimeout(() => { resizeCanvas(); renderMap(); }, 50);
+      setTimeout(() => { resizeCanvas();
+    window.addEventListener('resize', resizeCanvas); renderMap(); }, 50);
     }
 
     window.addEventListener('keydown', (e) => {
@@ -2910,90 +2922,52 @@
     // 7. INSPETOR DE TILE & BOTÕES DE CONSTRUÇÃO POLIMÓRFICA
     // ===========================================================================
     function renderTileInspector(tile) {
-      const el = document.getElementById('tile-inspector');
-      if (!tile) { el.innerHTML = `<p class="text-xs text-slate-500 font-mono">Clique em um lote no mapa para inspecioná-lo.</p>`; return; }
+      const pill = document.getElementById('tile-inspector-pill');
+      if (!pill) return;
+      if (!tile) {
+        pill.innerHTML = '<span class="text-slate-400">Clique em qualquer lote ou prédio no mapa</span>';
+        return;
+      }
+
       const d = tile.district;
+      const isLocked = tile.city.isLocked;
+      let statusBadge = '<span class="text-slate-400 bg-slate-800 px-2 py-0.5 rounded font-mono">Terreno Livre</span>';
+      let actionBtn = '';
 
-      if (tile.isPort) {
-        el.innerHTML = `
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 class="text-xs font-bold text-amber-300 flex items-center gap-1.5">⚓ ${tile.portData.name}</h3>
-              <p class="text-[11px] text-slate-400 mt-0.5 font-mono">Terminal de Cargas Marítimas · Cais de Arquipélago de Neo Capital (${tile.x}, ${tile.y})</p>
-            </div>
-            <button onclick="openPortModal(worldGrid[${tile.x}][${tile.y}].portData)" class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition">
-              📦 Inspecionar Remessas Portuárias
-            </button>
-          </div>
-        `;
-        return;
+      if (isLocked) {
+        statusBadge = '<span class="text-rose-400 bg-rose-950 px-2 py-0.5 rounded font-mono">🔒 Cidade Bloqueada</span>';
+      } else if (tile.store) {
+        statusBadge = '<span class="text-teal-300 bg-teal-950 border border-teal-800 px-2 py-0.5 rounded font-mono font-bold">🛒 ' + tile.store.name + '</span>';
+        actionBtn = '<button onclick="openFloatingFacilityWindow(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-teal-600 hover:bg-teal-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] ml-2">Gerir Loja</button>';
+      } else if (tile.mine) {
+        statusBadge = '<span class="text-sky-300 bg-sky-950 border border-sky-800 px-2 py-0.5 rounded font-mono font-bold">⛏️ ' + tile.mine.name + '</span>';
+        actionBtn = '<button onclick="openFloatingFacilityWindow(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] ml-2">Gerir Mina</button>';
+      } else if (tile.farm) {
+        statusBadge = '<span class="text-amber-300 bg-amber-950 border border-amber-800 px-2 py-0.5 rounded font-mono font-bold">🌾 ' + tile.farm.name + '</span>';
+        actionBtn = '<button onclick="openFloatingFacilityWindow(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] ml-2">Gerir Fazenda</button>';
+      } else if (tile.factory) {
+        statusBadge = '<span class="text-orange-300 bg-orange-950 border border-orange-800 px-2 py-0.5 rounded font-mono font-bold">🏭 ' + tile.factory.name + '</span>';
+        actionBtn = '<button onclick="openFloatingFacilityWindow(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] ml-2">Gerir Fábrica</button>';
+      } else if (tile.isPort) {
+        statusBadge = '<span class="text-yellow-400 bg-yellow-950 border border-yellow-800 px-2 py-0.5 rounded font-mono font-bold">⚓ Porto Marítimo</span>';
+        actionBtn = '<button onclick="openPortModal(' + tile.x + ',' + tile.y + ')" class="bg-yellow-600 hover:bg-yellow-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] ml-2">Ver Cargas</button>';
+      } else if (!tile.isWater) {
+        actionBtn = '<div class="flex items-center gap-1 ml-2">' +
+          '<button onclick="openStoreModal(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[10px]">🏪 Loja</button>' +
+          '<button onclick="openFactoryModal(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-orange-700 hover:bg-orange-600 text-white font-bold px-2 py-0.5 rounded text-[10px]">🏭 Fábrica</button>' +
+          '<button onclick="openFarmModal(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded text-[10px]">🌾 Fazenda</button>' +
+          (tile.hasIronDeposit || tile.hasOilDeposit ? '<button onclick="openMineModal(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[10px]">⛏️ Mina</button>' : '') +
+          '</div>';
       }
 
-      if (tile.isMedia) {
-        el.innerHTML = `
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 class="text-xs font-bold text-purple-300 flex items-center gap-1.5">${tile.mediaData.emoji} ${tile.mediaData.name}</h3>
-              <p class="text-[11px] text-slate-400 mt-0.5 font-mono">Sede de Mídia · Alcance: ${tile.mediaData.reachDescription}</p>
-            </div>
-            <button onclick="openMarketingCentralModal('${tile.mediaData.id}')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition">
-              📢 Contratar Anúncios na Emissora
-            </button>
-          </div>
-        `;
-        return;
-      }
-
-      const isBuildable = !tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.isWater && !tile.isRoad && !tile.competitor && !tile.city?.isLocked;
-      const canBuildMine = isBuildable && (tile.hasIronDeposit || tile.hasOilDeposit || tile.hasTimberDeposit || tile.gidTerrain === 6 || tile.gidTerrain === 7 || tile.districtId === 'industrial' || tile.districtId === 'west_suburbs');
-      const canBuildFarm = isBuildable && (tile.isFertile || tile.gidTerrain === 4 || tile.gidTerrain === 5 || tile.districtId === 'west_suburbs');
-      const canBuildFactory = isBuildable && !tile.isWater && !tile.isRoad;
-
-      el.innerHTML = `
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div class="flex items-center gap-2 flex-wrap">
-              <h3 class="text-xs font-bold text-amber-300">${tile.store?.name || tile.mine?.name || tile.farm?.name || tile.factory?.name || d.name}</h3>
-              <span class="text-[10px] text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800 font-mono">${d.type}</span>
-            </div>
-            <div class="text-[11px] text-slate-400 mt-1 font-mono flex flex-wrap gap-3">
-              <span>🚶 Tráfego: <strong class="text-emerald-400">${d.trafficIndex}/100</strong></span>
-              <span>👥 Pop: <strong class="text-slate-200">${d.population.toLocaleString()}</strong></span>
-              <span>💰 Aluguel base: <strong class="text-rose-400">$${d.landRentDaily}/dia</strong></span>
-            </div>
-          </div>
-          <div class="flex items-center gap-2 flex-wrap">
-            ${isBuildable ? `
-              <button onclick="openStoreWizard(worldGrid[${tile.x}][${tile.y}])" class="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
-                🛒 Abrir Loja
-              </button>
-              ${canBuildMine ? `
-                <button onclick="openMineModal(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-700 hover:bg-sky-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
-                  ⛏️ Mina
-                </button>
-              ` : ''}
-              ${canBuildFarm ? `
-                <button onclick="openFarmModal(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
-                  🌾 Fazenda
-                </button>
-              ` : ''}
-              ${canBuildFactory ? `
-                <button onclick="openFactoryModal(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-600 hover:bg-orange-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
-                  🏭 Fábrica
-                </button>
-              ` : ''}
-            ` : (tile.store ? `
-              <span class="text-xs font-mono text-emerald-400 bg-emerald-950 px-3 py-1 rounded-lg border border-emerald-800 font-bold">✅ Loja Ativa</span>
-            ` : (tile.mine ? `
-              <span class="text-xs font-mono text-sky-400 bg-sky-950 px-3 py-1 rounded-lg border border-sky-800 font-bold">⛏️ Mina Ativa</span>
-            ` : (tile.farm ? `
-              <span class="text-xs font-mono text-amber-400 bg-amber-950 px-3 py-1 rounded-lg border border-amber-800 font-bold">🌾 Fazenda Ativa</span>
-            ` : (tile.factory ? `
-              <span class="text-xs font-mono text-orange-400 bg-orange-950 px-3 py-1 rounded-lg border border-orange-800 font-bold">🏭 Fábrica Ativa</span>
-            ` : (tile.competitor ? `
-              <span class="text-xs font-mono text-rose-400 bg-rose-950 px-3 py-1 rounded-lg border border-rose-800">🤖 Concorrente IA</span>
-            ` : `<span class="text-xs font-mono text-slate-500 bg-slate-800 px-3 py-1 rounded-lg">🚫 Lote Inacessível</span>`)))))}
-          </div>
+      pill.innerHTML = `
+        <div class="flex items-center gap-3 flex-wrap">
+          <strong class="text-slate-100">${d.name} (${tile.x}, ${tile.y})</strong>
+          ${statusBadge}
+          <span class="text-slate-400">🚦 ${d.trafficIndex}/100</span>
+          <span class="text-slate-400">👥 ${d.population.toLocaleString()} hab</span>
+          <span class="text-rose-400">Aluguel: $${d.landRentDaily}/dia</span>
+          ${actionBtn}
         </div>
       `;
     }
@@ -3101,6 +3075,51 @@
       renderTileInspector(tile);
       renderMap();
       updateUI();
+    }
+
+    
+    // ===========================================================================
+    // CONTROLES DE JANELA FLUTUANTE (MODAL DE GESTÃO / DRE / DIÁRIO)
+    // ===========================================================================
+    function openFloatingFacilityWindow(tile) {
+      if (!tile) return;
+      activeManagedTile = tile;
+      renderFacilityPanel(tile);
+      const win = document.getElementById('floating-facility-window');
+      if (win) win.classList.remove('hidden');
+    }
+
+    function closeFloatingFacilityWindow() {
+      const win = document.getElementById('floating-facility-window');
+      if (win) win.classList.add('hidden');
+      activeManagedTile = null;
+    }
+
+    function toggleDREModal() {
+      const m = document.getElementById('dre-modal');
+      if (m) m.classList.toggle('hidden');
+    }
+
+    function toggleDiaryModal() {
+      const m = document.getElementById('diary-modal');
+      if (m) m.classList.toggle('hidden');
+    }
+
+    function syncDREValues(gross, cogs, rent, mkt, net) {
+      const gEl = document.getElementById('dre-gross-sales');
+      const cEl = document.getElementById('dre-cogs');
+      const rEl = document.getElementById('dre-rent');
+      const mEl = document.getElementById('dre-marketing');
+      const nEl = document.getElementById('dre-net-profit');
+
+      if (gEl) gEl.textContent = '+$' + gross.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (cEl) cEl.textContent = '-$' + cogs.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (rEl) rEl.textContent = '-$' + rent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (mEl) mEl.textContent = '-$' + mkt.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (nEl) {
+        nEl.textContent = (net >= 0 ? '+$' : '-$') + Math.abs(net).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        nEl.className = net >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold';
+      }
     }
 
     function renderIdlePanel() {
