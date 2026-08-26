@@ -1612,7 +1612,12 @@
       return total;
     }
 
+    let currentMarketingFilterOutletId = null;
+
     function openMarketingCentralModal(filterOutletId = null) {
+      if (filterOutletId !== undefined) {
+        currentMarketingFilterOutletId = filterOutletId;
+      }
       const list = document.getElementById('media-outlets-list');
       const products = Object.values(PRODUCT_CATALOG);
 
@@ -1623,7 +1628,27 @@
       document.getElementById('mkt-summary-monthly-cost').textContent = `-$${totalMonthlyMkt.toLocaleString('en-US', { minimumFractionDigits: 2 })}/mês`;
       document.getElementById('mkt-summary-daily-cost').textContent = `-$${totalDailyMkt.toLocaleString('en-US', { minimumFractionDigits: 2 })}/dia`;
 
-      list.innerHTML = MEDIA_OUTLETS.map(outlet => {
+      const outletsToShow = currentMarketingFilterOutletId
+        ? MEDIA_OUTLETS.filter(o => o.id === currentMarketingFilterOutletId)
+        : MEDIA_OUTLETS;
+
+      if (currentMarketingFilterOutletId && outletsToShow.length > 0) {
+        const outlet = outletsToShow[0];
+        document.getElementById('marketing-modal-title').innerHTML = `
+          <span>${outlet.emoji} ${outlet.name} — Contratação de Anúncios</span>
+          <button onclick="openMarketingCentralModal(null)" class="ml-auto text-[11px] text-indigo-300 hover:text-white bg-indigo-900/60 px-2.5 py-1 rounded-lg border border-indigo-700 font-mono">
+            ← Ver Todas as Emissoras
+          </button>
+        `;
+        document.getElementById('marketing-modal-subtitle').textContent =
+          `Tipo: ${outlet.type} · Localização: ${outlet.district.toUpperCase()} · Alcance: ${outlet.reachDescription}`;
+      } else {
+        document.getElementById('marketing-modal-title').innerHTML = `<span>📢 Central de Mídia & Publicidade Corporativa</span>`;
+        document.getElementById('marketing-modal-subtitle').textContent =
+          `Contrate campanhas publicitárias em emissoras locais para impulsionar o conhecimento e valor de marca.`;
+      }
+
+      list.innerHTML = outletsToShow.map(outlet => {
         return `
           <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-slate-800/80">
@@ -1689,7 +1714,7 @@
         addLog(`📺 Contrato firmado: ${prod.name} agora está no ar na ${outlet.name} (-$${outlet.monthlyCost}/mês)!`, 'text-indigo-400 font-bold');
       }
 
-      openMarketingCentralModal();
+      openMarketingCentralModal(currentMarketingFilterOutletId);
       if (activeManagedTile?.store) renderGondolaPanel(activeManagedTile);
       updateUI();
     }
