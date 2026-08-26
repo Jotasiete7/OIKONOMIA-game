@@ -80,16 +80,16 @@
       <!-- CONTROLES DO MAPA -->
       <div class="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
         <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
-          🗺️ Neo Capital
-          <span class="text-[10px] text-emerald-400 font-mono bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">36×36 Isométrico</span>
+          🗺️ Arquipélago de Neo Capital
+          <span class="text-[10px] text-emerald-400 font-mono bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">128×128 Isométrico · 4 Cidades</span>
         </span>
                 <!-- CIDADES / ATALHOS -->
         <div class="flex items-center gap-1 bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] font-mono">
           <span class="text-slate-500 px-1">Cidades:</span>
-          <button onclick="jumpToCity('nova_atenas')" class="px-2 py-0.5 rounded-md text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas">ðŸ›ï¸ Nova Atenas</button>
-          <button onclick="jumpToCity('porto_real')" class="px-2 py-0.5 rounded-md text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real">ðŸš¢ Porto Real</button>
-          <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-2 py-0.5 rounded-md text-slate-400 hover:bg-slate-800" title="Polo Industrial">ðŸ­ Montargis <span id="lock-montargis">ðŸ”’</span></button>
-          <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-2 py-0.5 rounded-md text-slate-400 hover:bg-slate-800" title="CinturÃ£o AgrÃ­cola">ðŸŒ¾ VÃ¡rzea <span id="lock-varzea">ðŸ”’</span></button>
+          <button onclick="jumpToCity('nova_atenas')" class="px-2 py-0.5 rounded-md text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ Nova Atenas</button>
+          <button onclick="jumpToCity('porto_real')" class="px-2 py-0.5 rounded-md text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real (Porto)">🚢 Porto Real</button>
+          <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-2 py-0.5 rounded-md text-slate-400 hover:bg-slate-800" title="Polo Industrial">🏭 Montargis <span id="lock-montargis">🔒</span></button>
+          <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-2 py-0.5 rounded-md text-slate-400 hover:bg-slate-800" title="Cinturão Agrícola">🌾 Várzea <span id="lock-varzea">🔒</span></button>
         </div>
         <!-- LENTES -->
         <div class="flex items-center gap-1 bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] font-mono">
@@ -106,16 +106,17 @@
         <div class="flex items-center gap-1 font-mono text-xs">
           <button onclick="changeZoom(-0.2)" class="w-6 h-6 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold">−</button>
           <button onclick="resetCamera()"    class="px-2 h-6 rounded bg-slate-950 border border-slate-800 text-slate-400 text-[10px]">Centro</button>
-          <button onclick="changeZoom(0.2)"  class="w-6 h-6 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold">+</button>
+          <button onclick="changeZoom(0.2)"  class="w-6 h-6 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold" title="Aumentar Zoom (E / +)">+</button>
+          <button id="btn-theater-mode" onclick="toggleTheaterMode()" class="px-2 h-6 rounded bg-emerald-950/90 border border-emerald-700/60 text-emerald-300 text-[10px] font-bold hover:bg-emerald-900 transition flex items-center gap-1" title="Maximizar Área do Mapa (Ocultar Menus laterais)">⛶ Expandir Mapa</button>
         </div>
       </div>
 
       <!-- CANVAS ISOMÉTRICO -->
-      <div class="relative bg-slate-950 rounded-xl border border-slate-800 shadow-2xl overflow-hidden flex-1 min-h-[380px] max-h-[460px]">
+      <div class="relative bg-slate-950 rounded-xl border border-slate-800 shadow-2xl overflow-hidden flex-1 min-h-[520px] max-h-[660px]">
         <canvas id="iso-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
         <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-900/96 border border-slate-700 rounded-xl px-3 py-2 shadow-2xl text-[11px] font-mono z-20"></div>
         <div class="absolute bottom-2 left-2 bg-slate-900/75 border border-slate-800 rounded-lg px-2.5 py-1 text-[10px] font-mono text-slate-500 pointer-events-none">
-          🖱 Arrastar: câmera · Scroll: zoom · Clique: inspecionar lote, loja, porto, mina, fazenda ou fábrica
+          🎮 <strong>WASD / Setas:</strong> Mover Câmera · 🔍 <strong>Scroll / Q-E:</strong> Zoom · 🖱 <strong>Arrastar / Clique:</strong> Inspecionar Lote · ⛶ <strong>F:</strong> Expandir Mapa
         </div>
       </div>
 
@@ -420,7 +421,7 @@
     // ===========================================================================
 
     const CITY_DISTRICTS = {
-      water:       { id: 'water',       name: 'Baía de Neo Capital',           type: 'Oceano',              population: 0,     trafficIndex: 0,  landRentDaily: 0     },
+      water:       { id: 'water',       name: 'Baía de Arquipélago de Neo Capital',           type: 'Oceano',              population: 0,     trafficIndex: 0,  landRentDaily: 0     },
       harbor:      { id: 'harbor',      name: 'Zona Portuária & Trânsito',      type: 'Logística / Hub',     population: 8000,  trafficIndex: 42, landRentDaily: 20    },
       downtown:    { id: 'downtown',    name: 'Downtown Central',              type: 'Comercial Nobre',     population: 18000, trafficIndex: 92, landRentDaily: 65    },
       uptown:      { id: 'uptown',      name: 'Uptown Universitário',          type: 'Jovens & Serviços',   population: 5000,  trafficIndex: 72, landRentDaily: 45    },
@@ -2689,6 +2690,84 @@
     }
 
     // ===========================================================================
+    
+    // ===========================================================================
+    // CONTROLES DE TECLADO (WASD + SETAS + ATALHOS DE ZOOM & TELA CHEIA)
+    // ===========================================================================
+    const activeKeys = new Set();
+    let isTheaterMode = false;
+
+    function toggleTheaterMode() {
+      isTheaterMode = !isTheaterMode;
+      const leftCol = document.querySelector('section.col-span-12.lg\\:col-span-8');
+      const rightCol = document.querySelector('section.col-span-12.lg\\:col-span-4');
+      const canvasEl = document.getElementById('iso-canvas');
+      const btn = document.getElementById('btn-theater-mode');
+
+      if (isTheaterMode) {
+        if (leftCol) { leftCol.classList.remove('lg:col-span-8'); leftCol.classList.add('lg:col-span-12'); }
+        if (rightCol) { rightCol.classList.add('hidden'); }
+        if (canvasEl && canvasEl.parentElement) {
+          canvasEl.parentElement.classList.remove('min-h-[520px]', 'max-h-[660px]');
+          canvasEl.parentElement.classList.add('min-h-[740px]', 'max-h-[860px]');
+        }
+        if (btn) btn.innerHTML = '⛶ Restaurar Painéis';
+      } else {
+        if (leftCol) { leftCol.classList.remove('lg:col-span-12'); leftCol.classList.add('lg:col-span-8'); }
+        if (rightCol) { rightCol.classList.remove('hidden'); }
+        if (canvasEl && canvasEl.parentElement) {
+          canvasEl.parentElement.classList.remove('min-h-[740px]', 'max-h-[860px]');
+          canvasEl.parentElement.classList.add('min-h-[520px]', 'max-h-[660px]');
+        }
+        if (btn) btn.innerHTML = '⛶ Expandir Mapa';
+      }
+      setTimeout(() => { resizeCanvas(); renderMap(); }, 50);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+
+      const k = e.key.toLowerCase();
+      if (['w', 'a', 's', 'd', 'arrowup', 'arrowleft', 'arrowdown', 'arrowright'].includes(k)) {
+        activeKeys.add(k);
+      } else if (k === 'q' || k === '-') {
+        changeZoom(-0.1);
+      } else if (k === 'e' || k === '+' || k === '=') {
+        changeZoom(0.1);
+      } else if (k === 'f') {
+        toggleTheaterMode();
+      } else if (k === ' ' && e.target === document.body) {
+        e.preventDefault();
+        setSpeed(gameSpeed === 0 ? 1 : 0);
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      activeKeys.delete(e.key.toLowerCase());
+    });
+
+    // Loop suave de câmera por WASD a 60 FPS
+    function updateKeyboardCamera() {
+      if (activeKeys.size > 0) {
+        const speed = 24 / camera.zoom;
+        if (activeKeys.has('w') || activeKeys.has('arrowup')) {
+          camera.panY += speed;
+        }
+        if (activeKeys.has('s') || activeKeys.has('arrowdown')) {
+          camera.panY -= speed;
+        }
+        if (activeKeys.has('a') || activeKeys.has('arrowleft')) {
+          camera.panX += speed;
+        }
+        if (activeKeys.has('d') || activeKeys.has('arrowright')) {
+          camera.panX -= speed;
+        }
+        renderMap();
+      }
+      requestAnimationFrame(updateKeyboardCamera);
+    }
+    requestAnimationFrame(updateKeyboardCamera);
+
     // 6. EVENTOS DO MOUSE (COM SUPORTE A CLIQUE NO MINIMAP)
     // ===========================================================================
     canvas.addEventListener('mousedown', (e) => {
@@ -2831,7 +2910,7 @@
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 class="text-xs font-bold text-amber-300 flex items-center gap-1.5">⚓ ${tile.portData.name}</h3>
-              <p class="text-[11px] text-slate-400 mt-0.5 font-mono">Terminal de Cargas Marítimas · Cais de Neo Capital (${tile.x}, ${tile.y})</p>
+              <p class="text-[11px] text-slate-400 mt-0.5 font-mono">Terminal de Cargas Marítimas · Cais de Arquipélago de Neo Capital (${tile.x}, ${tile.y})</p>
             </div>
             <button onclick="openPortModal(worldGrid[${tile.x}][${tile.y}].portData)" class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition">
               📦 Inspecionar Remessas Portuárias
@@ -3920,7 +3999,7 @@
 
     function openPortModal(port) {
       document.getElementById('port-modal-title').textContent = `⚓ ${port.name}`;
-      document.getElementById('port-modal-subtitle').textContent = `Local: Cais de Neo Capital (${port.tile.x}, ${port.tile.y})`;
+      document.getElementById('port-modal-subtitle').textContent = `Local: Cais de Arquipélago de Neo Capital (${port.tile.x}, ${port.tile.y})`;
       const list = document.getElementById('port-cargo-list');
       list.innerHTML = Object.entries(PRODUCT_CATALOG).slice(0, 15).map(([prodId, prod]) => {
         return `
