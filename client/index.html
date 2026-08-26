@@ -2856,10 +2856,10 @@
         return;
       }
 
-      const isBuildable = !tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.isWater && !tile.isRoad && !tile.competitor;
-      const canBuildMine = isBuildable && (tile.districtId === 'industrial' || tile.districtId === 'west_suburbs');
-      const canBuildFarm = isBuildable && (tile.districtId === 'west_suburbs' || tile.districtId === 'industrial' || tile.districtId === 'northside');
-      const canBuildFactory = isBuildable && (tile.districtId === 'industrial');
+      const isBuildable = !tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.isWater && !tile.isRoad && !tile.competitor && !tile.city?.isLocked;
+      const canBuildMine = isBuildable && (tile.hasIronDeposit || tile.hasOilDeposit || tile.hasTimberDeposit || tile.gidTerrain === 6 || tile.gidTerrain === 7 || tile.districtId === 'industrial' || tile.districtId === 'west_suburbs');
+      const canBuildFarm = isBuildable && (tile.isFertile || tile.gidTerrain === 4 || tile.gidTerrain === 5 || tile.districtId === 'west_suburbs');
+      const canBuildFactory = isBuildable && !tile.isWater && !tile.isRoad;
 
       el.innerHTML = `
         <div class="flex flex-wrap items-center justify-between gap-3">
