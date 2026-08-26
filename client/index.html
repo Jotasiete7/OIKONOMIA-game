@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OIKONOMIA — Estratégia Econômica & Logística Portuária</title>
+  <title>OIKONOMIA — Estratégia Corporativa, Varejo & Mídia</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     canvas { image-rendering: pixelated; }
@@ -23,7 +23,7 @@
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col p-3 md:p-4 select-none overflow-x-hidden">
 
   <!-- ======================================================================= -->
-  <!-- TOPBAR: LOGO, RELÓGIO CONTÍNUO, FINANÇAS                                -->
+  <!-- TOPBAR: LOGO, RELÓGIO CONTÍNUO, FINANÇAS, ATALHOS                       -->
   <!-- ======================================================================= -->
   <header class="bg-slate-900/95 border border-slate-800 rounded-2xl px-5 py-3 flex flex-wrap items-center justify-between shadow-2xl mb-3 max-w-[1400px] mx-auto w-full gap-3">
     <div class="flex items-center gap-3">
@@ -31,9 +31,9 @@
       <div>
         <div class="flex items-center gap-2">
           <h1 class="text-base font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
-          <span class="text-[9px] bg-emerald-950 text-emerald-300 font-mono px-1.5 py-0.5 rounded border border-emerald-800/60 uppercase">Sim Engine v0.4.1</span>
+          <span class="text-[9px] bg-emerald-950 text-emerald-300 font-mono px-1.5 py-0.5 rounded border border-emerald-800/60 uppercase">Sim Engine v0.5 · Mídia & Marketing</span>
         </div>
-        <span class="text-[11px] text-slate-400">Estratégia Corporativa, Varejo & Portos de Importação</span>
+        <span class="text-[11px] text-slate-400">Estratégia Corporativa, Varejo, Portos & Campanhas de Mídia</span>
       </div>
     </div>
 
@@ -51,13 +51,17 @@
       </div>
     </div>
 
-    <!-- FINANÇAS -->
-    <div class="flex items-center gap-5">
-      <div class="text-right">
+    <!-- FINANÇAS & ATALHO DE MARKETING -->
+    <div class="flex items-center gap-4">
+      <button onclick="openMarketingCentralModal()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-3 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 shadow-lg transition">
+        <span>📢 Central de Marketing</span>
+        <span id="active-campaigns-badge" class="bg-indigo-700 px-1.5 py-0.2 rounded text-[10px] text-white">0</span>
+      </button>
+      <div class="text-right border-l border-slate-800 pl-3">
         <span class="text-[10px] text-slate-400 block font-mono">Caixa Disponível</span>
         <span id="corp-cash" class="text-xl font-mono font-black text-emerald-400">$50,000.00</span>
       </div>
-      <div class="text-right border-l border-slate-800 pl-4">
+      <div class="text-right border-l border-slate-800 pl-3">
         <span class="text-[10px] text-slate-400 block font-mono">Lucro do Mês</span>
         <span id="month-profit" class="text-lg font-mono font-bold text-slate-400">$0.00</span>
       </div>
@@ -86,6 +90,7 @@
           <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">👥 Pop.</button>
           <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🏪 Conc.</button>
           <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">⚓ Portos</button>
+          <button id="hm-media"   onclick="setHeatmap('media')"   class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">📡 Mídia</button>
         </div>
         <!-- ZOOM -->
         <div class="flex items-center gap-1 font-mono text-xs">
@@ -100,7 +105,7 @@
         <canvas id="iso-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
         <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-900/96 border border-slate-700 rounded-xl px-3 py-2 shadow-2xl text-[11px] font-mono z-20"></div>
         <div class="absolute bottom-2 left-2 bg-slate-900/75 border border-slate-800 rounded-lg px-2.5 py-1 text-[10px] font-mono text-slate-500 pointer-events-none">
-          🖱 Arrastar: câmera · Scroll: zoom · Clique: inspecionar lote ou porto
+          🖱 Arrastar: câmera · Scroll: zoom · Clique: inspecionar lote, porto ou emissora de TV/Rádio
         </div>
       </div>
 
@@ -128,13 +133,11 @@
           </div>
         </div>
 
-        <div id="gondola-panel" class="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
+        <div id="gondola-panel" class="space-y-2 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
           <p class="text-[11px] text-slate-500 font-mono text-center py-4">Nenhuma loja ativa selecionada.</p>
         </div>
 
-        <div id="add-product-row" class="hidden pt-1 border-t border-slate-800">
-          <!-- Botão Adicionar Produto gerado dinamicamente -->
-        </div>
+        <div id="add-product-row" class="hidden pt-1 border-t border-slate-800"></div>
       </div>
 
       <!-- DRE MENSAL -->
@@ -143,10 +146,11 @@
           <span>📑 DRE do Mês</span>
           <span id="dre-month-label" class="text-[10px] text-slate-400 font-mono font-normal">Mês 01</span>
         </h3>
-        <div class="space-y-1.5 text-[11px] font-mono">
+        <div class="space-y-1 text-[11px] font-mono">
           <div class="flex justify-between text-slate-200"><span>(+) Receita Bruta:</span><span id="dre-revenue" class="text-emerald-400 font-bold">$0.00</span></div>
           <div class="flex justify-between text-slate-400"><span>(-) Custo Merc. (CPV + Frete):</span><span id="dre-cogs" class="text-rose-400">-$0.00</span></div>
-          <div class="flex justify-between text-slate-400"><span>(-) Aluguéis & Fixos:</span><span id="dre-fixed" class="text-rose-400">-$0.00</span></div>
+          <div class="flex justify-between text-slate-400"><span>(-) Aluguéis & Custos Fixos:</span><span id="dre-fixed" class="text-rose-400">-$0.00</span></div>
+          <div class="flex justify-between text-slate-400"><span>(-) Publicidade & Mídia:</span><span id="dre-marketing" class="text-indigo-400">-$0.00</span></div>
           <div class="flex justify-between items-center bg-slate-950 rounded-lg p-2 border-t border-slate-800 mt-1">
             <span class="text-slate-300 font-bold text-xs">LUCRO LÍQUIDO:</span>
             <span id="dre-net-profit" class="text-sm font-black text-slate-400">$0.00</span>
@@ -157,18 +161,18 @@
       <!-- DIÁRIO DE BORDO -->
       <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex-1 flex flex-col">
         <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
-          <span>📜 Diário de Bordo & Logística</span>
+          <span>📜 Diário de Bordo, Mídia & Logística</span>
           <span class="text-[9px] text-slate-500 font-normal">Eventos em Tempo Real</span>
         </h3>
-        <div id="game-logs" class="flex-1 min-h-[90px] max-h-[130px] overflow-y-auto space-y-0.5 text-[11px] font-mono text-slate-400 custom-scrollbar">
-          <div class="text-slate-500">OIKONOMIA inicializado. Clique nos portos marítimos ou nos lotes para jogar.</div>
+        <div id="game-logs" class="flex-1 min-h-[90px] max-h-[120px] overflow-y-auto space-y-0.5 text-[11px] font-mono text-slate-400 custom-scrollbar">
+          <div class="text-slate-500">OIKONOMIA inicializado. Contrate anúncios de TV/Rádio para alavancar suas marcas.</div>
         </div>
       </div>
     </section>
   </main>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 1: WIZARD DE ABERTURA DE LOJA (2 ETAPAS)                          -->
+  <!-- MODAL 1: WIZARD DE ABERTURA DE LOJA                                     -->
   <!-- ======================================================================= -->
   <div id="store-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
@@ -254,7 +258,7 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 4: ADICIONAR NOVO PRODUTO A UMA LOJA EXISTENTE                    -->
+  <!-- MODAL 4: ADICIONAR NOVO PRODUTO À LOJA EXISTENTE                        -->
   <!-- ======================================================================= -->
   <div id="add-product-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
@@ -288,6 +292,49 @@
         <button onclick="closeUpgradeModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
       </div>
       <div class="p-6 space-y-3" id="upgrade-options-list"></div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 6: CENTRAL DE MÍDIA & MARKETING (TV, RÁDIO, JORNAL)               -->
+  <!-- ======================================================================= -->
+  <div id="marketing-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden">
+      <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 id="marketing-modal-title" class="text-sm font-bold text-indigo-300 flex items-center gap-2">
+            <span>📢 Central de Mídia & Publicidade</span>
+          </h2>
+          <p id="marketing-modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5">
+            Contrate campanhas publicitárias em emissoras locais para impulsionar o conhecimento e valor de marca.
+          </p>
+        </div>
+        <button onclick="closeMarketingModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
+      </div>
+      <div class="p-6 space-y-4">
+        <!-- Resumo de Despesas de Marketing -->
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between text-xs font-mono gap-3">
+          <div>
+            <span class="text-slate-400 block text-[10px]">Contratos Ativos:</span>
+            <span id="mkt-summary-contracts" class="text-indigo-300 font-bold text-sm">0 campanhas</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[10px]">Custo Mensal de Mídia:</span>
+            <span id="mkt-summary-monthly-cost" class="text-rose-400 font-bold text-sm">$0.00/mês</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[10px]">Débito Diário na DRE:</span>
+            <span id="mkt-summary-daily-cost" class="text-amber-400 font-bold text-sm">$0.00/dia</span>
+          </div>
+        </div>
+
+        <!-- Lista de Veículos de Comunicação & Campanhas -->
+        <div id="media-outlets-list" class="space-y-3 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
+
+        <div class="pt-3 border-t border-slate-800 flex justify-end">
+          <button onclick="closeMarketingModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono">Fechar</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -355,6 +402,52 @@
       }
     ];
 
+    // Veículos de Mídia & Comunicação de Neo Capital
+    const MEDIA_OUTLETS = [
+      {
+        id: 'media_tv',
+        name: 'Rede Capital TV',
+        type: 'Televisão',
+        emoji: '📺',
+        tile: { x: 14, y: 8 },
+        district: 'uptown',
+        monthlyCost: 2500.00,
+        brandBoostMonthly: 15,
+        brandCap: 95,
+        reachPct: 100,
+        reachDescription: 'Toda a Região Metropolitana (100% da População)',
+        description: 'Emissora líder de audiência. Máximo impacto de lembrança e prestígio de marca.'
+      },
+      {
+        id: 'media_radio',
+        name: 'Rádio Central FM 104.5',
+        type: 'Rádio',
+        emoji: '📻',
+        tile: { x: 17, y: 13 },
+        district: 'downtown',
+        monthlyCost: 850.00,
+        brandBoostMonthly: 8,
+        brandCap: 75,
+        reachPct: 65,
+        reachDescription: 'Downtown, Cais e Polos Comerciais Centrais',
+        description: 'A rádio mais ouvida por motoristas e trabalhadores no horário de pico.'
+      },
+      {
+        id: 'media_news',
+        name: 'Jornal da Metrópole (Impresso & Web)',
+        type: 'Jornal',
+        emoji: '📰',
+        tile: { x: 23, y: 14 },
+        district: 'northside',
+        monthlyCost: 350.00,
+        brandBoostMonthly: 4,
+        brandCap: 60,
+        reachPct: 45,
+        reachDescription: 'Distrito Residencial Norte e Subúrbios',
+        description: 'Publicação diária tradicional com alta penetração em famílias e bairros residenciais.'
+      }
+    ];
+
     const STORE_TYPES = [
       { id:'kombini',       name:'Kombini',      emoji:'🛒', cost:8000,  maxShelves:4,  rentMultiplier:1.0, desc:'Varejo rápido de conveniência. Baixo custo, poucos produtos.' },
       { id:'mercadinho',    name:'Mercadinho',   emoji:'🏪', cost:18000, maxShelves:10, rentMultiplier:1.35,desc:'Equilíbrio entre variedade e custo. Ideal para bairros.' },
@@ -394,11 +487,14 @@
     // ===========================================================================
     let day = 1, month = 1, year = 1;
     let cash = 50000.00;
-    let monthRevenue = 0, monthCogs = 0, monthFixedExpenses = 0;
+    let monthRevenue = 0, monthCogs = 0, monthFixedExpenses = 0, monthMarketingExpenses = 0;
     let gameSpeed = 0, timerInterval = null;
 
     const playerBrandRating = {};
     Object.keys(PRODUCT_CATALOG).forEach(id => { playerBrandRating[id] = 20; });
+
+    // Contratos de Marketing Ativos: Set de chaves "outletId_prodId"
+    const activeMarketingContracts = new Set();
 
     let selectedTileX = -1, selectedTileY = -1;
     let hoveredTileX  = -1, hoveredTileY  = -1;
@@ -446,6 +542,11 @@
         if (x === 6 && y === 6) portData = SEAPORTS[0];
         if (x === 7 && y === 5) portData = SEAPORTS[1];
 
+        let mediaData = null;
+        if (x === 14 && y === 8) mediaData = MEDIA_OUTLETS[0]; // TV
+        if (x === 17 && y === 13) mediaData = MEDIA_OUTLETS[1]; // Radio
+        if (x === 23 && y === 14) mediaData = MEDIA_OUTLETS[2]; // News
+
         worldGrid[x][y] = {
           x, y,
           districtId,
@@ -454,7 +555,9 @@
           isRoad,
           portData,
           isPort: !!portData,
-          buildingHeight: isWater || isRoad ? 0 : (portData ? 16 : 0),
+          mediaData,
+          isMedia: !!mediaData,
+          buildingHeight: isWater || isRoad ? 0 : (portData ? 16 : (mediaData ? (mediaData.id === 'media_tv' ? 26 : 18) : 0)),
           store: null,
           competitor: (x === 25 && y === 15) ? {
             name: 'QuickMart North (IA)',
@@ -555,6 +658,7 @@
           const d = tile.districtId;
           if (tile.isWater)          fill = '#031e33';
           else if (tile.isPort)      fill = '#23382b';
+          else if (tile.isMedia)     fill = '#2e1065';
           else if (d === 'road')     fill = '#1a2535';
           else if (d === 'harbor')   fill = '#1a2e25';
           else if (d === 'downtown') fill = '#0d1f4a';
@@ -573,6 +677,8 @@
             else if (tile.competitor) fill = '#4a0416';
           } else if (currentHeatmap === 'ports') {
             if (tile.isPort) fill = '#854d0e';
+          } else if (currentHeatmap === 'media') {
+            if (tile.isMedia) fill = '#7c3aed';
           }
 
           drawDiamond(sx, sy, w, h, fill);
@@ -586,6 +692,8 @@
               topC='#f43f5e'; leftC='#e11d48'; rightC='#be123c';
             } else if (tile.isPort) {
               topC='#fbbf24'; leftC='#d97706'; rightC='#b45309';
+            } else if (tile.isMedia) {
+              topC='#c084fc'; leftC='#9333ea'; rightC='#7e22ce';
             } else if (d === 'residential' || d === 'northside') {
               topC='#818cf8'; leftC='#6366f1'; rightC='#4f46e5';
             } else if (d === 'downtown') {
@@ -606,6 +714,10 @@
               ctx.fillStyle = '#fde047';
               ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
               ctx.fillText(`⚓ ${tile.portData.id === 'port_alpha' ? 'P. ALFA' : 'P. BETA'}`, sx - 25 * camera.zoom, sy - hPx - 5);
+            } else if (tile.isMedia) {
+              ctx.fillStyle = '#e879f9';
+              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
+              ctx.fillText(`${tile.mediaData.emoji} ${tile.mediaData.name.split(' ')[0]}`, sx - 25 * camera.zoom, sy - hPx - 5);
             }
           }
 
@@ -660,6 +772,12 @@
             <div class="text-[10px] text-slate-400">Terminal Marítimo Internacional (${gx},${gy})</div>
             <div class="text-[10px] text-emerald-400 font-bold mt-1">Clique para inspecionar remessas e preços CIF</div>
           `;
+        } else if (tile.isMedia) {
+          tooltip.innerHTML = `
+            <div class="font-bold text-purple-300 text-xs">${tile.mediaData.emoji} ${tile.mediaData.name}</div>
+            <div class="text-[10px] text-slate-400">Veículo de Comunicação · ${tile.mediaData.type} (${gx},${gy})</div>
+            <div class="text-[10px] text-indigo-400 font-bold mt-1">Clique para contratar publicidade e campanhas</div>
+          `;
         } else {
           tooltip.innerHTML = `
             <div class="font-bold text-amber-300 text-xs">${tile.store ? tile.store.name : (tile.competitor ? tile.competitor.name : d.name)}</div>
@@ -701,6 +819,8 @@
 
       if (tile.isPort) {
         openPortModal(tile.portData);
+      } else if (tile.isMedia) {
+        openMarketingCentralModal(tile.mediaData.id);
       } else if (tile.store) {
         activeManagedTile = tile;
         renderGondolaPanel(tile);
@@ -718,7 +838,7 @@
     // ===========================================================================
     function renderTileInspector(tile) {
       const el = document.getElementById('tile-inspector');
-      if (!tile) { el.innerHTML = `<p class="text-xs text-slate-500 font-mono">Clique em um lote ou porto para inspecioná-lo.</p>`; return; }
+      if (!tile) { el.innerHTML = `<p class="text-xs text-slate-500 font-mono">Clique em um lote, porto ou emissora para inspecioná-lo.</p>`; return; }
       const d = tile.district;
 
       if (tile.isPort) {
@@ -731,6 +851,22 @@
             <button onclick="openPortModal(worldGrid[${tile.x}][${tile.y}].portData)"
               class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition">
               📦 Inspecionar Remessas & Preços
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      if (tile.isMedia) {
+        el.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="text-xs font-bold text-purple-300 flex items-center gap-1.5">${tile.mediaData.emoji} ${tile.mediaData.name}</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5 font-mono">Sede de Mídia · Alcance: ${tile.mediaData.reachDescription}</p>
+            </div>
+            <button onclick="openMarketingCentralModal('${tile.mediaData.id}')"
+              class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition">
+              📢 Contratar Anúncios na Emissora
             </button>
           </div>
         `;
@@ -1047,7 +1183,7 @@
     }
 
     // ===========================================================================
-    // 8. PAINEL DE GÔNDOLAS & COMPRA INSTANTÂNEA DE ESTOQUE
+    // 8. PAINEL DE GÔNDOLAS
     // ===========================================================================
     function renderIdlePanel() {
       document.getElementById('store-title').textContent = '🛒 Selecione uma loja no mapa';
@@ -1072,7 +1208,6 @@
       badge.textContent = `-$${store.dailyRent.toFixed(2)}/dia`;
       badge.classList.remove('hidden');
 
-      // Botão de expandir porte da loja se não for o maior
       const btnUpgrade = document.getElementById('btn-upgrade-store');
       if (store.storeTypeId !== 'supermercado') {
         btnUpgrade.classList.remove('hidden');
@@ -1114,17 +1249,30 @@
         const missingUnits = shelf.maxCapacity - shelf.stock;
         const costFill = Math.round(missingUnits * shelf.landedCost);
 
+        // Identifica campanhas ativas para este produto
+        const activeMktForProd = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}_${prodId}`));
+
         const card = document.createElement('div');
         card.className = `rounded-xl border ${isStockout ? 'border-rose-800 stockout-alert' : 'border-slate-800'} bg-slate-950 p-2.5 space-y-2`;
         card.innerHTML = `
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-1.5 flex-wrap">
               <span class="text-[11px] font-bold text-slate-200">${prod.name}</span>
               <span class="text-[9px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800 font-mono">QR: ${shelf.quality}</span>
-              <span class="text-[9px] bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-mono">⭐ Marca: ${brand}</span>
+              <button onclick="openMarketingCentralModal()" class="text-[9px] ${activeMktForProd.length > 0 ? 'bg-indigo-950 text-indigo-300 border-indigo-700' : 'bg-slate-900 text-slate-400 border-slate-700'} px-1.5 py-0.5 rounded border font-mono hover:border-indigo-500">
+                ⭐ Marca: ${brand} ${activeMktForProd.length > 0 ? '📢' : ''}
+              </button>
             </div>
             <button onclick="removeProductFromStore(${tile.x}, ${tile.y}, '${prodId}')" class="text-[10px] text-slate-600 hover:text-rose-400 font-mono px-1">✕</button>
           </div>
+
+          <!-- Badges de Campanhas de Mídia Ativas -->
+          ${activeMktForProd.length > 0 ? `
+            <div class="flex items-center gap-1 text-[9px] font-mono text-indigo-300 bg-indigo-950/40 px-2 py-0.5 rounded border border-indigo-900">
+              <span class="text-slate-400">Campanhas:</span>
+              ${activeMktForProd.map(m => `<span>${m.emoji} ${m.name.split(' ')[0]}</span>`).join(', ')}
+            </div>
+          ` : ''}
 
           <!-- Dados do Fornecedor Portuário -->
           <div class="bg-slate-900 p-1.5 rounded-lg text-[10px] font-mono flex items-center justify-between border border-slate-800">
@@ -1149,19 +1297,20 @@
 
             <!-- Botões de Compra Rápida de Estoque -->
             <div class="flex items-center gap-1.5 text-[9px] font-mono">
-              <span class="text-slate-500">Injetar Estoque:</span>
+              <span class="text-slate-500">Injetar:</span>
               <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', 200)"
-                class="bg-slate-900 hover:bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700 hover:border-emerald-600 transition"
-                title="Comprar 200 unidades imediatamente do porto">
+                class="bg-slate-900 hover:bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700 hover:border-emerald-600 transition">
                 +200 un (-$${cost200})
               </button>
               ${missingUnits > 50 ? `
                 <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', ${missingUnits})"
-                  class="bg-slate-900 hover:bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded border border-slate-700 hover:border-emerald-600 transition"
-                  title="Encher estoque até o limite máximo">
+                  class="bg-slate-900 hover:bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded border border-slate-700 hover:border-emerald-600 transition">
                   Encher (-$${costFill})
                 </button>
               ` : ''}
+              <button onclick="openMarketingCentralModal()" class="ml-auto text-indigo-400 hover:text-indigo-300 font-bold">
+                📢 Anunciar
+              </button>
             </div>
           </div>
 
@@ -1208,7 +1357,6 @@
       }
     }
 
-    // Compra Imediata de Estoque
     function buyInstantStock(x, y, prodId, qty) {
       const tile = worldGrid[x][y];
       if (!tile?.store?.shelves[prodId]) return;
@@ -1230,14 +1378,14 @@
 
       cash -= cost;
       shelf.stock += actualQty;
-      addLog(`📦 Compradas ${actualQty} un de ${PRODUCT_CATALOG[prodId].name} do ${shelf.supplierName.split('(')[0].trim()} por $${cost.toLocaleString()}!`, 'text-emerald-400');
+      addLog(`📦 Compradas ${actualQty} un de ${PRODUCT_CATALOG[prodId].name} por $${cost.toLocaleString()}!`, 'text-emerald-400');
 
       renderGondolaPanel(tile);
       updateUI();
     }
 
     // ===========================================================================
-    // 9. MODAL DE ADICIONAR NOVO PRODUTO À LOJA EXISTENTE
+    // 9. MODAL DE ADICIONAR PRODUTO À LOJA EXISTENTE
     // ===========================================================================
     function openAddProductModal(x, y) {
       const tile = worldGrid[x][y];
@@ -1332,7 +1480,7 @@
 
       const freeSlots = store.maxShelves - Object.keys(store.shelves).length;
       if (freeSlots <= 0) {
-        addLog(`⚠️ Loja já atingiu a capacidade máxima de ${store.maxShelves} gôndolas! Expanda o porte da loja.`, 'text-amber-400');
+        addLog(`⚠️ Loja já atingiu a capacidade máxima de ${store.maxShelves} gôndolas!`, 'text-amber-400');
         closeAddProductModal();
         return;
       }
@@ -1343,7 +1491,7 @@
 
       const initCost = Math.round(300 * offer.landedCost);
       if (cash < initCost) {
-        addLog(`❌ Caixa insuficiente para comprar o primeiro estoque de ${PRODUCT_CATALOG[prodId].name}!`, 'text-rose-400');
+        addLog(`❌ Caixa insuficiente para abastecer ${PRODUCT_CATALOG[prodId].name}!`, 'text-rose-400');
         return;
       }
 
@@ -1380,7 +1528,7 @@
     }
 
     // ===========================================================================
-    // 10. MODAL DE UPGRADE DE PORTE DA LOJA
+    // 10. MODAL DE UPGRADE DE PORTE
     // ===========================================================================
     function openUpgradeStoreModal() {
       if (!activeManagedTile?.store) return;
@@ -1439,7 +1587,7 @@
       tile.store.rentMultiplier = target.rentMultiplier;
       tile.store.dailyRent = tile.district.landRentDaily * target.rentMultiplier;
 
-      addLog(`⭐ Loja expandida com sucesso para ${target.name} por $${cost.toLocaleString()}! Capacidade aumentada para ${target.maxShelves} gôndolas.`, 'text-amber-300 font-bold');
+      addLog(`⭐ Loja expandida com sucesso para ${target.name} por $${cost.toLocaleString()}!`, 'text-amber-300 font-bold');
 
       closeUpgradeModal();
       renderGondolaPanel(tile);
@@ -1452,7 +1600,102 @@
     }
 
     // ===========================================================================
-    // 11. GESTÃO DE FORNECEDORES NAS GÔNDOLAS ATIVAS
+    // 11. CENTRAL DE MARKETING, MÍDIA & CAMPANHAS PUBLICITÁRIAS
+    // ===========================================================================
+    function openMarketingCentralModal(filterOutletId = null) {
+      const list = document.getElementById('media-outlets-list');
+      const products = Object.values(PRODUCT_CATALOG);
+
+      let totalMonthlyMkt = 0;
+      for (const contractKey of activeMarketingContracts) {
+        const [outletId] = contractKey.split('_');
+        const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
+        if (outlet) totalMonthlyMkt += outlet.monthlyCost;
+      }
+      const totalDailyMkt = totalMonthlyMkt / 30;
+
+      document.getElementById('mkt-summary-contracts').textContent = `${activeMarketingContracts.size} campanha(s) ativa(s)`;
+      document.getElementById('mkt-summary-monthly-cost').textContent = `-$${totalMonthlyMkt.toLocaleString('en-US', { minimumFractionDigits: 2 })}/mês`;
+      document.getElementById('mkt-summary-daily-cost').textContent = `-$${totalDailyMkt.toLocaleString('en-US', { minimumFractionDigits: 2 })}/dia`;
+
+      list.innerHTML = MEDIA_OUTLETS.map(outlet => {
+        return `
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-800/80">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-base">${outlet.emoji}</span>
+                  <span class="text-sm font-bold text-slate-100">${outlet.name}</span>
+                  <span class="text-[10px] bg-indigo-950 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-800 font-mono">${outlet.type}</span>
+                </div>
+                <div class="text-[11px] text-slate-400 mt-1 font-mono">
+                  Alcance: <strong class="text-slate-300">${outlet.reachDescription}</strong> · Impulso: <strong class="text-emerald-400">+${outlet.brandBoostMonthly} pts/mês</strong> (Teto: ${outlet.brandCap})
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] text-slate-500 block font-mono">Custo por Produto</span>
+                <span class="text-sm font-bold text-rose-400 font-mono">$${outlet.monthlyCost.toLocaleString()}/mês</span>
+                <span class="text-[9px] text-slate-500 block font-mono">($${(outlet.monthlyCost / 30).toFixed(2)}/dia)</span>
+              </div>
+            </div>
+
+            <!-- Seleção de Produtos para anunciar nesta emissora -->
+            <div>
+              <span class="text-[10px] text-slate-400 uppercase font-mono block mb-2">Produtos no Portfólio (Ligar/Desligar Contrato):</span>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                ${products.map(prod => {
+                  const contractKey = `${outlet.id}_${prod.id}`;
+                  const isActive = activeMarketingContracts.has(contractKey);
+                  const brand = playerBrandRating[prod.id] || 20;
+
+                  return `
+                    <div onclick="toggleMarketingContract('${outlet.id}', '${prod.id}')"
+                      class="cursor-pointer p-2 rounded-lg border text-[11px] font-mono flex items-center justify-between transition
+                        ${isActive ? 'border-indigo-500 bg-indigo-950/40 text-indigo-200 ring-1 ring-indigo-500' : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'}">
+                      <div class="truncate pr-1">
+                        <div class="font-bold truncate">${prod.name}</div>
+                        <div class="text-[9px] text-slate-500">Marca: ${brand}/100</div>
+                      </div>
+                      <span class="text-xs ${isActive ? 'text-indigo-300 font-bold' : 'text-slate-600'}">
+                        ${isActive ? '📢 ON' : 'OFF'}
+                      </span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('marketing-modal').classList.remove('hidden');
+    }
+
+    function toggleMarketingContract(outletId, prodId) {
+      const contractKey = `${outletId}_${prodId}`;
+      const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
+      const prod = PRODUCT_CATALOG[prodId];
+
+      if (activeMarketingContracts.has(contractKey)) {
+        activeMarketingContracts.delete(contractKey);
+        addLog(`📢 Contrato de publicidade de ${prod.name} na ${outlet.name} cancelado.`, 'text-slate-400');
+      } else {
+        activeMarketingContracts.add(contractKey);
+        addLog(`📺 Contrato firmado: ${prod.name} agora está no ar na ${outlet.name} (-$${outlet.monthlyCost}/mês)!`, 'text-indigo-400 font-bold');
+      }
+
+      document.getElementById('active-campaigns-badge').textContent = activeMarketingContracts.size;
+      openMarketingCentralModal();
+      if (activeManagedTile?.store) renderGondolaPanel(activeManagedTile);
+      updateUI();
+    }
+
+    function closeMarketingModal() {
+      document.getElementById('marketing-modal').classList.add('hidden');
+    }
+
+    // ===========================================================================
+    // 12. GESTÃO DE FORNECEDORES NAS GÔNDOLAS ATIVAS
     // ===========================================================================
     function openSupplierModal(x, y, prodId) {
       const tile = worldGrid[x][y];
@@ -1551,7 +1794,7 @@
     }
 
     // ===========================================================================
-    // 12. MOTOR ECONÔMICO & SIMULAÇÃO DIÁRIA
+    // 13. MOTOR ECONÔMICO & SIMULAÇÃO DIÁRIA
     // ===========================================================================
     function calcPriceRating(standardPrice, price) {
       if (price <= 0) return 100;
@@ -1581,6 +1824,14 @@
 
     function simulateDay() {
       let dailyRev = 0, dailyCogs = 0, dailyFixed = 0;
+
+      // Custo diário de Marketing ativo
+      let dailyMarketing = 0;
+      for (const contractKey of activeMarketingContracts) {
+        const [outletId] = contractKey.split('_');
+        const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
+        if (outlet) dailyMarketing += outlet.monthlyCost / 30;
+      }
 
       for (let x = 0; x < GRID_SIZE; x++) {
         for (let y = 0; y < GRID_SIZE; y++) {
@@ -1643,10 +1894,11 @@
         }
       }
 
-      cash += dailyRev - dailyFixed;
+      cash += dailyRev - dailyFixed - dailyMarketing;
       monthRevenue += dailyRev;
       monthCogs += dailyCogs;
       monthFixedExpenses += dailyFixed;
+      monthMarketingExpenses += dailyMarketing;
 
       day++;
       if (day > 30) { closeMonthEnd(); day = 1; month++; if (month > 12) { month = 1; year++; } }
@@ -1655,15 +1907,29 @@
     }
 
     function closeMonthEnd() {
-      const net = monthRevenue - monthCogs - monthFixedExpenses;
+      const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses;
       addLog(
-        `📊 FIM DO MÊS ${String(month).padStart(2,'0')}: Receita $${monthRevenue.toLocaleString('en-US',{maximumFractionDigits:0})} | Lucro Líquido $${net.toLocaleString('en-US',{maximumFractionDigits:0})}`,
+        `📊 FIM DO MÊS ${String(month).padStart(2,'0')}: Receita $${monthRevenue.toLocaleString('en-US',{maximumFractionDigits:0})} | Marketing: $${monthMarketingExpenses.toLocaleString('en-US',{maximumFractionDigits:0})} | Lucro Líq: $${net.toLocaleString('en-US',{maximumFractionDigits:0})}`,
         net >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'
       );
 
+      // Atualiza Marca com Campanhas de Mídia e Decaimento
       for (const prodId of Object.keys(PRODUCT_CATALOG)) {
-        if (net > 0) playerBrandRating[prodId] = Math.min(100, (playerBrandRating[prodId] || 20) + Math.floor(1 + Math.random() * 2));
-        else         playerBrandRating[prodId] = Math.max(0,   (playerBrandRating[prodId] || 20) - 1);
+        const activeOutletsForProd = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}_${prodId}`));
+        const currentBrand = playerBrandRating[prodId] || 20;
+
+        if (activeOutletsForProd.length > 0) {
+          let totalBoost = activeOutletsForProd.reduce((sum, o) => sum + o.brandBoostMonthly, 0);
+          if (net > 0) totalBoost += 1;
+          const maxCap = Math.max(...activeOutletsForProd.map(o => o.brandCap));
+          const newBrand = Math.min(maxCap, currentBrand + totalBoost);
+          playerBrandRating[prodId] = newBrand;
+          addLog(`📢 Publicidade de ${PRODUCT_CATALOG[prodId].name} impulsionou marca para ${newBrand}/100 (+${newBrand - currentBrand} pts)!`, 'text-indigo-300');
+        } else {
+          // Decaimento natural de marca se não há publicidade ativa
+          const decay = net > 0 ? 1 : 2;
+          playerBrandRating[prodId] = Math.max(10, currentBrand - decay);
+        }
       }
 
       for (let x = 0; x < GRID_SIZE; x++) {
@@ -1685,7 +1951,7 @@
         }
       }
 
-      monthRevenue = 0; monthCogs = 0; monthFixedExpenses = 0;
+      monthRevenue = 0; monthCogs = 0; monthFixedExpenses = 0; monthMarketingExpenses = 0;
       if (activeManagedTile?.store) renderGondolaPanel(activeManagedTile);
     }
 
@@ -1715,12 +1981,13 @@
         closeSupplierModal();
         closeAddProductModal();
         closeUpgradeModal();
+        closeMarketingModal();
       }
     });
 
     function setHeatmap(mode) {
       currentHeatmap = mode;
-      const btns = { terrain:'hm-terrain', traffic:'hm-traffic', pop:'hm-pop', comp:'hm-comp', ports:'hm-ports' };
+      const btns = { terrain:'hm-terrain', traffic:'hm-traffic', pop:'hm-pop', comp:'hm-comp', ports:'hm-ports', media:'hm-media' };
       for (const [m, id] of Object.entries(btns)) {
         const btn = document.getElementById(id);
         if (!btn) continue;
@@ -1735,7 +2002,7 @@
       document.getElementById('clock-date').textContent = `Dia ${String(day).padStart(2,'0')} / Mês ${String(month).padStart(2,'0')} / Ano ${year}`;
       document.getElementById('corp-cash').textContent  = `$${cash.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
 
-      const net = monthRevenue - monthCogs - monthFixedExpenses;
+      const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses;
       const pe  = document.getElementById('month-profit');
       pe.textContent = `${net >= 0 ? '+' : ''}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
       pe.className = `text-lg font-mono font-bold ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
@@ -1744,6 +2011,8 @@
       document.getElementById('dre-revenue').textContent      = `+$${monthRevenue.toLocaleString('en-US',{minimumFractionDigits:2})}`;
       document.getElementById('dre-cogs').textContent         = `-$${monthCogs.toLocaleString('en-US',{minimumFractionDigits:2})}`;
       document.getElementById('dre-fixed').textContent        = `-$${monthFixedExpenses.toLocaleString('en-US',{minimumFractionDigits:2})}`;
+      document.getElementById('dre-marketing').textContent    = `-$${monthMarketingExpenses.toLocaleString('en-US',{minimumFractionDigits:2})}`;
+      
       const dn = document.getElementById('dre-net-profit');
       dn.textContent = `${net >= 0 ? '+' : ''}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2})}`;
       dn.className = `text-sm font-black font-mono ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
@@ -1752,7 +2021,7 @@
     }
 
     // ===========================================================================
-    // 13. INICIALIZAÇÃO
+    // 14. INICIALIZAÇÃO
     // ===========================================================================
     window.addEventListener('resize', () => { resizeCanvas(); renderMap(); });
 

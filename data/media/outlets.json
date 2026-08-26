@@ -1,0 +1,44 @@
+[
+  {
+    "id": "media_tv",
+    "name": "Rede Capital TV",
+    "type": "Televisão",
+    "emoji": "📺",
+    "tile": { "x": 14, "y": 8 },
+    "district": "uptown",
+    "monthlyCost": 2500.00,
+    "brandBoostMonthly": 15,
+    "brandCap": 95,
+    "reachPct": 100,
+    "reachDescription": "Toda a Região Metropolitana (Neo Capital Inteira)",
+    "description": "Emissora de TV líder de audiência. Máximo impacto de conhecimento de marca e prestígio corporativo."
+  },
+  {
+    "id": "media_radio",
+    "name": "Rádio Central FM 104.5",
+    "type": "Rádio",
+    "emoji": "📻",
+    "tile": { "x": 17, "y": 13 },
+    "district": "downtown",
+    "monthlyCost": 850.00,
+    "brandBoostMonthly": 8,
+    "brandCap": 75,
+    "reachPct": 65,
+    "reachDescription": "Downtown, Zona Portuária e Uptown",
+    "description": "A rádio mais ouvida no trânsito e nos polos comerciais centrais da cidade."
+  },
+  {
+    "id": "media_news",
+    "name": "Jornal da Metrópole (Impresso & Web)",
+    "type": "Jornal",
+    "emoji": "📰",
+    "tile": { "x": 23, "y": 14 },
+    "district": "northside",
+    "monthlyCost": 350.00,
+    "brandBoostMonthly": 4,
+    "brandCap": 60,
+    "reachPct": 45,
+    "reachDescription": "Distrito Residencial Norte e Subúrbios",
+    "description": "Publicação diária tradicional com forte apelo em bairros residenciais e famílias."
+  }
+]

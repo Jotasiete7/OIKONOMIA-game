@@ -27,16 +27,26 @@ export interface District {
   competitorStore?: CompetitorStoreState | null;
 }
 
-export interface SupplierOffer {
-  supplierId: string;
-  supplierName: string;
-  wholesalePrice: number;
-  quality: number;
-  dailyQuota: number;
-  origin: string;
-  distance: number;
-  unitFreight: number;
-  landedCost: number;
+export interface MediaOutlet {
+  id: string;
+  name: string;
+  type: string;
+  emoji: string;
+  tile: { x: number; y: number };
+  district: string;
+  monthlyCost: number;
+  brandBoostMonthly: number;
+  brandCap: number;
+  reachPct: number;
+  reachDescription: string;
+  description: string;
+}
+
+export interface MarketingContract {
+  productId: string;
+  outletId: string;
+  dailyCost: number;
+  monthlyCost: number;
 }
 
 export interface ShelfState {
@@ -81,6 +91,7 @@ export interface MonthlyFinancialReport {
   grossRevenue: number;
   cogs: number;
   fixedRent: number;
+  marketingExpenses: number;
   netProfit: number;
   endingCash: number;
 }
@@ -94,8 +105,10 @@ export interface GameState {
   catalog: Record<string, ProductType>;
   districts: District[];
   playerBrandRating: Record<string, number>;
+  activeMarketingContracts: MarketingContract[];
   monthRevenue: number;
   monthCogs: number;
   monthFixedExpenses: number;
+  monthMarketingExpenses: number;
   lastMonthReport?: MonthlyFinancialReport;
 }
