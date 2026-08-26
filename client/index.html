@@ -2576,6 +2576,7 @@
 
     // Clique no radar minimapa para teletransportar a câmera
     window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(renderMinimap, 100);
       const mmCanvas = document.getElementById('minimap-canvas');
       if (mmCanvas) {
         mmCanvas.addEventListener('click', (e) => {
