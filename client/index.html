@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OIKONOMIA — Cadeia de Suprimentos, Indústria & Varejo</title>
+  <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.7)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     canvas { image-rendering: pixelated; }
@@ -31,9 +31,9 @@
       <div>
         <div class="flex items-center gap-2">
           <h1 class="text-base font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
-          <span class="text-[9px] bg-emerald-950 text-emerald-300 font-mono px-1.5 py-0.5 rounded border border-emerald-800/60 uppercase">Sim Engine v0.6 · Fase 2</span>
+          <span class="text-[9px] bg-emerald-950 text-emerald-300 font-mono px-1.5 py-0.5 rounded border border-emerald-800/60 uppercase">Sim Engine v0.7 · 100% Catálogo</span>
         </div>
-        <span class="text-[11px] text-slate-400">Império Corporativo: Fazendas, Fábricas, Varejo & Mídia</span>
+        <span class="text-[11px] text-slate-400">Mineração, Agropecuária, Indústria Pesada & Varejo Especializado</span>
       </div>
     </div>
 
@@ -59,7 +59,7 @@
       </button>
       <div class="text-right border-l border-slate-800 pl-3">
         <span class="text-[10px] text-slate-400 block font-mono">Caixa Disponível</span>
-        <span id="corp-cash" class="text-xl font-mono font-black text-emerald-400">$50,000.00</span>
+        <span id="corp-cash" class="text-xl font-mono font-black text-emerald-400">$100,000.00</span>
       </div>
       <div class="text-right border-l border-slate-800 pl-3">
         <span class="text-[10px] text-slate-400 block font-mono">Lucro do Mês</span>
@@ -88,7 +88,7 @@
           <button id="hm-terrain" onclick="setHeatmap('terrain')" class="px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-200">Terreno</button>
           <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🔥 Tráfego</button>
           <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">👥 Pop.</button>
-          <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🏪 Lojas/IA</button>
+          <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🏪 Varejo</button>
           <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">⚓ Portos</button>
           <button id="hm-ind"     onclick="setHeatmap('ind')"     class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🏭 Indústria</button>
           <button id="hm-media"   onclick="setHeatmap('media')"   class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">📡 Mídia</button>
@@ -106,7 +106,7 @@
         <canvas id="iso-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
         <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-900/96 border border-slate-700 rounded-xl px-3 py-2 shadow-2xl text-[11px] font-mono z-20"></div>
         <div class="absolute bottom-2 left-2 bg-slate-900/75 border border-slate-800 rounded-lg px-2.5 py-1 text-[10px] font-mono text-slate-500 pointer-events-none">
-          🖱 Arrastar: câmera · Scroll: zoom · Clique: inspecionar lote, loja, porto, fazenda ou fábrica
+          🖱 Arrastar: câmera · Scroll: zoom · Clique: inspecionar lote, loja, porto, mina, fazenda ou fábrica
         </div>
       </div>
 
@@ -116,7 +116,7 @@
       </div>
     </section>
 
-    <!-- DIREITA: GESTÃO (LOJA / FAZENDA / FÁBRICA) + DRE + DIÁRIO (4 COLUNAS) -->
+    <!-- DIREITA: GESTÃO (LOJA / MINA / FAZENDA / FÁBRICA) + DRE + DIÁRIO (4 COLUNAS) -->
     <section class="col-span-12 lg:col-span-4 flex flex-col gap-2.5">
 
       <!-- PAINEL DE GESTÃO DA INSTALAÇÃO ATIVA -->
@@ -124,13 +124,10 @@
         <div class="flex items-center justify-between pb-2 border-b border-slate-800 flex-wrap gap-2">
           <div>
             <h2 id="facility-title" class="text-xs font-bold text-emerald-300">🏢 Selecione uma instalação no mapa</h2>
-            <span id="facility-subtitle" class="text-[11px] text-slate-400">Clique na sua loja, fazenda ou fábrica para gerir.</span>
+            <span id="facility-subtitle" class="text-[11px] text-slate-400">Clique na sua loja, mina, fazenda ou fábrica para gerir.</span>
           </div>
           <div class="flex items-center gap-2">
             <span id="facility-rent-badge" class="text-[10px] font-bold text-rose-400 font-mono hidden"></span>
-            <button id="btn-upgrade-store" onclick="openUpgradeStoreModal()" class="hidden text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded font-mono hover:bg-amber-500/30">
-              ⭐ Expandir
-            </button>
           </div>
         </div>
 
@@ -166,21 +163,21 @@
           <span class="text-[9px] text-slate-500 font-normal">Eventos em Tempo Real</span>
         </h3>
         <div id="game-logs" class="flex-1 min-h-[85px] max-h-[115px] overflow-y-auto space-y-0.5 text-[11px] font-mono text-slate-400 custom-scrollbar">
-          <div class="text-slate-500">OIKONOMIA v0.6 inicializado. Construa fazendas e fábricas para abastecer suas lojas com custo mínimo.</div>
+          <div class="text-slate-500">OIKONOMIA v0.7 inicializado com catálogo de 100% de produtos, mineração e 8 redes especializadas.</div>
         </div>
       </div>
     </section>
   </main>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 1: WIZARD DE ABERTURA DE LOJA                                     -->
+  <!-- MODAL 1: WIZARD DE ABERTURA DE LOJA ESPECIALIZADA                       -->
   <!-- ======================================================================= -->
   <div id="store-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden">
       <div class="bg-slate-800/70 border-b border-slate-700 px-6 py-4">
         <div class="flex items-center justify-between">
           <div>
-            <h2 id="modal-title" class="text-sm font-bold text-slate-100">Abrir Estabelecimento</h2>
+            <h2 id="modal-title" class="text-sm font-bold text-slate-100">Inaugurar Estabelecimento Comercial</h2>
             <p id="modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
           </div>
           <button onclick="closeModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
@@ -194,9 +191,9 @@
       </div>
 
       <div id="wizard-step1" class="p-6">
-        <p class="text-xs text-slate-400 mb-4 font-mono">Escolha o tipo de estabelecimento. Cada um tem capacidade de gôndolas e aluguel diferenciado.</p>
-        <div class="grid grid-cols-3 gap-3" id="store-type-cards"></div>
-        <div class="flex justify-end mt-5">
+        <p class="text-xs text-slate-400 mb-3 font-mono">Escolha o formato comercial de loja especializada para atender a este distrito:</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2.5 max-h-80 overflow-y-auto custom-scrollbar pr-1" id="store-type-cards"></div>
+        <div class="flex justify-end mt-4">
           <button onclick="advanceToStep2()" id="btn-to-step2" disabled class="px-5 py-2 rounded-xl bg-emerald-700 text-white text-xs font-bold font-mono disabled:opacity-40 disabled:cursor-not-allowed hover:bg-emerald-600 transition">
             Próximo: Escolher Produtos & Fornecedores →
           </button>
@@ -205,7 +202,10 @@
 
       <div id="wizard-step2" class="hidden">
         <div id="cost-summary-bar" class="px-6 py-3 bg-slate-800/60 border-b border-slate-700 text-[11px] font-mono flex flex-wrap gap-3 items-center"></div>
-        <div id="category-tabs" class="flex gap-1 px-6 pt-4 pb-2 border-b border-slate-800 flex-wrap"></div>
+        <div class="px-6 pt-3 pb-1 flex items-center justify-between gap-3">
+          <div id="category-tabs" class="flex gap-1 flex-wrap"></div>
+          <input type="text" id="prod-search-input" onkeyup="filterProductSelectorSearch(this.value)" placeholder="🔍 Buscar produto..." class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-slate-200 focus:outline-none focus:border-emerald-500 w-40">
+        </div>
         <div id="product-list" class="px-6 py-3 max-h-64 overflow-y-auto custom-scrollbar space-y-1.5"></div>
         <div class="px-6 py-4 border-t border-slate-800 flex items-center justify-between bg-slate-800/40">
           <button onclick="backToStep1()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-400 text-xs font-mono hover:border-slate-500 hover:text-slate-200 transition">← Voltar</button>
@@ -218,43 +218,62 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 2: WIZARD DE CONSTRUÇÃO DE FAZENDA                                -->
+  <!-- MODAL 2: WIZARD DE CONSTRUÇÃO DE MINA / RECURSO NATURAL                 -->
   <!-- ======================================================================= -->
-  <div id="farm-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
+  <div id="mine-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
       <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
         <div>
-          <h2 class="text-sm font-bold text-amber-400 flex items-center gap-2">🌾 Construir Fazenda Agrícola</h2>
-          <p id="farm-modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
+          <h2 class="text-sm font-bold text-sky-400 flex items-center gap-2">⛏️ Extração de Recursos Naturais & Mineração</h2>
+          <p id="mine-modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
         </div>
-        <button onclick="closeFarmModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
+        <button onclick="closeMineModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
       </div>
       <div class="p-6 space-y-3">
-        <p class="text-xs text-slate-400 font-mono">Escolha o tipo de cultivo para esta propriedade rural:</p>
-        <div id="farm-types-list" class="space-y-2"></div>
+        <p class="text-xs text-slate-400 font-mono">Construa minas e poços de extração para abastecer usinas siderúrgicas, petroquímicas e indústrias de base:</p>
+        <div id="mine-types-list" class="space-y-2 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
       </div>
     </div>
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 3: WIZARD DE CONSTRUÇÃO DE FÁBRICA                                -->
+  <!-- MODAL 3: WIZARD DE CONSTRUÇÃO DE FAZENDA                                -->
+  <!-- ======================================================================= -->
+  <div id="farm-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+      <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-amber-400 flex items-center gap-2">🌾 Construir Propriedade Agropecuária</h2>
+          <p id="farm-modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closeFarmModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
+      </div>
+      <div class="p-6 space-y-3">
+        <p class="text-xs text-slate-400 font-mono">Escolha o tipo de cultivo agrícola ou criação de animais para esta fazenda:</p>
+        <div id="farm-types-list" class="space-y-2 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 4: WIZARD DE CONSTRUÇÃO DE FÁBRICA                                -->
   <!-- ======================================================================= -->
   <div id="factory-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
       <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
         <div>
-          <h2 class="text-sm font-bold text-orange-400 flex items-center gap-2">🏭 Construir Fábrica de Manufatura</h2>
+          <h2 class="text-sm font-bold text-orange-400 flex items-center gap-2">🏭 Construir Complexo Fabril Industrial</h2>
           <p id="factory-modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
         </div>
         <button onclick="closeFactoryModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
       </div>
       <div class="p-6 space-y-4">
         <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs font-mono space-y-1">
-          <div class="text-slate-200 font-bold">Complexo Fabril Industrial</div>
-          <div class="text-slate-400">Capacidade: <strong class="text-emerald-400">Até 3 Linhas de Montagem</strong></div>
+          <div class="text-slate-200 font-bold">Complexo Fabril & Linhas de Montagem</div>
+          <div class="text-slate-400">Capacidade: <strong class="text-emerald-400">Até 4 Linhas de Montagem</strong></div>
           <div class="text-slate-400">Custo de Obra: <strong class="text-rose-400">$48,000.00</strong></div>
         </div>
-        <p class="text-xs text-slate-400 font-mono">Após a construção, você poderá ativar receitas para produzir Pão, Cerveja, Leite Integral e Biscoitos para abastecer suas próprias lojas.</p>
+        <p class="text-xs text-slate-400 font-mono">Após a construção, ative receitas para produzir bens intermediários (Aço, Alumínio, Chips, Plástico, Tecidos) ou bens finais de consumo (Automóveis, Eletrônicos, Moda, Alimentos, Joias e Móveis).</p>
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
           <button onclick="closeFactoryModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-400 text-xs font-mono">Cancelar</button>
           <button onclick="confirmBuildFactory()" id="btn-confirm-factory" class="px-5 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold font-mono">
@@ -266,7 +285,7 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 4: INSPEÇÃO DO TERMINAL PORTUÁRIO                                 -->
+  <!-- MODAL 5: INSPEÇÃO DO TERMINAL PORTUÁRIO                                 -->
   <!-- ======================================================================= -->
   <div id="port-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
@@ -288,7 +307,7 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 5: SELETOR DE FORNECEDOR (PORTOS OU FÁBRICAS PRÓPRIAS)            -->
+  <!-- MODAL 6: SELETOR DE FORNECEDOR (PORTOS OU FÁBRICAS PRÓPRIAS)            -->
   <!-- ======================================================================= -->
   <div id="supplier-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
@@ -307,7 +326,7 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 6: ADICIONAR PRODUTO À LOJA EXISTENTE                             -->
+  <!-- MODAL 7: ADICIONAR PRODUTO À LOJA EXISTENTE                             -->
   <!-- ======================================================================= -->
   <div id="add-product-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
@@ -329,7 +348,7 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 7: CENTRAL DE MÍDIA & MARKETING (COM MARCA INSTITUCIONAL)         -->
+  <!-- MODAL 8: CENTRAL DE MÍDIA & MARKETING                                   -->
   <!-- ======================================================================= -->
   <div id="marketing-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden">
@@ -343,7 +362,6 @@
         <button onclick="closeMarketingModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
       </div>
       <div class="p-6 space-y-4">
-        <!-- Resumo -->
         <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between text-xs font-mono gap-3">
           <div>
             <span class="text-slate-400 block text-[10px]">Contratos Ativos:</span>
@@ -359,7 +377,6 @@
           </div>
         </div>
 
-        <!-- Lista de Emissoras & Campanhas (Produtos + Institucional) -->
         <div id="media-outlets-list" class="space-y-3 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
 
         <div class="pt-3 border-t border-slate-800 flex justify-end">
@@ -370,27 +387,27 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 8: ATIVAÇÃO DE LINHA DE MONTAGEM NA FÁBRICA                       -->
+  <!-- MODAL 9: ATIVAÇÃO DE LINHA DE MONTAGEM NA FÁBRICA                       -->
   <!-- ======================================================================= -->
   <div id="factory-recipe-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
       <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
         <div>
           <h2 class="text-sm font-bold text-orange-400">⚙️ Ativar Linha de Montagem Industrial</h2>
-          <p class="text-xs text-slate-400 font-mono mt-0.5">Selecione o produto manufaturado a ser processado nesta fábrica:</p>
+          <p class="text-xs text-slate-400 font-mono mt-0.5">Selecione o produto intermediário ou manufaturado final a ser produzido nesta fábrica:</p>
         </div>
         <button onclick="closeFactoryRecipeModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
       </div>
-      <div class="p-6 space-y-3" id="factory-available-recipes-list"></div>
+      <div class="p-6 space-y-3 max-h-96 overflow-y-auto custom-scrollbar pr-1" id="factory-available-recipes-list"></div>
     </div>
   </div>
 
   <!-- ======================================================================= -->
-  <!-- SCRIPT PRINCIPAL: MOTOR COMPLETO DE OIKONOMIA (FASE 2)                  -->
+  <!-- SCRIPT PRINCIPAL: MOTOR COMPLETO DE OIKONOMIA (100% CATÁLOGO)           -->
   <!-- ======================================================================= -->
   <script>
     // ===========================================================================
-    // 1. DADOS MESTRES
+    // 1. DADOS MESTRES (70+ PRODUTOS, RECURSOS, MINAS, FAZENDAS, FÁBRICAS, LOJAS)
     // ===========================================================================
 
     const CITY_DISTRICTS = {
@@ -404,116 +421,1646 @@
       road:        { id: 'road',        name: 'Avenida Principal',             type: 'Malha Viária',        population: 0,     trafficIndex: 80, landRentDaily: 0     },
     };
 
-    const PRODUCT_CATALOG = {
-      bread:          { id:'bread',         name:'Pão Artesanal',      category:'Food',        standardPrice:3.50,   baseCost:1.75,  necessityIndex:85, qualityWeight:45, brandWeight:15, perCapitaDailyDemand:0.025 },
-      milk:           { id:'milk',          name:'Leite Integral',     category:'Food',        standardPrice:2.80,   baseCost:1.40,  necessityIndex:85, qualityWeight:50, brandWeight:10, perCapitaDailyDemand:0.022 },
-      eggs:           { id:'eggs',          name:'Ovos Frescos',       category:'Food',        standardPrice:3.20,   baseCost:1.50,  necessityIndex:88, qualityWeight:45, brandWeight:10, perCapitaDailyDemand:0.020 },
-      cookies:        { id:'cookies',       name:'Biscoito Recheado',  category:'Food',        standardPrice:4.80,   baseCost:2.10,  necessityIndex:25, qualityWeight:40, brandWeight:35, perCapitaDailyDemand:0.012 },
-      chocolate_bar:  { id:'chocolate_bar', name:'Barra de Chocolate', category:'Food',        standardPrice:3.00,   baseCost:1.30,  necessityIndex:30, qualityWeight:40, brandWeight:40, perCapitaDailyDemand:0.014 },
-      beer:           { id:'beer',          name:'Cerveja Especial',   category:'Beverage',    standardPrice:4.00,   baseCost:1.60,  necessityIndex:30, qualityWeight:35, brandWeight:45, perCapitaDailyDemand:0.015 },
-      cola:           { id:'cola',          name:'Refrigerante Cola',  category:'Beverage',    standardPrice:2.20,   baseCost:0.85,  necessityIndex:50, qualityWeight:30, brandWeight:45, perCapitaDailyDemand:0.020 },
-      cold_pills:     { id:'cold_pills',    name:'Remédio para Gripe', category:'Farma',       standardPrice:9.50,   baseCost:3.80,  necessityIndex:80, qualityWeight:60, brandWeight:25, perCapitaDailyDemand:0.005 },
-      shampoo:        { id:'shampoo',       name:'Xampu',              category:'Higiene',     standardPrice:6.00,   baseCost:2.20,  necessityIndex:70, qualityWeight:40, brandWeight:40, perCapitaDailyDemand:0.006 },
-      jeans:          { id:'jeans',         name:'Calça Jeans',        category:'Vestuário',   standardPrice:45.00,  baseCost:18.00, necessityIndex:50, qualityWeight:40, brandWeight:40, perCapitaDailyDemand:0.0015},
-      mobile_phone:   { id:'mobile_phone',  name:'Smartphone',         category:'Eletrônicos', standardPrice:450.00, baseCost:210.00,necessityIndex:60, qualityWeight:50, brandWeight:35, perCapitaDailyDemand:0.0008},
-    };
+    const STORE_TYPES = [
+      { id:"kombini", name:"Kombini de Bairro", emoji:"🛒", category:"all", cost:8000, maxShelves:4, rentMultiplier:1.0, desc:"Varejo de conveniência ultrarrápido com poucas gôndolas e baixo risco." },
+      { id:"supermarket", name:"Supermercado & Alimentos", emoji:"🏬", category:"Alimentos", cost:45000, maxShelves:24, rentMultiplier:1.8, desc:"Grande porte para vendas em massa de alimentos, carnes, bebidas e laticínios." },
+      { id:"apparel", name:"Boutique de Vestuário & Moda", emoji:"👗", category:"Vestuário", cost:35000, maxShelves:12, rentMultiplier:1.5, desc:"Loja sofisticada para jeans, ternos, sapatos de couro, tênis e vestidos de luxo." },
+      { id:"electronics", name:"MegaStore de Eletrônicos", emoji:"💻", category:"Eletrônicos", cost:60000, maxShelves:12, rentMultiplier:2.0, desc:"Varejo especializado em smartphones, notebooks, TVs 4K e eletrodomésticos." },
+      { id:"automotive", name:"Concessionária de Automóveis", emoji:"🚗", category:"Automotivo", cost:85000, maxShelves:6, rentMultiplier:2.2, desc:"Showroom automotivo para venda de carros de passeio, SUVs, motos e caminhões." },
+      { id:"pharmacy", name:"Drogaria & Cosméticos", emoji:"💊", category:"Farmácia", cost:28000, maxShelves:10, rentMultiplier:1.3, desc:"Farmácia para remédios controlados, analgésicos, xampus e perfumes finos." },
+      { id:"furniture", name:"Loja de Móveis & Decoração", emoji:"🛋️", category:"Móveis", cost:40000, maxShelves:8, rentMultiplier:1.6, desc:"Ambiente amplo para camas king size, sofás, mesas de jantar e armários." },
+      { id:"jewelry", name:"Joalheria de Alta Nobreza", emoji:"💍", category:"Joias", cost:75000, maxShelves:5, rentMultiplier:2.4, desc:"Boutique de altíssimo padrão para anéis de ouro, relógios e colares nobres." },
+      { id:"hardware", name:"Home Center & Ferramentas", emoji:"🔨", category:"Construção", cost:38000, maxShelves:8, rentMultiplier:1.4, desc:"Loja de materiais de reforma, tintas acrílicas e ferramentas industriais." }
+    ];
+
+    const NATURAL_MINES = [
+      { id:"mine_iron", name:"Mina de Minério de Ferro", emoji:"⛏️", resourceId:"iron_ore", resourceName:"Minério de Ferro", cost:40000, unitCost:15.00, quality:60, dailyYield:600, desc:"Extração de ferro essencial para siderurgia e ligas de aço." },
+      { id:"mine_bauxite", name:"Mina de Bauxita", emoji:"🪨", resourceId:"bauxite", resourceName:"Bauxita (Alumínio)", cost:42000, unitCost:18.00, quality:60, dailyYield:500, desc:"Minério de bauxita refinado em alumínio estrutural leve." },
+      { id:"mine_oil", name:"Campo Petrolífero / Poço", emoji:"🛢️", resourceId:"crude_oil", resourceName:"Petróleo Bruto", cost:65000, unitCost:22.00, quality:65, dailyYield:700, desc:"Extração de óleo bruto para petroquímica e produção de plástico." },
+      { id:"mine_silica", name:"Jazida de Sílica & Areia", emoji:"🏖️", resourceId:"silica", resourceName:"Areia de Sílica", cost:30000, unitCost:8.00, quality:55, dailyYield:800, desc:"Sílica de alta pureza para vidros planos e semicondutores de chips." },
+      { id:"mine_timber", name:"Reserva Florestal / Silvicultura", emoji:"🪵", resourceId:"timber", resourceName:"Madeira / Toras", cost:28000, unitCost:12.00, quality:60, dailyYield:650, desc:"Manejo florestal de madeira para móveis, construção e papel." },
+      { id:"mine_gold", name:"Mina de Ouro Nobre", emoji:"🥇", resourceId:"gold_ore", resourceName:"Minério de Ouro", cost:90000, unitCost:120.00, quality:75, dailyYield:150, desc:"Metal precioso para alta joalheria e componentes eletrônicos." },
+      { id:"mine_chemicals", name:"Depósito de Minerais Químicos", emoji:"🧪", resourceId:"chemical_minerals", resourceName:"Minerais Químicos", cost:38000, unitCost:14.00, quality:60, dailyYield:550, desc:"Sais e compostos inorgânicos para remédios, tintas e reagentes." }
+    ];
+
+    const FARM_TYPES = [
+      { id:"farm_wheat", name:"Fazenda de Trigo & Cereais", emoji:"🌾", cropId:"wheat", cropName:"Trigo & Cereais", cost:22000, unitCost:0.45, quality:60, dailyYield:500, desc:"Cultivo de trigo essencial para farinha, pães e cervejas." },
+      { id:"farm_corn", name:"Fazenda de Milho", emoji:"🌽", cropId:"corn", cropName:"Milho Agrícola", cost:20000, unitCost:0.40, quality:55, dailyYield:550, desc:"Milho para cereais, óleos vegetais e rações pecuárias." },
+      { id:"farm_cotton", name:"Plantação de Algodão", emoji:"☁️", cropId:"cotton", cropName:"Algodão Cru", cost:24000, unitCost:1.20, quality:60, dailyYield:400, desc:"Fibras naturais de algodão para a indústria têxtil e vestuário." },
+      { id:"farm_sugar", name:"Plantação de Cana de Açúcar", emoji:"🎋", cropId:"sugar_cane", cropName:"Cana de Açúcar", cost:20000, unitCost:0.30, quality:55, dailyYield:600, desc:"Cana para refino de açúcar e xaropes para bebidas e doces." },
+      { id:"farm_cocoa", name:"Fazenda de Cacau", emoji:"🍫", cropId:"cocoa", cropName:"Cacau Nobre", cost:26000, unitCost:0.80, quality:60, dailyYield:350, desc:"Amêndoas de cacau para chocolates finos e confeitarias." },
+      { id:"farm_coffee", name:"Plantação de Café", emoji:"☕", cropId:"coffee_beans", cropName:"Café em Grão", cost:25000, unitCost:0.90, quality:65, dailyYield:380, desc:"Grãos arábica selecionados para torrefação de cafés especiais." },
+      { id:"farm_grapes", name:"Vinhedo / Parreiral", emoji:"🍇", cropId:"grapes", cropName:"Uvas Viníferas", cost:28000, unitCost:0.75, quality:70, dailyYield:420, desc:"Cultivo de uvas para produção de vinhos finos e sucos integrais." },
+      { id:"farm_tobacco", name:"Plantação de Tabaco", emoji:"🍂", cropId:"tobacco", cropName:"Folhas de Tabaco", cost:24000, unitCost:1.10, quality:60, dailyYield:320, desc:"Cultivo de tabaco curado para cigarros e charutos." },
+      { id:"farm_rubber", name:"Seringal / Borracha", emoji:"🌳", cropId:"rubber", cropName:"Látex / Borracha", cost:25000, unitCost:1.30, quality:60, dailyYield:350, desc:"Látex natural para pneus de automóveis e calçados esportivos." },
+      { id:"farm_cattle", name:"Pecuária Bovina", emoji:"🐄", cropId:"cattle", cropName:"Gado Bovino", cost:35000, unitCost:1.80, quality:65, dailyYield:300, desc:"Criação de gado para corte bovino e couro industrial." },
+      { id:"farm_dairy", name:"Pecuária Leiteira", emoji:"🥛", cropId:"raw_milk", cropName:"Leite Cru", cost:24000, unitCost:0.35, quality:65, dailyYield:450, desc:"Gado holandês para abastecimento de usinas de laticínios." },
+      { id:"farm_poultry", name:"Granja Avícola", emoji:"🐔", cropId:"poultry", cropName:"Aves & Ovos", cost:22000, unitCost:0.60, quality:60, dailyYield:500, desc:"Criação de aves para corte de frango e ovos frescos de granja." },
+      { id:"farm_pigs", name:"Suinocultura", emoji:"🐷", cropId:"pigs", cropName:"Suínos", cost:25000, unitCost:1.40, quality:60, dailyYield:400, desc:"Criação de porcos para abastecimento de carnes suínas e frios." },
+      { id:"farm_sheep", name:"Ovinocultura", emoji:"🐑", cropId:"wool", cropName:"Lã de Ovelha", cost:26000, unitCost:1.50, quality:65, dailyYield:380, desc:"Tosquia de ovelhas para produção de tecidos de lã e suéteres nobres." }
+    ];
+
+    let PRODUCT_CATALOG = {
+  "bread": {
+    "id": "bread",
+    "name": "Pão Artesanal",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 3.5,
+    "baseCost": 0.75,
+    "necessityIndex": 85,
+    "qualityWeight": 45,
+    "brandWeight": 15,
+    "perCapitaDailyDemand": 0.025
+  },
+  "milk": {
+    "id": "milk",
+    "name": "Leite Integral",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 2.8,
+    "baseCost": 0.6,
+    "necessityIndex": 85,
+    "qualityWeight": 50,
+    "brandWeight": 10,
+    "perCapitaDailyDemand": 0.022
+  },
+  "eggs": {
+    "id": "eggs",
+    "name": "Ovos Frescos",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 3.2,
+    "baseCost": 0.7,
+    "necessityIndex": 88,
+    "qualityWeight": 45,
+    "brandWeight": 10,
+    "perCapitaDailyDemand": 0.02
+  },
+  "frozen_beef": {
+    "id": "frozen_beef",
+    "name": "Carne Bovina Congelada",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 14,
+    "baseCost": 3.5,
+    "necessityIndex": 75,
+    "qualityWeight": 55,
+    "brandWeight": 15,
+    "perCapitaDailyDemand": 0.008
+  },
+  "poultry_meat": {
+    "id": "poultry_meat",
+    "name": "Carne de Frango",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 8.5,
+    "baseCost": 2,
+    "necessityIndex": 80,
+    "qualityWeight": 50,
+    "brandWeight": 15,
+    "perCapitaDailyDemand": 0.012
+  },
+  "pork_meat": {
+    "id": "pork_meat",
+    "name": "Carne Suína",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 10.5,
+    "baseCost": 2.6,
+    "necessityIndex": 75,
+    "qualityWeight": 50,
+    "brandWeight": 15,
+    "perCapitaDailyDemand": 0.009
+  },
+  "cookies": {
+    "id": "cookies",
+    "name": "Biscoito Recheado",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 4.8,
+    "baseCost": 1.2,
+    "necessityIndex": 25,
+    "qualityWeight": 40,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.012
+  },
+  "chocolate_bar": {
+    "id": "chocolate_bar",
+    "name": "Barra de Chocolate",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 3,
+    "baseCost": 0.85,
+    "necessityIndex": 30,
+    "qualityWeight": 40,
+    "brandWeight": 40,
+    "perCapitaDailyDemand": 0.014
+  },
+  "ground_coffee": {
+    "id": "ground_coffee",
+    "name": "Café Torrado e Moído",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 6.5,
+    "baseCost": 1.6,
+    "necessityIndex": 65,
+    "qualityWeight": 50,
+    "brandWeight": 25,
+    "perCapitaDailyDemand": 0.01
+  },
+  "beer": {
+    "id": "beer",
+    "name": "Cerveja Especial",
+    "category": "Bebidas",
+    "storeType": "supermarket",
+    "standardPrice": 4,
+    "baseCost": 0.95,
+    "necessityIndex": 30,
+    "qualityWeight": 35,
+    "brandWeight": 45,
+    "perCapitaDailyDemand": 0.015
+  },
+  "wine": {
+    "id": "wine",
+    "name": "Vinho Fino",
+    "category": "Bebidas",
+    "storeType": "supermarket",
+    "standardPrice": 18,
+    "baseCost": 4.5,
+    "necessityIndex": 25,
+    "qualityWeight": 55,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.004
+  },
+  "cola": {
+    "id": "cola",
+    "name": "Refrigerante Cola",
+    "category": "Bebidas",
+    "storeType": "supermarket",
+    "standardPrice": 2.2,
+    "baseCost": 0.65,
+    "necessityIndex": 50,
+    "qualityWeight": 30,
+    "brandWeight": 45,
+    "perCapitaDailyDemand": 0.02
+  },
+  "mineral_water": {
+    "id": "mineral_water",
+    "name": "Água Mineral",
+    "category": "Bebidas",
+    "storeType": "supermarket",
+    "standardPrice": 1.5,
+    "baseCost": 0.35,
+    "necessityIndex": 80,
+    "qualityWeight": 30,
+    "brandWeight": 30,
+    "perCapitaDailyDemand": 0.022
+  },
+  "fruit_juice": {
+    "id": "fruit_juice",
+    "name": "Suco Natural",
+    "category": "Bebidas",
+    "storeType": "supermarket",
+    "standardPrice": 3.8,
+    "baseCost": 1.1,
+    "necessityIndex": 60,
+    "qualityWeight": 45,
+    "brandWeight": 30,
+    "perCapitaDailyDemand": 0.012
+  },
+  "cigarettes": {
+    "id": "cigarettes",
+    "name": "Cigarros",
+    "category": "Conveniência",
+    "storeType": "supermarket",
+    "standardPrice": 7.5,
+    "baseCost": 1.8,
+    "necessityIndex": 40,
+    "qualityWeight": 30,
+    "brandWeight": 50,
+    "perCapitaDailyDemand": 0.008
+  },
+  "corn_flakes": {
+    "id": "corn_flakes",
+    "name": "Cereais Matinais",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 4.2,
+    "baseCost": 1.1,
+    "necessityIndex": 55,
+    "qualityWeight": 40,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.009
+  },
+  "canned_soup": {
+    "id": "canned_soup",
+    "name": "Sopa Enlatada",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 3.6,
+    "baseCost": 0.95,
+    "necessityIndex": 65,
+    "qualityWeight": 40,
+    "brandWeight": 25,
+    "perCapitaDailyDemand": 0.008
+  },
+  "cooking_oil": {
+    "id": "cooking_oil",
+    "name": "Óleo Vegetal",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 3.9,
+    "baseCost": 1.05,
+    "necessityIndex": 80,
+    "qualityWeight": 40,
+    "brandWeight": 20,
+    "perCapitaDailyDemand": 0.01
+  },
+  "yogurt": {
+    "id": "yogurt",
+    "name": "Iogurte",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 2.5,
+    "baseCost": 0.65,
+    "necessityIndex": 70,
+    "qualityWeight": 45,
+    "brandWeight": 25,
+    "perCapitaDailyDemand": 0.012
+  },
+  "cheese": {
+    "id": "cheese",
+    "name": "Queijo Curado",
+    "category": "Alimentos",
+    "storeType": "supermarket",
+    "standardPrice": 6.8,
+    "baseCost": 1.8,
+    "necessityIndex": 65,
+    "qualityWeight": 55,
+    "brandWeight": 20,
+    "perCapitaDailyDemand": 0.007
+  },
+  "jeans": {
+    "id": "jeans",
+    "name": "Calça Jeans",
+    "category": "Vestuário",
+    "storeType": "apparel",
+    "standardPrice": 45,
+    "baseCost": 9,
+    "necessityIndex": 50,
+    "qualityWeight": 40,
+    "brandWeight": 40,
+    "perCapitaDailyDemand": 0.0015
+  },
+  "t_shirt": {
+    "id": "t_shirt",
+    "name": "Camiseta Básica",
+    "category": "Vestuário",
+    "storeType": "apparel",
+    "standardPrice": 22,
+    "baseCost": 4.8,
+    "necessityIndex": 60,
+    "qualityWeight": 35,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.0025
+  },
+  "business_suit": {
+    "id": "business_suit",
+    "name": "Terno Executivo",
+    "category": "Vestuário",
+    "storeType": "apparel",
+    "standardPrice": 220,
+    "baseCost": 45,
+    "necessityIndex": 30,
+    "qualityWeight": 50,
+    "brandWeight": 40,
+    "perCapitaDailyDemand": 0.0004
+  },
+  "wool_sweater": {
+    "id": "wool_sweater",
+    "name": "Suéter de Lã",
+    "category": "Vestuário",
+    "storeType": "apparel",
+    "standardPrice": 65,
+    "baseCost": 14,
+    "necessityIndex": 45,
+    "qualityWeight": 45,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.001
+  },
+  "leather_jacket": {
+    "id": "leather_jacket",
+    "name": "Jaqueta de Couro",
+    "category": "Vestuário",
+    "storeType": "apparel",
+    "standardPrice": 180,
+    "baseCost": 38,
+    "necessityIndex": 25,
+    "qualityWeight": 45,
+    "brandWeight": 45,
+    "perCapitaDailyDemand": 0.0005
+  },
+  "leather_shoes": {
+    "id": "leather_shoes",
+    "name": "Sapatos de Couro",
+    "category": "Vestuário",
+    "storeType": "apparel",
+    "standardPrice": 85,
+    "baseCost": 19,
+    "necessityIndex": 55,
+    "qualityWeight": 45,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.0011
+  },
+  "athletic_shoes": {
+    "id": "athletic_shoes",
+    "name": "Tênis Esportivo",
+    "category": "Vestuário",
+    "storeType": "apparel",
+    "standardPrice": 75,
+    "baseCost": 16,
+    "necessityIndex": 55,
+    "qualityWeight": 40,
+    "brandWeight": 45,
+    "perCapitaDailyDemand": 0.0014
+  },
+  "leather_bag": {
+    "id": "leather_bag",
+    "name": "Bolsa Feminina",
+    "category": "Vestuário",
+    "storeType": "apparel",
+    "standardPrice": 120,
+    "baseCost": 26,
+    "necessityIndex": 25,
+    "qualityWeight": 45,
+    "brandWeight": 45,
+    "perCapitaDailyDemand": 0.0006
+  },
+  "gala_dress": {
+    "id": "gala_dress",
+    "name": "Vestido de Gala",
+    "category": "Vestuário",
+    "storeType": "apparel",
+    "standardPrice": 95,
+    "baseCost": 21,
+    "necessityIndex": 25,
+    "qualityWeight": 45,
+    "brandWeight": 45,
+    "perCapitaDailyDemand": 0.0007
+  },
+  "underwear": {
+    "id": "underwear",
+    "name": "Roupas Íntimas",
+    "category": "Vestuário",
+    "storeType": "apparel",
+    "standardPrice": 15,
+    "baseCost": 3.2,
+    "necessityIndex": 80,
+    "qualityWeight": 40,
+    "brandWeight": 30,
+    "perCapitaDailyDemand": 0.003
+  },
+  "mobile_phone": {
+    "id": "mobile_phone",
+    "name": "Smartphone",
+    "category": "Eletrônicos",
+    "storeType": "electronics",
+    "standardPrice": 450,
+    "baseCost": 95,
+    "necessityIndex": 60,
+    "qualityWeight": 50,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.0008
+  },
+  "laptop_pc": {
+    "id": "laptop_pc",
+    "name": "Notebook / Laptop",
+    "category": "Eletrônicos",
+    "storeType": "electronics",
+    "standardPrice": 850,
+    "baseCost": 180,
+    "necessityIndex": 55,
+    "qualityWeight": 55,
+    "brandWeight": 30,
+    "perCapitaDailyDemand": 0.0004
+  },
+  "desktop_pc": {
+    "id": "desktop_pc",
+    "name": "Computador Desktop",
+    "category": "Eletrônicos",
+    "storeType": "electronics",
+    "standardPrice": 700,
+    "baseCost": 150,
+    "necessityIndex": 50,
+    "qualityWeight": 55,
+    "brandWeight": 25,
+    "perCapitaDailyDemand": 0.0003
+  },
+  "television": {
+    "id": "television",
+    "name": "Smart TV 4K",
+    "category": "Eletrônicos",
+    "storeType": "electronics",
+    "standardPrice": 600,
+    "baseCost": 130,
+    "necessityIndex": 45,
+    "qualityWeight": 50,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.0004
+  },
+  "digital_camera": {
+    "id": "digital_camera",
+    "name": "Câmera Digital",
+    "category": "Eletrônicos",
+    "storeType": "electronics",
+    "standardPrice": 350,
+    "baseCost": 78,
+    "necessityIndex": 30,
+    "qualityWeight": 55,
+    "brandWeight": 30,
+    "perCapitaDailyDemand": 0.0003
+  },
+  "game_console": {
+    "id": "game_console",
+    "name": "Console de Videogame",
+    "category": "Eletrônicos",
+    "storeType": "electronics",
+    "standardPrice": 400,
+    "baseCost": 90,
+    "necessityIndex": 30,
+    "qualityWeight": 45,
+    "brandWeight": 45,
+    "perCapitaDailyDemand": 0.0005
+  },
+  "microwave": {
+    "id": "microwave",
+    "name": "Forno Micro-ondas",
+    "category": "Eletrônicos",
+    "storeType": "electronics",
+    "standardPrice": 160,
+    "baseCost": 38,
+    "necessityIndex": 65,
+    "qualityWeight": 45,
+    "brandWeight": 25,
+    "perCapitaDailyDemand": 0.0006
+  },
+  "refrigerator": {
+    "id": "refrigerator",
+    "name": "Geladeira Duplex",
+    "category": "Eletrônicos",
+    "storeType": "electronics",
+    "standardPrice": 750,
+    "baseCost": 165,
+    "necessityIndex": 75,
+    "qualityWeight": 50,
+    "brandWeight": 25,
+    "perCapitaDailyDemand": 0.0003
+  },
+  "air_conditioner": {
+    "id": "air_conditioner",
+    "name": "Ar Condicionado",
+    "category": "Eletrônicos",
+    "storeType": "electronics",
+    "standardPrice": 550,
+    "baseCost": 125,
+    "necessityIndex": 50,
+    "qualityWeight": 50,
+    "brandWeight": 25,
+    "perCapitaDailyDemand": 0.0004
+  },
+  "washing_machine": {
+    "id": "washing_machine",
+    "name": "Lavadora de Roupas",
+    "category": "Eletrônicos",
+    "storeType": "electronics",
+    "standardPrice": 620,
+    "baseCost": 140,
+    "necessityIndex": 70,
+    "qualityWeight": 50,
+    "brandWeight": 25,
+    "perCapitaDailyDemand": 0.0003
+  },
+  "compact_car": {
+    "id": "compact_car",
+    "name": "Carro Compacto",
+    "category": "Automotivo",
+    "storeType": "automotive",
+    "standardPrice": 14000,
+    "baseCost": 3200,
+    "necessityIndex": 50,
+    "qualityWeight": 45,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.00008
+  },
+  "sedan_car": {
+    "id": "sedan_car",
+    "name": "Carro Sedan",
+    "category": "Automotivo",
+    "storeType": "automotive",
+    "standardPrice": 22000,
+    "baseCost": 5100,
+    "necessityIndex": 40,
+    "qualityWeight": 50,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.00005
+  },
+  "suv_car": {
+    "id": "suv_car",
+    "name": "Veículo SUV",
+    "category": "Automotivo",
+    "storeType": "automotive",
+    "standardPrice": 32000,
+    "baseCost": 7400,
+    "necessityIndex": 35,
+    "qualityWeight": 50,
+    "brandWeight": 40,
+    "perCapitaDailyDemand": 0.00004
+  },
+  "motorcycle": {
+    "id": "motorcycle",
+    "name": "Motocicleta",
+    "category": "Automotivo",
+    "storeType": "automotive",
+    "standardPrice": 6500,
+    "baseCost": 1450,
+    "necessityIndex": 55,
+    "qualityWeight": 40,
+    "brandWeight": 40,
+    "perCapitaDailyDemand": 0.0001
+  },
+  "heavy_truck": {
+    "id": "heavy_truck",
+    "name": "Caminhão Pesado",
+    "category": "Automotivo",
+    "storeType": "automotive",
+    "standardPrice": 65000,
+    "baseCost": 15500,
+    "necessityIndex": 60,
+    "qualityWeight": 60,
+    "brandWeight": 20,
+    "perCapitaDailyDemand": 0.00002
+  },
+  "cold_pills": {
+    "id": "cold_pills",
+    "name": "Remédio para Gripe",
+    "category": "Farmácia",
+    "storeType": "pharmacy",
+    "standardPrice": 9.5,
+    "baseCost": 1.8,
+    "necessityIndex": 80,
+    "qualityWeight": 60,
+    "brandWeight": 25,
+    "perCapitaDailyDemand": 0.005
+  },
+  "pain_reliever": {
+    "id": "pain_reliever",
+    "name": "Analgésico",
+    "category": "Farmácia",
+    "storeType": "pharmacy",
+    "standardPrice": 8,
+    "baseCost": 1.5,
+    "necessityIndex": 85,
+    "qualityWeight": 60,
+    "brandWeight": 20,
+    "perCapitaDailyDemand": 0.006
+  },
+  "cough_syrup": {
+    "id": "cough_syrup",
+    "name": "Xarope para Tosse",
+    "category": "Farmácia",
+    "storeType": "pharmacy",
+    "standardPrice": 11,
+    "baseCost": 2.2,
+    "necessityIndex": 80,
+    "qualityWeight": 60,
+    "brandWeight": 20,
+    "perCapitaDailyDemand": 0.0035
+  },
+  "shampoo": {
+    "id": "shampoo",
+    "name": "Xampu",
+    "category": "Higiene",
+    "storeType": "pharmacy",
+    "standardPrice": 6,
+    "baseCost": 1.2,
+    "necessityIndex": 70,
+    "qualityWeight": 40,
+    "brandWeight": 40,
+    "perCapitaDailyDemand": 0.006
+  },
+  "soap": {
+    "id": "soap",
+    "name": "Sabonete Corporal",
+    "category": "Higiene",
+    "storeType": "pharmacy",
+    "standardPrice": 3.5,
+    "baseCost": 0.7,
+    "necessityIndex": 85,
+    "qualityWeight": 40,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.01
+  },
+  "toothpaste": {
+    "id": "toothpaste",
+    "name": "Pasta de Dente",
+    "category": "Higiene",
+    "storeType": "pharmacy",
+    "standardPrice": 4.2,
+    "baseCost": 0.85,
+    "necessityIndex": 88,
+    "qualityWeight": 40,
+    "brandWeight": 35,
+    "perCapitaDailyDemand": 0.008
+  },
+  "luxury_perfume": {
+    "id": "luxury_perfume",
+    "name": "Perfume de Luxo",
+    "category": "Cosméticos",
+    "storeType": "pharmacy",
+    "standardPrice": 75,
+    "baseCost": 14,
+    "necessityIndex": 20,
+    "qualityWeight": 45,
+    "brandWeight": 45,
+    "perCapitaDailyDemand": 0.001
+  },
+  "sunscreen": {
+    "id": "sunscreen",
+    "name": "Protetor Solar",
+    "category": "Cosméticos",
+    "storeType": "pharmacy",
+    "standardPrice": 16,
+    "baseCost": 3.1,
+    "necessityIndex": 60,
+    "qualityWeight": 50,
+    "brandWeight": 30,
+    "perCapitaDailyDemand": 0.0025
+  },
+  "king_bed": {
+    "id": "king_bed",
+    "name": "Cama King Size",
+    "category": "Móveis",
+    "storeType": "furniture",
+    "standardPrice": 450,
+    "baseCost": 95,
+    "necessityIndex": 60,
+    "qualityWeight": 50,
+    "brandWeight": 25,
+    "perCapitaDailyDemand": 0.0003
+  },
+  "sofa": {
+    "id": "sofa",
+    "name": "Sofá Conforto",
+    "category": "Móveis",
+    "storeType": "furniture",
+    "standardPrice": 550,
+    "baseCost": 120,
+    "necessityIndex": 45,
+    "qualityWeight": 50,
+    "brandWeight": 30,
+    "perCapitaDailyDemand": 0.0003
+  },
+  "dining_table": {
+    "id": "dining_table",
+    "name": "Mesa de Jantar",
+    "category": "Móveis",
+    "storeType": "furniture",
+    "standardPrice": 320,
+    "baseCost": 68,
+    "necessityIndex": 55,
+    "qualityWeight": 50,
+    "brandWeight": 20,
+    "perCapitaDailyDemand": 0.0004
+  },
+  "wardrobe": {
+    "id": "wardrobe",
+    "name": "Guarda-Roupa",
+    "category": "Móveis",
+    "storeType": "furniture",
+    "standardPrice": 480,
+    "baseCost": 105,
+    "necessityIndex": 60,
+    "qualityWeight": 50,
+    "brandWeight": 20,
+    "perCapitaDailyDemand": 0.0003
+  },
+  "office_chair": {
+    "id": "office_chair",
+    "name": "Cadeira Executiva",
+    "category": "Móveis",
+    "storeType": "furniture",
+    "standardPrice": 150,
+    "baseCost": 32,
+    "necessityIndex": 65,
+    "qualityWeight": 50,
+    "brandWeight": 25,
+    "perCapitaDailyDemand": 0.0006
+  },
+  "gold_watch": {
+    "id": "gold_watch",
+    "name": "Relógio de Ouro",
+    "category": "Joias",
+    "storeType": "jewelry",
+    "standardPrice": 1200,
+    "baseCost": 260,
+    "necessityIndex": 15,
+    "qualityWeight": 45,
+    "brandWeight": 50,
+    "perCapitaDailyDemand": 0.00015
+  },
+  "gold_ring": {
+    "id": "gold_ring",
+    "name": "Anel de Ouro 18k",
+    "category": "Joias",
+    "storeType": "jewelry",
+    "standardPrice": 650,
+    "baseCost": 140,
+    "necessityIndex": 15,
+    "qualityWeight": 45,
+    "brandWeight": 50,
+    "perCapitaDailyDemand": 0.00025
+  },
+  "gold_necklace": {
+    "id": "gold_necklace",
+    "name": "Colar de Ouro",
+    "category": "Joias",
+    "storeType": "jewelry",
+    "standardPrice": 1100,
+    "baseCost": 250,
+    "necessityIndex": 15,
+    "qualityWeight": 45,
+    "brandWeight": 50,
+    "perCapitaDailyDemand": 0.00018
+  },
+  "acrylic_paint": {
+    "id": "acrylic_paint",
+    "name": "Lata de Tinta Acrílica",
+    "category": "Construção",
+    "storeType": "hardware",
+    "standardPrice": 35,
+    "baseCost": 7.5,
+    "necessityIndex": 50,
+    "qualityWeight": 45,
+    "brandWeight": 30,
+    "perCapitaDailyDemand": 0.0012
+  },
+  "tool_set": {
+    "id": "tool_set",
+    "name": "Jogo de Ferramentas",
+    "category": "Construção",
+    "storeType": "hardware",
+    "standardPrice": 65,
+    "baseCost": 13.5,
+    "necessityIndex": 60,
+    "qualityWeight": 55,
+    "brandWeight": 20,
+    "perCapitaDailyDemand": 0.0008
+  }
+};
+    let FACTORY_RECIPES = [
+  {
+    "id": "rec_steel",
+    "name": "Siderurgia: Aço Laminado",
+    "outputProdId": "steel",
+    "outputName": "Aço Laminado",
+    "isIntermediate": true,
+    "unitCost": 28,
+    "quality": 65,
+    "dailyCap": 400,
+    "inputs": {
+      "iron_ore": 1
+    },
+    "desc": "Transforma minério de ferro em placas de aço estrutural."
+  },
+  {
+    "id": "rec_aluminum",
+    "name": "Refino de Alumínio",
+    "outputProdId": "aluminum",
+    "outputName": "Alumínio Processado",
+    "isIntermediate": true,
+    "unitCost": 32,
+    "quality": 65,
+    "dailyCap": 350,
+    "inputs": {
+      "bauxite": 1
+    },
+    "desc": "Processa bauxita em ligas de alumínio ultraleves."
+  },
+  {
+    "id": "rec_plastic",
+    "name": "Petroquímica: Plásticos",
+    "outputProdId": "plastic",
+    "outputName": "Plástico Industrial",
+    "isIntermediate": true,
+    "unitCost": 16,
+    "quality": 60,
+    "dailyCap": 600,
+    "inputs": {
+      "crude_oil": 0.5
+    },
+    "desc": "Polímeros derivados de petróleo para embalagens e gabinetes."
+  },
+  {
+    "id": "rec_glass",
+    "name": "Vidraria Industrial",
+    "outputProdId": "glass",
+    "outputName": "Vidro Plano",
+    "isIntermediate": true,
+    "unitCost": 14,
+    "quality": 60,
+    "dailyCap": 500,
+    "inputs": {
+      "silica": 1
+    },
+    "desc": "Fundição de sílica para garrafas, janelas e telas digitais."
+  },
+  {
+    "id": "rec_cloth",
+    "name": "Fiação & Tecelagem de Algodão",
+    "outputProdId": "cotton_cloth",
+    "outputName": "Tecido de Algodão",
+    "isIntermediate": true,
+    "unitCost": 3.5,
+    "quality": 65,
+    "dailyCap": 500,
+    "inputs": {
+      "cotton": 1
+    },
+    "desc": "Tecelagem de fios de algodão para confecção têxtil."
+  },
+  {
+    "id": "rec_wool_cloth",
+    "name": "Tecelagem de Lã Nobre",
+    "outputProdId": "wool_cloth",
+    "outputName": "Tecido de Lã",
+    "isIntermediate": true,
+    "unitCost": 4.2,
+    "quality": 68,
+    "dailyCap": 400,
+    "inputs": {
+      "wool": 1
+    },
+    "desc": "Fios de lã natural para alfaiataria de luxo e suéteres."
+  },
+  {
+    "id": "rec_leather",
+    "name": "Curtume: Couro Bovino",
+    "outputProdId": "leather",
+    "outputName": "Couro Curtido",
+    "isIntermediate": true,
+    "unitCost": 8.5,
+    "quality": 65,
+    "dailyCap": 350,
+    "inputs": {
+      "cattle": 1
+    },
+    "desc": "Tratamento de couro bovino para calçados, bolsas e jaquetas."
+  },
+  {
+    "id": "rec_paper",
+    "name": "Celulose & Papel",
+    "outputProdId": "paper",
+    "outputName": "Papel & Embalagens",
+    "isIntermediate": true,
+    "unitCost": 8,
+    "quality": 60,
+    "dailyCap": 600,
+    "inputs": {
+      "timber": 0.5
+    },
+    "desc": "Processamento de celulose para caixas, manuais e cigarros."
+  },
+  {
+    "id": "rec_lumber",
+    "name": "Serraria: Chapas de Madeira",
+    "outputProdId": "lumber",
+    "outputName": "Chapas de Madeira",
+    "isIntermediate": true,
+    "unitCost": 18,
+    "quality": 65,
+    "dailyCap": 450,
+    "inputs": {
+      "timber": 1
+    },
+    "desc": "Corte de toras em pranchas estruturais para marcenaria."
+  },
+  {
+    "id": "rec_chips",
+    "name": "Semicondutores & Microchips",
+    "outputProdId": "chips",
+    "outputName": "Chips & Circuitos",
+    "isIntermediate": true,
+    "unitCost": 45,
+    "quality": 72,
+    "dailyCap": 300,
+    "inputs": {
+      "silica": 1,
+      "chemical_minerals": 1
+    },
+    "desc": "Wafers de silício fotogravados para a indústria eletrônica."
+  },
+  {
+    "id": "rec_engine",
+    "name": "Usinagem de Motores",
+    "outputProdId": "engine",
+    "outputName": "Motor a Combustão",
+    "isIntermediate": true,
+    "unitCost": 180,
+    "quality": 70,
+    "dailyCap": 150,
+    "inputs": {
+      "steel": 1,
+      "aluminum": 1
+    },
+    "desc": "Blocos de motor de alta precisão para a indústria automotiva."
+  },
+  {
+    "id": "rec_tires",
+    "name": "Vulcanização de Pneus",
+    "outputProdId": "tires",
+    "outputName": "Pneus Automotivos",
+    "isIntermediate": true,
+    "unitCost": 22,
+    "quality": 65,
+    "dailyCap": 400,
+    "inputs": {
+      "rubber": 1,
+      "chemical_minerals": 0.5
+    },
+    "desc": "Pneus de borracha vulcanizada com cinta de aço."
+  },
+  {
+    "id": "rec_flour",
+    "name": "Moinho de Farinha",
+    "outputProdId": "flour",
+    "outputName": "Farinha Refinada",
+    "isIntermediate": true,
+    "unitCost": 0.65,
+    "quality": 62,
+    "dailyCap": 700,
+    "inputs": {
+      "wheat": 1
+    },
+    "desc": "Moagem de trigo para suprir padarias e confeitarias."
+  },
+  {
+    "id": "rec_sugar",
+    "name": "Refinaria de Açúcar",
+    "outputProdId": "refined_sugar",
+    "outputName": "Açúcar Refinado",
+    "isIntermediate": true,
+    "unitCost": 0.5,
+    "quality": 58,
+    "dailyCap": 800,
+    "inputs": {
+      "sugar_cane": 1
+    },
+    "desc": "Cristalização e refino de caldo de cana para bebidas e doces."
+  },
+  {
+    "id": "rec_bread",
+    "name": "Panificação Artesanal",
+    "outputProdId": "bread",
+    "outputName": "Pão Artesanal",
+    "unitCost": 0.75,
+    "quality": 65,
+    "dailyCap": 500,
+    "desc": "Farinha refinada transformada em pães crocantes."
+  },
+  {
+    "id": "rec_milk",
+    "name": "Usina de Laticínios",
+    "outputProdId": "milk",
+    "outputName": "Leite Integral",
+    "unitCost": 0.6,
+    "quality": 68,
+    "dailyCap": 450,
+    "desc": "Pasteurização de leite cru e embalagem cartonada."
+  },
+  {
+    "id": "rec_frozen_beef",
+    "name": "Frigorífico Bovino",
+    "outputProdId": "frozen_beef",
+    "outputName": "Carne Bovina Congelada",
+    "unitCost": 3.5,
+    "quality": 70,
+    "dailyCap": 300,
+    "desc": "Cortes nobres bovinos resfriados e embalados a vácuo."
+  },
+  {
+    "id": "rec_poultry",
+    "name": "Abatedouro Avícola",
+    "outputProdId": "poultry_meat",
+    "outputName": "Carne de Frango",
+    "unitCost": 2,
+    "quality": 65,
+    "dailyCap": 450,
+    "desc": "Processamento de cortes de frango resfriados."
+  },
+  {
+    "id": "rec_pork",
+    "name": "Frigorífico Suíno",
+    "outputProdId": "pork_meat",
+    "outputName": "Carne Suína",
+    "unitCost": 2.6,
+    "quality": 65,
+    "dailyCap": 380,
+    "desc": "Cortes suínos selecionados para varejo."
+  },
+  {
+    "id": "rec_cookies",
+    "name": "Confeitaria & Biscoitos",
+    "outputProdId": "cookies",
+    "outputName": "Biscoito Recheado",
+    "unitCost": 1.2,
+    "quality": 65,
+    "dailyCap": 400,
+    "desc": "Biscoitos crocantes com recheio de chocolate e baunilha."
+  },
+  {
+    "id": "rec_chocolate",
+    "name": "Fábrica de Chocolates",
+    "outputProdId": "chocolate_bar",
+    "outputName": "Barra de Chocolate",
+    "unitCost": 0.85,
+    "quality": 70,
+    "dailyCap": 450,
+    "desc": "Cacau nobre com leite e açúcar cristalizado."
+  },
+  {
+    "id": "rec_coffee",
+    "name": "Torrefação de Café",
+    "outputProdId": "ground_coffee",
+    "outputName": "Café Torrado e Moído",
+    "unitCost": 1.6,
+    "quality": 72,
+    "dailyCap": 350,
+    "desc": "Moagem e embalagem a vácuo de grãos selecionados."
+  },
+  {
+    "id": "rec_beer",
+    "name": "Cervejaria Puro Malte",
+    "outputProdId": "beer",
+    "outputName": "Cerveja Especial",
+    "unitCost": 0.95,
+    "quality": 75,
+    "dailyCap": 400,
+    "desc": "Fermentação artesanal com lúpulo e malte de trigo."
+  },
+  {
+    "id": "rec_wine",
+    "name": "Vinícola Tradicional",
+    "outputProdId": "wine",
+    "outputName": "Vinho Fino",
+    "unitCost": 4.5,
+    "quality": 78,
+    "dailyCap": 250,
+    "desc": "Envelhecimento em barris de carvalho e engarrafamento."
+  },
+  {
+    "id": "rec_cola",
+    "name": "Engarrafadora de Refrigerante",
+    "outputProdId": "cola",
+    "outputName": "Refrigerante Cola",
+    "unitCost": 0.65,
+    "quality": 60,
+    "dailyCap": 700,
+    "desc": "Xarope gaseificado em latas de alumínio reciclável."
+  },
+  {
+    "id": "rec_water",
+    "name": "Fonte & Envase de Água",
+    "outputProdId": "mineral_water",
+    "outputName": "Água Mineral",
+    "unitCost": 0.35,
+    "quality": 65,
+    "dailyCap": 800,
+    "desc": "Água mineral de nascente purificada em garrafas pet."
+  },
+  {
+    "id": "rec_juice",
+    "name": "Fábrica de Sucos Naturais",
+    "outputProdId": "fruit_juice",
+    "outputName": "Suco Natural",
+    "unitCost": 1.1,
+    "quality": 70,
+    "dailyCap": 400,
+    "desc": "Polpa de fruta pasteurizada sem conservantes artificiais."
+  },
+  {
+    "id": "rec_cigarettes",
+    "name": "Manufatura de Fumo",
+    "outputProdId": "cigarettes",
+    "outputName": "Cigarros",
+    "unitCost": 1.8,
+    "quality": 60,
+    "dailyCap": 500,
+    "desc": "Tabaco curado embalado com filtro em maços selados."
+  },
+  {
+    "id": "rec_corn_flakes",
+    "name": "Cereais & Alimentos Matinais",
+    "outputProdId": "corn_flakes",
+    "outputName": "Cereais Matinais",
+    "unitCost": 1.1,
+    "quality": 65,
+    "dailyCap": 420,
+    "desc": "Flocos de milho tostados enriquecidos com vitaminas."
+  },
+  {
+    "id": "rec_canned_soup",
+    "name": "Conservas & Sopas Enlatadas",
+    "outputProdId": "canned_soup",
+    "outputName": "Sopa Enlatada",
+    "unitCost": 0.95,
+    "quality": 62,
+    "dailyCap": 450,
+    "desc": "Alimentos em conserva herméticos de longa durabilidade."
+  },
+  {
+    "id": "rec_cooking_oil",
+    "name": "Refinaria de Óleo Vegetal",
+    "outputProdId": "cooking_oil",
+    "outputName": "Óleo Vegetal",
+    "unitCost": 1.05,
+    "quality": 60,
+    "dailyCap": 480,
+    "desc": "Prensagem e refino de milho em óleo culinário límpido."
+  },
+  {
+    "id": "rec_yogurt",
+    "name": "Iogurteria & Fermentados",
+    "outputProdId": "yogurt",
+    "outputName": "Iogurte",
+    "unitCost": 0.65,
+    "quality": 68,
+    "dailyCap": 500,
+    "desc": "Leite fermentado com probióticos naturais e frutas."
+  },
+  {
+    "id": "rec_cheese",
+    "name": "Queijaria & Maturação",
+    "outputProdId": "cheese",
+    "outputName": "Queijo Curado",
+    "unitCost": 1.8,
+    "quality": 75,
+    "dailyCap": 320,
+    "desc": "Massa coalhada prensada e maturada por 90 dias."
+  },
+  {
+    "id": "rec_jeans",
+    "name": "Confecção: Calça Jeans",
+    "outputProdId": "jeans",
+    "outputName": "Calça Jeans",
+    "unitCost": 9,
+    "quality": 68,
+    "dailyCap": 350,
+    "desc": "Tecido de algodão denim com costuras duplas reforçadas."
+  },
+  {
+    "id": "rec_tshirt",
+    "name": "Confecção: Camisetas",
+    "outputProdId": "t_shirt",
+    "outputName": "Camiseta Básica",
+    "unitCost": 4.8,
+    "quality": 65,
+    "dailyCap": 500,
+    "desc": "Algodão macio penteado com corte moderno unissex."
+  },
+  {
+    "id": "rec_suit",
+    "name": "Alfaiataria Executiva",
+    "outputProdId": "business_suit",
+    "outputName": "Terno Executivo",
+    "unitCost": 45,
+    "quality": 80,
+    "dailyCap": 150,
+    "desc": "Ternos de lã pura estruturados com forro acetinado."
+  },
+  {
+    "id": "rec_sweater",
+    "name": "Tear de Malhas & Lã",
+    "outputProdId": "wool_sweater",
+    "outputName": "Suéter de Lã",
+    "unitCost": 14,
+    "quality": 72,
+    "dailyCap": 280,
+    "desc": "Malharia de lã pesada com acabamento térmico confortável."
+  },
+  {
+    "id": "rec_leather_jacket",
+    "name": "Confecção de Couro",
+    "outputProdId": "leather_jacket",
+    "outputName": "Jaqueta de Couro",
+    "unitCost": 38,
+    "quality": 82,
+    "dailyCap": 180,
+    "desc": "Jaqueta de couro legítimo bovino com zíperes metálicos."
+  },
+  {
+    "id": "rec_leather_shoes",
+    "name": "Sapataria Clássica",
+    "outputProdId": "leather_shoes",
+    "outputName": "Sapatos de Couro",
+    "unitCost": 19,
+    "quality": 75,
+    "dailyCap": 260,
+    "desc": "Calçados sociais de couro com sola de borracha vulcanizada."
+  },
+  {
+    "id": "rec_athletic_shoes",
+    "name": "Fábrica de Calçados Esportivos",
+    "outputProdId": "athletic_shoes",
+    "outputName": "Tênis Esportivo",
+    "unitCost": 16,
+    "quality": 72,
+    "dailyCap": 320,
+    "desc": "Amortecimento ergonômico com cabedal respirável em tecido."
+  },
+  {
+    "id": "rec_leather_bag",
+    "name": "Marcenaria & Bolsas de Couro",
+    "outputProdId": "leather_bag",
+    "outputName": "Bolsa Feminina",
+    "unitCost": 26,
+    "quality": 78,
+    "dailyCap": 200,
+    "desc": "Bolsas estruturadas de couro legítimo com ferragens nobres."
+  },
+  {
+    "id": "rec_dress",
+    "name": "Alta Costura & Vestidos",
+    "outputProdId": "gala_dress",
+    "outputName": "Vestido de Gala",
+    "unitCost": 21,
+    "quality": 75,
+    "dailyCap": 220,
+    "desc": "Tecidos acetinados para eventos sociais e alta moda."
+  },
+  {
+    "id": "rec_underwear",
+    "name": "Malharia Íntima",
+    "outputProdId": "underwear",
+    "outputName": "Roupas Íntimas",
+    "unitCost": 3.2,
+    "quality": 65,
+    "dailyCap": 600,
+    "desc": "Moda íntima em algodão elástico antialérgico."
+  },
+  {
+    "id": "rec_phone",
+    "name": "Montagem de Smartphones",
+    "outputProdId": "mobile_phone",
+    "outputName": "Smartphone",
+    "unitCost": 95,
+    "quality": 75,
+    "dailyCap": 200,
+    "desc": "Placas de silício com tela de vidro temperado e câmera 4K."
+  },
+  {
+    "id": "rec_laptop",
+    "name": "Montadora de Notebooks",
+    "outputProdId": "laptop_pc",
+    "outputName": "Notebook / Laptop",
+    "unitCost": 180,
+    "quality": 78,
+    "dailyCap": 140,
+    "desc": "Chassi de alumínio anodizado e processadores de alta performance."
+  },
+  {
+    "id": "rec_desktop",
+    "name": "Montagem de Computadores",
+    "outputProdId": "desktop_pc",
+    "outputName": "Computador Desktop",
+    "unitCost": 150,
+    "quality": 75,
+    "dailyCap": 160,
+    "desc": "Gabinetes de aço ventilados para trabalho e games pesados."
+  },
+  {
+    "id": "rec_tv",
+    "name": "Fábrica de Painéis & Smart TVs",
+    "outputProdId": "television",
+    "outputName": "Smart TV 4K",
+    "unitCost": 130,
+    "quality": 76,
+    "dailyCap": 180,
+    "desc": "Telas de vidro plano com tecnologia OLED e som surround."
+  },
+  {
+    "id": "rec_camera",
+    "name": "Óptica & Câmeras Digitais",
+    "outputProdId": "digital_camera",
+    "outputName": "Câmera Digital",
+    "unitCost": 78,
+    "quality": 78,
+    "dailyCap": 160,
+    "desc": "Sensores de alta definição acoplados a lentes de precisão."
+  },
+  {
+    "id": "rec_console",
+    "name": "Fábrica de Videogames",
+    "outputProdId": "game_console",
+    "outputName": "Console de Videogame",
+    "unitCost": 90,
+    "quality": 74,
+    "dailyCap": 190,
+    "desc": "Chips gráficos dedicados para jogos de última geração."
+  },
+  {
+    "id": "rec_microwave",
+    "name": "Linha Branca: Micro-ondas",
+    "outputProdId": "microwave",
+    "outputName": "Forno Micro-ondas",
+    "unitCost": 38,
+    "quality": 68,
+    "dailyCap": 250,
+    "desc": "Estrutura em aço inox e circuito de aquecimento rápido."
+  },
+  {
+    "id": "rec_refrigerator",
+    "name": "Linha Branca: Geladeiras",
+    "outputProdId": "refrigerator",
+    "outputName": "Geladeira Duplex",
+    "unitCost": 165,
+    "quality": 75,
+    "dailyCap": 130,
+    "desc": "Compressor silencioso de baixo consumo e gabinete de aço."
+  },
+  {
+    "id": "rec_ac",
+    "name": "Climatizadores & Ar-Condicionado",
+    "outputProdId": "air_conditioner",
+    "outputName": "Ar Condicionado",
+    "unitCost": 125,
+    "quality": 72,
+    "dailyCap": 160,
+    "desc": "Condensadores de alumínio eficientes para climatização."
+  },
+  {
+    "id": "rec_washing",
+    "name": "Linha Branca: Lavadoras",
+    "outputProdId": "washing_machine",
+    "outputName": "Lavadora de Roupas",
+    "unitCost": 140,
+    "quality": 74,
+    "dailyCap": 140,
+    "desc": "Tambores de aço inox com motorização de acionamento direto."
+  },
+  {
+    "id": "rec_compact_car",
+    "name": "Montadora: Carro Compacto",
+    "outputProdId": "compact_car",
+    "outputName": "Carro Compacto",
+    "unitCost": 3200,
+    "quality": 70,
+    "dailyCap": 40,
+    "desc": "Carroceria de aço com motor econômico e pneus duráveis."
+  },
+  {
+    "id": "rec_sedan_car",
+    "name": "Montadora: Carro Sedan",
+    "outputProdId": "sedan_car",
+    "outputName": "Carro Sedan",
+    "unitCost": 5100,
+    "quality": 76,
+    "dailyCap": 30,
+    "desc": "Sedan luxuoso com acabamento em couro e suspensão macia."
+  },
+  {
+    "id": "rec_suv_car",
+    "name": "Montadora: Veículo SUV",
+    "outputProdId": "suv_car",
+    "outputName": "Veículo SUV",
+    "unitCost": 7400,
+    "quality": 78,
+    "dailyCap": 25,
+    "desc": "Tração 4x4 com amplo espaço interno e blindagem leve."
+  },
+  {
+    "id": "rec_motorcycle",
+    "name": "Fábrica de Motocicletas",
+    "outputProdId": "motorcycle",
+    "outputName": "Motocicleta",
+    "unitCost": 1450,
+    "quality": 70,
+    "dailyCap": 60,
+    "desc": "Quadro tubular leve e motor ágil para tráfego urbano."
+  },
+  {
+    "id": "rec_heavy_truck",
+    "name": "Fábrica de Caminhões Pesados",
+    "outputProdId": "heavy_truck",
+    "outputName": "Caminhão Pesado",
+    "unitCost": 15500,
+    "quality": 82,
+    "dailyCap": 15,
+    "desc": "Cavalo mecânico de grande torque para logística pesada."
+  },
+  {
+    "id": "rec_cold_pills",
+    "name": "Laboratório: Antigripais",
+    "outputProdId": "cold_pills",
+    "outputName": "Remédio para Gripe",
+    "unitCost": 1.8,
+    "quality": 80,
+    "dailyCap": 500,
+    "desc": "Comprimidos revestidos para alívio rápido de sintomas."
+  },
+  {
+    "id": "rec_pain_reliever",
+    "name": "Laboratório: Analgésicos",
+    "outputProdId": "pain_reliever",
+    "outputName": "Analgésico",
+    "unitCost": 1.5,
+    "quality": 80,
+    "dailyCap": 550,
+    "desc": "Analgésico e antitérmico de alta pureza química."
+  },
+  {
+    "id": "rec_cough_syrup",
+    "name": "Laboratório: Xaropes",
+    "outputProdId": "cough_syrup",
+    "outputName": "Xarope para Tosse",
+    "unitCost": 2.2,
+    "quality": 78,
+    "dailyCap": 400,
+    "desc": "Frascos de vidro com xarope expectorante aromatizado."
+  },
+  {
+    "id": "rec_shampoo",
+    "name": "Cosméticos: Xampus",
+    "outputProdId": "shampoo",
+    "outputName": "Xampu",
+    "unitCost": 1.2,
+    "quality": 70,
+    "dailyCap": 500,
+    "desc": "Fórmula com extratos botânicos e agentes condicionantes."
+  },
+  {
+    "id": "rec_soap",
+    "name": "Sabonetes & Higiene",
+    "outputProdId": "soap",
+    "outputName": "Sabonete Corporal",
+    "unitCost": 0.7,
+    "quality": 68,
+    "dailyCap": 600,
+    "desc": "Barras de sabonete cremosas com óleos hidratantes."
+  },
+  {
+    "id": "rec_toothpaste",
+    "name": "Higiene Bucal: Creme Dental",
+    "outputProdId": "toothpaste",
+    "outputName": "Pasta de Dente",
+    "unitCost": 0.85,
+    "quality": 72,
+    "dailyCap": 550,
+    "desc": "Gel dental com flúor e ação branqueadora prolongada."
+  },
+  {
+    "id": "rec_perfume",
+    "name": "Perfumaria Fina",
+    "outputProdId": "luxury_perfume",
+    "outputName": "Perfume de Luxo",
+    "unitCost": 14,
+    "quality": 85,
+    "dailyCap": 180,
+    "desc": "Frascos de cristal com essências nobres concentradas."
+  },
+  {
+    "id": "rec_sunscreen",
+    "name": "Dermocosméticos: Protetor Solar",
+    "outputProdId": "sunscreen",
+    "outputName": "Protetor Solar",
+    "unitCost": 3.1,
+    "quality": 76,
+    "dailyCap": 320,
+    "desc": "Loção de amplo espectro UVA/UVB resistente à água."
+  },
+  {
+    "id": "rec_bed",
+    "name": "Marcenaria: Camas King Size",
+    "outputProdId": "king_bed",
+    "outputName": "Cama King Size",
+    "unitCost": 95,
+    "quality": 75,
+    "dailyCap": 120,
+    "desc": "Estrutura em madeira nobre com estofamento ortopédico."
+  },
+  {
+    "id": "rec_sofa",
+    "name": "Estofados: Sofás Confort",
+    "outputProdId": "sofa",
+    "outputName": "Sofá Conforto",
+    "unitCost": 120,
+    "quality": 76,
+    "dailyCap": 110,
+    "desc": "Molas ensacadas revestidas em couro ou tecido aveludado."
+  },
+  {
+    "id": "rec_dining_table",
+    "name": "Marcenaria: Mesas de Jantar",
+    "outputProdId": "dining_table",
+    "outputName": "Mesa de Jantar",
+    "unitCost": 68,
+    "quality": 72,
+    "dailyCap": 140,
+    "desc": "Tampo de vidro temperado e base em madeira maciça."
+  },
+  {
+    "id": "rec_wardrobe",
+    "name": "Marcenaria: Guarda-Roupas",
+    "outputProdId": "wardrobe",
+    "outputName": "Guarda-Roupa",
+    "unitCost": 105,
+    "quality": 74,
+    "dailyCap": 100,
+    "desc": "Portas de correr com espelhos e divisórias internas amplas."
+  },
+  {
+    "id": "rec_office_chair",
+    "name": "Mobiliário Corporativo: Cadeiras",
+    "outputProdId": "office_chair",
+    "outputName": "Cadeira Executiva",
+    "unitCost": 32,
+    "quality": 72,
+    "dailyCap": 220,
+    "desc": "Ajuste pneumático de altura e suporte lombar ergonômico."
+  },
+  {
+    "id": "rec_gold_watch",
+    "name": "Alta Relojoaria: Ouro",
+    "outputProdId": "gold_watch",
+    "outputName": "Relógio de Ouro",
+    "unitCost": 260,
+    "quality": 88,
+    "dailyCap": 60,
+    "desc": "Mecanismo automático suíço em caixa de ouro maciço 18k."
+  },
+  {
+    "id": "rec_gold_ring",
+    "name": "Ourivesaria: Anéis 18k",
+    "outputProdId": "gold_ring",
+    "outputName": "Anel de Ouro 18k",
+    "unitCost": 140,
+    "quality": 85,
+    "dailyCap": 100,
+    "desc": "Anéis de ouro polido com acabamento lapidado exclusivo."
+  },
+  {
+    "id": "rec_gold_necklace",
+    "name": "Ourivesaria: Colares",
+    "outputProdId": "gold_necklace",
+    "outputName": "Colar de Ouro",
+    "unitCost": 250,
+    "quality": 86,
+    "dailyCap": 75,
+    "desc": "Corrente de elos finos em ouro puro com fecho de segurança."
+  },
+  {
+    "id": "rec_paint",
+    "name": "Fábrica de Tintas & Vernizes",
+    "outputProdId": "acrylic_paint",
+    "outputName": "Lata de Tinta Acrílica",
+    "unitCost": 7.5,
+    "quality": 68,
+    "dailyCap": 380,
+    "desc": "Tinta acrílica lavável de alta cobertura para alvenaria."
+  },
+  {
+    "id": "rec_tools",
+    "name": "Metalúrgica de Ferramentas",
+    "outputProdId": "tool_set",
+    "outputName": "Jogo de Ferramentas",
+    "unitCost": 13.5,
+    "quality": 74,
+    "dailyCap": 260,
+    "desc": "Chaves e alicates de aço cromo-vanádio forjado."
+  }
+];
+
+    const MEDIA_OUTLETS = [
+      { id:'media_tv', name:'Rede Capital TV', type:'Televisão', emoji:'📺', tile:{x:14,y:8}, district:'uptown', monthlyCost:2500.00, institutionalMonthlyCost:3500.00, brandBoostMonthly:15, brandCap:95, reachPct:100, reachDescription:'Toda a Região Metropolitana (100% da População)' },
+      { id:'media_radio', name:'Rádio Central FM 104.5', type:'Rádio', emoji:'📻', tile:{x:17,y:13}, district:'downtown', monthlyCost:850.00, institutionalMonthlyCost:1200.00, brandBoostMonthly:8, brandCap:75, reachPct:65, reachDescription:'Downtown, Cais e Polos Comerciais Centrais' },
+      { id:'media_news', name:'Jornal da Metrópole', type:'Jornal', emoji:'📰', tile:{x:23,y:14}, district:'northside', monthlyCost:350.00, institutionalMonthlyCost:450.00, brandBoostMonthly:4, brandCap:60, reachPct:45, reachDescription:'Distrito Residencial Norte e Subúrbios' }
+    ];
 
     const SEAPORTS = [
       {
         id: 'port_alpha',
-        name: 'Porto Alfa (Terminal de Alimentos)',
+        name: 'Porto Alfa (Terminal Geral de Alimentos & Matérias-Primas)',
         tile: { x: 6, y: 6 },
         freightRatePerTile: 0.012,
-        supplies: {
-          bread:         { wholesalePrice: 1.50, quality: 52, quota: 1200, origin: 'Trigo da Província Norte' },
-          milk:          { wholesalePrice: 1.20, quality: 50, quota: 1000, origin: 'Laticínios Oceânicos' },
-          eggs:          { wholesalePrice: 1.30, quality: 48, quota: 800,  origin: 'Granjas Litorâneas' },
-          cookies:       { wholesalePrice: 1.85, quality: 55, quota: 600,  origin: 'Confeitaria Portuária' },
-          chocolate_bar: { wholesalePrice: 1.10, quality: 50, quota: 700,  origin: 'Cacau Ultramarino' },
-          beer:          { wholesalePrice: 1.40, quality: 45, quota: 900,  origin: 'Cerveja Standard Lager' },
-          cola:          { wholesalePrice: 0.70, quality: 48, quota: 1500, origin: 'Xarope Concentrado Global' },
-        }
+        supplies: {}
       },
       {
         id: 'port_beta',
-        name: 'Porto Beta (Terminal Especializado & Farma)',
+        name: 'Porto Beta (Terminal Especializado, Eletrônicos & Automotivo)',
         tile: { x: 7, y: 5 },
         freightRatePerTile: 0.018,
-        supplies: {
-          beer:         { wholesalePrice: 1.85, quality: 72, quota: 400, origin: 'Cerveja Artesanal Puro Malte (Premium)' },
-          cold_pills:   { wholesalePrice: 3.20, quality: 70, quota: 500, origin: 'Laboratórios Centrais' },
-          shampoo:      { wholesalePrice: 1.80, quality: 60, quota: 600, origin: 'Cosméticos Orgânicos' },
-          jeans:        { wholesalePrice: 15.00, quality: 65, quota: 200, origin: 'Têxtil de Alta Resistência' },
-          mobile_phone: { wholesalePrice: 185.00, quality: 65, quota: 100, origin: 'Montadora de Semicondutores' },
-        }
+        supplies: {}
       }
-    ];
-
-    const MEDIA_OUTLETS = [
-      {
-        id: 'media_tv',
-        name: 'Rede Capital TV',
-        type: 'Televisão',
-        emoji: '📺',
-        tile: { x: 14, y: 8 },
-        district: 'uptown',
-        monthlyCost: 2500.00,
-        institutionalMonthlyCost: 3500.00,
-        brandBoostMonthly: 15,
-        brandCap: 95,
-        reachPct: 100,
-        reachDescription: 'Toda a Região Metropolitana (100% da População)',
-        description: 'Emissora líder de audiência. Máximo impacto de lembrança e prestígio de marca.'
-      },
-      {
-        id: 'media_radio',
-        name: 'Rádio Central FM 104.5',
-        type: 'Rádio',
-        emoji: '📻',
-        tile: { x: 17, y: 13 },
-        district: 'downtown',
-        monthlyCost: 850.00,
-        institutionalMonthlyCost: 1200.00,
-        brandBoostMonthly: 8,
-        brandCap: 75,
-        reachPct: 65,
-        reachDescription: 'Downtown, Cais e Polos Comerciais Centrais',
-        description: 'A rádio mais ouvida por motoristas e trabalhadores no horário de pico.'
-      },
-      {
-        id: 'media_news',
-        name: 'Jornal da Metrópole (Impresso & Web)',
-        type: 'Jornal',
-        emoji: '📰',
-        tile: { x: 23, y: 14 },
-        district: 'northside',
-        monthlyCost: 350.00,
-        institutionalMonthlyCost: 450.00,
-        brandBoostMonthly: 4,
-        brandCap: 60,
-        reachPct: 45,
-        reachDescription: 'Distrito Residencial Norte e Subúrbios',
-        description: 'Publicação diária tradicional com alta penetração em famílias e bairros residenciais.'
-      }
-    ];
-
-    const STORE_TYPES = [
-      { id:'kombini',       name:'Kombini',      emoji:'🛒', cost:8000,  maxShelves:4,  rentMultiplier:1.0, desc:'Varejo rápido de conveniência. Baixo custo, poucos produtos.' },
-      { id:'mercadinho',    name:'Mercadinho',   emoji:'🏪', cost:18000, maxShelves:10, rentMultiplier:1.35,desc:'Equilíbrio entre variedade e custo. Ideal para bairros.' },
-      { id:'supermercado',  name:'Supermercado', emoji:'🏬', cost:45000, maxShelves:25, rentMultiplier:1.8, desc:'Alto volume, muitas categorias. Requer grande fluxo de clientes.' },
-    ];
-
-    const FARM_TYPES = [
-      { id:'farm_wheat', name:'Fazenda de Trigo & Cereais', emoji:'🌾', cropId:'wheat', cropName:'Trigo & Cereais', cost:22000, unitCost:0.45, quality:60, dailyYield:450, desc:'Cultivo de trigo essencial para pães e cervejas.' },
-      { id:'farm_milk',  name:'Fazenda de Pecuária & Leite', emoji:'🥛', cropId:'raw_milk', cropName:'Leite Cru', cost:24000, unitCost:0.35, quality:65, dailyYield:400, desc:'Criação de gado leiteiro para suprir usinas de laticínios.' },
-      { id:'farm_sugar', name:'Plantação de Cana & Cacau', emoji:'🍫', cropId:'sugar', cropName:'Cana & Cacau', cost:20000, unitCost:0.30, quality:55, dailyYield:500, desc:'Produção de açúcar e cacau para bebidas e biscoitos.' },
-    ];
-
-    const FACTORY_RECIPES = [
-      { id:'recipe_bread',   name:'Panificação Artesanal', outputProdId:'bread', outputName:'Pão Artesanal', unitCost:0.75, quality:65, dailyCap:500, desc:'Transforma trigo em pão com custo de apenas $0.75/un (vs $1.50 no porto).' },
-      { id:'recipe_beer',    name:'Cervejaria Puro Malte', outputProdId:'beer', outputName:'Cerveja Especial', unitCost:0.70, quality:75, dailyCap:400, desc:'Produz cerveja especial puro malte premium com alto QR.' },
-      { id:'recipe_milk',    name:'Usina de Laticínios', outputProdId:'milk', outputName:'Leite Integral', unitCost:0.60, quality:68, dailyCap:450, desc:'Pasteuriza leite cru em leite integral fresco.' },
-      { id:'recipe_cookies', name:'Confeitaria Industrial', outputProdId:'cookies', outputName:'Biscoito Recheado', unitCost:0.65, quality:65, dailyCap:350, desc:'Processa farinha e cacau em biscoitos recheados.' },
     ];
 
     function getManhattanDist(p1, p2) {
@@ -521,7 +2068,7 @@
     }
 
     // ===========================================================================
-    // 2. BUSCA DE FORNECEDORES (PORTOS + FÁBRICAS PRÓPRIAS DA GUILDA)
+    // 2. BUSCA DE FORNECEDORES (PORTOS + FÁBRICAS PRÓPRIAS)
     // ===========================================================================
     function getSupplierOffersForProduct(prodId, storeTile) {
       const offers = [];
@@ -548,7 +2095,7 @@
         }
       }
 
-      // 2. Fábricas Próprias no Mapa
+      // 2. Fábricas Próprias
       for (let x = 0; x < GRID_SIZE; x++) {
         for (let y = 0; y < GRID_SIZE; y++) {
           const tile = worldGrid[x][y];
@@ -556,12 +2103,12 @@
             for (const [recipeId, line] of Object.entries(tile.factory.lines)) {
               if (line.outputProductId === prodId) {
                 const dist = getManhattanDist(tile, storeTile);
-                const freight = Number((0.01 + dist * 0.010).toFixed(3)); // Frete interno com desconto
+                const freight = Number((0.01 + dist * 0.010).toFixed(3));
                 const landed = Number((line.unitCost + freight).toFixed(3));
                 offers.push({
                   type: 'internal_factory',
                   supplierId: `factory_${x}_${y}_${recipeId}`,
-                  supplierName: `🏭 ${tile.factory.name} (Linha ${line.recipeName})`,
+                  supplierName: `🏭 ${tile.factory.name} (${line.recipeName})`,
                   wholesalePrice: line.unitCost,
                   quality: line.outputQuality,
                   quota: line.dailyCapacity,
@@ -576,6 +2123,26 @@
         }
       }
 
+      // Fallback caso não tenha estoque local: Fornecedor Portuário Global padrão
+      if (offers.length === 0 && PRODUCT_CATALOG[prodId]) {
+        const prod = PRODUCT_CATALOG[prodId];
+        const dist = getManhattanDist({ x: 6, y: 6 }, storeTile);
+        const wholesale = Number((prod.baseCost * 1.6).toFixed(2));
+        const freight = Number((0.02 + dist * 0.015).toFixed(3));
+        offers.push({
+          type: 'port',
+          supplierId: 'port_alpha',
+          supplierName: 'Porto Alfa (Importação Marítima)',
+          wholesalePrice: wholesale,
+          quality: 55,
+          quota: 1000,
+          origin: 'Importação Internacional',
+          distance: dist,
+          freight,
+          landedCost: Number((wholesale + freight).toFixed(2))
+        });
+      }
+
       return offers.sort((a, b) => a.landedCost - b.landedCost);
     }
 
@@ -583,13 +2150,11 @@
     // 3. ESTADO GLOBAL DO JOGO
     // ===========================================================================
     let day = 1, month = 1, year = 1;
-    let cash = 50000.00;
+    let cash = 100000.00;
     let monthRevenue = 0, monthCogs = 0, monthFixedExpenses = 0, monthMarketingExpenses = 0;
     let gameSpeed = 0, timerInterval = null;
 
     const playerBrandRating = {};
-    Object.keys(PRODUCT_CATALOG).forEach(id => { playerBrandRating[id] = 20; });
-
     const activeMarketingContracts = new Set();
 
     let selectedTileX = -1, selectedTileY = -1;
@@ -600,12 +2165,13 @@
     let pendingTile = null;
     let pendingStoreType = null;
     let selectedProductsMap = new Map();
-    let activeCategoryTab = 'Food';
+    let activeCategoryTab = 'Alimentos';
+    let activeSearchQuery = '';
 
     let activeManagedTile = null;
     let supplierTargetShelf = null;
     let addProductTargetTile = null;
-    let activeAddProductCategoryTab = 'Food';
+    let activeAddProductCategoryTab = 'Alimentos';
     let activeFactoryTile = null;
 
     // ===========================================================================
@@ -640,9 +2206,9 @@
         if (x === 7 && y === 5) portData = SEAPORTS[1];
 
         let mediaData = null;
-        if (x === 14 && y === 8) mediaData = MEDIA_OUTLETS[0]; // TV
-        if (x === 17 && y === 13) mediaData = MEDIA_OUTLETS[1]; // Radio
-        if (x === 23 && y === 14) mediaData = MEDIA_OUTLETS[2]; // News
+        if (x === 14 && y === 8) mediaData = MEDIA_OUTLETS[0];
+        if (x === 17 && y === 13) mediaData = MEDIA_OUTLETS[1];
+        if (x === 23 && y === 14) mediaData = MEDIA_OUTLETS[2];
 
         worldGrid[x][y] = {
           x, y,
@@ -656,10 +2222,11 @@
           isMedia: !!mediaData,
           buildingHeight: isWater || isRoad ? 0 : (portData ? 16 : (mediaData ? (mediaData.id === 'media_tv' ? 26 : 18) : 0)),
           store: null,
+          mine: null,
           farm: null,
           factory: null,
           competitor: (x === 25 && y === 15) ? {
-            name: 'QuickMart North (IA)',
+            name: 'MegaMart North (IA)',
             shelves: {
               bread: { price: 3.60, quality: 48, brand: 30 },
               beer:  { price: 4.10, quality: 50, brand: 30 },
@@ -777,7 +2344,8 @@
           } else if (currentHeatmap === 'ports') {
             if (tile.isPort) fill = '#854d0e';
           } else if (currentHeatmap === 'ind') {
-            if (tile.farm) fill = '#854d0e';
+            if (tile.mine) fill = '#0284c7';
+            else if (tile.farm) fill = '#854d0e';
             else if (tile.factory) fill = '#9a3412';
           } else if (currentHeatmap === 'media') {
             if (tile.isMedia) fill = '#7c3aed';
@@ -790,6 +2358,8 @@
             let topC='#38bdf8', leftC='#0284c7', rightC='#0369a1';
             if (tile.store) {
               topC='#10b981'; leftC='#059669'; rightC='#047857';
+            } else if (tile.mine) {
+              topC='#38bdf8'; leftC='#0284c7'; rightC='#0369a1';
             } else if (tile.farm) {
               topC='#eab308'; leftC='#ca8a04'; rightC='#a16207';
             } else if (tile.factory) {
@@ -800,10 +2370,6 @@
               topC='#fbbf24'; leftC='#d97706'; rightC='#b45309';
             } else if (tile.isMedia) {
               topC='#c084fc'; leftC='#9333ea'; rightC='#7e22ce';
-            } else if (d === 'residential' || d === 'northside') {
-              topC='#818cf8'; leftC='#6366f1'; rightC='#4f46e5';
-            } else if (d === 'downtown') {
-              topC='#60a5fa'; leftC='#3b82f6'; rightC='#2563eb';
             }
             drawBuilding(sx, sy, w, h, hPx, topC, leftC, rightC);
 
@@ -811,7 +2377,11 @@
               const emoji = STORE_TYPES.find(s => s.id === tile.store.storeTypeId)?.emoji || '🛒';
               ctx.fillStyle = '#34d399';
               ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText(`${emoji} LOJA`, sx - 22 * camera.zoom, sy - hPx - 5);
+              ctx.fillText(`${emoji} ${tile.store.name.split(' ')[0]}`, sx - 22 * camera.zoom, sy - hPx - 5);
+            } else if (tile.mine) {
+              ctx.fillStyle = '#38bdf8';
+              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
+              ctx.fillText(`⛏️ MINA`, sx - 20 * camera.zoom, sy - hPx - 5);
             } else if (tile.farm) {
               ctx.fillStyle = '#fde047';
               ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
@@ -823,7 +2393,7 @@
             } else if (tile.competitor) {
               ctx.fillStyle = '#fb7185';
               ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText('🏪 QUICKMART', sx - 32 * camera.zoom, sy - hPx - 5);
+              ctx.fillText('🏪 MEGAMART', sx - 32 * camera.zoom, sy - hPx - 5);
             } else if (tile.isPort) {
               ctx.fillStyle = '#fde047';
               ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
@@ -881,34 +2451,20 @@
         tooltip.style.top  = `${my + 10}px`;
 
         if (tile.isPort) {
-          tooltip.innerHTML = `
-            <div class="font-bold text-amber-300 text-xs">⚓ ${tile.portData.name}</div>
-            <div class="text-[10px] text-slate-400">Terminal Marítimo (${gx},${gy})</div>
-          `;
+          tooltip.innerHTML = `<div class="font-bold text-amber-300 text-xs">⚓ ${tile.portData.name}</div><div class="text-[10px] text-slate-400">Terminal Marítimo (${gx},${gy})</div>`;
         } else if (tile.isMedia) {
-          tooltip.innerHTML = `
-            <div class="font-bold text-purple-300 text-xs">${tile.mediaData.emoji} ${tile.mediaData.name}</div>
-            <div class="text-[10px] text-slate-400">${tile.mediaData.type} (${gx},${gy})</div>
-          `;
+          tooltip.innerHTML = `<div class="font-bold text-purple-300 text-xs">${tile.mediaData.emoji} ${tile.mediaData.name}</div><div class="text-[10px] text-slate-400">${tile.mediaData.type} (${gx},${gy})</div>`;
+        } else if (tile.mine) {
+          tooltip.innerHTML = `<div class="font-bold text-sky-400 text-xs">${tile.mine.name}</div><div class="text-[10px] text-slate-300">⛏️ Extração: ${tile.mine.dailyYield} un/dia · QR: ${tile.mine.quality}</div>`;
         } else if (tile.farm) {
-          tooltip.innerHTML = `
-            <div class="font-bold text-amber-400 text-xs">${tile.farm.name}</div>
-            <div class="text-[10px] text-slate-300">🌾 Produção: ${tile.farm.dailyYield} un/dia · QR: ${tile.farm.quality}</div>
-          `;
+          tooltip.innerHTML = `<div class="font-bold text-amber-400 text-xs">${tile.farm.name}</div><div class="text-[10px] text-slate-300">🌾 Produção: ${tile.farm.dailyYield} un/dia · QR: ${tile.farm.quality}</div>`;
         } else if (tile.factory) {
-          tooltip.innerHTML = `
-            <div class="font-bold text-orange-400 text-xs">${tile.factory.name}</div>
-            <div class="text-[10px] text-slate-300">🏭 Linhas de Montagem: ${Object.keys(tile.factory.lines).length}/${tile.factory.maxLines}</div>
-          `;
+          tooltip.innerHTML = `<div class="font-bold text-orange-400 text-xs">${tile.factory.name}</div><div class="text-[10px] text-slate-300">🏭 Linhas: ${Object.keys(tile.factory.lines).length}/${tile.factory.maxLines}</div>`;
         } else {
           tooltip.innerHTML = `
             <div class="font-bold text-amber-300 text-xs">${tile.store ? tile.store.name : (tile.competitor ? tile.competitor.name : d.name)}</div>
             <div class="text-[10px] text-slate-400">(${gx},${gy}) · ${d.type}</div>
-            <div class="text-[10px] text-slate-300 mt-0.5">
-              🚶 ${d.trafficIndex}/100 · 👥 ${d.population.toLocaleString()} hab · 💰 $${d.landRentDaily}/dia
-            </div>
-            ${tile.store ? `<div class="text-[10px] text-emerald-400 font-bold mt-0.5">🛒 Sua loja ativa · Clique para gerir</div>` : ''}
-            ${!tile.store && !tile.farm && !tile.factory && !tile.isWater && !tile.isRoad ? `<div class="text-[10px] text-teal-400 mt-0.5">🏗 Clique para construir</div>` : ''}
+            <div class="text-[10px] text-slate-300 mt-0.5">🚶 ${d.trafficIndex}/100 · 👥 ${d.population.toLocaleString()} hab · 💰 $${d.landRentDaily}/dia</div>
           `;
         }
       } else {
@@ -942,7 +2498,7 @@
         openPortModal(tile.portData);
       } else if (tile.isMedia) {
         openMarketingCentralModal(tile.mediaData.id);
-      } else if (tile.store || tile.farm || tile.factory) {
+      } else if (tile.store || tile.mine || tile.farm || tile.factory) {
         activeManagedTile = tile;
         renderFacilityPanel(tile);
       } else {
@@ -955,7 +2511,7 @@
     });
 
     // ===========================================================================
-    // 7. INSPETOR DE TILE & BOTÕES DE CONSTRUÇÃO (LOJA / FAZENDA / FÁBRICA)
+    // 7. INSPETOR DE TILE & BOTÕES DE CONSTRUÇÃO POLIMÓRFICA
     // ===========================================================================
     function renderTileInspector(tile) {
       const el = document.getElementById('tile-inspector');
@@ -969,9 +2525,8 @@
               <h3 class="text-xs font-bold text-amber-300 flex items-center gap-1.5">⚓ ${tile.portData.name}</h3>
               <p class="text-[11px] text-slate-400 mt-0.5 font-mono">Terminal de Cargas Marítimas · Cais de Neo Capital (${tile.x}, ${tile.y})</p>
             </div>
-            <button onclick="openPortModal(worldGrid[${tile.x}][${tile.y}].portData)"
-              class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition">
-              📦 Inspecionar Remessas & Preços
+            <button onclick="openPortModal(worldGrid[${tile.x}][${tile.y}].portData)" class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition">
+              📦 Inspecionar Remessas Portuárias
             </button>
           </div>
         `;
@@ -985,8 +2540,7 @@
               <h3 class="text-xs font-bold text-purple-300 flex items-center gap-1.5">${tile.mediaData.emoji} ${tile.mediaData.name}</h3>
               <p class="text-[11px] text-slate-400 mt-0.5 font-mono">Sede de Mídia · Alcance: ${tile.mediaData.reachDescription}</p>
             </div>
-            <button onclick="openMarketingCentralModal('${tile.mediaData.id}')"
-              class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition">
+            <button onclick="openMarketingCentralModal('${tile.mediaData.id}')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition">
               📢 Contratar Anúncios na Emissora
             </button>
           </div>
@@ -994,7 +2548,8 @@
         return;
       }
 
-      const isBuildable = !tile.store && !tile.farm && !tile.factory && !tile.isWater && !tile.isRoad && !tile.competitor;
+      const isBuildable = !tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.isWater && !tile.isRoad && !tile.competitor;
+      const canBuildMine = isBuildable && (tile.districtId === 'industrial' || tile.districtId === 'west_suburbs');
       const canBuildFarm = isBuildable && (tile.districtId === 'west_suburbs' || tile.districtId === 'industrial' || tile.districtId === 'northside');
       const canBuildFactory = isBuildable && (tile.districtId === 'industrial');
 
@@ -1002,7 +2557,7 @@
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div class="flex items-center gap-2 flex-wrap">
-              <h3 class="text-xs font-bold text-amber-300">${tile.store?.name || tile.farm?.name || tile.factory?.name || d.name}</h3>
+              <h3 class="text-xs font-bold text-amber-300">${tile.store?.name || tile.mine?.name || tile.farm?.name || tile.factory?.name || d.name}</h3>
               <span class="text-[10px] text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800 font-mono">${d.type}</span>
             </div>
             <div class="text-[11px] text-slate-400 mt-1 font-mono flex flex-wrap gap-3">
@@ -1013,241 +2568,121 @@
           </div>
           <div class="flex items-center gap-2 flex-wrap">
             ${isBuildable ? `
-              <button onclick="openStoreWizard(worldGrid[${tile.x}][${tile.y}])"
-                class="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
+              <button onclick="openStoreWizard(worldGrid[${tile.x}][${tile.y}])" class="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
                 🛒 Abrir Loja
               </button>
+              ${canBuildMine ? `
+                <button onclick="openMineModal(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-700 hover:bg-sky-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
+                  ⛏️ Mina
+                </button>
+              ` : ''}
               ${canBuildFarm ? `
-                <button onclick="openFarmModal(worldGrid[${tile.x}][${tile.y}])"
-                  class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
-                  🌾 Construir Fazenda
+                <button onclick="openFarmModal(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
+                  🌾 Fazenda
                 </button>
               ` : ''}
               ${canBuildFactory ? `
-                <button onclick="openFactoryModal(worldGrid[${tile.x}][${tile.y}])"
-                  class="bg-orange-600 hover:bg-orange-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
-                  🏭 Construir Fábrica
+                <button onclick="openFactoryModal(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-600 hover:bg-orange-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
+                  🏭 Fábrica
                 </button>
               ` : ''}
             ` : (tile.store ? `
               <span class="text-xs font-mono text-emerald-400 bg-emerald-950 px-3 py-1 rounded-lg border border-emerald-800 font-bold">✅ Loja Ativa</span>
+            ` : (tile.mine ? `
+              <span class="text-xs font-mono text-sky-400 bg-sky-950 px-3 py-1 rounded-lg border border-sky-800 font-bold">⛏️ Mina Ativa</span>
             ` : (tile.farm ? `
               <span class="text-xs font-mono text-amber-400 bg-amber-950 px-3 py-1 rounded-lg border border-amber-800 font-bold">🌾 Fazenda Ativa</span>
             ` : (tile.factory ? `
               <span class="text-xs font-mono text-orange-400 bg-orange-950 px-3 py-1 rounded-lg border border-orange-800 font-bold">🏭 Fábrica Ativa</span>
             ` : (tile.competitor ? `
               <span class="text-xs font-mono text-rose-400 bg-rose-950 px-3 py-1 rounded-lg border border-rose-800">🤖 Concorrente IA</span>
-            ` : `
-              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-3 py-1 rounded-lg">🚫 Lote Inacessível</span>
-            `))))}
+            ` : `<span class="text-xs font-mono text-slate-500 bg-slate-800 px-3 py-1 rounded-lg">🚫 Lote Inacessível</span>`)))))}
           </div>
         </div>
       `;
     }
 
     // ===========================================================================
-    // 8. PAINEL POLIMÓRFICO DE GESTÃO (LOJA / FAZENDA / FÁBRICA)
+    // 8. PAINEL POLIMÓRFICO DE GESTÃO
     // ===========================================================================
     function renderIdlePanel() {
       document.getElementById('facility-title').textContent = '🏢 Selecione uma instalação no mapa';
-      document.getElementById('facility-subtitle').textContent = 'Clique na sua loja, fazenda ou fábrica para gerir.';
+      document.getElementById('facility-subtitle').textContent = 'Clique na sua loja, mina, fazenda ou fábrica para gerir.';
       document.getElementById('facility-rent-badge').classList.add('hidden');
-      document.getElementById('btn-upgrade-store').classList.add('hidden');
       document.getElementById('facility-action-row').classList.add('hidden');
-      document.getElementById('facility-content-panel').innerHTML = `
-        <p class="text-[11px] text-slate-500 font-mono text-center py-3">Nenhuma instalação selecionada.</p>
-      `;
+      document.getElementById('facility-content-panel').innerHTML = `<p class="text-[11px] text-slate-500 font-mono text-center py-3">Nenhuma instalação selecionada.</p>`;
     }
 
     function renderFacilityPanel(tile) {
       if (!tile) { renderIdlePanel(); return; }
-
-      if (tile.store) {
-        renderStorePanel(tile);
-      } else if (tile.farm) {
-        renderFarmPanel(tile);
-      } else if (tile.factory) {
-        renderFactoryPanel(tile);
-      } else {
-        renderIdlePanel();
-      }
+      if (tile.store) renderStorePanel(tile);
+      else if (tile.mine) renderMinePanel(tile);
+      else if (tile.farm) renderFarmPanel(tile);
+      else if (tile.factory) renderFactoryPanel(tile);
+      else renderIdlePanel();
     }
 
-    // A. GESTÃO DE LOJA DE VAREJO
-    function renderStorePanel(tile) {
-      const store = tile.store;
-      const d = tile.district;
-
-      document.getElementById('facility-title').textContent = store.name;
-      document.getElementById('facility-subtitle').textContent = `${d.name} · ${Object.keys(store.shelves).length}/${store.maxShelves} gôndolas`;
-      
+    function renderMinePanel(tile) {
+      const m = tile.mine;
+      document.getElementById('facility-title').textContent = m.name;
+      document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Instalação Extrativista de Recursos`;
       const badge = document.getElementById('facility-rent-badge');
-      badge.textContent = `-$${store.dailyRent.toFixed(2)}/dia`;
+      badge.textContent = `-$${tile.district.landRentDaily}/dia`;
       badge.classList.remove('hidden');
 
-      const btnUpgrade = document.getElementById('btn-upgrade-store');
-      if (store.storeTypeId !== 'supermercado') {
-        btnUpgrade.classList.remove('hidden');
-      } else {
-        btnUpgrade.classList.add('hidden');
-      }
-
-      const panel = document.getElementById('facility-content-panel');
-      panel.innerHTML = '';
-
-      for (const [prodId, shelf] of Object.entries(store.shelves)) {
-        const prod = PRODUCT_CATALOG[prodId];
-        if (!prod) continue;
-
-        const brand = playerBrandRating[prodId] || 20;
-        const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
-        const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
-        const estSales = Math.floor(d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast);
-        const stockPct = Math.round((shelf.stock / shelf.maxCapacity) * 100);
-        const markupPct = Math.round(((shelf.price - shelf.landedCost) / shelf.landedCost) * 100);
-        const isStockout = shelf.stock < 30;
-
-        const cost200 = Math.round(200 * shelf.landedCost);
-        const missingUnits = shelf.maxCapacity - shelf.stock;
-        const costFill = Math.round(missingUnits * shelf.landedCost);
-
-        const isInternal = shelf.supplierId?.startsWith('factory_');
-
-        const card = document.createElement('div');
-        card.className = `rounded-xl border ${isStockout ? 'border-rose-800 stockout-alert' : 'border-slate-800'} bg-slate-950 p-2.5 space-y-2`;
-        card.innerHTML = `
+      document.getElementById('facility-content-panel').innerHTML = `
+        <div class="bg-slate-950 p-4 rounded-xl border border-sky-800 space-y-3 font-mono text-xs">
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-1.5 flex-wrap">
-              <span class="text-[11px] font-bold text-slate-200">${prod.name}</span>
-              <span class="text-[9px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800 font-mono">QR: ${shelf.quality}</span>
-              <button onclick="openMarketingCentralModal()" class="text-[9px] bg-slate-900 text-slate-400 border-slate-700 px-1.5 py-0.5 rounded border font-mono hover:border-indigo-500">
-                ⭐ Marca: ${brand}
-              </button>
-            </div>
-            <button onclick="removeProductFromStore(${tile.x}, ${tile.y}, '${prodId}')" class="text-[10px] text-slate-600 hover:text-rose-400 font-mono px-1">✕</button>
+            <span class="font-bold text-sky-300 text-sm">${m.resourceName}</span>
+            <span class="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded border border-cyan-800">QR: ${m.quality}/100</span>
           </div>
-
-          <!-- Dados do Fornecedor (Porto ou Fábrica Própria) -->
-          <div class="bg-slate-900 p-1.5 rounded-lg text-[10px] font-mono flex items-center justify-between border ${isInternal ? 'border-orange-800 bg-orange-950/20' : 'border-slate-800'}">
-            <div class="truncate max-w-[180px]">
-              <span class="${isInternal ? 'text-orange-400 font-bold' : 'text-amber-400'}">${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Porto'}</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-slate-400">Custo: <strong class="text-emerald-400 font-bold">$${shelf.landedCost.toFixed(2)}</strong></span>
-              <button onclick="openSupplierModal(${tile.x}, ${tile.y}, '${prodId}')" class="bg-slate-800 hover:bg-slate-700 text-teal-300 px-1.5 py-0.5 rounded text-[9px] font-bold">Trocar</button>
-            </div>
+          <div class="space-y-1 text-slate-300 text-[11px]">
+            <div>Extração Diária: <strong class="text-emerald-400">${m.dailyYield} un/dia</strong></div>
+            <div>Custo Unitário de Extração: <strong class="text-rose-400">$${m.unitCost.toFixed(2)}/un</strong></div>
+            <div>Armazém de Minério: <strong class="text-slate-100">${m.stock} / ${m.maxCapacity} un</strong></div>
           </div>
-
-          <!-- Barra de Estoque & Compra Rápida -->
-          <div>
-            <div class="flex justify-between text-[10px] font-mono text-slate-400 mb-0.5">
-              <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-400'}">Estoque: ${shelf.stock.toLocaleString()} / ${shelf.maxCapacity.toLocaleString()} un</span>
-              <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-500'}">${isStockout ? '⚠ BAIXO' : `${stockPct}%`}</span>
-            </div>
-            <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden mb-1.5">
-              <div class="stock-bar-fill h-full rounded-full ${isStockout ? 'bg-rose-500' : stockPct > 50 ? 'bg-emerald-500' : 'bg-amber-500'}" style="width:${stockPct}%"></div>
-            </div>
-
-            <div class="flex items-center gap-1.5 text-[9px] font-mono">
-              <span class="text-slate-500">Injetar:</span>
-              <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', 200)"
-                class="bg-slate-900 hover:bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700 hover:border-emerald-600 transition">
-                +200 un (-$${cost200})
-              </button>
-              ${missingUnits > 50 ? `
-                <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', ${missingUnits})"
-                  class="bg-slate-900 hover:bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded border border-slate-700 hover:border-emerald-600 transition">
-                  Encher (-$${costFill})
-                </button>
-              ` : ''}
-              <button onclick="openMarketingCentralModal()" class="ml-auto text-indigo-400 hover:text-indigo-300 font-bold">
-                📢 Anunciar
-              </button>
-            </div>
+          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-[10px] text-slate-400">
+            💡 Fornece matérias-primas pesadas diretamente para usinas siderúrgicas, refinarias e indústrias petroquímicas.
           </div>
-
-          <!-- Preço & Reposição Diária -->
-          <div class="grid grid-cols-2 gap-2 text-[10px] font-mono pt-1 border-t border-slate-900">
-            <div>
-              <span class="text-slate-400 block">Preço de Venda ($):</span>
-              <input type="number" step="0.10" value="${shelf.price.toFixed(2)}"
-                onchange="updateShelfPrice(${tile.x}, ${tile.y}, '${prodId}', this.value)"
-                class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-emerald-400 font-bold text-right focus:outline-none focus:border-emerald-500">
-              <span class="text-[9px] ${markupPct >= 0 ? 'text-emerald-500' : 'text-rose-500'}">Margem: ${markupPct > 0 ? '+' : ''}${markupPct}%</span>
-            </div>
-            <div>
-              <span class="text-slate-400 block">Reposição Diária (un):</span>
-              <input type="number" step="50" value="${shelf.dailyRestock}"
-                onchange="updateShelfRestock(${tile.x}, ${tile.y}, '${prodId}', this.value)"
-                class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-slate-200 font-bold text-right focus:outline-none focus:border-cyan-500">
-            </div>
-          </div>
-        `;
-        panel.appendChild(card);
-      }
-
-      const addRow = document.getElementById('facility-action-row');
-      const freeSlots = store.maxShelves - Object.keys(store.shelves).length;
-      if (freeSlots > 0) {
-        addRow.classList.remove('hidden');
-        addRow.innerHTML = `
-          <button onclick="openAddProductModal(${tile.x}, ${tile.y})"
-            class="w-full text-center text-xs font-bold text-teal-300 hover:text-white bg-teal-950/60 hover:bg-teal-800/80 font-mono py-2 rounded-xl border border-teal-700/60 shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
-            <span>➕ Adicionar Novo Produto às Gôndolas</span>
-            <span class="bg-teal-900 px-1.5 py-0.5 rounded text-[10px]">(${freeSlots} livre${freeSlots > 1 ? 's' : ''})</span>
-          </button>
-        `;
-      } else {
-        addRow.classList.add('hidden');
-      }
+        </div>
+      `;
+      document.getElementById('facility-action-row').classList.add('hidden');
     }
 
-    // B. GESTÃO DE FAZENDA AGRÍCOLA
     function renderFarmPanel(tile) {
       const farm = tile.farm;
-      const d = tile.district;
-
       document.getElementById('facility-title').textContent = farm.name;
-      document.getElementById('facility-subtitle').textContent = `${d.name} · Propriedade Rural Agrícola`;
-      
+      document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Propriedade Agropecuária`;
       const badge = document.getElementById('facility-rent-badge');
-      badge.textContent = `-$${d.landRentDaily}/dia`;
+      badge.textContent = `-$${tile.district.landRentDaily}/dia`;
       badge.classList.remove('hidden');
-      document.getElementById('btn-upgrade-store').classList.add('hidden');
 
-      const panel = document.getElementById('facility-content-panel');
-      panel.innerHTML = `
-        <div class="bg-slate-950 p-4 rounded-xl border border-amber-800/80 space-y-3 font-mono text-xs">
+      document.getElementById('facility-content-panel').innerHTML = `
+        <div class="bg-slate-950 p-4 rounded-xl border border-amber-800 space-y-3 font-mono text-xs">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-amber-300 text-sm">🌾 Cultivo: ${farm.cropName}</span>
+            <span class="font-bold text-amber-300 text-sm">${farm.cropName}</span>
             <span class="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded border border-cyan-800">QR: ${farm.quality}/100</span>
           </div>
           <div class="space-y-1 text-slate-300 text-[11px]">
-            <div>Colheita Diária: <strong class="text-emerald-400">${farm.dailyYield} un/dia</strong></div>
+            <div>Produção Diária: <strong class="text-emerald-400">${farm.dailyYield} un/dia</strong></div>
             <div>Custo Operacional Unitário: <strong class="text-rose-400">$${farm.dailyOperatingCost.toFixed(2)}/un</strong></div>
             <div>Silo / Estoque Rural: <strong class="text-slate-100">${farm.stock} / ${farm.maxCapacity} un</strong></div>
           </div>
           <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-[10px] text-slate-400">
-            💡 Esta fazenda fornece matéria-prima de baixo custo para as suas fábricas industriais.
+            💡 Fornece insumos agrícolas de baixo custo para as fábricas de alimentos, bebidas, tecelagens e confecções.
           </div>
         </div>
       `;
-
       document.getElementById('facility-action-row').classList.add('hidden');
     }
 
-    // C. GESTÃO DE FÁBRICA INDUSTRIAL
     function renderFactoryPanel(tile) {
       const factory = tile.factory;
-      const d = tile.district;
-
       document.getElementById('facility-title').textContent = factory.name;
-      document.getElementById('facility-subtitle').textContent = `${d.name} · Complexo de Manufatura`;
-      
+      document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Complexo Fabril Multinível`;
       const badge = document.getElementById('facility-rent-badge');
-      badge.textContent = `-$${d.landRentDaily}/dia`;
+      badge.textContent = `-$${tile.district.landRentDaily}/dia`;
       badge.classList.remove('hidden');
-      document.getElementById('btn-upgrade-store').classList.add('hidden');
 
       const panel = document.getElementById('facility-content-panel');
       panel.innerHTML = '';
@@ -1263,7 +2698,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <span class="font-bold text-orange-300">${line.recipeName}</span>
-                <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded ml-1.5">${PRODUCT_CATALOG[line.outputProductId]?.category}</span>
+                <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded ml-1.5">${PRODUCT_CATALOG[line.outputProductId]?.category || 'Insumo'}</span>
               </div>
               <button onclick="removeFactoryLine(${tile.x}, ${tile.y}, '${recipeId}')" class="text-slate-500 hover:text-rose-400">✕</button>
             </div>
@@ -1272,9 +2707,6 @@
               <div>Qualidade (QR): <strong class="text-cyan-300">${line.outputQuality}/100</strong></div>
               <div>Capacidade: <strong class="text-slate-100">${line.dailyCapacity} un/dia</strong></div>
               <div>Estoque Fabril: <strong class="text-amber-400">${line.finishedStock} un</strong></div>
-            </div>
-            <div class="text-[10px] text-teal-400 bg-teal-950/40 p-1.5 rounded border border-teal-900 flex items-center justify-between">
-              <span>✅ Disponível como Fornecedor Interno nas suas lojas</span>
             </div>
           `;
           panel.appendChild(card);
@@ -1288,7 +2720,109 @@
         addRow.innerHTML = `
           <button onclick="openFactoryRecipeModal(${tile.x}, ${tile.y})"
             class="w-full text-center text-xs font-bold text-orange-300 hover:text-white bg-orange-950/60 hover:bg-orange-800/80 font-mono py-2 rounded-xl border border-orange-700/60 shadow-lg transition">
-            ➕ Ativar Nova Linha de Montagem (${freeLines} livre${freeLines > 1 ? 's' : ''})
+            ➕ Ativar Linha de Produção (${freeLines} livre${freeLines > 1 ? 's' : ''})
+          </button>
+        `;
+      } else {
+        addRow.classList.add('hidden');
+      }
+    }
+
+    function renderStorePanel(tile) {
+      const store = tile.store;
+      const d = tile.district;
+
+      document.getElementById('facility-title').textContent = store.name;
+      document.getElementById('facility-subtitle').textContent = `${d.name} · ${Object.keys(store.shelves).length}/${store.maxShelves} gôndolas`;
+      
+      const badge = document.getElementById('facility-rent-badge');
+      badge.textContent = `-$${store.dailyRent.toFixed(2)}/dia`;
+      badge.classList.remove('hidden');
+
+      const panel = document.getElementById('facility-content-panel');
+      panel.innerHTML = '';
+
+      for (const [prodId, shelf] of Object.entries(store.shelves)) {
+        const prod = PRODUCT_CATALOG[prodId];
+        if (!prod) continue;
+
+        const brand = playerBrandRating[prodId] || 20;
+        const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
+        const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
+        const estSales = Math.floor(d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast);
+        const stockPct = Math.round((shelf.stock / shelf.maxCapacity) * 100);
+        const markupPct = Math.round(((shelf.price - shelf.landedCost) / shelf.landedCost) * 100);
+        const isStockout = shelf.stock < 15;
+
+        const costFill = Math.round((shelf.maxCapacity - shelf.stock) * shelf.landedCost);
+        const isInternal = shelf.supplierId?.startsWith('factory_');
+
+        const card = document.createElement('div');
+        card.className = `rounded-xl border ${isStockout ? 'border-rose-800 stockout-alert' : 'border-slate-800'} bg-slate-950 p-2.5 space-y-2`;
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="text-[11px] font-bold text-slate-200">${prod.name}</span>
+              <span class="text-[9px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800 font-mono">QR: ${shelf.quality}</span>
+              <span class="text-[9px] bg-indigo-950 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-800 font-mono">⭐ Marca: ${brand}</span>
+            </div>
+            <button onclick="removeProductFromStore(${tile.x}, ${tile.y}, '${prodId}')" class="text-[10px] text-slate-600 hover:text-rose-400 font-mono px-1">✕</button>
+          </div>
+
+          <div class="bg-slate-900 p-1.5 rounded-lg text-[10px] font-mono flex items-center justify-between border ${isInternal ? 'border-orange-800 bg-orange-950/20' : 'border-slate-800'}">
+            <div class="truncate max-w-[180px]">
+              <span class="${isInternal ? 'text-orange-400 font-bold' : 'text-amber-400'}">${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Porto'}</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-slate-400">Custo: <strong class="text-emerald-400 font-bold">$${shelf.landedCost.toFixed(2)}</strong></span>
+              <button onclick="openSupplierModal(${tile.x}, ${tile.y}, '${prodId}')" class="bg-slate-800 hover:bg-slate-700 text-teal-300 px-1.5 py-0.5 rounded text-[9px] font-bold">Trocar</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-[10px] font-mono text-slate-400 mb-0.5">
+              <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-400'}">Estoque: ${shelf.stock.toLocaleString()} / ${shelf.maxCapacity.toLocaleString()} un</span>
+              <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-500'}">${isStockout ? '⚠ BAIXO' : `${stockPct}%`}</span>
+            </div>
+            <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden mb-1.5">
+              <div class="stock-bar-fill h-full rounded-full ${isStockout ? 'bg-rose-500' : stockPct > 50 ? 'bg-emerald-500' : 'bg-amber-500'}" style="width:${stockPct}%"></div>
+            </div>
+
+            <div class="flex items-center gap-1.5 text-[9px] font-mono">
+              <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', 100)" class="bg-slate-900 hover:bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700">+100 un</button>
+              <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', ${shelf.maxCapacity - shelf.stock})" class="bg-slate-900 hover:bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded border border-slate-700">Encher (-$${costFill})</button>
+              <button onclick="openMarketingCentralModal()" class="ml-auto text-indigo-400 hover:text-indigo-300 font-bold">📢 Anunciar</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-[10px] font-mono pt-1 border-t border-slate-900">
+            <div>
+              <span class="text-slate-400 block">Preço ($):</span>
+              <input type="number" step="0.50" value="${shelf.price.toFixed(2)}"
+                onchange="updateShelfPrice(${tile.x}, ${tile.y}, '${prodId}', this.value)"
+                class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-emerald-400 font-bold text-right focus:outline-none">
+              <span class="text-[9px] ${markupPct >= 0 ? 'text-emerald-500' : 'text-rose-500'}">Margem: ${markupPct > 0 ? '+' : ''}${markupPct}%</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">Reposição Diária:</span>
+              <input type="number" step="10" value="${shelf.dailyRestock}"
+                onchange="updateShelfRestock(${tile.x}, ${tile.y}, '${prodId}', this.value)"
+                class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-slate-200 font-bold text-right focus:outline-none">
+            </div>
+          </div>
+        `;
+        panel.appendChild(card);
+      }
+
+      const addRow = document.getElementById('facility-action-row');
+      const freeSlots = store.maxShelves - Object.keys(store.shelves).length;
+      if (freeSlots > 0) {
+        addRow.classList.remove('hidden');
+        addRow.innerHTML = `
+          <button onclick="openAddProductModal(${tile.x}, ${tile.y})"
+            class="w-full text-center text-xs font-bold text-teal-300 hover:text-white bg-teal-950/60 hover:bg-teal-800/80 font-mono py-2 rounded-xl border border-teal-700/60 shadow-lg transition flex items-center justify-center gap-1.5">
+            <span>➕ Adicionar Produto às Gôndolas</span>
+            <span class="bg-teal-900 px-1.5 py-0.5 rounded text-[10px]">(${freeSlots} livre${freeSlots > 1 ? 's' : ''})</span>
           </button>
         `;
       } else {
@@ -1297,37 +2831,84 @@
     }
 
     // ===========================================================================
-    // 9. WIZARD DE CONSTRUÇÃO DE FAZENDAS & FÁBRICAS
+    // 9. WIZARDS DE CONSTRUÇÃO DE MINAS, FAZENDAS E FÁBRICAS
     // ===========================================================================
-    function openFarmModal(tile) {
+    function openMineModal(tile) {
       pendingTile = tile;
-      document.getElementById('farm-modal-subtitle').textContent = `Local: ${tile.district.name} (${tile.x}, ${tile.y}) · Aluguel: $${tile.district.landRentDaily}/dia`;
-
-      const list = document.getElementById('farm-types-list');
-      list.innerHTML = FARM_TYPES.map(ft => {
-        const canAfford = cash >= ft.cost;
+      document.getElementById('mine-modal-subtitle').textContent = `Local: ${tile.district.name} (${tile.x}, ${tile.y}) · Aluguel: $${tile.district.landRentDaily}/dia`;
+      const list = document.getElementById('mine-types-list');
+      list.innerHTML = NATURAL_MINES.map(m => {
+        const canAfford = cash >= m.cost;
         return `
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
             <div>
-              <div class="text-sm font-bold text-slate-100 flex items-center gap-1.5">
-                <span>${ft.emoji}</span> <span>${ft.name}</span>
-              </div>
-              <div class="text-[11px] text-slate-400 mt-1">
-                Produção: <strong class="text-emerald-400">${ft.dailyYield} un/dia</strong> · Custo: <strong class="text-slate-200">$${ft.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${ft.quality}</strong>
-              </div>
-              <div class="text-[10px] text-slate-500 mt-1">${ft.desc}</div>
+              <div class="text-sm font-bold text-slate-100 flex items-center gap-1.5"><span>${m.emoji}</span> <span>${m.name}</span></div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Extração: <strong class="text-emerald-400">${m.dailyYield} un/dia</strong> · Custo: <strong class="text-slate-200">$${m.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${m.quality}</strong></div>
+              <div class="text-[10px] text-slate-500 mt-0.5">${m.desc}</div>
             </div>
             <div class="text-right">
-              <div class="text-sm font-bold text-rose-400 mb-1">$${ft.cost.toLocaleString()}</div>
-              <button onclick="confirmBuildFarm('${ft.id}')" ${!canAfford ? 'disabled' : ''}
-                class="bg-amber-600 hover:bg-amber-500 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-bold px-3.5 py-1.5 rounded-xl text-xs font-mono transition">
-                ${canAfford ? 'Construir' : 'Saldo Baixo'}
-              </button>
+              <div class="text-sm font-bold text-rose-400 mb-1">$${m.cost.toLocaleString()}</div>
+              <button onclick="confirmBuildMine('${m.id}')" ${!canAfford ? 'disabled' : ''} class="bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-white font-bold px-3 py-1.5 rounded-xl text-xs">Construir</button>
             </div>
           </div>
         `;
       }).join('');
+      document.getElementById('mine-modal').classList.remove('hidden');
+    }
 
+    function confirmBuildMine(mineId) {
+      if (!pendingTile) return;
+      const m = NATURAL_MINES.find(n => n.id === mineId);
+      if (!m || cash < m.cost) return;
+
+      cash -= m.cost;
+      pendingTile.mine = {
+        id: `mine_${pendingTile.x}_${pendingTile.y}`,
+        name: `${m.emoji} ${m.name}`,
+        resourceId: m.resourceId,
+        resourceName: m.resourceName,
+        quality: m.quality,
+        dailyYield: m.dailyYield,
+        unitCost: m.unitCost,
+        stock: 500,
+        maxCapacity: 8000
+      };
+      pendingTile.buildingHeight = 18;
+
+      addLog(`⛏️ ${m.name} inaugurada por $${m.cost.toLocaleString()}!`, 'text-sky-400 font-bold');
+      closeMineModal();
+      activeManagedTile = pendingTile;
+      renderFacilityPanel(pendingTile);
+      renderTileInspector(pendingTile);
+      renderMap();
+      updateUI();
+    }
+
+    function closeMineModal() {
+      document.getElementById('mine-modal').classList.add('hidden');
+      pendingTile = null;
+    }
+
+    function openFarmModal(tile) {
+      pendingTile = tile;
+      document.getElementById('farm-modal-subtitle').textContent = `Local: ${tile.district.name} (${tile.x}, ${tile.y}) · Aluguel: $${tile.district.landRentDaily}/dia`;
+      const list = document.getElementById('farm-types-list');
+      list.innerHTML = FARM_TYPES.map(ft => {
+        const canAfford = cash >= ft.cost;
+        return `
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
+            <div>
+              <div class="text-sm font-bold text-slate-100 flex items-center gap-1.5"><span>${ft.emoji}</span> <span>${ft.name}</span></div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Produção: <strong class="text-emerald-400">${ft.dailyYield} un/dia</strong> · Custo: <strong class="text-slate-200">$${ft.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${ft.quality}</strong></div>
+              <div class="text-[10px] text-slate-500 mt-0.5">${ft.desc}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-bold text-rose-400 mb-1">$${ft.cost.toLocaleString()}</div>
+              <button onclick="confirmBuildFarm('${ft.id}')" ${!canAfford ? 'disabled' : ''} class="bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs">Construir</button>
+            </div>
+          </div>
+        `;
+      }).join('');
       document.getElementById('farm-modal').classList.remove('hidden');
     }
 
@@ -1339,7 +2920,6 @@
       cash -= ft.cost;
       pendingTile.farm = {
         id: `farm_${pendingTile.x}_${pendingTile.y}`,
-        farmTypeId: ft.id,
         name: `${ft.emoji} ${ft.name}`,
         cropId: ft.cropId,
         cropName: ft.cropName,
@@ -1351,8 +2931,7 @@
       };
       pendingTile.buildingHeight = 18;
 
-      addLog(`🌾 ${ft.name} construída com sucesso em ${pendingTile.district.name} por $${ft.cost.toLocaleString()}!`, 'text-amber-400 font-bold');
-
+      addLog(`🌾 ${ft.name} construída com sucesso por $${ft.cost.toLocaleString()}!`, 'text-amber-400 font-bold');
       closeFarmModal();
       activeManagedTile = pendingTile;
       renderFacilityPanel(pendingTile);
@@ -1375,18 +2954,16 @@
 
     function confirmBuildFactory() {
       if (!pendingTile || cash < 48000) return;
-
       cash -= 48000;
       pendingTile.factory = {
         id: `factory_${pendingTile.x}_${pendingTile.y}`,
         name: `Fábrica Central (${pendingTile.x}, ${pendingTile.y})`,
-        maxLines: 3,
+        maxLines: 4,
         lines: {}
       };
       pendingTile.buildingHeight = 22;
 
-      addLog(`🏭 Fábrica de Manufatura construída por $48.000! Ative linhas de produção para fabricar mercadorias.`, 'text-orange-400 font-bold');
-
+      addLog(`🏭 Fábrica de Manufatura construída por $48.000!`, 'text-orange-400 font-bold');
       closeFactoryModal();
       activeManagedTile = pendingTile;
       renderFacilityPanel(pendingTile);
@@ -1409,27 +2986,23 @@
       list.innerHTML = FACTORY_RECIPES.map(rec => {
         const isAlreadyActive = !!tile.factory.lines[rec.id];
         return `
-          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
             <div>
               <span class="font-bold text-slate-100">${rec.name} (${rec.outputName})</span>
-              <div class="text-[11px] text-slate-400 mt-1">
-                Custo de Fabricação: <strong class="text-emerald-400">$${rec.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${rec.quality}</strong>
-              </div>
+              <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded ml-1.5">${rec.isIntermediate ? 'Insumo Industrial' : 'Bem de Consumo'}</span>
+              <div class="text-[11px] text-slate-400 mt-1">Custo Fabril: <strong class="text-emerald-400">$${rec.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${rec.quality}</strong> · Capacidade: ${rec.dailyCap} un/dia</div>
               <div class="text-[10px] text-slate-500 mt-0.5">${rec.desc}</div>
             </div>
             <div>
               ${isAlreadyActive ? `
                 <span class="text-[10px] text-orange-400 bg-orange-950 px-2 py-1 rounded border border-orange-800 font-bold">Ativa</span>
               ` : `
-                <button onclick="confirmActivateFactoryRecipe('${rec.id}')" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs font-mono">
-                  Ativar Linha
-                </button>
+                <button onclick="confirmActivateFactoryRecipe('${rec.id}')" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs">Ativar</button>
               `}
             </div>
           </div>
         `;
       }).join('');
-
       document.getElementById('factory-recipe-modal').classList.remove('hidden');
     }
 
@@ -1445,12 +3018,11 @@
         dailyCapacity: rec.dailyCap,
         unitCost: rec.unitCost,
         outputQuality: rec.quality,
-        finishedStock: 400,
+        finishedStock: 200,
         maxStock: 3000
       };
 
-      addLog(`⚙️ Linha de montagem "${rec.name}" ativada na ${activeFactoryTile.factory.name}!`, 'text-orange-400');
-
+      addLog(`⚙️ Linha de montagem "${rec.name}" ativada!`, 'text-orange-400');
       closeFactoryRecipeModal();
       renderFacilityPanel(activeFactoryTile);
       updateUI();
@@ -1460,7 +3032,6 @@
       const tile = worldGrid[x][y];
       if (!tile?.factory?.lines[recipeId]) return;
       delete tile.factory.lines[recipeId];
-      addLog(`Linha de montagem desativada.`);
       renderFacilityPanel(tile);
     }
 
@@ -1470,7 +3041,7 @@
     }
 
     // ===========================================================================
-    // 10. CENTRAL DE MARKETING, MÍDIA & CAMPANHAS PUBLICITÁRIAS
+    // 10. CENTRAL DE MARKETING E CAMPANHAS
     // ===========================================================================
     let currentMarketingFilterOutletId = null;
 
@@ -1487,9 +3058,7 @@
     }
 
     function openMarketingCentralModal(filterOutletId = null) {
-      if (filterOutletId !== undefined) {
-        currentMarketingFilterOutletId = filterOutletId;
-      }
+      if (filterOutletId !== undefined) currentMarketingFilterOutletId = filterOutletId;
       const list = document.getElementById('media-outlets-list');
       const products = Object.values(PRODUCT_CATALOG);
 
@@ -1512,12 +3081,10 @@
             ← Ver Todas as Emissoras
           </button>
         `;
-        document.getElementById('marketing-modal-subtitle').textContent =
-          `Tipo: ${outlet.type} · Localização: ${outlet.district.toUpperCase()} · Alcance: ${outlet.reachDescription}`;
+        document.getElementById('marketing-modal-subtitle').textContent = `Tipo: ${outlet.type} · Alcance: ${outlet.reachDescription}`;
       } else {
         document.getElementById('marketing-modal-title').innerHTML = `<span>📢 Central de Mídia & Publicidade Corporativa</span>`;
-        document.getElementById('marketing-modal-subtitle').textContent =
-          `Contrate campanhas institucionais da rede ou publicidade individual para cada produto do catálogo.`;
+        document.getElementById('marketing-modal-subtitle').textContent = `Contrate campanhas institucionais da rede ou publicidade individual para cada produto do catálogo.`;
       }
 
       list.innerHTML = outletsToShow.map(outlet => {
@@ -1539,19 +3106,15 @@
               </div>
             </div>
 
-            <!-- OPÇÃO 1: CAMPANHA INSTITUCIONAL DA REDE (MARCA DA LOJA) -->
+            <!-- Campanha Institucional da Rede -->
             <div class="p-3 rounded-xl border ${isInstActive ? 'border-amber-500 bg-amber-950/30' : 'border-slate-800 bg-slate-900/80'} flex items-center justify-between font-mono text-xs">
               <div>
                 <div class="font-bold text-amber-300 flex items-center gap-1.5">
                   <span>🏢 Campanha Institucional da Rede OIKONOMIA</span>
                   <span class="text-[9px] bg-amber-950 text-amber-300 px-1.5 py-0.2 rounded border border-amber-800">Marca Corporativa</span>
                 </div>
-                <div class="text-[10px] text-slate-400 mt-0.5">
-                  Eleva o Brand Rating de <strong>TODAS as gôndolas de todas as lojas</strong> simultaneamente!
-                </div>
-                <div class="text-[11px] text-slate-300 mt-1">
-                  Custo Único: <strong class="text-rose-400 font-bold">$${outlet.institutionalMonthlyCost.toLocaleString()}/mês</strong>
-                </div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Eleva a marca de TODAS as gôndolas de todas as suas lojas simultaneamente!</div>
+                <div class="text-[11px] text-slate-300 mt-1">Custo: <strong class="text-rose-400 font-bold">$${outlet.institutionalMonthlyCost.toLocaleString()}/mês</strong></div>
               </div>
               <button onclick="toggleMarketingContract('${outlet.id}', '__institutional__')"
                 class="px-3.5 py-1.5 rounded-xl font-bold text-xs transition ${isInstActive ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
@@ -1559,15 +3122,14 @@
               </button>
             </div>
 
-            <!-- OPÇÃO 2: CAMPANHAS DE PRODUTO ÚNICO -->
+            <!-- Campanhas de Produto Único -->
             <div>
               <span class="text-[10px] text-slate-400 uppercase font-mono block mb-2">Ou Anunciar Produtos Individuais ($${outlet.monthlyCost.toLocaleString()}/mês cada):</span>
-              <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto custom-scrollbar pr-1">
                 ${products.map(prod => {
                   const contractKey = `${outlet.id}::${prod.id}`;
                   const isActive = activeMarketingContracts.has(contractKey);
                   const brand = playerBrandRating[prod.id] || 20;
-
                   return `
                     <div onclick="toggleMarketingContract('${outlet.id}', '${prod.id}')"
                       class="cursor-pointer p-2 rounded-lg border text-[11px] font-mono flex items-center justify-between transition
@@ -1576,9 +3138,7 @@
                         <div class="font-bold truncate">${prod.name}</div>
                         <div class="text-[9px] text-slate-500">Marca: ${brand}/100</div>
                       </div>
-                      <span class="text-xs ${isActive ? 'text-indigo-300 font-bold' : 'text-slate-600'}">
-                        ${isActive ? '📢 ON' : 'OFF'}
-                      </span>
+                      <span class="text-xs ${isActive ? 'text-indigo-300 font-bold' : 'text-slate-600'}">${isActive ? '📢 ON' : 'OFF'}</span>
                     </div>
                   `;
                 }).join('')}
@@ -1614,18 +3174,18 @@
     }
 
     // ===========================================================================
-    // 11. OUTROS MODAIS (WIZARDS, FORNECEDORES, GÔNDOLAS)
+    // 11. WIZARDS DE LOJA E GÔNDOLAS
     // ===========================================================================
     function openStoreWizard(tile) {
       pendingTile = tile;
       pendingStoreType = null;
       selectedProductsMap.clear();
-      activeCategoryTab = 'Food';
+      activeCategoryTab = 'Alimentos';
+      activeSearchQuery = '';
 
       const d = tile.district;
-      document.getElementById('modal-title').textContent = `Abrir Estabelecimento em ${d.name}`;
-      document.getElementById('modal-subtitle').textContent =
-        `Tráfego: ${d.trafficIndex}/100 · Pop: ${d.population.toLocaleString()} hab · Aluguel base: $${d.landRentDaily}/dia`;
+      document.getElementById('modal-title').textContent = `Inaugurar Estabelecimento em ${d.name}`;
+      document.getElementById('modal-subtitle').textContent = `Tráfego: ${d.trafficIndex}/100 · Pop: ${d.population.toLocaleString()} hab · Aluguel base: $${d.landRentDaily}/dia`;
 
       updateStepIndicator(1);
       renderStoreTypeCards();
@@ -1649,17 +3209,17 @@
         const isSelected = pendingStoreType?.id === st.id;
         return `
           <div onclick="selectStoreType('${st.id}')"
-            class="store-type-card cursor-pointer rounded-xl border p-4 flex flex-col gap-2
+            class="store-type-card cursor-pointer rounded-xl border p-3 flex flex-col gap-1.5
               ${isSelected ? 'border-emerald-500 bg-emerald-950/40 ring-1 ring-emerald-500' : 'border-slate-700 bg-slate-800/60 hover:border-slate-600'}">
-            <div class="text-2xl">${st.emoji}</div>
-            <div class="text-sm font-bold text-slate-100">${st.name}</div>
-            <div class="text-[11px] font-bold text-emerald-400 font-mono">$${st.cost.toLocaleString()}</div>
-            <div class="text-[10px] font-mono text-slate-400 space-y-0.5">
-              <div>📦 ${st.maxShelves} gôndolas</div>
-              <div>🏠 Aluguel: <strong class="text-rose-400">$${actualRent}/dia</strong></div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl">${st.emoji}</span>
+              <div>
+                <div class="text-xs font-bold text-slate-100">${st.name}</div>
+                <div class="text-[10px] font-bold text-emerald-400 font-mono">$${st.cost.toLocaleString()}</div>
+              </div>
             </div>
-            <div class="text-[10px] text-slate-500 border-t border-slate-700 pt-1.5 mt-0.5">${st.desc}</div>
-            ${isSelected ? `<div class="text-[10px] text-emerald-400 font-bold font-mono mt-0.5">✅ Selecionado</div>` : ''}
+            <div class="text-[10px] font-mono text-slate-400">📦 ${st.maxShelves} gôndolas · Aluguel: <strong class="text-rose-400">$${actualRent}/dia</strong></div>
+            <div class="text-[9px] text-slate-500 border-t border-slate-700 pt-1">${st.desc}</div>
           </div>
         `;
       }).join('');
@@ -1676,6 +3236,9 @@
       updateStepIndicator(2);
       document.getElementById('wizard-step1').classList.add('hidden');
       document.getElementById('wizard-step2').classList.remove('hidden');
+      if (pendingStoreType.category !== 'all') {
+        activeCategoryTab = pendingStoreType.category;
+      }
       renderProductSelector();
     }
 
@@ -1685,35 +3248,42 @@
       document.getElementById('wizard-step1').classList.remove('hidden');
     }
 
-    function renderProductSelector() {
-      const d = pendingTile.district;
-      const categories = [...new Set(Object.values(PRODUCT_CATALOG).map(p => p.category))];
+    function filterProductSelectorSearch(q) {
+      activeSearchQuery = q.toLowerCase().trim();
+      renderProductSelector();
+    }
 
+    function renderProductSelector() {
+      const categories = [...new Set(Object.values(PRODUCT_CATALOG).map(p => p.category))];
       document.getElementById('category-tabs').innerHTML = categories.map(cat => `
         <button onclick="setCategoryTab('${cat}')"
-          class="px-3 py-1 rounded-lg text-[11px] font-mono transition
+          class="px-2.5 py-1 rounded-lg text-[10px] font-mono transition
             ${activeCategoryTab === cat ? 'bg-slate-700 text-slate-100 font-bold' : 'text-slate-400 hover:text-slate-200'}">
           ${cat}
         </button>
       `).join('');
 
-      const products = Object.values(PRODUCT_CATALOG).filter(p => p.category === activeCategoryTab);
+      let products = Object.values(PRODUCT_CATALOG);
+      if (activeSearchQuery) {
+        products = products.filter(p => p.name.toLowerCase().includes(activeSearchQuery) || p.category.toLowerCase().includes(activeSearchQuery));
+      } else {
+        products = products.filter(p => p.category === activeCategoryTab);
+      }
+
       const usedSlots = selectedProductsMap.size;
       const maxSlots  = pendingStoreType.maxShelves;
 
       document.getElementById('product-list').innerHTML = products.map(prod => {
         const offers = getSupplierOffersForProduct(prod.id, pendingTile);
         const hasOffer = offers.length > 0;
-        const defaultOffer = offers[0] || null;
-        const currentOffer = selectedProductsMap.get(prod.id) || defaultOffer;
+        const currentOffer = selectedProductsMap.get(prod.id) || (offers[0] || null);
         const isSelected = selectedProductsMap.has(prod.id);
         const isDisabled = (!isSelected && usedSlots >= maxSlots) || !hasOffer;
-
-        const initStockCost = currentOffer ? Math.round(300 * currentOffer.landedCost) : 0;
+        const initStockCost = currentOffer ? Math.round(100 * currentOffer.landedCost) : 0;
         const isInternal = currentOffer?.type === 'internal_factory';
 
         return `
-          <div class="product-card rounded-xl border p-3 flex flex-col gap-2 ${isSelected ? 'border-emerald-600 bg-emerald-950/30' : 'border-slate-800 bg-slate-800/30'}">
+          <div class="product-card rounded-xl border p-2.5 flex flex-col gap-1.5 ${isSelected ? 'border-emerald-600 bg-emerald-950/30' : 'border-slate-800 bg-slate-800/30'}">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <input type="checkbox" ${isSelected ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}
@@ -1722,23 +3292,20 @@
                 <span class="text-[9px] bg-slate-700 text-slate-400 px-1.5 py-0.5 rounded font-mono">${prod.category}</span>
               </div>
               <div class="text-right text-[10px] font-mono">
-                <span class="text-slate-400">1º Estoque (300 un): </span>
+                <span class="text-slate-400">1º Estoque (100 un): </span>
                 <strong class="text-rose-400">-$${initStockCost.toLocaleString()}</strong>
               </div>
             </div>
 
             ${hasOffer ? `
-              <div class="bg-slate-900/80 rounded-lg p-2 text-[10px] font-mono border ${isInternal ? 'border-orange-800 bg-orange-950/20' : 'border-slate-800/80'} flex flex-wrap items-center justify-between gap-2">
+              <div class="bg-slate-900/80 rounded-lg p-1.5 text-[10px] font-mono border ${isInternal ? 'border-orange-800 bg-orange-950/20' : 'border-slate-800/80'} flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-1.5">
                   <span class="${isInternal ? 'text-orange-400 font-bold' : 'text-amber-400'}">${currentOffer.supplierName.split('(')[0].trim()}</span>
-                  <span class="text-slate-500">(${currentOffer.distance} tiles)</span>
-                  <span class="text-cyan-300 bg-cyan-950 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${currentOffer.quality}</span>
+                  <span class="text-cyan-300 bg-cyan-950 px-1.5 py-0.2 rounded border border-cyan-800">QR: ${currentOffer.quality}</span>
                 </div>
-                <div class="flex items-center gap-2">
-                  <span>Custo Landed: <strong class="text-emerald-400 font-bold">$${currentOffer.landedCost.toFixed(2)}</strong></span>
-                </div>
+                <span>Custo: <strong class="text-emerald-400 font-bold">$${currentOffer.landedCost.toFixed(2)}</strong></span>
               </div>
-            ` : `<div class="text-[10px] text-rose-400 font-mono">❌ Sem fornecedores atracados ou fabricando este item.</div>`}
+            ` : `<div class="text-[10px] text-rose-400 font-mono">❌ Sem fornecedores disponíveis.</div>`}
           </div>
         `;
       }).join('');
@@ -1748,6 +3315,8 @@
 
     function setCategoryTab(cat) {
       activeCategoryTab = cat;
+      activeSearchQuery = '';
+      document.getElementById('prod-search-input').value = '';
       renderProductSelector();
     }
 
@@ -1766,7 +3335,7 @@
       const buildCost = pendingStoreType.cost;
       let stockCost = 0;
       for (const [prodId, offer] of selectedProductsMap.entries()) {
-        stockCost += Math.round(300 * offer.landedCost);
+        stockCost += Math.round(100 * offer.landedCost);
       }
       const totalCost  = buildCost + stockCost;
       const remaining  = cash - totalCost;
@@ -1777,7 +3346,7 @@
       document.getElementById('cost-summary-bar').innerHTML = `
         <div class="flex flex-wrap gap-4 text-[11px] font-mono w-full">
           <span>🏗 Obra: <strong class="text-rose-400">-$${buildCost.toLocaleString()}</strong></span>
-          <span>📦 Estoque + Frete: <strong class="text-rose-400">-$${stockCost.toLocaleString()}</strong></span>
+          <span>📦 Estoque: <strong class="text-rose-400">-$${stockCost.toLocaleString()}</strong></span>
           <span class="font-bold">Total: <strong class="text-rose-300">-$${totalCost.toLocaleString()}</strong></span>
           <span class="ml-auto">Gôndolas: <strong class="${usedSlots >= maxSlots ? 'text-amber-400' : 'text-slate-200'}">${usedSlots}/${maxSlots}</strong></span>
           <span>Saldo após: <strong class="${remaining < 0 ? 'text-red-400' : 'text-emerald-400'}">$${remaining.toLocaleString()}</strong></span>
@@ -1796,7 +3365,7 @@
       const buildCost = pendingStoreType.cost;
       let stockCost = 0;
       for (const [prodId, offer] of selectedProductsMap.entries()) {
-        stockCost += Math.round(300 * offer.landedCost);
+        stockCost += Math.round(100 * offer.landedCost);
       }
       const totalCost = buildCost + stockCost;
       if (cash < totalCost) return;
@@ -1808,9 +3377,9 @@
         const prod = PRODUCT_CATALOG[prodId];
         shelves[prodId] = {
           price: prod.standardPrice,
-          stock: 300,
+          stock: 100,
           maxCapacity: 1000,
-          dailyRestock: Math.round(prod.perCapitaDailyDemand * pendingTile.district.population * 0.5),
+          dailyRestock: Math.max(10, Math.round(prod.perCapitaDailyDemand * pendingTile.district.population * 0.5)),
           quality: offer.quality,
           supplierId: offer.supplierId,
           supplierName: offer.supplierName,
@@ -1873,20 +3442,14 @@
                 <span class="font-bold ${isInternal ? 'text-orange-400' : 'text-amber-300'}">${offer.supplierName}</span>
                 <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${offer.quality}</span>
               </div>
-              <div class="text-[10px] text-slate-400 mt-1">
-                Distância: <strong class="text-slate-300">${offer.distance} tiles</strong> · Origem: <strong>${offer.origin}</strong>
-              </div>
-              <div class="text-[11px] text-slate-300 mt-1">
-                Preço Base: $${offer.wholesalePrice.toFixed(2)} + Frete: <span class="text-amber-400">+$${offer.freight.toFixed(2)}</span> = Custo: <strong class="text-emerald-400 font-bold">$${offer.landedCost.toFixed(2)}</strong>
-              </div>
+              <div class="text-[10px] text-slate-400 mt-1">Distância: ${offer.distance} tiles · Custo Base: $${offer.wholesalePrice.toFixed(2)} + Frete: $${offer.freight.toFixed(2)}</div>
+              <div class="text-[11px] text-slate-300 mt-0.5">Custo Final: <strong class="text-emerald-400 font-bold">$${offer.landedCost.toFixed(2)}</strong></div>
             </div>
             <div>
               ${isCurrent ? `
                 <span class="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-1 rounded border border-emerald-800 font-bold">Ativo</span>
               ` : `
-                <button onclick="applySupplierChange('${offer.supplierId}')" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold font-mono">
-                  Contratar
-                </button>
+                <button onclick="applySupplierChange('${offer.supplierId}')" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold font-mono">Contratar</button>
               `}
             </div>
           </div>
@@ -1911,7 +3474,7 @@
         shelf.landedCost = chosen.landedCost;
         shelf.quality = chosen.quality;
 
-        addLog(`🔗 Fornecedor de ${PRODUCT_CATALOG[prodId].name} alterado para ${chosen.supplierName} (Custo: $${chosen.landedCost.toFixed(2)} | QR: ${chosen.quality}).`, 'text-cyan-400');
+        addLog(`🔗 Fornecedor alterado para ${chosen.supplierName} (Custo: $${chosen.landedCost.toFixed(2)}).`, 'text-cyan-400');
         closeSupplierModal();
         renderFacilityPanel(tile);
       }
@@ -1963,7 +3526,7 @@
       const categories = [...new Set(Object.values(PRODUCT_CATALOG).map(p => p.category))];
       document.getElementById('add-prod-category-tabs').innerHTML = categories.map(cat => `
         <button onclick="setAddProductCategoryTab('${cat}')"
-          class="px-3 py-1 rounded-lg text-[11px] font-mono transition
+          class="px-2.5 py-1 rounded-lg text-[10px] font-mono transition
             ${activeAddProductCategoryTab === cat ? 'bg-slate-700 text-slate-100 font-bold' : 'text-slate-400 hover:text-slate-200'}">
           ${cat}
         </button>
@@ -1983,7 +3546,7 @@
         const bestOffer = offers[0] || null;
         if (!bestOffer) return '';
 
-        const initCost = Math.round(300 * bestOffer.landedCost);
+        const initCost = Math.round(100 * bestOffer.landedCost);
         const canAfford = cash >= initCost;
 
         return `
@@ -1993,14 +3556,12 @@
                 <span class="font-bold text-slate-100">${prod.name}</span>
                 <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${bestOffer.quality}</span>
               </div>
-              <div class="text-[10px] text-slate-400 mt-1">
-                Fornecedor: <strong class="text-amber-400">${bestOffer.supplierName.split('(')[0].trim()}</strong> · Custo: <strong class="text-emerald-400">$${bestOffer.landedCost.toFixed(2)}/un</strong>
-              </div>
+              <div class="text-[10px] text-slate-400 mt-1">Fornecedor: ${bestOffer.supplierName.split('(')[0].trim()} · Custo: $${bestOffer.landedCost.toFixed(2)}/un</div>
             </div>
             <div class="text-right">
-              <div class="text-[10px] text-slate-400 mb-1">1º Estoque (300 un): <strong class="text-rose-400 font-bold">$${initCost.toLocaleString()}</strong></div>
+              <div class="text-[10px] text-slate-400 mb-1">1º Estoque: <strong class="text-rose-400 font-bold">$${initCost.toLocaleString()}</strong></div>
               <button onclick="confirmAddNewProductToStore('${prod.id}')" ${!canAfford ? 'disabled' : ''}
-                class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono">
+                class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white px-3 py-1 rounded-xl text-xs font-bold">
                 ➕ Adicionar
               </button>
             </div>
@@ -2018,7 +3579,7 @@
       if (offers.length === 0) return;
       const offer = offers[0];
 
-      const initCost = Math.round(300 * offer.landedCost);
+      const initCost = Math.round(100 * offer.landedCost);
       if (cash < initCost) return;
 
       cash -= initCost;
@@ -2026,9 +3587,9 @@
 
       store.shelves[prodId] = {
         price: prod.standardPrice,
-        stock: 300,
+        stock: 100,
         maxCapacity: 1000,
-        dailyRestock: Math.round(prod.perCapitaDailyDemand * tile.district.population * 0.5),
+        dailyRestock: Math.max(10, Math.round(prod.perCapitaDailyDemand * tile.district.population * 0.5)),
         quality: offer.quality,
         supplierId: offer.supplierId,
         supplierName: offer.supplierName,
@@ -2051,19 +3612,17 @@
 
     function openPortModal(port) {
       document.getElementById('port-modal-title').textContent = `⚓ ${port.name}`;
-      document.getElementById('port-modal-subtitle').textContent = `Local: Cais Norte (${port.tile.x}, ${port.tile.y})`;
+      document.getElementById('port-modal-subtitle').textContent = `Local: Cais de Neo Capital (${port.tile.x}, ${port.tile.y})`;
       const list = document.getElementById('port-cargo-list');
-      list.innerHTML = Object.entries(port.supplies).map(([prodId, sup]) => {
-        const prod = PRODUCT_CATALOG[prodId];
+      list.innerHTML = Object.entries(PRODUCT_CATALOG).slice(0, 15).map(([prodId, prod]) => {
         return `
-          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
+          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
             <div>
               <span class="font-bold text-slate-200">${prod.name}</span>
-              <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800 ml-2">QR: ${sup.quality}</span>
-              <div class="text-[10px] text-slate-400 mt-1">Origem: ${sup.origin} · Cota: ${sup.quota} un/dia</div>
+              <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.2 rounded ml-1.5">${prod.category}</span>
             </div>
             <div class="text-right">
-              <span class="text-sm font-bold text-emerald-400">$${sup.wholesalePrice.toFixed(2)}/un</span>
+              <span class="text-xs font-bold text-emerald-400">$${(prod.baseCost * 1.5).toFixed(2)}/un</span>
             </div>
           </div>
         `;
@@ -2131,7 +3690,7 @@
     function simulateDay() {
       let dailyRev = 0, dailyCogs = 0, dailyFixed = 0;
 
-      // Despesa diária de Marketing
+      // Marketing
       let dailyMarketing = 0;
       for (const contractKey of activeMarketingContracts) {
         const [outletId, prodId] = contractKey.split('::');
@@ -2147,22 +3706,28 @@
           const d = tile.district;
 
           if (tile.store) dailyFixed += tile.store.dailyRent;
+          if (tile.mine) dailyFixed += tile.district.landRentDaily;
           if (tile.farm) dailyFixed += tile.district.landRentDaily;
           if (tile.factory) dailyFixed += tile.district.landRentDaily;
 
-          // Produção Diária de Fazenda
+          // Produção de Minas
+          if (tile.mine) {
+            tile.mine.stock = Math.min(tile.mine.maxCapacity, tile.mine.stock + tile.mine.dailyYield);
+          }
+
+          // Produção de Fazendas
           if (tile.farm) {
             tile.farm.stock = Math.min(tile.farm.maxCapacity, tile.farm.stock + tile.farm.dailyYield);
           }
 
-          // Produção Diária de Fábrica
+          // Produção de Fábricas
           if (tile.factory) {
             for (const line of Object.values(tile.factory.lines)) {
               line.finishedStock = Math.min(line.maxStock, line.finishedStock + line.dailyCapacity);
             }
           }
 
-          // Vendas de Loja
+          // Vendas no Varejo
           if (tile.store) {
             for (const [prodId, shelf] of Object.entries(tile.store.shelves)) {
               const prod = PRODUCT_CATALOG[prodId];
@@ -2188,8 +3753,8 @@
               const potDemand = Math.floor(baseDem * elast * share);
               const sold = Math.min(shelf.stock, potDemand);
 
-              if (shelf.stock === 0 && potDemand > 10 && Math.random() < 0.15)
-                addLog(`⚠ Stockout de "${prod.name}" na ${tile.store?.name ?? ''}! Clientes perdidos.`, 'text-amber-400');
+              if (shelf.stock === 0 && potDemand > 5 && Math.random() < 0.15)
+                addLog(`⚠ Stockout de "${prod.name}" na ${tile.store?.name ?? ''}!`, 'text-amber-400');
 
               shelf.stock = Math.max(0, shelf.stock - sold);
               dailyRev  += sold * shelf.price;
@@ -2237,11 +3802,9 @@
         net >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'
       );
 
-      // Verifica se há campanhas institucionais ativas
       const activeInstOutlets = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}::__institutional__`));
       const instBoost = activeInstOutlets.reduce((s, o) => s + Math.floor(o.brandBoostMonthly * 0.75), 0);
 
-      // Atualiza Marca com Campanhas de Mídia, Institucional e Decaimento
       for (const prodId of Object.keys(PRODUCT_CATALOG)) {
         const activeOutletsForProd = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}::${prodId}`));
         const currentBrand = playerBrandRating[prodId] || 20;
@@ -2310,6 +3873,7 @@
         closeSupplierModal();
         closeAddProductModal();
         closeMarketingModal();
+        closeMineModal();
         closeFarmModal();
         closeFactoryModal();
         closeFactoryRecipeModal();
@@ -2360,11 +3924,30 @@
     }
 
     // ===========================================================================
-    // 13. INICIALIZAÇÃO
+    // 13. INICIALIZAÇÃO ASSÍNCRONA E CARGA DE DADOS
     // ===========================================================================
+    async function initMasterData() {
+      try {
+        const catRes = await fetch('../data/products/catalog.json');
+        const catData = await catRes.json();
+        PRODUCT_CATALOG = catData.products;
+
+        const recRes = await fetch('../data/production/recipes.json');
+        const recData = await recRes.json();
+        FACTORY_RECIPES = recData.recipes;
+
+        Object.keys(PRODUCT_CATALOG).forEach(id => {
+          if (!playerBrandRating[id]) playerBrandRating[id] = 20;
+        });
+      } catch (e) {
+        console.warn('Carga via Fetch local indisponível, usando catálogo integrado.');
+      }
+    }
+
     window.addEventListener('resize', () => { resizeCanvas(); renderMap(); });
 
-    setTimeout(() => {
+    setTimeout(async () => {
+      await initMasterData();
       resizeCanvas();
       resetCamera();
       renderTileInspector(null);

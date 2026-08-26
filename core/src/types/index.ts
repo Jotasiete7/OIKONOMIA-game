@@ -1,52 +1,68 @@
 /**
- * types/index.ts — Modelos e Tipos Estritos do Sim-Core de OIKONOMIA
+ * types/index.ts — Modelos e Tipos Oficiais de OIKONOMIA
  */
 
 export interface ProductType {
   id: string;
   name: string;
   category: string;
+  storeType: string;
   standardPrice: number;
   baseCost: number;
-  qualityRating: number;
-  brandRating: number;
   necessityIndex: number;
   qualityWeight: number;
   brandWeight: number;
   perCapitaDailyDemand: number;
 }
 
-export interface District {
+export interface NaturalResourceMine {
   id: string;
   name: string;
-  type: string;
-  population: number;
-  trafficIndex: number;
-  landRentDaily: number;
-  playerStore?: StoreState | null;
-  competitorStore?: CompetitorStoreState | null;
-}
-
-export interface MediaOutlet {
-  id: string;
-  name: string;
-  type: string;
   emoji: string;
-  tile: { x: number; y: number };
-  district: string;
-  monthlyCost: number;
-  brandBoostMonthly: number;
-  brandCap: number;
-  reachPct: number;
-  reachDescription: string;
-  description: string;
+  resourceId: string;
+  resourceName: string;
+  cost: number;
+  unitCost: number;
+  quality: number;
+  dailyYield: number;
+  desc: string;
 }
 
-export interface MarketingContract {
-  productId: string;
-  outletId: string;
-  dailyCost: number;
-  monthlyCost: number;
+export interface FarmCropType {
+  id: string;
+  name: string;
+  emoji: string;
+  cropId: string;
+  cropName: string;
+  cost: number;
+  unitCost: number;
+  quality: number;
+  dailyYield: number;
+  desc: string;
+}
+
+export interface StoreTypeDef {
+  id: string;
+  name: string;
+  emoji: string;
+  category: string;
+  cost: number;
+  maxShelves: number;
+  rentMultiplier: number;
+  desc: string;
+}
+
+export interface RecipeDef {
+  id: string;
+  name: string;
+  outputProdId: string;
+  outputName: string;
+  isIntermediate?: boolean;
+  unitCost: number;
+  quality: number;
+  dailyCap: number;
+  inputs?: Record<string, number>;
+  desc: string;
 }
 
 export interface ShelfState {
@@ -62,12 +78,6 @@ export interface ShelfState {
   landedCost?: number;
 }
 
-export interface CompetitorShelfState {
-  price: number;
-  quality: number;
-  brand: number;
-}
-
 export interface StoreState {
   id: string;
   name: string;
@@ -78,69 +88,33 @@ export interface StoreState {
   shelves: Record<string, ShelfState>;
 }
 
-export interface FarmState {
+export interface ProductionFacilityState {
   id: string;
-  farmTypeId: string;
+  type: 'mine' | 'farm' | 'factory';
   name: string;
-  cropId: string;
-  cropName: string;
-  quality: number;
-  dailyYield: number;
   dailyOperatingCost: number;
+  dailyRent: number;
   stock: number;
   maxCapacity: number;
+  quality: number;
+  dailyYield?: number;
+  lines?: Record<string, {
+    recipeId: string;
+    recipeName: string;
+    outputProductId: string;
+    unitCost: number;
+    outputQuality: number;
+    dailyCapacity: number;
+    finishedStock: number;
+    maxStock: number;
+  }>;
 }
 
-export interface ProductionLineState {
-  recipeId: string;
-  recipeName: string;
-  outputProductId: string;
-  dailyCapacity: number;
-  unitCost: number;
-  outputQuality: number;
-  finishedStock: number;
-  maxStock: number;
-}
-
-export interface FactoryState {
+export interface District {
   id: string;
   name: string;
-  maxLines: number;
-  dailyRent: number;
-  lines: Record<string, ProductionLineState>;
-}
-
-export interface CompetitorStoreState {
-  id: string;
-  name: string;
-  shelves: Record<string, CompetitorShelfState>;
-  lastShare?: number;
-}
-
-export interface MonthlyFinancialReport {
-  month: number;
-  year: number;
-  grossRevenue: number;
-  cogs: number;
-  fixedRent: number;
-  marketingExpenses: number;
-  netProfit: number;
-  endingCash: number;
-}
-
-export interface GameState {
-  day: number;
-  month: number;
-  year: number;
-  cash: number;
-  cityName: string;
-  catalog: Record<string, ProductType>;
-  districts: District[];
-  playerBrandRating: Record<string, number>;
-  activeMarketingContracts: MarketingContract[];
-  monthRevenue: number;
-  monthCogs: number;
-  monthFixedExpenses: number;
-  monthMarketingExpenses: number;
-  lastMonthReport?: MonthlyFinancialReport;
+  type: string;
+  population: number;
+  trafficIndex: number;
+  landRentDaily: number;
 }

@@ -1,0 +1,13 @@
+{
+  "storeTypes": [
+    { "id":"kombini", "name":"Kombini de Bairro", "emoji":"🛒", "category":"all", "cost":8000, "maxShelves":4, "rentMultiplier":1.0, "desc":"Varejo de conveniência ultrarrápido com poucas gôndolas e baixo risco." },
+    { "id":"supermarket", "name":"Supermercado & Alimentos", "emoji":"🏬", "category":"Alimentos", "cost":45000, "maxShelves":24, "rentMultiplier":1.8, "desc":"Grande porte para vendas em massa de alimentos, carnes, bebidas e laticínios." },
+    { "id":"apparel", "name":"Boutique de Vestuário & Moda", "emoji":"👗", "category":"Vestuário", "cost":35000, "maxShelves":12, "rentMultiplier":1.5, "desc":"Loja sofisticada para jeans, ternos, sapatos de couro, tênis e vestidos de luxo." },
+    { "id":"electronics", "name":"MegaStore de Eletrônicos", "emoji":"💻", "category":"Eletrônicos", "cost":60000, "maxShelves":12, "rentMultiplier":2.0, "desc":"Varejo especializado em smartphones, notebooks, TVs 4K e eletrodomésticos." },
+    { "id":"automotive", "name":"Concessionária de Automóveis", "emoji":"🚗", "category":"Automotivo", "cost":85000, "maxShelves":6, "rentMultiplier":2.2, "desc":"Showroom automotivo para venda de carros de passeio, SUVs, motos e caminhões." },
+    { "id":"pharmacy", "name":"Drogaria & Cosméticos", "emoji":"💊", "category":"Farmácia", "cost":28000, "maxShelves":10, "rentMultiplier":1.3, "desc":"Farmácia para remédios controlados, analgésicos, xampus e perfumes finos." },
+    { "id":"furniture", "name":"Loja de Móveis & Decoração", "emoji":"🛋️", "category":"Móveis", "cost":40000, "maxShelves":8, "rentMultiplier":1.6, "desc":"Ambiente amplo para camas king size, sofás, mesas de jantar e armários." },
+    { "id":"jewelry", "name":"Joalheria de Alta Nobreza", "emoji":"💍", "category":"Joias", "cost":75000, "maxShelves":5, "rentMultiplier":2.4, "desc":"Boutique de altíssimo padrão para anéis de ouro, relógios e colares nobres." },
+    { "id":"hardware", "name":"Home Center & Ferramentas", "emoji":"🔨", "category":"Construção", "cost":38000, "maxShelves":8, "rentMultiplier":1.4, "desc":"Loja de materiais de reforma, tintas acrílicas e ferramentas industriais." }
+  ]
+}
