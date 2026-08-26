@@ -1250,7 +1250,7 @@
         const costFill = Math.round(missingUnits * shelf.landedCost);
 
         // Identifica campanhas ativas para este produto
-        const activeMktForProd = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}_${prodId}`));
+        const activeMktForProd = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}::${prodId}`));
 
         const card = document.createElement('div');
         card.className = `rounded-xl border ${isStockout ? 'border-rose-800 stockout-alert' : 'border-slate-800'} bg-slate-950 p-2.5 space-y-2`;
@@ -1602,16 +1602,21 @@
     // ===========================================================================
     // 11. CENTRAL DE MARKETING, MÍDIA & CAMPANHAS PUBLICITÁRIAS
     // ===========================================================================
+    function getTotalMonthlyMarketingBudget() {
+      let total = 0;
+      for (const contractKey of activeMarketingContracts) {
+        const [outletId] = contractKey.split('::');
+        const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
+        if (outlet) total += outlet.monthlyCost;
+      }
+      return total;
+    }
+
     function openMarketingCentralModal(filterOutletId = null) {
       const list = document.getElementById('media-outlets-list');
       const products = Object.values(PRODUCT_CATALOG);
 
-      let totalMonthlyMkt = 0;
-      for (const contractKey of activeMarketingContracts) {
-        const [outletId] = contractKey.split('_');
-        const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
-        if (outlet) totalMonthlyMkt += outlet.monthlyCost;
-      }
+      const totalMonthlyMkt = getTotalMonthlyMarketingBudget();
       const totalDailyMkt = totalMonthlyMkt / 30;
 
       document.getElementById('mkt-summary-contracts').textContent = `${activeMarketingContracts.size} campanha(s) ativa(s)`;
@@ -1644,7 +1649,7 @@
               <span class="text-[10px] text-slate-400 uppercase font-mono block mb-2">Produtos no Portfólio (Ligar/Desligar Contrato):</span>
               <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                 ${products.map(prod => {
-                  const contractKey = `${outlet.id}_${prod.id}`;
+                  const contractKey = `${outlet.id}::${prod.id}`;
                   const isActive = activeMarketingContracts.has(contractKey);
                   const brand = playerBrandRating[prod.id] || 20;
 
@@ -1672,7 +1677,7 @@
     }
 
     function toggleMarketingContract(outletId, prodId) {
-      const contractKey = `${outletId}_${prodId}`;
+      const contractKey = `${outletId}::${prodId}`;
       const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
       const prod = PRODUCT_CATALOG[prodId];
 
@@ -1684,7 +1689,6 @@
         addLog(`📺 Contrato firmado: ${prod.name} agora está no ar na ${outlet.name} (-$${outlet.monthlyCost}/mês)!`, 'text-indigo-400 font-bold');
       }
 
-      document.getElementById('active-campaigns-badge').textContent = activeMarketingContracts.size;
       openMarketingCentralModal();
       if (activeManagedTile?.store) renderGondolaPanel(activeManagedTile);
       updateUI();
@@ -1828,7 +1832,7 @@
       // Custo diário de Marketing ativo
       let dailyMarketing = 0;
       for (const contractKey of activeMarketingContracts) {
-        const [outletId] = contractKey.split('_');
+        const [outletId] = contractKey.split('::');
         const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
         if (outlet) dailyMarketing += outlet.monthlyCost / 30;
       }
@@ -1915,7 +1919,7 @@
 
       // Atualiza Marca com Campanhas de Mídia e Decaimento
       for (const prodId of Object.keys(PRODUCT_CATALOG)) {
-        const activeOutletsForProd = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}_${prodId}`));
+        const activeOutletsForProd = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}::${prodId}`));
         const currentBrand = playerBrandRating[prodId] || 20;
 
         if (activeOutletsForProd.length > 0) {
@@ -2002,6 +2006,14 @@
       document.getElementById('clock-date').textContent = `Dia ${String(day).padStart(2,'0')} / Mês ${String(month).padStart(2,'0')} / Ano ${year}`;
       document.getElementById('corp-cash').textContent  = `$${cash.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
 
+      const totalContractedMonthlyMkt = getTotalMonthlyMarketingBudget();
+      const badge = document.getElementById('active-campaigns-badge');
+      if (badge) {
+        badge.textContent = activeMarketingContracts.size > 0 
+          ? `${activeMarketingContracts.size} ($${(totalContractedMonthlyMkt/1000).toFixed(1)}k/mês)` 
+          : '0';
+      }
+
       const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses;
       const pe  = document.getElementById('month-profit');
       pe.textContent = `${net >= 0 ? '+' : ''}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
@@ -2011,7 +2023,7 @@
       document.getElementById('dre-revenue').textContent      = `+$${monthRevenue.toLocaleString('en-US',{minimumFractionDigits:2})}`;
       document.getElementById('dre-cogs').textContent         = `-$${monthCogs.toLocaleString('en-US',{minimumFractionDigits:2})}`;
       document.getElementById('dre-fixed').textContent        = `-$${monthFixedExpenses.toLocaleString('en-US',{minimumFractionDigits:2})}`;
-      document.getElementById('dre-marketing').textContent    = `-$${monthMarketingExpenses.toLocaleString('en-US',{minimumFractionDigits:2})}`;
+      document.getElementById('dre-marketing').textContent    = `-$${monthMarketingExpenses.toLocaleString('en-US',{minimumFractionDigits:2})}` + (totalContractedMonthlyMkt > 0 ? ` (Contratado: $${totalContractedMonthlyMkt.toLocaleString()}/mês)` : '');
       
       const dn = document.getElementById('dre-net-profit');
       dn.textContent = `${net >= 0 ? '+' : ''}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2})}`;
