@@ -1,0 +1,13 @@
+{
+  "companyName": "QuickMart Corporation (IA)",
+  "personality": "ReactiveDiscounters",
+  "startingStore": {
+    "districtId": "northside",
+    "storeName": "QuickMart North",
+    "shelves": {
+      "bread": { "price": 3.60, "quality": 48, "brand": 25 },
+      "beer":  { "price": 4.10, "quality": 50, "brand": 25 },
+      "cola":  { "price": 2.30, "quality": 48, "brand": 25 }
+    }
+  }
+}

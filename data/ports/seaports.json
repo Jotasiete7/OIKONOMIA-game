@@ -1,0 +1,92 @@
+[
+  {
+    "id": "port_alpha",
+    "name": "Porto Alfa (Terminal Geral de Alimentos)",
+    "tile": { "x": 6, "y": 6 },
+    "district": "harbor",
+    "freightRatePerTile": 0.015,
+    "catalog": {
+      "bread": {
+        "wholesalePrice": 1.55,
+        "quality": 52,
+        "dailyQuota": 1200,
+        "origin": "Trigo Importado - Província Norte"
+      },
+      "milk": {
+        "wholesalePrice": 1.25,
+        "quality": 50,
+        "dailyQuota": 1000,
+        "origin": "Laticínios da Bacia Costeira"
+      },
+      "eggs": {
+        "wholesalePrice": 1.35,
+        "quality": 48,
+        "dailyQuota": 800,
+        "origin" : "Granjas Oceânicas"
+      },
+      "cookies": {
+        "wholesalePrice": 1.90,
+        "quality": 55,
+        "dailyQuota": 600,
+        "origin": "Confeitaria Portuária"
+      },
+      "chocolate_bar": {
+        "wholesalePrice": 1.15,
+        "quality": 50,
+        "dailyQuota": 700,
+        "origin": "Cacau Ultramarino"
+      },
+      "beer": {
+        "wholesalePrice": 1.45,
+        "quality": 45,
+        "dailyQuota": 900,
+        "origin": "Cervejaria Standard Import"
+      },
+      "cola": {
+        "wholesalePrice": 0.75,
+        "quality": 48,
+        "dailyQuota": 1500,
+        "origin": "Xarope Concentrado Global"
+      }
+    }
+  },
+  {
+    "id": "port_beta",
+    "name": "Porto Beta (Terminal Especializado & Farma)",
+    "tile": { "x": 7, "y": 5 },
+    "district": "harbor",
+    "freightRatePerTile": 0.020,
+    "catalog": {
+      "beer": {
+        "wholesalePrice": 1.85,
+        "quality": 68,
+        "dailyQuota": 400,
+        "origin": "Cerveja Artesanal Puro Malte (Premium)"
+      },
+      "cold_pills": {
+        "wholesalePrice": 3.40,
+        "quality": 70,
+        "dailyQuota": 500,
+        "origin": "Laboratórios Farmacêuticos Centrais"
+      },
+      "shampoo": {
+        "wholesalePrice": 1.95,
+        "quality": 60,
+        "dailyQuota": 600,
+        "origin": "Cosméticos Orgânicos Importados"
+      },
+      "jeans": {
+        "wholesalePrice": 16.00,
+        "quality": 65,
+        "dailyQuota": 200,
+        "origin": "Têxtil de Alta Resistência"
+      },
+      "mobile_phone": {
+        "wholesalePrice": 195.00,
+        "quality": 62,
+        "dailyQuota": 100,
+        "origin": "Montadora de Semicondutores"
+      }
+    }
+  }
+]

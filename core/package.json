@@ -1,0 +1,10 @@
+{
+  "name": "oikonomia-core",
+  "version": "1.0.0",
+  "description": "Núcleo de simulação microeconômica e territorial de OIKONOMIA",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types tests/math.test.ts"
+  },
+  "license": "MIT"
+}

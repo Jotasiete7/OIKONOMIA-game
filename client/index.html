@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OIKONOMIA — Estratégia Econômica & Logística Portuária</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    canvas { image-rendering: pixelated; }
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #020617; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #334155; }
+    .store-type-card { transition: all 0.15s ease; }
+    .store-type-card:hover { transform: translateY(-2px); }
+    .product-card { transition: all 0.1s ease; }
+    .product-card:hover { background-color: #1e293b; }
+    .stock-bar-fill { transition: width 0.3s ease; }
+    @keyframes stockout-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .stockout-alert { animation: stockout-pulse 0.8s infinite ease-in-out; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col p-3 md:p-4 select-none overflow-x-hidden">
+
+  <!-- ======================================================================= -->
+  <!-- TOPBAR: LOGO, RELÓGIO CONTÍNUO, FINANÇAS                                -->
+  <!-- ======================================================================= -->
+  <header class="bg-slate-900/95 border border-slate-800 rounded-2xl px-5 py-3 flex flex-wrap items-center justify-between shadow-2xl mb-3 max-w-[1400px] mx-auto w-full gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/40 flex items-center justify-center text-lg">🏛️</div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-base font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
+          <span class="text-[9px] bg-emerald-950 text-emerald-300 font-mono px-1.5 py-0.5 rounded border border-emerald-800/60 uppercase">Sim Engine v0.4 · Logística</span>
+        </div>
+        <span class="text-[11px] text-slate-400">Estratégia Corporativa, Varejo & Portos de Importação</span>
+      </div>
+    </div>
+
+    <!-- RELÓGIO E VELOCIDADES -->
+    <div class="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-1 gap-1.5">
+      <div class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-center min-w-[130px]">
+        <span class="text-[9px] text-slate-500 block uppercase font-mono tracking-wider">Data do Jogo</span>
+        <span id="clock-date" class="text-xs font-bold text-amber-400 font-mono">Dia 01 / Mês 01 / Ano 1</span>
+      </div>
+      <div class="flex gap-0.5">
+        <button id="btn-p"  onclick="setSpeed(0)" class="px-2 py-1 rounded-lg text-xs font-bold font-mono flex items-center gap-1 bg-amber-500/20 text-amber-300 border border-amber-500/40">⏸ Pausa</button>
+        <button id="btn-1x" onclick="setSpeed(1)" class="px-2 py-1 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800">▶ 1x</button>
+        <button id="btn-2x" onclick="setSpeed(2)" class="px-2 py-1 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800">⏩ 2x</button>
+        <button id="btn-5x" onclick="setSpeed(5)" class="px-2 py-1 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800">⚡ 5x</button>
+      </div>
+    </div>
+
+    <!-- FINANÇAS -->
+    <div class="flex items-center gap-5">
+      <div class="text-right">
+        <span class="text-[10px] text-slate-400 block font-mono">Caixa Disponível</span>
+        <span id="corp-cash" class="text-xl font-mono font-black text-emerald-400">$50,000.00</span>
+      </div>
+      <div class="text-right border-l border-slate-800 pl-4">
+        <span class="text-[10px] text-slate-400 block font-mono">Lucro do Mês</span>
+        <span id="month-profit" class="text-lg font-mono font-bold text-slate-400">$0.00</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================================= -->
+  <!-- MAIN: CANVAS ISOMÉTRICO (ESQ) + PAINEL DE GESTÃO (DIR)                  -->
+  <!-- ======================================================================= -->
+  <main class="grid grid-cols-12 gap-3 max-w-[1400px] mx-auto w-full flex-1">
+
+    <!-- ESQUERDA: MAPA + CONTROLES + INSPETOR DE TILE (8 COLUNAS) -->
+    <section class="col-span-12 lg:col-span-8 flex flex-col gap-2.5">
+
+      <!-- CONTROLES DO MAPA -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+        <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
+          🗺️ Neo Capital
+          <span class="text-[10px] text-emerald-400 font-mono bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">36×36 Isométrico</span>
+        </span>
+        <!-- LENTES -->
+        <div class="flex items-center gap-1 bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] font-mono">
+          <span class="text-slate-500 px-1">Lente:</span>
+          <button id="hm-terrain" onclick="setHeatmap('terrain')" class="px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-200">Terreno</button>
+          <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🔥 Tráfego</button>
+          <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">👥 Pop.</button>
+          <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🏪 Conc.</button>
+          <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">⚓ Portos</button>
+        </div>
+        <!-- ZOOM -->
+        <div class="flex items-center gap-1 font-mono text-xs">
+          <button onclick="changeZoom(-0.2)" class="w-6 h-6 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold">−</button>
+          <button onclick="resetCamera()"    class="px-2 h-6 rounded bg-slate-950 border border-slate-800 text-slate-400 text-[10px]">Centro</button>
+          <button onclick="changeZoom(0.2)"  class="w-6 h-6 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold">+</button>
+        </div>
+      </div>
+
+      <!-- CANVAS ISOMÉTRICO -->
+      <div class="relative bg-slate-950 rounded-xl border border-slate-800 shadow-2xl overflow-hidden flex-1 min-h-[380px] max-h-[460px]">
+        <canvas id="iso-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+        <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-900/96 border border-slate-700 rounded-xl px-3 py-2 shadow-2xl text-[11px] font-mono z-20"></div>
+        <div class="absolute bottom-2 left-2 bg-slate-900/75 border border-slate-800 rounded-lg px-2.5 py-1 text-[10px] font-mono text-slate-500 pointer-events-none">
+          🖱 Arrastar: câmera · Scroll: zoom · Clique: inspecionar lote ou porto
+        </div>
+      </div>
+
+      <!-- INSPETOR DO LOTE SELECIONADO -->
+      <div id="tile-inspector" class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 shadow-lg min-h-[60px]">
+        <p class="text-xs text-slate-500 font-mono">Clique em um lote no mapa para inspecioná-lo.</p>
+      </div>
+    </section>
+
+    <!-- DIREITA: GESTÃO DA LOJA + DRE + DIÁRIO (4 COLUNAS) -->
+    <section class="col-span-12 lg:col-span-4 flex flex-col gap-2.5">
+
+      <!-- PAINEL DE GÔNDOLAS DA LOJA ATIVA -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 shadow-xl flex flex-col gap-2.5">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+          <div>
+            <h2 id="store-title" class="text-xs font-bold text-emerald-300">🛒 Selecione uma loja no mapa</h2>
+            <span id="store-subtitle" class="text-[11px] text-slate-400">Clique na loja verde para gerir gôndolas e fornecedores.</span>
+          </div>
+          <span id="store-rent-badge" class="text-[10px] font-bold text-rose-400 font-mono hidden"></span>
+        </div>
+        <div id="gondola-panel" class="space-y-2 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
+          <p class="text-[11px] text-slate-500 font-mono text-center py-4">Nenhuma loja ativa selecionada.</p>
+        </div>
+        <div id="add-product-row" class="hidden pt-1 border-t border-slate-800">
+          <!-- Botão Adicionar Produto -->
+        </div>
+      </div>
+
+      <!-- DRE MENSAL -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 shadow-xl">
+        <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-2 pb-2 border-b border-slate-800 flex items-center justify-between">
+          <span>📑 DRE do Mês</span>
+          <span id="dre-month-label" class="text-[10px] text-slate-400 font-mono font-normal">Mês 01</span>
+        </h3>
+        <div class="space-y-1.5 text-[11px] font-mono">
+          <div class="flex justify-between text-slate-200"><span>(+) Receita Bruta:</span><span id="dre-revenue" class="text-emerald-400 font-bold">$0.00</span></div>
+          <div class="flex justify-between text-slate-400"><span>(-) Custo Merc. (CPV + Frete):</span><span id="dre-cogs" class="text-rose-400">-$0.00</span></div>
+          <div class="flex justify-between text-slate-400"><span>(-) Aluguéis & Fixos:</span><span id="dre-fixed" class="text-rose-400">-$0.00</span></div>
+          <div class="flex justify-between items-center bg-slate-950 rounded-lg p-2 border-t border-slate-800 mt-1">
+            <span class="text-slate-300 font-bold text-xs">LUCRO LÍQUIDO:</span>
+            <span id="dre-net-profit" class="text-sm font-black text-slate-400">$0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIÁRIO DE BORDO -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex-1 flex flex-col">
+        <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
+          <span>📜 Diário de Bordo & Logística</span>
+          <span class="text-[9px] text-slate-500 font-normal">Eventos em Tempo Real</span>
+        </h3>
+        <div id="game-logs" class="flex-1 min-h-[100px] max-h-[140px] overflow-y-auto space-y-0.5 text-[11px] font-mono text-slate-400 custom-scrollbar">
+          <div class="text-slate-500">OIKONOMIA inicializado. Clique nos portos marítimos ou nos lotes para jogar.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 1: WIZARD DE ABERTURA DE LOJA (2 ETAPAS)                          -->
+  <!-- ======================================================================= -->
+  <div id="store-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+      <!-- HEADER DO MODAL -->
+      <div class="bg-slate-800/70 border-b border-slate-700 px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 id="modal-title" class="text-sm font-bold text-slate-100">Abrir Estabelecimento</h2>
+            <p id="modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
+          </div>
+          <button onclick="closeModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
+        </div>
+        <div class="flex items-center gap-2 mt-3">
+          <div id="step-dot-1" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+          <div id="step-line"   class="flex-1 h-0.5 bg-slate-700"><div id="step-line-fill" class="h-full bg-emerald-500 transition-all w-0"></div></div>
+          <div id="step-dot-2" class="w-2.5 h-2.5 rounded-full bg-slate-600"></div>
+          <span id="step-label" class="text-[10px] font-mono text-slate-400 ml-2">Etapa 1/2</span>
+        </div>
+      </div>
+
+      <!-- ETAPA 1 -->
+      <div id="wizard-step1" class="p-6">
+        <p class="text-xs text-slate-400 mb-4 font-mono">Escolha o tipo de estabelecimento. Cada um tem capacidade de gôndolas e aluguel diferenciado.</p>
+        <div class="grid grid-cols-3 gap-3" id="store-type-cards"></div>
+        <div class="flex justify-end mt-5">
+          <button onclick="advanceToStep2()" id="btn-to-step2" disabled class="px-5 py-2 rounded-xl bg-emerald-700 text-white text-xs font-bold font-mono disabled:opacity-40 disabled:cursor-not-allowed hover:bg-emerald-600 transition">
+            Próximo: Escolher Produtos & Fornecedores →
+          </button>
+        </div>
+      </div>
+
+      <!-- ETAPA 2 -->
+      <div id="wizard-step2" class="hidden">
+        <div id="cost-summary-bar" class="px-6 py-3 bg-slate-800/60 border-b border-slate-700 text-[11px] font-mono flex flex-wrap gap-3 items-center"></div>
+        <div id="category-tabs" class="flex gap-1 px-6 pt-4 pb-2 border-b border-slate-800 flex-wrap"></div>
+        <div id="product-list" class="px-6 py-3 max-h-64 overflow-y-auto custom-scrollbar space-y-1.5"></div>
+        <div class="px-6 py-4 border-t border-slate-800 flex items-center justify-between bg-slate-800/40">
+          <button onclick="backToStep1()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-400 text-xs font-mono hover:border-slate-500 hover:text-slate-200 transition">← Voltar</button>
+          <button onclick="confirmOpenStore()" id="btn-confirm-store" disabled class="px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold font-mono disabled:opacity-40 disabled:cursor-not-allowed transition">
+            Confirmar e Abrir Loja
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 2: INSPEÇÃO DO TERMINAL PORTUÁRIO (FICHA DE IMPORTAÇÕES)          -->
+  <!-- ======================================================================= -->
+  <div id="port-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+      <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 id="port-modal-title" class="text-sm font-bold text-amber-300 flex items-center gap-2">⚓ Terminal Portuário</h2>
+          <p id="port-modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closePortModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
+      </div>
+      <div class="p-6">
+        <p class="text-xs text-slate-400 mb-3 font-mono">Remessas marítimas internacionais atracadas no cais disponíveis para compra no atacado:</p>
+        <div id="port-cargo-list" class="max-h-72 overflow-y-auto custom-scrollbar space-y-2 pr-1"></div>
+        <div class="mt-4 pt-3 border-t border-slate-800 flex justify-end">
+          <button onclick="closePortModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 3: SELETOR DE FORNECEDOR PARA GÔNDOLA                             -->
+  <!-- ======================================================================= -->
+  <div id="supplier-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
+      <div class="bg-slate-800/80 border-b border-slate-700 px-5 py-3.5 flex items-center justify-between">
+        <div>
+          <h2 id="supplier-modal-title" class="text-xs font-bold text-slate-100">🔗 Selecionar Fornecedor Portuário</h2>
+          <p id="supplier-modal-subtitle" class="text-[11px] text-slate-400 font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closeSupplierModal()" class="w-6 h-6 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-xs font-bold flex items-center justify-center">✕</button>
+      </div>
+      <div class="p-5">
+        <p class="text-[11px] text-slate-400 mb-3 font-mono">Escolha o porto de importação. O frete é calculado pela distância em tiles até a sua loja:</p>
+        <div id="supplier-options-list" class="space-y-2 max-h-64 overflow-y-auto custom-scrollbar pr-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- SCRIPT PRINCIPAL: MOTOR COMPLETO DE OIKONOMIA COM LOGÍSTICA DE PORTOS   -->
+  <!-- ======================================================================= -->
+  <script>
+    // ===========================================================================
+    // 1. DADOS MESTRES (DISTRITOS, CATÁLOGO E PORTOS MARÍTIMOS)
+    // ===========================================================================
+
+    const CITY_DISTRICTS = {
+      water:       { id: 'water',       name: 'Baía de Neo Capital',           type: 'Oceano',              population: 0,     trafficIndex: 0,  landRentDaily: 0     },
+      harbor:      { id: 'harbor',      name: 'Zona Portuária & Trânsito',      type: 'Logística / Hub',     population: 8000,  trafficIndex: 42, landRentDaily: 20    },
+      downtown:    { id: 'downtown',    name: 'Downtown Central',              type: 'Comercial Nobre',     population: 18000, trafficIndex: 92, landRentDaily: 65    },
+      uptown:      { id: 'uptown',      name: 'Uptown Universitário',          type: 'Jovens & Serviços',   population: 5000,  trafficIndex: 72, landRentDaily: 45    },
+      northside:   { id: 'northside',   name: 'Distrito Residencial Norte',    type: 'Residencial Médio',   population: 14000, trafficIndex: 55, landRentDaily: 30    },
+      west_suburbs:{ id: 'west_suburbs',name: 'Subúrbio Oeste',                type: 'Residencial Família', population: 6000,  trafficIndex: 35, landRentDaily: 15    },
+      industrial:  { id: 'industrial',  name: 'Distrito Industrial Sul',       type: 'Fábricas & Armazéns', population: 4000,  trafficIndex: 14, landRentDaily: 8     },
+      road:        { id: 'road',        name: 'Avenida Principal',             type: 'Malha Viária',        population: 0,     trafficIndex: 80, landRentDaily: 0     },
+    };
+
+    const PRODUCT_CATALOG = {
+      bread:          { id:'bread',         name:'Pão Artesanal',      category:'Food',        standardPrice:3.50,   baseCost:1.75,  necessityIndex:85, qualityWeight:45, brandWeight:15, perCapitaDailyDemand:0.025 },
+      milk:           { id:'milk',          name:'Leite Integral',     category:'Food',        standardPrice:2.80,   baseCost:1.40,  necessityIndex:85, qualityWeight:50, brandWeight:10, perCapitaDailyDemand:0.022 },
+      eggs:           { id:'eggs',          name:'Ovos Frescos',       category:'Food',        standardPrice:3.20,   baseCost:1.50,  necessityIndex:88, qualityWeight:45, brandWeight:10, perCapitaDailyDemand:0.020 },
+      cookies:        { id:'cookies',       name:'Biscoito Recheado',  category:'Food',        standardPrice:4.80,   baseCost:2.10,  necessityIndex:25, qualityWeight:40, brandWeight:35, perCapitaDailyDemand:0.012 },
+      chocolate_bar:  { id:'chocolate_bar', name:'Barra de Chocolate', category:'Food',        standardPrice:3.00,   baseCost:1.30,  necessityIndex:30, qualityWeight:40, brandWeight:40, perCapitaDailyDemand:0.014 },
+      beer:           { id:'beer',          name:'Cerveja Especial',   category:'Beverage',    standardPrice:4.00,   baseCost:1.60,  necessityIndex:30, qualityWeight:35, brandWeight:45, perCapitaDailyDemand:0.015 },
+      cola:           { id:'cola',          name:'Refrigerante Cola',  category:'Beverage',    standardPrice:2.20,   baseCost:0.85,  necessityIndex:50, qualityWeight:30, brandWeight:45, perCapitaDailyDemand:0.020 },
+      cold_pills:     { id:'cold_pills',    name:'Remédio para Gripe', category:'Farma',       standardPrice:9.50,   baseCost:3.80,  necessityIndex:80, qualityWeight:60, brandWeight:25, perCapitaDailyDemand:0.005 },
+      shampoo:        { id:'shampoo',       name:'Xampu',              category:'Higiene',     standardPrice:6.00,   baseCost:2.20,  necessityIndex:70, qualityWeight:40, brandWeight:40, perCapitaDailyDemand:0.006 },
+      jeans:          { id:'jeans',         name:'Calça Jeans',        category:'Vestuário',   standardPrice:45.00,  baseCost:18.00, necessityIndex:50, qualityWeight:40, brandWeight:40, perCapitaDailyDemand:0.0015},
+      mobile_phone:   { id:'mobile_phone',  name:'Smartphone',         category:'Eletrônicos', standardPrice:450.00, baseCost:210.00,necessityIndex:60, qualityWeight:50, brandWeight:35, perCapitaDailyDemand:0.0008},
+    };
+
+    // Portos de Importação Físicos de Neo Capital
+    const SEAPORTS = [
+      {
+        id: 'port_alpha',
+        name: 'Porto Alfa (Terminal de Alimentos)',
+        tile: { x: 6, y: 6 },
+        freightRatePerTile: 0.012,
+        supplies: {
+          bread:         { wholesalePrice: 1.50, quality: 52, quota: 1200, origin: 'Trigo da Província Norte' },
+          milk:          { wholesalePrice: 1.20, quality: 50, quota: 1000, origin: 'Laticínios Oceânicos' },
+          eggs:          { wholesalePrice: 1.30, quality: 48, quota: 800,  origin: 'Granjas Litorâneas' },
+          cookies:       { wholesalePrice: 1.85, quality: 55, quota: 600,  origin: 'Confeitaria Portuária' },
+          chocolate_bar: { wholesalePrice: 1.10, quality: 50, quota: 700,  origin: 'Cacau Ultramarino' },
+          beer:          { wholesalePrice: 1.40, quality: 45, quota: 900,  origin: 'Cerveja Standard Lager' },
+          cola:          { wholesalePrice: 0.70, quality: 48, quota: 1500, origin: 'Xarope Concentrado Global' },
+        }
+      },
+      {
+        id: 'port_beta',
+        name: 'Porto Beta (Terminal Especializado & Farma)',
+        tile: { x: 7, y: 5 },
+        freightRatePerTile: 0.018,
+        supplies: {
+          beer:         { wholesalePrice: 1.85, quality: 72, quota: 400, origin: 'Cerveja Artesanal Puro Malte (Premium)' },
+          cold_pills:   { wholesalePrice: 3.20, quality: 70, quota: 500, origin: 'Laboratórios Centrais' },
+          shampoo:      { wholesalePrice: 1.80, quality: 60, quota: 600, origin: 'Cosméticos Orgânicos' },
+          jeans:        { wholesalePrice: 15.00, quality: 65, quota: 200, origin: 'Têxtil de Alta Resistência' },
+          mobile_phone: { wholesalePrice: 185.00, quality: 65, quota: 100, origin: 'Montadora de Semicondutores' },
+        }
+      }
+    ];
+
+    const STORE_TYPES = [
+      { id:'kombini',       name:'Kombini',      emoji:'🛒', cost:8000,  maxShelves:4,  rentMultiplier:1.0, desc:'Varejo rápido de conveniência. Baixo custo, poucos produtos.' },
+      { id:'mercadinho',    name:'Mercadinho',   emoji:'🏪', cost:18000, maxShelves:10, rentMultiplier:1.35,desc:'Equilíbrio entre variedade e custo. Ideal para bairros.' },
+      { id:'supermercado',  name:'Supermercado', emoji:'🏬', cost:45000, maxShelves:25, rentMultiplier:1.8, desc:'Alto volume, muitas categorias. Requer grande fluxo de clientes.' },
+    ];
+
+    // ===========================================================================
+    // 2. FUNÇÕES DE LOGÍSTICA & FRETE
+    // ===========================================================================
+    function getManhattanDist(p1, p2) {
+      return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
+    }
+
+    function getSupplierOffersForProduct(prodId, storeTile) {
+      const offers = [];
+      for (const port of SEAPORTS) {
+        if (port.supplies[prodId]) {
+          const sup = port.supplies[prodId];
+          const dist = getManhattanDist(port.tile, storeTile);
+          const freight = Number((0.02 + dist * port.freightRatePerTile).toFixed(3));
+          const landed = Number((sup.wholesalePrice + freight).toFixed(3));
+          offers.push({
+            portId: port.id,
+            portName: port.name,
+            wholesalePrice: sup.wholesalePrice,
+            quality: sup.quality,
+            quota: sup.quota,
+            origin: sup.origin,
+            distance: dist,
+            freight,
+            landedCost: landed
+          });
+        }
+      }
+      // Ordena por custo de entrega
+      return offers.sort((a, b) => a.landedCost - b.landedCost);
+    }
+
+    // ===========================================================================
+    // 3. ESTADO GLOBAL DO JOGO
+    // ===========================================================================
+    let day = 1, month = 1, year = 1;
+    let cash = 50000.00;
+    let monthRevenue = 0, monthCogs = 0, monthFixedExpenses = 0;
+    let gameSpeed = 0, timerInterval = null;
+
+    const playerBrandRating = {};
+    Object.keys(PRODUCT_CATALOG).forEach(id => { playerBrandRating[id] = 20; });
+
+    let selectedTileX = -1, selectedTileY = -1;
+    let hoveredTileX  = -1, hoveredTileY  = -1;
+    let wasDragging   = false;
+    let currentHeatmap = 'terrain';
+
+    // Wizard de Abertura
+    let pendingTile = null;
+    let pendingStoreType = null;
+    let selectedProductsMap = new Map(); // prodId -> selectedOffer
+    let activeCategoryTab = 'Food';
+
+    // Loja gerida no painel
+    let activeManagedTile = null;
+
+    // Seletor de Fornecedor em gôndola ativa
+    let supplierTargetShelf = null; // { tile, prodId }
+
+    // ===========================================================================
+    // 4. WORLD GRID 36x36
+    // ===========================================================================
+    const GRID_SIZE = 36;
+    const TILE_W = 64, TILE_H = 32;
+    const worldGrid = [];
+
+    function getDistrictForTile(x, y) {
+      if (x + y < 11) return 'water';
+      if (x + y >= 11 && x + y <= 14 && (x < 12 || y < 12)) return 'harbor';
+      if (x === 18 || y === 18) return 'road';
+      if (x >= 14 && x <= 22 && y >= 12 && y <= 20) return 'downtown';
+      if (x >= 12 && x <= 24 && y >= 5 && y <= 12) return 'uptown';
+      if (x >= 22 && y < 22) return 'northside';
+      if (x < 14 && y >= 14 && y < 28) return 'west_suburbs';
+      if (y >= 26 || (x >= 24 && y >= 22)) return 'industrial';
+      return 'west_suburbs';
+    }
+
+    for (let x = 0; x < GRID_SIZE; x++) {
+      worldGrid[x] = [];
+      for (let y = 0; y < GRID_SIZE; y++) {
+        const districtId = getDistrictForTile(x, y);
+        const district = CITY_DISTRICTS[districtId];
+        const isWater = districtId === 'water';
+        const isRoad  = districtId === 'road';
+        
+        let portData = null;
+        if (x === 6 && y === 6) portData = SEAPORTS[0];
+        if (x === 7 && y === 5) portData = SEAPORTS[1];
+
+        worldGrid[x][y] = {
+          x, y,
+          districtId,
+          district,
+          isWater,
+          isRoad,
+          portData,
+          isPort: !!portData,
+          buildingHeight: isWater || isRoad ? 0 : (portData ? 16 : 0),
+          store: null,
+          competitor: (x === 25 && y === 15) ? {
+            name: 'QuickMart North (IA)',
+            shelves: {
+              bread: { price: 3.60, quality: 48, brand: 30 },
+              beer:  { price: 4.10, quality: 50, brand: 30 },
+              cola:  { price: 2.30, quality: 48, brand: 30 },
+              milk:  { price: 2.90, quality: 48, brand: 20 },
+            },
+            lastShare: 0.45,
+          } : null,
+        };
+      }
+    }
+
+    // ===========================================================================
+    // 5. MOTOR DE RENDERIZAÇÃO ISOMÉTRICO
+    // ===========================================================================
+    const canvas  = document.getElementById('iso-canvas');
+    const ctx     = canvas.getContext('2d');
+    const tooltip = document.getElementById('iso-tooltip');
+
+    const camera = { panX: 0, panY: 0, zoom: 1.0, isDragging: false, dragStartX: 0, dragStartY: 0 };
+
+    function resizeCanvas() {
+      const r = canvas.getBoundingClientRect();
+      canvas.width  = r.width  * window.devicePixelRatio;
+      canvas.height = r.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+
+    function resetCamera() {
+      const r = canvas.getBoundingClientRect();
+      camera.zoom = 1.0;
+      camera.panX = r.width  / 2;
+      camera.panY = r.height / 2 - (18 + 18) * (TILE_H / 2);
+      renderMap();
+    }
+
+    function changeZoom(d) {
+      camera.zoom = Math.min(2.2, Math.max(0.5, camera.zoom + d));
+      renderMap();
+    }
+
+    function gridToScreen(gx, gy) {
+      return {
+        sx: (gx - gy) * (TILE_W / 2) * camera.zoom + camera.panX,
+        sy: (gx + gy) * (TILE_H / 2) * camera.zoom + camera.panY,
+      };
+    }
+
+    function screenToGrid(mx, my) {
+      const relX = (mx - camera.panX) / ((TILE_W / 2) * camera.zoom);
+      const relY = (my - camera.panY) / ((TILE_H / 2) * camera.zoom);
+      return { gx: Math.floor((relY + relX) / 2), gy: Math.floor((relY - relX) / 2) };
+    }
+
+    function drawDiamond(sx, sy, w, h, fill, stroke = '#09111e') {
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(sx + w/2, sy + h/2);
+      ctx.lineTo(sx, sy + h);
+      ctx.lineTo(sx - w/2, sy + h/2);
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 0.8; ctx.stroke(); }
+    }
+
+    function drawBuilding(sx, sy, w, h, hPx, topC, leftC, rightC) {
+      const tsy = sy - hPx;
+      ctx.beginPath(); ctx.moveTo(sx - w/2, sy + h/2); ctx.lineTo(sx, sy + h); ctx.lineTo(sx, tsy + h); ctx.lineTo(sx - w/2, tsy + h/2); ctx.closePath();
+      ctx.fillStyle = leftC; ctx.fill();
+      ctx.beginPath(); ctx.moveTo(sx, sy + h); ctx.lineTo(sx + w/2, sy + h/2); ctx.lineTo(sx + w/2, tsy + h/2); ctx.lineTo(sx, tsy + h); ctx.closePath();
+      ctx.fillStyle = rightC; ctx.fill();
+      ctx.beginPath(); ctx.moveTo(sx, tsy); ctx.lineTo(sx + w/2, tsy + h/2); ctx.lineTo(sx, tsy + h); ctx.lineTo(sx - w/2, tsy + h/2); ctx.closePath();
+      ctx.fillStyle = topC; ctx.fill(); ctx.strokeStyle = '#010c14'; ctx.lineWidth = 0.8; ctx.stroke();
+    }
+
+    function renderMap() {
+      const r = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, r.width, r.height);
+      ctx.fillStyle = '#010d18'; ctx.fillRect(0, 0, r.width, r.height);
+
+      const w = TILE_W * camera.zoom;
+      const h = TILE_H * camera.zoom;
+
+      for (let depth = 0; depth <= 2 * GRID_SIZE; depth++) {
+        for (let gx = 0; gx < GRID_SIZE; gx++) {
+          const gy = depth - gx;
+          if (gy < 0 || gy >= GRID_SIZE) continue;
+          const tile = worldGrid[gx][gy];
+          const { sx, sy } = gridToScreen(gx, gy);
+
+          if (sx < -120 || sx > r.width + 120 || sy < -120 || sy > r.height + 200) continue;
+
+          let fill = '#0c2218';
+          const d = tile.districtId;
+          if (tile.isWater)          fill = '#031e33';
+          else if (tile.isPort)      fill = '#23382b';
+          else if (d === 'road')     fill = '#1a2535';
+          else if (d === 'harbor')   fill = '#1a2e25';
+          else if (d === 'downtown') fill = '#0d1f4a';
+          else if (d === 'uptown')   fill = '#1a1040';
+          else if (d === 'northside')fill = '#1a1e40';
+          else if (d === 'industrial')fill= '#1f1f1f';
+
+          // Heatmaps
+          if (currentHeatmap === 'traffic' && tile.district.trafficIndex > 0) {
+            const t = tile.district.trafficIndex / 100;
+            fill = `rgba(5, ${Math.floor(80 + 100 * t)}, ${Math.floor(50 + 30 * t)}, 0.85)`;
+          } else if (currentHeatmap === 'pop' && tile.district.population > 0) {
+            const t = Math.min(1, tile.district.population / 18000);
+            fill = `rgba(29, ${Math.floor(40 + 60 * t)}, ${Math.floor(130 + 100 * t)}, 0.85)`;
+          } else if (currentHeatmap === 'comp') {
+            if (tile.store) fill = '#044a28';
+            else if (tile.competitor) fill = '#4a0416';
+          } else if (currentHeatmap === 'ports') {
+            if (tile.isPort) fill = '#854d0e';
+          }
+
+          drawDiamond(sx, sy, w, h, fill);
+
+          // Prédios / Estruturas
+          const hPx = tile.buildingHeight * camera.zoom;
+          if (hPx > 0) {
+            let topC='#38bdf8', leftC='#0284c7', rightC='#0369a1';
+            if (tile.store) {
+              topC='#10b981'; leftC='#059669'; rightC='#047857';
+            } else if (tile.competitor) {
+              topC='#f43f5e'; leftC='#e11d48'; rightC='#be123c';
+            } else if (tile.isPort) {
+              topC='#fbbf24'; leftC='#d97706'; rightC='#b45309';
+            } else if (d === 'residential' || d === 'northside') {
+              topC='#818cf8'; leftC='#6366f1'; rightC='#4f46e5';
+            } else if (d === 'downtown') {
+              topC='#60a5fa'; leftC='#3b82f6'; rightC='#2563eb';
+            }
+            drawBuilding(sx, sy, w, h, hPx, topC, leftC, rightC);
+
+            if (tile.store) {
+              const emoji = STORE_TYPES.find(s => s.id === tile.store.storeTypeId)?.emoji || '🛒';
+              ctx.fillStyle = '#34d399';
+              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
+              ctx.fillText(`${emoji} A GUILDA`, sx - 28 * camera.zoom, sy - hPx - 5);
+            } else if (tile.competitor) {
+              ctx.fillStyle = '#fb7185';
+              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
+              ctx.fillText('🏪 QUICKMART', sx - 32 * camera.zoom, sy - hPx - 5);
+            } else if (tile.isPort) {
+              ctx.fillStyle = '#fde047';
+              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
+              ctx.fillText(`⚓ ${tile.portData.id === 'port_alpha' ? 'P. ALFA' : 'P. BETA'}`, sx - 25 * camera.zoom, sy - hPx - 5);
+            }
+          }
+
+          if (gx === hoveredTileX && gy === hoveredTileY)
+            drawDiamond(sx, sy, w, h, 'rgba(255,255,255,0.18)', '#38bdf8');
+          if (gx === selectedTileX && gy === selectedTileY)
+            drawDiamond(sx, sy, w, h, 'rgba(251,191,36,0.28)', '#fbbf24');
+        }
+      }
+    }
+
+    // ===========================================================================
+    // 6. EVENTOS DO MOUSE
+    // ===========================================================================
+    canvas.addEventListener('mousedown', (e) => {
+      camera.isDragging = true;
+      wasDragging = false;
+      camera.dragStartX = e.clientX - camera.panX;
+      camera.dragStartY = e.clientY - camera.panY;
+    });
+
+    window.addEventListener('mouseup', () => { camera.isDragging = false; });
+
+    canvas.addEventListener('mousemove', (e) => {
+      const r = canvas.getBoundingClientRect();
+      const mx = e.clientX - r.left, my = e.clientY - r.top;
+
+      if (camera.isDragging) {
+        const dx = Math.abs(e.clientX - camera.dragStartX - camera.panX);
+        const dy = Math.abs(e.clientY - camera.dragStartY - camera.panY);
+        if (dx > 4 || dy > 4) wasDragging = true;
+        camera.panX = e.clientX - camera.dragStartX;
+        camera.panY = e.clientY - camera.dragStartY;
+        tooltip.classList.add('hidden');
+        renderMap();
+        return;
+      }
+
+      const { gx, gy } = screenToGrid(mx, my);
+      if (gx >= 0 && gx < GRID_SIZE && gy >= 0 && gy < GRID_SIZE) {
+        hoveredTileX = gx; hoveredTileY = gy;
+        const tile = worldGrid[gx][gy];
+        const d = tile.district;
+
+        tooltip.classList.remove('hidden');
+        tooltip.style.left = `${mx + 14}px`;
+        tooltip.style.top  = `${my + 10}px`;
+
+        if (tile.isPort) {
+          tooltip.innerHTML = `
+            <div class="font-bold text-amber-300 text-xs">⚓ ${tile.portData.name}</div>
+            <div class="text-[10px] text-slate-400">Terminal Marítimo Internacional (${gx},${gy})</div>
+            <div class="text-[10px] text-emerald-400 font-bold mt-1">Clique para inspecionar remessas e preços CIF</div>
+          `;
+        } else {
+          tooltip.innerHTML = `
+            <div class="font-bold text-amber-300 text-xs">${tile.store ? tile.store.name : (tile.competitor ? tile.competitor.name : d.name)}</div>
+            <div class="text-[10px] text-slate-400">(${gx},${gy}) · ${d.type}</div>
+            <div class="text-[10px] text-slate-300 mt-0.5">
+              🚶 ${d.trafficIndex}/100 · 👥 ${d.population.toLocaleString()} hab · 💰 $${d.landRentDaily}/dia
+            </div>
+            ${tile.store ? `<div class="text-[10px] text-emerald-400 font-bold mt-0.5">🛒 Sua loja ativa · Clique para gerir</div>` : ''}
+            ${tile.competitor ? `<div class="text-[10px] text-rose-400 mt-0.5">🤖 Concorrente IA operando aqui</div>` : ''}
+            ${!tile.store && !tile.isWater && !tile.isRoad ? `<div class="text-[10px] text-teal-400 mt-0.5">🏗 Clique para abrir um estabelecimento</div>` : ''}
+          `;
+        }
+      } else {
+        hoveredTileX = -1; hoveredTileY = -1;
+        tooltip.classList.add('hidden');
+      }
+      renderMap();
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      hoveredTileX = -1; hoveredTileY = -1;
+      tooltip.classList.add('hidden');
+      renderMap();
+    });
+
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      changeZoom(e.deltaY < 0 ? 0.1 : -0.1);
+    }, { passive: false });
+
+    canvas.addEventListener('click', (e) => {
+      if (wasDragging) return;
+      const r = canvas.getBoundingClientRect();
+      const { gx, gy } = screenToGrid(e.clientX - r.left, e.clientY - r.top);
+      if (gx < 0 || gx >= GRID_SIZE || gy < 0 || gy >= GRID_SIZE) return;
+
+      selectedTileX = gx; selectedTileY = gy;
+      const tile = worldGrid[gx][gy];
+
+      if (tile.isPort) {
+        openPortModal(tile.portData);
+      } else if (tile.store) {
+        activeManagedTile = tile;
+        renderGondolaPanel(tile);
+      } else {
+        activeManagedTile = null;
+        renderIdlePanel();
+      }
+
+      renderTileInspector(tile);
+      renderMap();
+    });
+
+    // ===========================================================================
+    // 7. INSPETOR DE TILE & MODAL DE PORTOS
+    // ===========================================================================
+    function renderTileInspector(tile) {
+      const el = document.getElementById('tile-inspector');
+      if (!tile) { el.innerHTML = `<p class="text-xs text-slate-500 font-mono">Clique em um lote ou porto para inspecioná-lo.</p>`; return; }
+      const d = tile.district;
+
+      if (tile.isPort) {
+        el.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="text-xs font-bold text-amber-300 flex items-center gap-1.5">⚓ ${tile.portData.name}</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5 font-mono">Terminal de Cargas Marítimas · Cais de Neo Capital (${tile.x}, ${tile.y})</p>
+            </div>
+            <button onclick="openPortModal(worldGrid[${tile.x}][${tile.y}].portData)"
+              class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition">
+              📦 Inspecionar Remessas & Preços
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      const canBuild = !tile.store && !tile.isWater && !tile.isRoad && !tile.competitor;
+
+      el.innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="text-xs font-bold text-amber-300">${tile.store ? tile.store.name : d.name}</h3>
+              <span class="text-[10px] text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800 font-mono">${d.type}</span>
+            </div>
+            <div class="text-[11px] text-slate-400 mt-1 font-mono flex flex-wrap gap-3">
+              <span>🚶 Tráfego: <strong class="text-emerald-400">${d.trafficIndex}/100</strong></span>
+              <span>👥 Pop: <strong class="text-slate-200">${d.population.toLocaleString()}</strong></span>
+              <span>💰 Aluguel base: <strong class="text-rose-400">$${d.landRentDaily}/dia</strong></span>
+            </div>
+          </div>
+          <div>
+            ${canBuild ? `
+              <button onclick="openStoreWizard(worldGrid[${tile.x}][${tile.y}])"
+                class="bg-emerald-700 hover:bg-emerald-600 text-white px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition flex items-center gap-1.5">
+                🏗️ Abrir Estabelecimento <span class="bg-emerald-900/80 px-1.5 py-0.5 rounded text-[10px]">→ escolher</span>
+              </button>
+            ` : (tile.store ? `
+              <span class="text-xs font-mono text-emerald-400 bg-emerald-950 px-3 py-1 rounded-lg border border-emerald-800 font-bold">✅ Loja Ativa</span>
+            ` : (tile.competitor ? `
+              <span class="text-xs font-mono text-rose-400 bg-rose-950 px-3 py-1 rounded-lg border border-rose-800">🤖 Concorrente IA</span>
+            ` : `
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-3 py-1 rounded-lg">🚫 Lote Inacessível</span>
+            `))}
+          </div>
+        </div>
+      `;
+    }
+
+    function openPortModal(port) {
+      document.getElementById('port-modal-title').textContent = `⚓ ${port.name}`;
+      document.getElementById('port-modal-subtitle').textContent = `Localização: Cais Norte (${port.tile.x}, ${port.tile.y}) · Tarifa Base de Frete: $${port.freightRatePerTile}/tile`;
+
+      const list = document.getElementById('port-cargo-list');
+      list.innerHTML = Object.entries(port.supplies).map(([prodId, sup]) => {
+        const prod = PRODUCT_CATALOG[prodId];
+        const markup = Math.round(((prod.standardPrice - sup.wholesalePrice) / sup.wholesalePrice) * 100);
+        return `
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-slate-200 text-sm">${prod.name}</span>
+                <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">${prod.category}</span>
+                <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">⭐ Qualidade: ${sup.quality}/100</span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-1">
+                Origem: <strong class="text-slate-300">${sup.origin}</strong> · Cota Diária: <strong class="text-amber-400">${sup.quota} un/dia</strong>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-slate-500 text-[10px] block">Preço Atacado (CIF)</span>
+              <span class="text-sm font-bold text-emerald-400">$${sup.wholesalePrice.toFixed(2)}/un</span>
+              <span class="text-[10px] text-slate-400 block mt-0.5">Ref. Varejo: $${prod.standardPrice.toFixed(2)} (+${markup}%)</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('port-modal').classList.remove('hidden');
+    }
+
+    function closePortModal() {
+      document.getElementById('port-modal').classList.add('hidden');
+    }
+
+    // ===========================================================================
+    // 8. WIZARD DE ABERTURA DE LOJA COM ESCOLHA DE FORNECEDORES
+    // ===========================================================================
+    function openStoreWizard(tile) {
+      pendingTile = tile;
+      pendingStoreType = null;
+      selectedProductsMap.clear();
+      activeCategoryTab = 'Food';
+
+      const d = tile.district;
+      document.getElementById('modal-title').textContent = `Abrir Estabelecimento em ${d.name}`;
+      document.getElementById('modal-subtitle').textContent =
+        `Tráfego: ${d.trafficIndex}/100 · Pop: ${d.population.toLocaleString()} hab · Aluguel base: $${d.landRentDaily}/dia`;
+
+      updateStepIndicator(1);
+      renderStoreTypeCards();
+      document.getElementById('wizard-step1').classList.remove('hidden');
+      document.getElementById('wizard-step2').classList.add('hidden');
+      document.getElementById('store-modal').classList.remove('hidden');
+    }
+
+    function updateStepIndicator(step) {
+      document.getElementById('step-dot-1').className = `w-2.5 h-2.5 rounded-full ${step >= 1 ? 'bg-emerald-400' : 'bg-slate-600'}`;
+      document.getElementById('step-dot-2').className = `w-2.5 h-2.5 rounded-full ${step >= 2 ? 'bg-emerald-400' : 'bg-slate-600'}`;
+      document.getElementById('step-line-fill').style.width = step >= 2 ? '100%' : '0%';
+      document.getElementById('step-label').textContent = `Etapa ${step}/2`;
+    }
+
+    function renderStoreTypeCards() {
+      const d = pendingTile.district;
+      const container = document.getElementById('store-type-cards');
+      container.innerHTML = STORE_TYPES.map(st => {
+        const actualRent = (d.landRentDaily * st.rentMultiplier).toFixed(0);
+        const isSelected = pendingStoreType?.id === st.id;
+        return `
+          <div onclick="selectStoreType('${st.id}')"
+            class="store-type-card cursor-pointer rounded-xl border p-4 flex flex-col gap-2
+              ${isSelected ? 'border-emerald-500 bg-emerald-950/40 ring-1 ring-emerald-500' : 'border-slate-700 bg-slate-800/60 hover:border-slate-600'}">
+            <div class="text-2xl">${st.emoji}</div>
+            <div class="text-sm font-bold text-slate-100">${st.name}</div>
+            <div class="text-[11px] font-bold text-emerald-400 font-mono">$${st.cost.toLocaleString()}</div>
+            <div class="text-[10px] font-mono text-slate-400 space-y-0.5">
+              <div>📦 ${st.maxShelves} gôndolas</div>
+              <div>🏠 Aluguel: <strong class="text-rose-400">$${actualRent}/dia</strong></div>
+            </div>
+            <div class="text-[10px] text-slate-500 border-t border-slate-700 pt-1.5 mt-0.5">${st.desc}</div>
+            ${isSelected ? `<div class="text-[10px] text-emerald-400 font-bold font-mono mt-0.5">✅ Selecionado</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectStoreType(typeId) {
+      pendingStoreType = STORE_TYPES.find(s => s.id === typeId);
+      renderStoreTypeCards();
+      document.getElementById('btn-to-step2').disabled = false;
+    }
+
+    function advanceToStep2() {
+      if (!pendingStoreType) return;
+      updateStepIndicator(2);
+      document.getElementById('wizard-step1').classList.add('hidden');
+      document.getElementById('wizard-step2').classList.remove('hidden');
+      renderProductSelector();
+    }
+
+    function backToStep1() {
+      updateStepIndicator(1);
+      document.getElementById('wizard-step2').classList.add('hidden');
+      document.getElementById('wizard-step1').classList.remove('hidden');
+    }
+
+    function renderProductSelector() {
+      const d = pendingTile.district;
+      const categories = [...new Set(Object.values(PRODUCT_CATALOG).map(p => p.category))];
+
+      document.getElementById('category-tabs').innerHTML = categories.map(cat => `
+        <button onclick="setCategoryTab('${cat}')"
+          class="px-3 py-1 rounded-lg text-[11px] font-mono transition
+            ${activeCategoryTab === cat ? 'bg-slate-700 text-slate-100 font-bold' : 'text-slate-400 hover:text-slate-200'}">
+          ${cat}
+        </button>
+      `).join('');
+
+      const products = Object.values(PRODUCT_CATALOG).filter(p => p.category === activeCategoryTab);
+      const usedSlots = selectedProductsMap.size;
+      const maxSlots  = pendingStoreType.maxShelves;
+
+      document.getElementById('product-list').innerHTML = products.map(prod => {
+        const offers = getSupplierOffersForProduct(prod.id, pendingTile);
+        const hasOffer = offers.length > 0;
+        const defaultOffer = offers[0] || null;
+        const currentOffer = selectedProductsMap.get(prod.id) || defaultOffer;
+        const isSelected = selectedProductsMap.has(prod.id);
+        const isDisabled = (!isSelected && usedSlots >= maxSlots) || !hasOffer;
+
+        const brand = playerBrandRating[prod.id] || 20;
+        const rating = currentOffer ? calcProductRating(prod, prod.standardPrice, currentOffer.quality, brand) : 0;
+        const estSales = Math.floor(d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45);
+        const initStockCost = currentOffer ? Math.round(300 * currentOffer.landedCost) : 0;
+
+        return `
+          <div class="product-card rounded-xl border p-3 flex flex-col gap-2 ${isSelected ? 'border-emerald-600 bg-emerald-950/30' : 'border-slate-800 bg-slate-800/30'}">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" ${isSelected ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}
+                  onchange="toggleProductInWizard('${prod.id}')" class="w-4 h-4 rounded text-emerald-500 focus:ring-0 cursor-pointer">
+                <span class="text-xs font-bold text-slate-100">${prod.name}</span>
+                <span class="text-[9px] bg-slate-700 text-slate-400 px-1.5 py-0.5 rounded font-mono">${prod.category}</span>
+              </div>
+              <div class="text-right text-[10px] font-mono">
+                <span class="text-slate-400">1º Estoque (300 un): </span>
+                <strong class="text-rose-400">-$${initStockCost.toLocaleString()}</strong>
+              </div>
+            </div>
+
+            <!-- Detalhe do Fornecedor Portuário -->
+            ${hasOffer ? `
+              <div class="bg-slate-900/80 rounded-lg p-2 text-[10px] font-mono border border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-amber-400">⚓ ${currentOffer.portName.split('(')[0].trim()}</span>
+                  <span class="text-slate-500">(${currentOffer.distance} tiles)</span>
+                  <span class="text-cyan-300 bg-cyan-950 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${currentOffer.quality}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span>Atacado: <strong class="text-slate-300">$${currentOffer.wholesalePrice.toFixed(2)}</strong></span>
+                  <span>Frete: <strong class="text-amber-300">+$${currentOffer.freight.toFixed(2)}</strong></span>
+                  <span>Custo Efetivo: <strong class="text-emerald-400 font-bold">$${currentOffer.landedCost.toFixed(2)}</strong></span>
+                </div>
+              </div>
+            ` : `<div class="text-[10px] text-rose-400 font-mono">❌ Nenhum porto com remessas atracadas para este item.</div>`}
+          </div>
+        `;
+      }).join('');
+
+      updateCostSummary();
+    }
+
+    function setCategoryTab(cat) {
+      activeCategoryTab = cat;
+      renderProductSelector();
+    }
+
+    function toggleProductInWizard(prodId) {
+      if (selectedProductsMap.has(prodId)) {
+        selectedProductsMap.delete(prodId);
+      } else {
+        if (selectedProductsMap.size >= pendingStoreType.maxShelves) return;
+        const offers = getSupplierOffersForProduct(prodId, pendingTile);
+        if (offers.length > 0) {
+          selectedProductsMap.set(prodId, offers[0]);
+        }
+      }
+      renderProductSelector();
+    }
+
+    function updateCostSummary() {
+      const buildCost  = pendingStoreType.cost;
+      let stockCost = 0;
+      for (const [prodId, offer] of selectedProductsMap.entries()) {
+        stockCost += Math.round(300 * offer.landedCost);
+      }
+      const totalCost  = buildCost + stockCost;
+      const remaining  = cash - totalCost;
+      const usedSlots  = selectedProductsMap.size;
+      const maxSlots   = pendingStoreType.maxShelves;
+      const canConfirm = selectedProductsMap.size > 0 && remaining >= 0;
+
+      document.getElementById('cost-summary-bar').innerHTML = `
+        <div class="flex flex-wrap gap-4 text-[11px] font-mono w-full">
+          <span>🏗 Obra: <strong class="text-rose-400">-$${buildCost.toLocaleString()}</strong></span>
+          <span>📦 Estoque + Frete: <strong class="text-rose-400">-$${stockCost.toLocaleString()}</strong></span>
+          <span class="font-bold">Total: <strong class="text-rose-300">-$${totalCost.toLocaleString()}</strong></span>
+          <span class="ml-auto">Gôndolas: <strong class="${usedSlots >= maxSlots ? 'text-amber-400' : 'text-slate-200'}">${usedSlots}/${maxSlots}</strong></span>
+          <span>Saldo após: <strong class="${remaining < 0 ? 'text-red-400' : 'text-emerald-400'}">$${remaining.toLocaleString()}</strong></span>
+        </div>
+      `;
+
+      const btnConfirm = document.getElementById('btn-confirm-store');
+      btnConfirm.disabled = !canConfirm;
+      btnConfirm.textContent = canConfirm
+        ? `✅ Confirmar e Abrir ${pendingStoreType.name} (-$${totalCost.toLocaleString()})`
+        : (remaining < 0 ? '❌ Caixa insuficiente' : 'Selecione ao menos 1 produto');
+    }
+
+    function confirmOpenStore() {
+      if (selectedProductsMap.size === 0 || !pendingStoreType || !pendingTile) return;
+      const buildCost = pendingStoreType.cost;
+      let stockCost = 0;
+      for (const [prodId, offer] of selectedProductsMap.entries()) {
+        stockCost += Math.round(300 * offer.landedCost);
+      }
+      const totalCost = buildCost + stockCost;
+      if (cash < totalCost) return;
+
+      cash -= totalCost;
+
+      const shelves = {};
+      for (const [prodId, offer] of selectedProductsMap.entries()) {
+        const prod = PRODUCT_CATALOG[prodId];
+        shelves[prodId] = {
+          price: prod.standardPrice,
+          stock: 300,
+          maxCapacity: 1000,
+          dailyRestock: Math.round(prod.perCapitaDailyDemand * pendingTile.district.population * 0.5),
+          quality: offer.quality,
+          supplierId: offer.portId,
+          supplierName: offer.portName,
+          wholesalePrice: offer.wholesalePrice,
+          unitFreight: offer.freight,
+          landedCost: offer.landedCost
+        };
+      }
+
+      const actualRent = pendingTile.district.landRentDaily * pendingStoreType.rentMultiplier;
+      const storeName  = `${pendingStoreType.emoji} ${pendingStoreType.name} (${pendingTile.district.name})`;
+
+      pendingTile.store = {
+        storeTypeId:     pendingStoreType.id,
+        name:            storeName,
+        maxShelves:      pendingStoreType.maxShelves,
+        rentMultiplier:  pendingStoreType.rentMultiplier,
+        dailyRent:       actualRent,
+        shelves,
+      };
+      pendingTile.buildingHeight = 20;
+
+      addLog(`🏗️ ${storeName} inaugurada por $${totalCost.toLocaleString()}! Fornecedores portuários vinculados.`, 'text-emerald-400 font-bold');
+
+      closeModal();
+      activeManagedTile = pendingTile;
+      renderGondolaPanel(pendingTile);
+      renderTileInspector(pendingTile);
+      renderMap();
+      updateUI();
+    }
+
+    function closeModal() {
+      document.getElementById('store-modal').classList.add('hidden');
+      pendingTile = null;
+      pendingStoreType = null;
+      selectedProductsMap.clear();
+    }
+
+    // ===========================================================================
+    // 9. PAINEL DE GÔNDOLAS COM LOGÍSTICA & SELEÇÃO DE FORNECEDORES
+    // ===========================================================================
+    function renderIdlePanel() {
+      document.getElementById('store-title').textContent = '🛒 Selecione uma loja no mapa';
+      document.getElementById('store-subtitle').textContent = 'Clique numa loja verde para gerir gôndolas e fornecedores.';
+      document.getElementById('store-rent-badge').classList.add('hidden');
+      document.getElementById('add-product-row').classList.add('hidden');
+      document.getElementById('gondola-panel').innerHTML = `
+        <p class="text-[11px] text-slate-500 font-mono text-center py-3">Nenhuma loja selecionada.</p>
+      `;
+    }
+
+    function renderGondolaPanel(tile) {
+      if (!tile || !tile.store) { renderIdlePanel(); return; }
+      const store = tile.store;
+      const d = tile.district;
+
+      document.getElementById('store-title').textContent = store.name;
+      document.getElementById('store-subtitle').textContent = `${d.name} · ${Object.keys(store.shelves).length}/${store.maxShelves} gôndolas`;
+      const badge = document.getElementById('store-rent-badge');
+      badge.textContent = `-$${store.dailyRent.toFixed(2)}/dia`;
+      badge.classList.remove('hidden');
+
+      const panel = document.getElementById('gondola-panel');
+      panel.innerHTML = '';
+
+      for (const [prodId, shelf] of Object.entries(store.shelves)) {
+        const prod = PRODUCT_CATALOG[prodId];
+        if (!prod) continue;
+
+        // Se ainda não tem fornecedor explícito, busca o melhor porto
+        if (!shelf.landedCost) {
+          const offers = getSupplierOffersForProduct(prodId, tile);
+          if (offers.length > 0) {
+            shelf.supplierId = offers[0].portId;
+            shelf.supplierName = offers[0].portName;
+            shelf.wholesalePrice = offers[0].wholesalePrice;
+            shelf.unitFreight = offers[0].freight;
+            shelf.landedCost = offers[0].landedCost;
+            shelf.quality = offers[0].quality;
+          } else {
+            shelf.landedCost = prod.baseCost;
+            shelf.quality = 50;
+          }
+        }
+
+        const brand = playerBrandRating[prodId] || 20;
+        const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
+        const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
+        const estSales = Math.floor(d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast);
+        const stockPct = Math.round((shelf.stock / shelf.maxCapacity) * 100);
+        const markupPct = Math.round(((shelf.price - shelf.landedCost) / shelf.landedCost) * 100);
+        const isStockout = shelf.stock < 30;
+
+        const card = document.createElement('div');
+        card.className = `rounded-xl border ${isStockout ? 'border-rose-800 stockout-alert' : 'border-slate-800'} bg-slate-950 p-2.5 space-y-2`;
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="text-[11px] font-bold text-slate-200">${prod.name}</span>
+              <span class="text-[9px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800 font-mono">QR: ${shelf.quality}</span>
+              <span class="text-[9px] bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-mono">⭐ Marca: ${brand}</span>
+            </div>
+            <button onclick="removeProductFromStore(${tile.x}, ${tile.y}, '${prodId}')" class="text-[10px] text-slate-600 hover:text-rose-400 font-mono px-1">✕</button>
+          </div>
+
+          <!-- Dados do Fornecedor Portuário -->
+          <div class="bg-slate-900 p-1.5 rounded-lg text-[10px] font-mono flex items-center justify-between border border-slate-800">
+            <div class="truncate max-w-[180px]">
+              <span class="text-amber-400">⚓ ${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Porto Padrão'}</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-slate-400">Custo: <strong class="text-emerald-400 font-bold">$${shelf.landedCost.toFixed(2)}</strong></span>
+              <button onclick="openSupplierModal(${tile.x}, ${tile.y}, '${prodId}')" class="bg-slate-800 hover:bg-slate-700 text-teal-300 px-1.5 py-0.5 rounded text-[9px] font-bold">Trocar</button>
+            </div>
+          </div>
+
+          <!-- Barra de Estoque -->
+          <div>
+            <div class="flex justify-between text-[10px] font-mono text-slate-400 mb-0.5">
+              <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-400'}">Estoque: ${shelf.stock.toLocaleString()} / ${shelf.maxCapacity.toLocaleString()} un</span>
+              <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-500'}">${isStockout ? '⚠ BAIXO' : `${stockPct}%`}</span>
+            </div>
+            <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div class="stock-bar-fill h-full rounded-full ${isStockout ? 'bg-rose-500' : stockPct > 50 ? 'bg-emerald-500' : 'bg-amber-500'}" style="width:${stockPct}%"></div>
+            </div>
+          </div>
+
+          <!-- Preço & Reposição -->
+          <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
+            <div>
+              <span class="text-slate-400 block">Preço de Venda ($):</span>
+              <input type="number" step="0.10" value="${shelf.price.toFixed(2)}"
+                onchange="updateShelfPrice(${tile.x}, ${tile.y}, '${prodId}', this.value)"
+                class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-emerald-400 font-bold text-right focus:outline-none focus:border-emerald-500">
+              <span class="text-[9px] ${markupPct >= 0 ? 'text-emerald-500' : 'text-rose-500'}">Margem: ${markupPct > 0 ? '+' : ''}${markupPct}%</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">Reposição/dia (un):</span>
+              <input type="number" step="50" value="${shelf.dailyRestock}"
+                onchange="updateShelfRestock(${tile.x}, ${tile.y}, '${prodId}', this.value)"
+                class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-slate-200 font-bold text-right focus:outline-none focus:border-cyan-500">
+            </div>
+          </div>
+
+          <!-- Indicadores -->
+          <div class="flex justify-between text-[10px] font-mono text-slate-400 border-t border-slate-800/60 pt-1.5">
+            <span>Rating: <strong class="text-cyan-300">${rating.toFixed(1)}/100</strong></span>
+            <span>Elast: <strong class="text-amber-300">${elast.toFixed(2)}x</strong></span>
+            <span>Est./dia: <strong class="text-teal-300">~${estSales} un</strong></span>
+          </div>
+        `;
+        panel.appendChild(card);
+      }
+
+      const addRow = document.getElementById('add-product-row');
+      const freeSlots = store.maxShelves - Object.keys(store.shelves).length;
+      if (freeSlots > 0) {
+        addRow.classList.remove('hidden');
+        addRow.innerHTML = `
+          <button onclick="openAddProductModal(${tile.x}, ${tile.y})"
+            class="w-full text-center text-[11px] text-teal-400 hover:text-teal-300 font-mono py-1 border border-dashed border-slate-700 rounded-lg hover:border-teal-700 transition">
+            + Adicionar Produto (${freeSlots} slot${freeSlots > 1 ? 's' : ''} livre${freeSlots > 1 ? 's' : ''})
+          </button>
+        `;
+      } else {
+        addRow.classList.add('hidden');
+      }
+    }
+
+    function openSupplierModal(x, y, prodId) {
+      const tile = worldGrid[x][y];
+      if (!tile?.store?.shelves[prodId]) return;
+      supplierTargetShelf = { tile, prodId };
+
+      const prod = PRODUCT_CATALOG[prodId];
+      const offers = getSupplierOffersForProduct(prodId, tile);
+
+      document.getElementById('supplier-modal-title').textContent = `🔗 Fornecedores de ${prod.name}`;
+      document.getElementById('supplier-modal-subtitle').textContent = `Loja: ${tile.store.name} (${tile.x}, ${tile.y})`;
+
+      const list = document.getElementById('supplier-options-list');
+      list.innerHTML = offers.map(offer => {
+        const isCurrent = tile.store.shelves[prodId].supplierId === offer.portId;
+        return `
+          <div class="bg-slate-950 p-3 rounded-xl border ${isCurrent ? 'border-emerald-500 bg-emerald-950/20' : 'border-slate-800'} flex items-center justify-between text-xs font-mono">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-amber-300">${offer.portName}</span>
+                <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${offer.quality}</span>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-1">
+                Distância: <strong class="text-slate-300">${offer.distance} tiles</strong> · Origem: <strong>${offer.origin}</strong>
+              </div>
+              <div class="text-[11px] text-slate-300 mt-1">
+                Preço Porto: $${offer.wholesalePrice.toFixed(2)} + Frete: <span class="text-amber-400">+$${offer.freight.toFixed(2)}</span> = Custo: <strong class="text-emerald-400 font-bold">$${offer.landedCost.toFixed(2)}</strong>
+              </div>
+            </div>
+            <div>
+              ${isCurrent ? `
+                <span class="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-1 rounded border border-emerald-800 font-bold">Ativo</span>
+              ` : `
+                <button onclick="applySupplierChange('${offer.portId}')" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold font-mono">
+                  Contratar
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('supplier-modal').classList.remove('hidden');
+    }
+
+    function applySupplierChange(portId) {
+      if (!supplierTargetShelf) return;
+      const { tile, prodId } = supplierTargetShelf;
+      const offers = getSupplierOffersForProduct(prodId, tile);
+      const chosen = offers.find(o => o.portId === portId);
+
+      if (chosen && tile.store?.shelves[prodId]) {
+        const shelf = tile.store.shelves[prodId];
+        shelf.supplierId = chosen.portId;
+        shelf.supplierName = chosen.portName;
+        shelf.wholesalePrice = chosen.wholesalePrice;
+        shelf.unitFreight = chosen.freight;
+        shelf.landedCost = chosen.landedCost;
+        shelf.quality = chosen.quality;
+
+        addLog(`🔗 Fornecedor de ${PRODUCT_CATALOG[prodId].name} alterado para ${chosen.portName} (Novo custo: $${chosen.landedCost.toFixed(2)} | QR: ${chosen.quality}).`, 'text-cyan-400');
+        closeSupplierModal();
+        renderGondolaPanel(tile);
+      }
+    }
+
+    function closeSupplierModal() {
+      document.getElementById('supplier-modal').classList.add('hidden');
+      supplierTargetShelf = null;
+    }
+
+    function removeProductFromStore(x, y, prodId) {
+      const tile = worldGrid[x][y];
+      if (!tile?.store) return;
+      delete tile.store.shelves[prodId];
+      addLog(`🔻 ${PRODUCT_CATALOG[prodId]?.name} retirado das gôndolas de ${tile.store.name}.`);
+      renderGondolaPanel(tile);
+    }
+
+    function updateShelfPrice(x, y, prodId, val) {
+      const tile = worldGrid[x][y];
+      if (!tile?.store?.shelves[prodId]) return;
+      const p = parseFloat(val);
+      if (p > 0) {
+        tile.store.shelves[prodId].price = p;
+        addLog(`💲 Preço de ${PRODUCT_CATALOG[prodId].name} ajustado para $${p.toFixed(2)}.`);
+        if (activeManagedTile?.x === x && activeManagedTile?.y === y) renderGondolaPanel(tile);
+      }
+    }
+
+    function updateShelfRestock(x, y, prodId, val) {
+      const tile = worldGrid[x][y];
+      if (!tile?.store?.shelves[prodId]) return;
+      const q = parseInt(val);
+      if (q >= 0) tile.store.shelves[prodId].dailyRestock = q;
+    }
+
+    // ===========================================================================
+    // 10. SIMULAÇÃO DIÁRIA & MOTOR ECONÔMICO
+    // ===========================================================================
+    function calcPriceRating(standardPrice, price) {
+      if (price <= 0) return 100;
+      return Math.min(100, Math.max(0, (standardPrice / price) * 50));
+    }
+
+    function calcProductRating(prod, price, quality, brand) {
+      const qW = prod.qualityWeight, bW = prod.brandWeight, pW = Math.max(0, 100 - qW - bW);
+      const pr = calcPriceRating(prod.standardPrice, price);
+      return Math.min(100, Math.max(1, (Math.min(100, quality) * qW + Math.min(100, brand) * bW + pr * pW) / 100));
+    }
+
+    function calcElasticity(necessityIndex, standardPrice, price) {
+      if (price <= 0) return 2.5;
+      const exp = 2.20 - 1.85 * (Math.min(100, necessityIndex) / 100);
+      return Math.min(3.0, Math.max(0.05, Math.pow(standardPrice / price, exp)));
+    }
+
+    function addLog(text, color = 'text-slate-300') {
+      const logs = document.getElementById('game-logs');
+      const item = document.createElement('div');
+      item.className = color;
+      item.innerText = `[${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')}/A${year}] ${text}`;
+      logs.prepend(item);
+      while (logs.children.length > 60) logs.removeChild(logs.lastChild);
+    }
+
+    function simulateDay() {
+      let dailyRev = 0, dailyCogs = 0, dailyFixed = 0;
+
+      for (let x = 0; x < GRID_SIZE; x++) {
+        for (let y = 0; y < GRID_SIZE; y++) {
+          const tile = worldGrid[x][y];
+          const d = tile.district;
+          if (!tile.store && !tile.competitor) continue;
+
+          if (tile.store) dailyFixed += tile.store.dailyRent;
+
+          for (const [prodId, shelf] of Object.entries(tile.store?.shelves || {})) {
+            const prod = PRODUCT_CATALOG[prodId];
+            if (!prod) continue;
+            const noise = 0.94 + Math.random() * 0.12;
+            const baseDem = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * noise;
+            const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
+            const brand = playerBrandRating[prodId] || 20;
+            const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
+
+            let compRating = 0;
+            const nb = worldGrid[x+1]?.[y]?.competitor || worldGrid[x]?.[y+1]?.competitor || worldGrid[x]?.[y]?.competitor;
+            if (nb?.shelves[prodId]) {
+              const cs = nb.shelves[prodId];
+              compRating = calcProductRating(prod, cs.price, cs.quality, cs.brand);
+            }
+
+            const pW = Math.pow(rating, 2);
+            const cW = Math.pow(compRating, 2);
+            const uW = Math.pow(25, 2);
+            const share = pW / (pW + cW + uW);
+
+            const potDemand = Math.floor(baseDem * elast * share);
+            const sold = Math.min(shelf.stock, potDemand);
+
+            if (shelf.stock === 0 && potDemand > 10 && Math.random() < 0.15)
+              addLog(`⚠ Stockout de "${prod.name}" na ${tile.store?.name ?? ''}! Clientes perdidos.`, 'text-amber-400');
+
+            shelf.stock = Math.max(0, shelf.stock - sold);
+            dailyRev  += sold * shelf.price;
+            dailyCogs += sold * (shelf.landedCost || prod.baseCost);
+
+            // Reposição diária usando Landed Cost
+            const restock = Math.min(shelf.dailyRestock, shelf.maxCapacity - shelf.stock);
+            if (restock > 0) {
+              const rc = restock * (shelf.landedCost || prod.baseCost);
+              if (cash >= rc) { cash -= rc; shelf.stock += restock; }
+            }
+          }
+
+          if (tile.competitor?.shelves) {
+            for (const [pId, cs] of Object.entries(tile.competitor.shelves)) {
+              const prod = PRODUCT_CATALOG[pId];
+              if (!prod) continue;
+              const noise = 0.90 + Math.random() * 0.15;
+              const baseDem = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * noise;
+              const cR = calcProductRating(prod, cs.price, cs.quality, cs.brand);
+              const cW = Math.pow(cR, 2);
+              const uW = Math.pow(25, 2);
+              tile.competitor.lastShare = cW / (cW + uW);
+            }
+          }
+        }
+      }
+
+      cash += dailyRev - dailyFixed;
+      monthRevenue += dailyRev;
+      monthCogs += dailyCogs;
+      monthFixedExpenses += dailyFixed;
+
+      day++;
+      if (day > 30) { closeMonthEnd(); day = 1; month++; if (month > 12) { month = 1; year++; } }
+
+      updateUI();
+    }
+
+    function closeMonthEnd() {
+      const net = monthRevenue - monthCogs - monthFixedExpenses;
+      addLog(
+        `📊 FIM DO MÊS ${String(month).padStart(2,'0')}: Receita $${monthRevenue.toLocaleString('en-US',{maximumFractionDigits:0})} | Lucro Líquido $${net.toLocaleString('en-US',{maximumFractionDigits:0})}`,
+        net >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'
+      );
+
+      for (const prodId of Object.keys(PRODUCT_CATALOG)) {
+        if (net > 0) playerBrandRating[prodId] = Math.min(100, (playerBrandRating[prodId] || 20) + Math.floor(1 + Math.random() * 2));
+        else         playerBrandRating[prodId] = Math.max(0,   (playerBrandRating[prodId] || 20) - 1);
+      }
+
+      for (let x = 0; x < GRID_SIZE; x++) {
+        for (let y = 0; y < GRID_SIZE; y++) {
+          const tile = worldGrid[x][y];
+          if (!tile.competitor?.shelves) continue;
+          for (const [pId, cs] of Object.entries(tile.competitor.shelves)) {
+            const prod = PRODUCT_CATALOG[pId];
+            if (!prod) continue;
+            if ((tile.competitor.lastShare || 0.5) < 0.38) {
+              const newPrice = Number(Math.max(prod.baseCost * 1.08, cs.price * (0.94 + Math.random() * 0.03)).toFixed(2));
+              const pctDrop  = Math.round((1 - newPrice / cs.price) * 100);
+              cs.price = newPrice;
+              if (pctDrop > 1) addLog(`🤖 ${tile.competitor.name} reduziu ${prod.name} para $${newPrice} (-${pctDrop}%)!`, 'text-purple-400');
+            } else {
+              cs.price = Number(Math.min(prod.standardPrice * 1.25, cs.price * (1.005 + Math.random() * 0.01)).toFixed(2));
+            }
+          }
+        }
+      }
+
+      monthRevenue = 0; monthCogs = 0; monthFixedExpenses = 0;
+      if (activeManagedTile?.store) renderGondolaPanel(activeManagedTile);
+    }
+
+    function setSpeed(s) {
+      gameSpeed = s;
+      if (timerInterval) clearInterval(timerInterval);
+      const map = { 0:'btn-p', 1:'btn-1x', 2:'btn-2x', 5:'btn-5x' };
+      for (const [spd, id] of Object.entries(map)) {
+        const btn = document.getElementById(id);
+        if (!btn) continue;
+        btn.className = parseInt(spd) === s
+          ? 'px-2 py-1 rounded-lg text-xs font-bold font-mono flex items-center gap-1 bg-amber-500/20 text-amber-300 border border-amber-500/40'
+          : 'px-2 py-1 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800';
+      }
+      if (s === 0) return;
+      timerInterval = setInterval(simulateDay, { 1:600, 2:250, 5:80 }[s] || 250);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+        setSpeed(gameSpeed === 0 ? 2 : 0);
+      }
+      if (e.key === 'Escape') {
+        closeModal();
+        closePortModal();
+        closeSupplierModal();
+      }
+    });
+
+    function setHeatmap(mode) {
+      currentHeatmap = mode;
+      const btns = { terrain:'hm-terrain', traffic:'hm-traffic', pop:'hm-pop', comp:'hm-comp', ports:'hm-ports' };
+      for (const [m, id] of Object.entries(btns)) {
+        const btn = document.getElementById(id);
+        if (!btn) continue;
+        btn.className = m === mode
+          ? 'px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-200'
+          : 'px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200';
+      }
+      renderMap();
+    }
+
+    function updateUI() {
+      document.getElementById('clock-date').textContent = `Dia ${String(day).padStart(2,'0')} / Mês ${String(month).padStart(2,'0')} / Ano ${year}`;
+      document.getElementById('corp-cash').textContent  = `$${cash.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+
+      const net = monthRevenue - monthCogs - monthFixedExpenses;
+      const pe  = document.getElementById('month-profit');
+      pe.textContent = `${net >= 0 ? '+' : ''}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+      pe.className = `text-lg font-mono font-bold ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+      document.getElementById('dre-month-label').textContent  = `Mês ${String(month).padStart(2,'0')}`;
+      document.getElementById('dre-revenue').textContent      = `+$${monthRevenue.toLocaleString('en-US',{minimumFractionDigits:2})}`;
+      document.getElementById('dre-cogs').textContent         = `-$${monthCogs.toLocaleString('en-US',{minimumFractionDigits:2})}`;
+      document.getElementById('dre-fixed').textContent        = `-$${monthFixedExpenses.toLocaleString('en-US',{minimumFractionDigits:2})}`;
+      const dn = document.getElementById('dre-net-profit');
+      dn.textContent = `${net >= 0 ? '+' : ''}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2})}`;
+      dn.className = `text-sm font-black font-mono ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+      if (activeManagedTile?.store) renderGondolaPanel(activeManagedTile);
+    }
+
+    // ===========================================================================
+    // 11. INICIALIZAÇÃO
+    // ===========================================================================
+    window.addEventListener('resize', () => { resizeCanvas(); renderMap(); });
+
+    setTimeout(() => {
+      resizeCanvas();
+      resetCamera();
+      renderTileInspector(null);
+      renderIdlePanel();
+      updateUI();
+    }, 50);
+  </script>
+</body>
+</html>
