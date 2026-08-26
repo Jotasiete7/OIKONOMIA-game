@@ -2516,28 +2516,37 @@
           // Culling inteligente para render a 60 FPS
           if (sx < -140 || sx > r.width + 140 || sy < -140 || sy > r.height + 220) continue;
 
-          let fill = '#0f291e';
+          // 1. CAMADA 01 & 02: TERRENO BASE & RELEVO
+          let fill = '#0f291e'; // Grama plana
           const d = tile.districtId;
           const tTerrain = tile.gidTerrain;
 
           if (tile.isWater) {
             fill = tile.gidWater === 1 ? '#031e33' : '#073252';
           } else if (tTerrain === 3) {
-            fill = '#8c7847'; // Areia de praia
+            fill = '#8c7847'; // Praia
           } else if (tTerrain === 5) {
             fill = '#194226'; // Terra fértil agrícola
           } else if (tTerrain === 6) {
             fill = '#3b3a2a'; // Colina
           } else if (tTerrain === 7) {
             fill = '#3a3a42'; // Montanha
-          } else if (tile.isRoad) {
-            fill = '#1e293b'; // Rodovia
-          } else if (tile.isPort) {
-            fill = '#854d0e'; // Porto
-          } else if (d === 'downtown') {
-            fill = '#0f2744';
-          } else if (d === 'northside') {
-            fill = '#1a2238';
+          }
+
+          // 2. CAMADA 05: ZONEAMENTO DE SOLO (CENTRO / RESIDENCIAL / PORTO)
+          if (!tile.isWater) {
+            if (d === 'downtown') {
+              fill = '#0f2744';
+            } else if (d === 'northside') {
+              fill = '#1a2238';
+            } else if (tile.isPort) {
+              fill = '#854d0e';
+            }
+          }
+
+          // 3. CAMADA 04: INFRAESTRUTURA & VIAS (SOBREPÕE TERRENO E ZONAS)
+          if (tile.isRoad && !tile.isWater) {
+            fill = '#334155'; // Asfalto cinza escuro de autoestrada
           }
 
           // Lentes de Heatmap
