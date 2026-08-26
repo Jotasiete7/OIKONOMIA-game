@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OIKONOMIA — Estratégia Corporativa, Varejo & Mídia</title>
+  <title>OIKONOMIA — Cadeia de Suprimentos, Indústria & Varejo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     canvas { image-rendering: pixelated; }
@@ -31,9 +31,9 @@
       <div>
         <div class="flex items-center gap-2">
           <h1 class="text-base font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
-          <span class="text-[9px] bg-emerald-950 text-emerald-300 font-mono px-1.5 py-0.5 rounded border border-emerald-800/60 uppercase">Sim Engine v0.5 · Mídia & Marketing</span>
+          <span class="text-[9px] bg-emerald-950 text-emerald-300 font-mono px-1.5 py-0.5 rounded border border-emerald-800/60 uppercase">Sim Engine v0.6 · Fase 2</span>
         </div>
-        <span class="text-[11px] text-slate-400">Estratégia Corporativa, Varejo, Portos & Campanhas de Mídia</span>
+        <span class="text-[11px] text-slate-400">Império Corporativo: Fazendas, Fábricas, Varejo & Mídia</span>
       </div>
     </div>
 
@@ -88,8 +88,9 @@
           <button id="hm-terrain" onclick="setHeatmap('terrain')" class="px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-200">Terreno</button>
           <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🔥 Tráfego</button>
           <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">👥 Pop.</button>
-          <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🏪 Conc.</button>
+          <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🏪 Lojas/IA</button>
           <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">⚓ Portos</button>
+          <button id="hm-ind"     onclick="setHeatmap('ind')"     class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">🏭 Indústria</button>
           <button id="hm-media"   onclick="setHeatmap('media')"   class="px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200">📡 Mídia</button>
         </div>
         <!-- ZOOM -->
@@ -105,7 +106,7 @@
         <canvas id="iso-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
         <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-900/96 border border-slate-700 rounded-xl px-3 py-2 shadow-2xl text-[11px] font-mono z-20"></div>
         <div class="absolute bottom-2 left-2 bg-slate-900/75 border border-slate-800 rounded-lg px-2.5 py-1 text-[10px] font-mono text-slate-500 pointer-events-none">
-          🖱 Arrastar: câmera · Scroll: zoom · Clique: inspecionar lote, porto ou emissora de TV/Rádio
+          🖱 Arrastar: câmera · Scroll: zoom · Clique: inspecionar lote, loja, porto, fazenda ou fábrica
         </div>
       </div>
 
@@ -115,44 +116,44 @@
       </div>
     </section>
 
-    <!-- DIREITA: GESTÃO DA LOJA + DRE + DIÁRIO (4 COLUNAS) -->
+    <!-- DIREITA: GESTÃO (LOJA / FAZENDA / FÁBRICA) + DRE + DIÁRIO (4 COLUNAS) -->
     <section class="col-span-12 lg:col-span-4 flex flex-col gap-2.5">
 
-      <!-- PAINEL DE GÔNDOLAS DA LOJA ATIVA -->
+      <!-- PAINEL DE GESTÃO DA INSTALAÇÃO ATIVA -->
       <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 shadow-xl flex flex-col gap-2.5">
         <div class="flex items-center justify-between pb-2 border-b border-slate-800 flex-wrap gap-2">
           <div>
-            <h2 id="store-title" class="text-xs font-bold text-emerald-300">🛒 Selecione uma loja no mapa</h2>
-            <span id="store-subtitle" class="text-[11px] text-slate-400">Clique na loja verde para gerir gôndolas e fornecedores.</span>
+            <h2 id="facility-title" class="text-xs font-bold text-emerald-300">🏢 Selecione uma instalação no mapa</h2>
+            <span id="facility-subtitle" class="text-[11px] text-slate-400">Clique na sua loja, fazenda ou fábrica para gerir.</span>
           </div>
           <div class="flex items-center gap-2">
-            <span id="store-rent-badge" class="text-[10px] font-bold text-rose-400 font-mono hidden"></span>
+            <span id="facility-rent-badge" class="text-[10px] font-bold text-rose-400 font-mono hidden"></span>
             <button id="btn-upgrade-store" onclick="openUpgradeStoreModal()" class="hidden text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded font-mono hover:bg-amber-500/30">
               ⭐ Expandir
             </button>
           </div>
         </div>
 
-        <div id="gondola-panel" class="space-y-2 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
-          <p class="text-[11px] text-slate-500 font-mono text-center py-4">Nenhuma loja ativa selecionada.</p>
+        <div id="facility-content-panel" class="space-y-2 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
+          <p class="text-[11px] text-slate-500 font-mono text-center py-4">Nenhuma instalação ativa selecionada.</p>
         </div>
 
-        <div id="add-product-row" class="hidden pt-1 border-t border-slate-800"></div>
+        <div id="facility-action-row" class="hidden pt-1 border-t border-slate-800"></div>
       </div>
 
       <!-- DRE MENSAL -->
       <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 shadow-xl">
         <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-2 pb-2 border-b border-slate-800 flex items-center justify-between">
-          <span>📑 DRE do Mês</span>
+          <span>📑 DRE Consolidada do Mês</span>
           <span id="dre-month-label" class="text-[10px] text-slate-400 font-mono font-normal">Mês 01</span>
         </h3>
         <div class="space-y-1 text-[11px] font-mono">
-          <div class="flex justify-between text-slate-200"><span>(+) Receita Bruta:</span><span id="dre-revenue" class="text-emerald-400 font-bold">$0.00</span></div>
-          <div class="flex justify-between text-slate-400"><span>(-) Custo Merc. (CPV + Frete):</span><span id="dre-cogs" class="text-rose-400">-$0.00</span></div>
-          <div class="flex justify-between text-slate-400"><span>(-) Aluguéis & Custos Fixos:</span><span id="dre-fixed" class="text-rose-400">-$0.00</span></div>
-          <div class="flex justify-between text-slate-400"><span>(-) Publicidade & Mídia:</span><span id="dre-marketing" class="text-indigo-400">-$0.00</span></div>
+          <div class="flex justify-between text-slate-200"><span>(+) Receita Bruta (Varejo):</span><span id="dre-revenue" class="text-emerald-400 font-bold">$0.00</span></div>
+          <div class="flex justify-between text-slate-400"><span>(-) Custo Mercadorias (CPV + Frete):</span><span id="dre-cogs" class="text-rose-400">-$0.00</span></div>
+          <div class="flex justify-between text-slate-400"><span>(-) Aluguéis & Fixos (Lojas + Indústrias):</span><span id="dre-fixed" class="text-rose-400">-$0.00</span></div>
+          <div class="flex justify-between text-slate-400"><span>(-) Publicidade & Marketing:</span><span id="dre-marketing" class="text-indigo-400">-$0.00</span></div>
           <div class="flex justify-between items-center bg-slate-950 rounded-lg p-2 border-t border-slate-800 mt-1">
-            <span class="text-slate-300 font-bold text-xs">LUCRO LÍQUIDO:</span>
+            <span class="text-slate-300 font-bold text-xs">LUCRO LÍQUIDO CONSOLIDADO:</span>
             <span id="dre-net-profit" class="text-sm font-black text-slate-400">$0.00</span>
           </div>
         </div>
@@ -161,11 +162,11 @@
       <!-- DIÁRIO DE BORDO -->
       <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex-1 flex flex-col">
         <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
-          <span>📜 Diário de Bordo, Mídia & Logística</span>
+          <span>📜 Diário de Bordo & Operações</span>
           <span class="text-[9px] text-slate-500 font-normal">Eventos em Tempo Real</span>
         </h3>
-        <div id="game-logs" class="flex-1 min-h-[90px] max-h-[120px] overflow-y-auto space-y-0.5 text-[11px] font-mono text-slate-400 custom-scrollbar">
-          <div class="text-slate-500">OIKONOMIA inicializado. Contrate anúncios de TV/Rádio para alavancar suas marcas.</div>
+        <div id="game-logs" class="flex-1 min-h-[85px] max-h-[115px] overflow-y-auto space-y-0.5 text-[11px] font-mono text-slate-400 custom-scrollbar">
+          <div class="text-slate-500">OIKONOMIA v0.6 inicializado. Construa fazendas e fábricas para abastecer suas lojas com custo mínimo.</div>
         </div>
       </div>
     </section>
@@ -217,7 +218,55 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 2: INSPEÇÃO DO TERMINAL PORTUÁRIO                                 -->
+  <!-- MODAL 2: WIZARD DE CONSTRUÇÃO DE FAZENDA                                -->
+  <!-- ======================================================================= -->
+  <div id="farm-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
+      <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-amber-400 flex items-center gap-2">🌾 Construir Fazenda Agrícola</h2>
+          <p id="farm-modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closeFarmModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
+      </div>
+      <div class="p-6 space-y-3">
+        <p class="text-xs text-slate-400 font-mono">Escolha o tipo de cultivo para esta propriedade rural:</p>
+        <div id="farm-types-list" class="space-y-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 3: WIZARD DE CONSTRUÇÃO DE FÁBRICA                                -->
+  <!-- ======================================================================= -->
+  <div id="factory-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
+      <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-orange-400 flex items-center gap-2">🏭 Construir Fábrica de Manufatura</h2>
+          <p id="factory-modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closeFactoryModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs font-mono space-y-1">
+          <div class="text-slate-200 font-bold">Complexo Fabril Industrial</div>
+          <div class="text-slate-400">Capacidade: <strong class="text-emerald-400">Até 3 Linhas de Montagem</strong></div>
+          <div class="text-slate-400">Custo de Obra: <strong class="text-rose-400">$48,000.00</strong></div>
+        </div>
+        <p class="text-xs text-slate-400 font-mono">Após a construção, você poderá ativar receitas para produzir Pão, Cerveja, Leite Integral e Biscoitos para abastecer suas próprias lojas.</p>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
+          <button onclick="closeFactoryModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-400 text-xs font-mono">Cancelar</button>
+          <button onclick="confirmBuildFactory()" id="btn-confirm-factory" class="px-5 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold font-mono">
+            Confirmar Construção (-$48,000)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 4: INSPEÇÃO DO TERMINAL PORTUÁRIO                                 -->
   <!-- ======================================================================= -->
   <div id="port-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
@@ -239,26 +288,26 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 3: SELETOR DE FORNECEDOR PORTUÁRIO                                -->
+  <!-- MODAL 5: SELETOR DE FORNECEDOR (PORTOS OU FÁBRICAS PRÓPRIAS)            -->
   <!-- ======================================================================= -->
   <div id="supplier-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
       <div class="bg-slate-800/80 border-b border-slate-700 px-5 py-3.5 flex items-center justify-between">
         <div>
-          <h2 id="supplier-modal-title" class="text-xs font-bold text-slate-100">🔗 Selecionar Fornecedor Portuário</h2>
+          <h2 id="supplier-modal-title" class="text-xs font-bold text-slate-100">🔗 Selecionar Fornecedor (Porto ou Fábrica Própria)</h2>
           <p id="supplier-modal-subtitle" class="text-[11px] text-slate-400 font-mono mt-0.5"></p>
         </div>
         <button onclick="closeSupplierModal()" class="w-6 h-6 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-xs font-bold flex items-center justify-center">✕</button>
       </div>
       <div class="p-5">
-        <p class="text-[11px] text-slate-400 mb-3 font-mono">Escolha o porto de importação. O frete é calculado pela distância em tiles até a sua loja:</p>
+        <p class="text-[11px] text-slate-400 mb-3 font-mono">Escolha o fornecedor. Fornecedores internos da sua corporação possuem custo de produção direto com zero margem de intermediários:</p>
         <div id="supplier-options-list" class="space-y-2 max-h-64 overflow-y-auto custom-scrollbar pr-1"></div>
       </div>
     </div>
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 4: ADICIONAR NOVO PRODUTO À LOJA EXISTENTE                        -->
+  <!-- MODAL 6: ADICIONAR PRODUTO À LOJA EXISTENTE                             -->
   <!-- ======================================================================= -->
   <div id="add-product-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
@@ -280,23 +329,7 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL 5: UPGRADE DE PORTE DA LOJA                                       -->
-  <!-- ======================================================================= -->
-  <div id="upgrade-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
-      <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
-        <div>
-          <h2 id="upgrade-modal-title" class="text-sm font-bold text-amber-300">⭐ Expandir Porte da Loja</h2>
-          <p id="upgrade-modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
-        </div>
-        <button onclick="closeUpgradeModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
-      </div>
-      <div class="p-6 space-y-3" id="upgrade-options-list"></div>
-    </div>
-  </div>
-
-  <!-- ======================================================================= -->
-  <!-- MODAL 6: CENTRAL DE MÍDIA & MARKETING (TV, RÁDIO, JORNAL)               -->
+  <!-- MODAL 7: CENTRAL DE MÍDIA & MARKETING (COM MARCA INSTITUCIONAL)         -->
   <!-- ======================================================================= -->
   <div id="marketing-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden">
@@ -305,14 +338,12 @@
           <h2 id="marketing-modal-title" class="text-sm font-bold text-indigo-300 flex items-center gap-2">
             <span>📢 Central de Mídia & Publicidade</span>
           </h2>
-          <p id="marketing-modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5">
-            Contrate campanhas publicitárias em emissoras locais para impulsionar o conhecimento e valor de marca.
-          </p>
+          <p id="marketing-modal-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
         </div>
         <button onclick="closeMarketingModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
       </div>
       <div class="p-6 space-y-4">
-        <!-- Resumo de Despesas de Marketing -->
+        <!-- Resumo -->
         <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between text-xs font-mono gap-3">
           <div>
             <span class="text-slate-400 block text-[10px]">Contratos Ativos:</span>
@@ -328,7 +359,7 @@
           </div>
         </div>
 
-        <!-- Lista de Veículos de Comunicação & Campanhas -->
+        <!-- Lista de Emissoras & Campanhas (Produtos + Institucional) -->
         <div id="media-outlets-list" class="space-y-3 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
 
         <div class="pt-3 border-t border-slate-800 flex justify-end">
@@ -339,7 +370,23 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- SCRIPT PRINCIPAL                                                        -->
+  <!-- MODAL 8: ATIVAÇÃO DE LINHA DE MONTAGEM NA FÁBRICA                       -->
+  <!-- ======================================================================= -->
+  <div id="factory-recipe-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
+      <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-orange-400">⚙️ Ativar Linha de Montagem Industrial</h2>
+          <p class="text-xs text-slate-400 font-mono mt-0.5">Selecione o produto manufaturado a ser processado nesta fábrica:</p>
+        </div>
+        <button onclick="closeFactoryRecipeModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
+      </div>
+      <div class="p-6 space-y-3" id="factory-available-recipes-list"></div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- SCRIPT PRINCIPAL: MOTOR COMPLETO DE OIKONOMIA (FASE 2)                  -->
   <!-- ======================================================================= -->
   <script>
     // ===========================================================================
@@ -402,7 +449,6 @@
       }
     ];
 
-    // Veículos de Mídia & Comunicação de Neo Capital
     const MEDIA_OUTLETS = [
       {
         id: 'media_tv',
@@ -412,6 +458,7 @@
         tile: { x: 14, y: 8 },
         district: 'uptown',
         monthlyCost: 2500.00,
+        institutionalMonthlyCost: 3500.00,
         brandBoostMonthly: 15,
         brandCap: 95,
         reachPct: 100,
@@ -426,6 +473,7 @@
         tile: { x: 17, y: 13 },
         district: 'downtown',
         monthlyCost: 850.00,
+        institutionalMonthlyCost: 1200.00,
         brandBoostMonthly: 8,
         brandCap: 75,
         reachPct: 65,
@@ -440,6 +488,7 @@
         tile: { x: 23, y: 14 },
         district: 'northside',
         monthlyCost: 350.00,
+        institutionalMonthlyCost: 450.00,
         brandBoostMonthly: 4,
         brandCap: 60,
         reachPct: 45,
@@ -454,12 +503,30 @@
       { id:'supermercado',  name:'Supermercado', emoji:'🏬', cost:45000, maxShelves:25, rentMultiplier:1.8, desc:'Alto volume, muitas categorias. Requer grande fluxo de clientes.' },
     ];
 
+    const FARM_TYPES = [
+      { id:'farm_wheat', name:'Fazenda de Trigo & Cereais', emoji:'🌾', cropId:'wheat', cropName:'Trigo & Cereais', cost:22000, unitCost:0.45, quality:60, dailyYield:450, desc:'Cultivo de trigo essencial para pães e cervejas.' },
+      { id:'farm_milk',  name:'Fazenda de Pecuária & Leite', emoji:'🥛', cropId:'raw_milk', cropName:'Leite Cru', cost:24000, unitCost:0.35, quality:65, dailyYield:400, desc:'Criação de gado leiteiro para suprir usinas de laticínios.' },
+      { id:'farm_sugar', name:'Plantação de Cana & Cacau', emoji:'🍫', cropId:'sugar', cropName:'Cana & Cacau', cost:20000, unitCost:0.30, quality:55, dailyYield:500, desc:'Produção de açúcar e cacau para bebidas e biscoitos.' },
+    ];
+
+    const FACTORY_RECIPES = [
+      { id:'recipe_bread',   name:'Panificação Artesanal', outputProdId:'bread', outputName:'Pão Artesanal', unitCost:0.75, quality:65, dailyCap:500, desc:'Transforma trigo em pão com custo de apenas $0.75/un (vs $1.50 no porto).' },
+      { id:'recipe_beer',    name:'Cervejaria Puro Malte', outputProdId:'beer', outputName:'Cerveja Especial', unitCost:0.70, quality:75, dailyCap:400, desc:'Produz cerveja especial puro malte premium com alto QR.' },
+      { id:'recipe_milk',    name:'Usina de Laticínios', outputProdId:'milk', outputName:'Leite Integral', unitCost:0.60, quality:68, dailyCap:450, desc:'Pasteuriza leite cru em leite integral fresco.' },
+      { id:'recipe_cookies', name:'Confeitaria Industrial', outputProdId:'cookies', outputName:'Biscoito Recheado', unitCost:0.65, quality:65, dailyCap:350, desc:'Processa farinha e cacau em biscoitos recheados.' },
+    ];
+
     function getManhattanDist(p1, p2) {
       return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
     }
 
+    // ===========================================================================
+    // 2. BUSCA DE FORNECEDORES (PORTOS + FÁBRICAS PRÓPRIAS DA GUILDA)
+    // ===========================================================================
     function getSupplierOffersForProduct(prodId, storeTile) {
       const offers = [];
+
+      // 1. Portos Marítimos
       for (const port of SEAPORTS) {
         if (port.supplies[prodId]) {
           const sup = port.supplies[prodId];
@@ -467,8 +534,9 @@
           const freight = Number((0.02 + dist * port.freightRatePerTile).toFixed(3));
           const landed = Number((sup.wholesalePrice + freight).toFixed(3));
           offers.push({
-            portId: port.id,
-            portName: port.name,
+            type: 'port',
+            supplierId: port.id,
+            supplierName: port.name,
             wholesalePrice: sup.wholesalePrice,
             quality: sup.quality,
             quota: sup.quota,
@@ -479,11 +547,40 @@
           });
         }
       }
+
+      // 2. Fábricas Próprias no Mapa
+      for (let x = 0; x < GRID_SIZE; x++) {
+        for (let y = 0; y < GRID_SIZE; y++) {
+          const tile = worldGrid[x][y];
+          if (tile.factory) {
+            for (const [recipeId, line] of Object.entries(tile.factory.lines)) {
+              if (line.outputProductId === prodId) {
+                const dist = getManhattanDist(tile, storeTile);
+                const freight = Number((0.01 + dist * 0.010).toFixed(3)); // Frete interno com desconto
+                const landed = Number((line.unitCost + freight).toFixed(3));
+                offers.push({
+                  type: 'internal_factory',
+                  supplierId: `factory_${x}_${y}_${recipeId}`,
+                  supplierName: `🏭 ${tile.factory.name} (Linha ${line.recipeName})`,
+                  wholesalePrice: line.unitCost,
+                  quality: line.outputQuality,
+                  quota: line.dailyCapacity,
+                  origin: `Fabricação Própria (${x}, ${y})`,
+                  distance: dist,
+                  freight,
+                  landedCost: landed
+                });
+              }
+            }
+          }
+        }
+      }
+
       return offers.sort((a, b) => a.landedCost - b.landedCost);
     }
 
     // ===========================================================================
-    // 2. ESTADO GLOBAL DO JOGO
+    // 3. ESTADO GLOBAL DO JOGO
     // ===========================================================================
     let day = 1, month = 1, year = 1;
     let cash = 50000.00;
@@ -493,7 +590,6 @@
     const playerBrandRating = {};
     Object.keys(PRODUCT_CATALOG).forEach(id => { playerBrandRating[id] = 20; });
 
-    // Contratos de Marketing Ativos: Set de chaves "outletId_prodId"
     const activeMarketingContracts = new Set();
 
     let selectedTileX = -1, selectedTileY = -1;
@@ -510,9 +606,10 @@
     let supplierTargetShelf = null;
     let addProductTargetTile = null;
     let activeAddProductCategoryTab = 'Food';
+    let activeFactoryTile = null;
 
     // ===========================================================================
-    // 3. WORLD GRID 36x36
+    // 4. WORLD GRID 36x36
     // ===========================================================================
     const GRID_SIZE = 36;
     const TILE_W = 64, TILE_H = 32;
@@ -559,6 +656,8 @@
           isMedia: !!mediaData,
           buildingHeight: isWater || isRoad ? 0 : (portData ? 16 : (mediaData ? (mediaData.id === 'media_tv' ? 26 : 18) : 0)),
           store: null,
+          farm: null,
+          factory: null,
           competitor: (x === 25 && y === 15) ? {
             name: 'QuickMart North (IA)',
             shelves: {
@@ -574,7 +673,7 @@
     }
 
     // ===========================================================================
-    // 4. MOTOR DE RENDERIZAÇÃO
+    // 5. MOTOR DE RENDERIZAÇÃO ISOMÉTRICO
     // ===========================================================================
     const canvas  = document.getElementById('iso-canvas');
     const ctx     = canvas.getContext('2d');
@@ -677,6 +776,9 @@
             else if (tile.competitor) fill = '#4a0416';
           } else if (currentHeatmap === 'ports') {
             if (tile.isPort) fill = '#854d0e';
+          } else if (currentHeatmap === 'ind') {
+            if (tile.farm) fill = '#854d0e';
+            else if (tile.factory) fill = '#9a3412';
           } else if (currentHeatmap === 'media') {
             if (tile.isMedia) fill = '#7c3aed';
           }
@@ -688,6 +790,10 @@
             let topC='#38bdf8', leftC='#0284c7', rightC='#0369a1';
             if (tile.store) {
               topC='#10b981'; leftC='#059669'; rightC='#047857';
+            } else if (tile.farm) {
+              topC='#eab308'; leftC='#ca8a04'; rightC='#a16207';
+            } else if (tile.factory) {
+              topC='#ea580c'; leftC='#c2410c'; rightC='#9a3412';
             } else if (tile.competitor) {
               topC='#f43f5e'; leftC='#e11d48'; rightC='#be123c';
             } else if (tile.isPort) {
@@ -705,7 +811,15 @@
               const emoji = STORE_TYPES.find(s => s.id === tile.store.storeTypeId)?.emoji || '🛒';
               ctx.fillStyle = '#34d399';
               ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText(`${emoji} A GUILDA`, sx - 28 * camera.zoom, sy - hPx - 5);
+              ctx.fillText(`${emoji} LOJA`, sx - 22 * camera.zoom, sy - hPx - 5);
+            } else if (tile.farm) {
+              ctx.fillStyle = '#fde047';
+              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
+              ctx.fillText(`🌾 FAZENDA`, sx - 26 * camera.zoom, sy - hPx - 5);
+            } else if (tile.factory) {
+              ctx.fillStyle = '#fdba74';
+              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
+              ctx.fillText(`🏭 FÁBRICA`, sx - 26 * camera.zoom, sy - hPx - 5);
             } else if (tile.competitor) {
               ctx.fillStyle = '#fb7185';
               ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
@@ -730,7 +844,7 @@
     }
 
     // ===========================================================================
-    // 5. EVENTOS DO MOUSE
+    // 6. EVENTOS DO MOUSE
     // ===========================================================================
     canvas.addEventListener('mousedown', (e) => {
       camera.isDragging = true;
@@ -769,14 +883,22 @@
         if (tile.isPort) {
           tooltip.innerHTML = `
             <div class="font-bold text-amber-300 text-xs">⚓ ${tile.portData.name}</div>
-            <div class="text-[10px] text-slate-400">Terminal Marítimo Internacional (${gx},${gy})</div>
-            <div class="text-[10px] text-emerald-400 font-bold mt-1">Clique para inspecionar remessas e preços CIF</div>
+            <div class="text-[10px] text-slate-400">Terminal Marítimo (${gx},${gy})</div>
           `;
         } else if (tile.isMedia) {
           tooltip.innerHTML = `
             <div class="font-bold text-purple-300 text-xs">${tile.mediaData.emoji} ${tile.mediaData.name}</div>
-            <div class="text-[10px] text-slate-400">Veículo de Comunicação · ${tile.mediaData.type} (${gx},${gy})</div>
-            <div class="text-[10px] text-indigo-400 font-bold mt-1">Clique para contratar publicidade e campanhas</div>
+            <div class="text-[10px] text-slate-400">${tile.mediaData.type} (${gx},${gy})</div>
+          `;
+        } else if (tile.farm) {
+          tooltip.innerHTML = `
+            <div class="font-bold text-amber-400 text-xs">${tile.farm.name}</div>
+            <div class="text-[10px] text-slate-300">🌾 Produção: ${tile.farm.dailyYield} un/dia · QR: ${tile.farm.quality}</div>
+          `;
+        } else if (tile.factory) {
+          tooltip.innerHTML = `
+            <div class="font-bold text-orange-400 text-xs">${tile.factory.name}</div>
+            <div class="text-[10px] text-slate-300">🏭 Linhas de Montagem: ${Object.keys(tile.factory.lines).length}/${tile.factory.maxLines}</div>
           `;
         } else {
           tooltip.innerHTML = `
@@ -786,8 +908,7 @@
               🚶 ${d.trafficIndex}/100 · 👥 ${d.population.toLocaleString()} hab · 💰 $${d.landRentDaily}/dia
             </div>
             ${tile.store ? `<div class="text-[10px] text-emerald-400 font-bold mt-0.5">🛒 Sua loja ativa · Clique para gerir</div>` : ''}
-            ${tile.competitor ? `<div class="text-[10px] text-rose-400 mt-0.5">🤖 Concorrente IA operando aqui</div>` : ''}
-            ${!tile.store && !tile.isWater && !tile.isRoad ? `<div class="text-[10px] text-teal-400 mt-0.5">🏗 Clique para abrir um estabelecimento</div>` : ''}
+            ${!tile.store && !tile.farm && !tile.factory && !tile.isWater && !tile.isRoad ? `<div class="text-[10px] text-teal-400 mt-0.5">🏗 Clique para construir</div>` : ''}
           `;
         }
       } else {
@@ -821,9 +942,9 @@
         openPortModal(tile.portData);
       } else if (tile.isMedia) {
         openMarketingCentralModal(tile.mediaData.id);
-      } else if (tile.store) {
+      } else if (tile.store || tile.farm || tile.factory) {
         activeManagedTile = tile;
-        renderGondolaPanel(tile);
+        renderFacilityPanel(tile);
       } else {
         activeManagedTile = null;
         renderIdlePanel();
@@ -834,11 +955,11 @@
     });
 
     // ===========================================================================
-    // 6. INSPETOR DE TILE & MODAL DE PORTOS
+    // 7. INSPETOR DE TILE & BOTÕES DE CONSTRUÇÃO (LOJA / FAZENDA / FÁBRICA)
     // ===========================================================================
     function renderTileInspector(tile) {
       const el = document.getElementById('tile-inspector');
-      if (!tile) { el.innerHTML = `<p class="text-xs text-slate-500 font-mono">Clique em um lote, porto ou emissora para inspecioná-lo.</p>`; return; }
+      if (!tile) { el.innerHTML = `<p class="text-xs text-slate-500 font-mono">Clique em um lote no mapa para inspecioná-lo.</p>`; return; }
       const d = tile.district;
 
       if (tile.isPort) {
@@ -873,13 +994,15 @@
         return;
       }
 
-      const canBuild = !tile.store && !tile.isWater && !tile.isRoad && !tile.competitor;
+      const isBuildable = !tile.store && !tile.farm && !tile.factory && !tile.isWater && !tile.isRoad && !tile.competitor;
+      const canBuildFarm = isBuildable && (tile.districtId === 'west_suburbs' || tile.districtId === 'industrial' || tile.districtId === 'northside');
+      const canBuildFactory = isBuildable && (tile.districtId === 'industrial');
 
       el.innerHTML = `
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div class="flex items-center gap-2 flex-wrap">
-              <h3 class="text-xs font-bold text-amber-300">${tile.store ? tile.store.name : d.name}</h3>
+              <h3 class="text-xs font-bold text-amber-300">${tile.store?.name || tile.farm?.name || tile.factory?.name || d.name}</h3>
               <span class="text-[10px] text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800 font-mono">${d.type}</span>
             </div>
             <div class="text-[11px] text-slate-400 mt-1 font-mono flex flex-wrap gap-3">
@@ -888,62 +1011,610 @@
               <span>💰 Aluguel base: <strong class="text-rose-400">$${d.landRentDaily}/dia</strong></span>
             </div>
           </div>
-          <div>
-            ${canBuild ? `
+          <div class="flex items-center gap-2 flex-wrap">
+            ${isBuildable ? `
               <button onclick="openStoreWizard(worldGrid[${tile.x}][${tile.y}])"
-                class="bg-emerald-700 hover:bg-emerald-600 text-white px-4 py-1.5 rounded-xl text-xs font-bold font-mono shadow-lg transition flex items-center gap-1.5">
-                🏗️ Abrir Estabelecimento <span class="bg-emerald-900/80 px-1.5 py-0.5 rounded text-[10px]">→ escolher</span>
+                class="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
+                🛒 Abrir Loja
               </button>
+              ${canBuildFarm ? `
+                <button onclick="openFarmModal(worldGrid[${tile.x}][${tile.y}])"
+                  class="bg-amber-600 hover:bg-amber-500 text-slate-950 px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
+                  🌾 Construir Fazenda
+                </button>
+              ` : ''}
+              ${canBuildFactory ? `
+                <button onclick="openFactoryModal(worldGrid[${tile.x}][${tile.y}])"
+                  class="bg-orange-600 hover:bg-orange-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold font-mono shadow transition">
+                  🏭 Construir Fábrica
+                </button>
+              ` : ''}
             ` : (tile.store ? `
               <span class="text-xs font-mono text-emerald-400 bg-emerald-950 px-3 py-1 rounded-lg border border-emerald-800 font-bold">✅ Loja Ativa</span>
+            ` : (tile.farm ? `
+              <span class="text-xs font-mono text-amber-400 bg-amber-950 px-3 py-1 rounded-lg border border-amber-800 font-bold">🌾 Fazenda Ativa</span>
+            ` : (tile.factory ? `
+              <span class="text-xs font-mono text-orange-400 bg-orange-950 px-3 py-1 rounded-lg border border-orange-800 font-bold">🏭 Fábrica Ativa</span>
             ` : (tile.competitor ? `
               <span class="text-xs font-mono text-rose-400 bg-rose-950 px-3 py-1 rounded-lg border border-rose-800">🤖 Concorrente IA</span>
             ` : `
               <span class="text-xs font-mono text-slate-500 bg-slate-800 px-3 py-1 rounded-lg">🚫 Lote Inacessível</span>
-            `))}
+            `))))}
           </div>
         </div>
       `;
     }
 
-    function openPortModal(port) {
-      document.getElementById('port-modal-title').textContent = `⚓ ${port.name}`;
-      document.getElementById('port-modal-subtitle').textContent = `Localização: Cais Norte (${port.tile.x}, ${port.tile.y}) · Tarifa Base de Frete: $${port.freightRatePerTile}/tile`;
+    // ===========================================================================
+    // 8. PAINEL POLIMÓRFICO DE GESTÃO (LOJA / FAZENDA / FÁBRICA)
+    // ===========================================================================
+    function renderIdlePanel() {
+      document.getElementById('facility-title').textContent = '🏢 Selecione uma instalação no mapa';
+      document.getElementById('facility-subtitle').textContent = 'Clique na sua loja, fazenda ou fábrica para gerir.';
+      document.getElementById('facility-rent-badge').classList.add('hidden');
+      document.getElementById('btn-upgrade-store').classList.add('hidden');
+      document.getElementById('facility-action-row').classList.add('hidden');
+      document.getElementById('facility-content-panel').innerHTML = `
+        <p class="text-[11px] text-slate-500 font-mono text-center py-3">Nenhuma instalação selecionada.</p>
+      `;
+    }
 
-      const list = document.getElementById('port-cargo-list');
-      list.innerHTML = Object.entries(port.supplies).map(([prodId, sup]) => {
+    function renderFacilityPanel(tile) {
+      if (!tile) { renderIdlePanel(); return; }
+
+      if (tile.store) {
+        renderStorePanel(tile);
+      } else if (tile.farm) {
+        renderFarmPanel(tile);
+      } else if (tile.factory) {
+        renderFactoryPanel(tile);
+      } else {
+        renderIdlePanel();
+      }
+    }
+
+    // A. GESTÃO DE LOJA DE VAREJO
+    function renderStorePanel(tile) {
+      const store = tile.store;
+      const d = tile.district;
+
+      document.getElementById('facility-title').textContent = store.name;
+      document.getElementById('facility-subtitle').textContent = `${d.name} · ${Object.keys(store.shelves).length}/${store.maxShelves} gôndolas`;
+      
+      const badge = document.getElementById('facility-rent-badge');
+      badge.textContent = `-$${store.dailyRent.toFixed(2)}/dia`;
+      badge.classList.remove('hidden');
+
+      const btnUpgrade = document.getElementById('btn-upgrade-store');
+      if (store.storeTypeId !== 'supermercado') {
+        btnUpgrade.classList.remove('hidden');
+      } else {
+        btnUpgrade.classList.add('hidden');
+      }
+
+      const panel = document.getElementById('facility-content-panel');
+      panel.innerHTML = '';
+
+      for (const [prodId, shelf] of Object.entries(store.shelves)) {
         const prod = PRODUCT_CATALOG[prodId];
-        const markup = Math.round(((prod.standardPrice - sup.wholesalePrice) / sup.wholesalePrice) * 100);
-        return `
-          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
+        if (!prod) continue;
+
+        const brand = playerBrandRating[prodId] || 20;
+        const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
+        const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
+        const estSales = Math.floor(d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast);
+        const stockPct = Math.round((shelf.stock / shelf.maxCapacity) * 100);
+        const markupPct = Math.round(((shelf.price - shelf.landedCost) / shelf.landedCost) * 100);
+        const isStockout = shelf.stock < 30;
+
+        const cost200 = Math.round(200 * shelf.landedCost);
+        const missingUnits = shelf.maxCapacity - shelf.stock;
+        const costFill = Math.round(missingUnits * shelf.landedCost);
+
+        const isInternal = shelf.supplierId?.startsWith('factory_');
+
+        const card = document.createElement('div');
+        card.className = `rounded-xl border ${isStockout ? 'border-rose-800 stockout-alert' : 'border-slate-800'} bg-slate-950 p-2.5 space-y-2`;
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="text-[11px] font-bold text-slate-200">${prod.name}</span>
+              <span class="text-[9px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800 font-mono">QR: ${shelf.quality}</span>
+              <button onclick="openMarketingCentralModal()" class="text-[9px] bg-slate-900 text-slate-400 border-slate-700 px-1.5 py-0.5 rounded border font-mono hover:border-indigo-500">
+                ⭐ Marca: ${brand}
+              </button>
+            </div>
+            <button onclick="removeProductFromStore(${tile.x}, ${tile.y}, '${prodId}')" class="text-[10px] text-slate-600 hover:text-rose-400 font-mono px-1">✕</button>
+          </div>
+
+          <!-- Dados do Fornecedor (Porto ou Fábrica Própria) -->
+          <div class="bg-slate-900 p-1.5 rounded-lg text-[10px] font-mono flex items-center justify-between border ${isInternal ? 'border-orange-800 bg-orange-950/20' : 'border-slate-800'}">
+            <div class="truncate max-w-[180px]">
+              <span class="${isInternal ? 'text-orange-400 font-bold' : 'text-amber-400'}">${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Porto'}</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-slate-400">Custo: <strong class="text-emerald-400 font-bold">$${shelf.landedCost.toFixed(2)}</strong></span>
+              <button onclick="openSupplierModal(${tile.x}, ${tile.y}, '${prodId}')" class="bg-slate-800 hover:bg-slate-700 text-teal-300 px-1.5 py-0.5 rounded text-[9px] font-bold">Trocar</button>
+            </div>
+          </div>
+
+          <!-- Barra de Estoque & Compra Rápida -->
+          <div>
+            <div class="flex justify-between text-[10px] font-mono text-slate-400 mb-0.5">
+              <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-400'}">Estoque: ${shelf.stock.toLocaleString()} / ${shelf.maxCapacity.toLocaleString()} un</span>
+              <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-500'}">${isStockout ? '⚠ BAIXO' : `${stockPct}%`}</span>
+            </div>
+            <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden mb-1.5">
+              <div class="stock-bar-fill h-full rounded-full ${isStockout ? 'bg-rose-500' : stockPct > 50 ? 'bg-emerald-500' : 'bg-amber-500'}" style="width:${stockPct}%"></div>
+            </div>
+
+            <div class="flex items-center gap-1.5 text-[9px] font-mono">
+              <span class="text-slate-500">Injetar:</span>
+              <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', 200)"
+                class="bg-slate-900 hover:bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700 hover:border-emerald-600 transition">
+                +200 un (-$${cost200})
+              </button>
+              ${missingUnits > 50 ? `
+                <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', ${missingUnits})"
+                  class="bg-slate-900 hover:bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded border border-slate-700 hover:border-emerald-600 transition">
+                  Encher (-$${costFill})
+                </button>
+              ` : ''}
+              <button onclick="openMarketingCentralModal()" class="ml-auto text-indigo-400 hover:text-indigo-300 font-bold">
+                📢 Anunciar
+              </button>
+            </div>
+          </div>
+
+          <!-- Preço & Reposição Diária -->
+          <div class="grid grid-cols-2 gap-2 text-[10px] font-mono pt-1 border-t border-slate-900">
             <div>
-              <div class="flex items-center gap-2">
-                <span class="font-bold text-slate-200 text-sm">${prod.name}</span>
-                <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">${prod.category}</span>
-                <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">⭐ Qualidade: ${sup.quality}/100</span>
+              <span class="text-slate-400 block">Preço de Venda ($):</span>
+              <input type="number" step="0.10" value="${shelf.price.toFixed(2)}"
+                onchange="updateShelfPrice(${tile.x}, ${tile.y}, '${prodId}', this.value)"
+                class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-emerald-400 font-bold text-right focus:outline-none focus:border-emerald-500">
+              <span class="text-[9px] ${markupPct >= 0 ? 'text-emerald-500' : 'text-rose-500'}">Margem: ${markupPct > 0 ? '+' : ''}${markupPct}%</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">Reposição Diária (un):</span>
+              <input type="number" step="50" value="${shelf.dailyRestock}"
+                onchange="updateShelfRestock(${tile.x}, ${tile.y}, '${prodId}', this.value)"
+                class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-slate-200 font-bold text-right focus:outline-none focus:border-cyan-500">
+            </div>
+          </div>
+        `;
+        panel.appendChild(card);
+      }
+
+      const addRow = document.getElementById('facility-action-row');
+      const freeSlots = store.maxShelves - Object.keys(store.shelves).length;
+      if (freeSlots > 0) {
+        addRow.classList.remove('hidden');
+        addRow.innerHTML = `
+          <button onclick="openAddProductModal(${tile.x}, ${tile.y})"
+            class="w-full text-center text-xs font-bold text-teal-300 hover:text-white bg-teal-950/60 hover:bg-teal-800/80 font-mono py-2 rounded-xl border border-teal-700/60 shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>➕ Adicionar Novo Produto às Gôndolas</span>
+            <span class="bg-teal-900 px-1.5 py-0.5 rounded text-[10px]">(${freeSlots} livre${freeSlots > 1 ? 's' : ''})</span>
+          </button>
+        `;
+      } else {
+        addRow.classList.add('hidden');
+      }
+    }
+
+    // B. GESTÃO DE FAZENDA AGRÍCOLA
+    function renderFarmPanel(tile) {
+      const farm = tile.farm;
+      const d = tile.district;
+
+      document.getElementById('facility-title').textContent = farm.name;
+      document.getElementById('facility-subtitle').textContent = `${d.name} · Propriedade Rural Agrícola`;
+      
+      const badge = document.getElementById('facility-rent-badge');
+      badge.textContent = `-$${d.landRentDaily}/dia`;
+      badge.classList.remove('hidden');
+      document.getElementById('btn-upgrade-store').classList.add('hidden');
+
+      const panel = document.getElementById('facility-content-panel');
+      panel.innerHTML = `
+        <div class="bg-slate-950 p-4 rounded-xl border border-amber-800/80 space-y-3 font-mono text-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-amber-300 text-sm">🌾 Cultivo: ${farm.cropName}</span>
+            <span class="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded border border-cyan-800">QR: ${farm.quality}/100</span>
+          </div>
+          <div class="space-y-1 text-slate-300 text-[11px]">
+            <div>Colheita Diária: <strong class="text-emerald-400">${farm.dailyYield} un/dia</strong></div>
+            <div>Custo Operacional Unitário: <strong class="text-rose-400">$${farm.dailyOperatingCost.toFixed(2)}/un</strong></div>
+            <div>Silo / Estoque Rural: <strong class="text-slate-100">${farm.stock} / ${farm.maxCapacity} un</strong></div>
+          </div>
+          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-[10px] text-slate-400">
+            💡 Esta fazenda fornece matéria-prima de baixo custo para as suas fábricas industriais.
+          </div>
+        </div>
+      `;
+
+      document.getElementById('facility-action-row').classList.add('hidden');
+    }
+
+    // C. GESTÃO DE FÁBRICA INDUSTRIAL
+    function renderFactoryPanel(tile) {
+      const factory = tile.factory;
+      const d = tile.district;
+
+      document.getElementById('facility-title').textContent = factory.name;
+      document.getElementById('facility-subtitle').textContent = `${d.name} · Complexo de Manufatura`;
+      
+      const badge = document.getElementById('facility-rent-badge');
+      badge.textContent = `-$${d.landRentDaily}/dia`;
+      badge.classList.remove('hidden');
+      document.getElementById('btn-upgrade-store').classList.add('hidden');
+
+      const panel = document.getElementById('facility-content-panel');
+      panel.innerHTML = '';
+
+      const lines = Object.entries(factory.lines);
+      if (lines.length === 0) {
+        panel.innerHTML = `<p class="text-xs text-slate-500 font-mono text-center py-6">Nenhuma linha de produção ativa. Ative uma linha abaixo.</p>`;
+      } else {
+        for (const [recipeId, line] of lines) {
+          const card = document.createElement('div');
+          card.className = 'bg-slate-950 p-3 rounded-xl border border-orange-800/80 space-y-2 font-mono text-xs';
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="font-bold text-orange-300">${line.recipeName}</span>
+                <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded ml-1.5">${PRODUCT_CATALOG[line.outputProductId]?.category}</span>
+              </div>
+              <button onclick="removeFactoryLine(${tile.x}, ${tile.y}, '${recipeId}')" class="text-slate-500 hover:text-rose-400">✕</button>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[10px] text-slate-300">
+              <div>Custo Unitário: <strong class="text-emerald-400">$${line.unitCost.toFixed(2)}/un</strong></div>
+              <div>Qualidade (QR): <strong class="text-cyan-300">${line.outputQuality}/100</strong></div>
+              <div>Capacidade: <strong class="text-slate-100">${line.dailyCapacity} un/dia</strong></div>
+              <div>Estoque Fabril: <strong class="text-amber-400">${line.finishedStock} un</strong></div>
+            </div>
+            <div class="text-[10px] text-teal-400 bg-teal-950/40 p-1.5 rounded border border-teal-900 flex items-center justify-between">
+              <span>✅ Disponível como Fornecedor Interno nas suas lojas</span>
+            </div>
+          `;
+          panel.appendChild(card);
+        }
+      }
+
+      const freeLines = factory.maxLines - lines.length;
+      const addRow = document.getElementById('facility-action-row');
+      if (freeLines > 0) {
+        addRow.classList.remove('hidden');
+        addRow.innerHTML = `
+          <button onclick="openFactoryRecipeModal(${tile.x}, ${tile.y})"
+            class="w-full text-center text-xs font-bold text-orange-300 hover:text-white bg-orange-950/60 hover:bg-orange-800/80 font-mono py-2 rounded-xl border border-orange-700/60 shadow-lg transition">
+            ➕ Ativar Nova Linha de Montagem (${freeLines} livre${freeLines > 1 ? 's' : ''})
+          </button>
+        `;
+      } else {
+        addRow.classList.add('hidden');
+      }
+    }
+
+    // ===========================================================================
+    // 9. WIZARD DE CONSTRUÇÃO DE FAZENDAS & FÁBRICAS
+    // ===========================================================================
+    function openFarmModal(tile) {
+      pendingTile = tile;
+      document.getElementById('farm-modal-subtitle').textContent = `Local: ${tile.district.name} (${tile.x}, ${tile.y}) · Aluguel: $${tile.district.landRentDaily}/dia`;
+
+      const list = document.getElementById('farm-types-list');
+      list.innerHTML = FARM_TYPES.map(ft => {
+        const canAfford = cash >= ft.cost;
+        return `
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
+            <div>
+              <div class="text-sm font-bold text-slate-100 flex items-center gap-1.5">
+                <span>${ft.emoji}</span> <span>${ft.name}</span>
               </div>
               <div class="text-[11px] text-slate-400 mt-1">
-                Origem: <strong class="text-slate-300">${sup.origin}</strong> · Cota Diária: <strong class="text-amber-400">${sup.quota} un/dia</strong>
+                Produção: <strong class="text-emerald-400">${ft.dailyYield} un/dia</strong> · Custo: <strong class="text-slate-200">$${ft.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${ft.quality}</strong>
               </div>
+              <div class="text-[10px] text-slate-500 mt-1">${ft.desc}</div>
             </div>
             <div class="text-right">
-              <span class="text-slate-500 text-[10px] block">Preço Atacado (CIF)</span>
-              <span class="text-sm font-bold text-emerald-400">$${sup.wholesalePrice.toFixed(2)}/un</span>
-              <span class="text-[10px] text-slate-400 block mt-0.5">Ref. Varejo: $${prod.standardPrice.toFixed(2)} (+${markup}%)</span>
+              <div class="text-sm font-bold text-rose-400 mb-1">$${ft.cost.toLocaleString()}</div>
+              <button onclick="confirmBuildFarm('${ft.id}')" ${!canAfford ? 'disabled' : ''}
+                class="bg-amber-600 hover:bg-amber-500 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-bold px-3.5 py-1.5 rounded-xl text-xs font-mono transition">
+                ${canAfford ? 'Construir' : 'Saldo Baixo'}
+              </button>
             </div>
           </div>
         `;
       }).join('');
 
-      document.getElementById('port-modal').classList.remove('hidden');
+      document.getElementById('farm-modal').classList.remove('hidden');
     }
 
-    function closePortModal() {
-      document.getElementById('port-modal').classList.add('hidden');
+    function confirmBuildFarm(farmTypeId) {
+      if (!pendingTile) return;
+      const ft = FARM_TYPES.find(f => f.id === farmTypeId);
+      if (!ft || cash < ft.cost) return;
+
+      cash -= ft.cost;
+      pendingTile.farm = {
+        id: `farm_${pendingTile.x}_${pendingTile.y}`,
+        farmTypeId: ft.id,
+        name: `${ft.emoji} ${ft.name}`,
+        cropId: ft.cropId,
+        cropName: ft.cropName,
+        quality: ft.quality,
+        dailyYield: ft.dailyYield,
+        dailyOperatingCost: ft.unitCost,
+        stock: 500,
+        maxCapacity: 5000
+      };
+      pendingTile.buildingHeight = 18;
+
+      addLog(`🌾 ${ft.name} construída com sucesso em ${pendingTile.district.name} por $${ft.cost.toLocaleString()}!`, 'text-amber-400 font-bold');
+
+      closeFarmModal();
+      activeManagedTile = pendingTile;
+      renderFacilityPanel(pendingTile);
+      renderTileInspector(pendingTile);
+      renderMap();
+      updateUI();
+    }
+
+    function closeFarmModal() {
+      document.getElementById('farm-modal').classList.add('hidden');
+      pendingTile = null;
+    }
+
+    function openFactoryModal(tile) {
+      pendingTile = tile;
+      document.getElementById('factory-modal-subtitle').textContent = `Local: ${tile.district.name} (${tile.x}, ${tile.y}) · Aluguel: $${tile.district.landRentDaily}/dia`;
+      document.getElementById('btn-confirm-factory').disabled = cash < 48000;
+      document.getElementById('factory-modal').classList.remove('hidden');
+    }
+
+    function confirmBuildFactory() {
+      if (!pendingTile || cash < 48000) return;
+
+      cash -= 48000;
+      pendingTile.factory = {
+        id: `factory_${pendingTile.x}_${pendingTile.y}`,
+        name: `Fábrica Central (${pendingTile.x}, ${pendingTile.y})`,
+        maxLines: 3,
+        lines: {}
+      };
+      pendingTile.buildingHeight = 22;
+
+      addLog(`🏭 Fábrica de Manufatura construída por $48.000! Ative linhas de produção para fabricar mercadorias.`, 'text-orange-400 font-bold');
+
+      closeFactoryModal();
+      activeManagedTile = pendingTile;
+      renderFacilityPanel(pendingTile);
+      renderTileInspector(pendingTile);
+      renderMap();
+      updateUI();
+    }
+
+    function closeFactoryModal() {
+      document.getElementById('factory-modal').classList.add('hidden');
+      pendingTile = null;
+    }
+
+    function openFactoryRecipeModal(x, y) {
+      const tile = worldGrid[x][y];
+      if (!tile?.factory) return;
+      activeFactoryTile = tile;
+
+      const list = document.getElementById('factory-available-recipes-list');
+      list.innerHTML = FACTORY_RECIPES.map(rec => {
+        const isAlreadyActive = !!tile.factory.lines[rec.id];
+        return `
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
+            <div>
+              <span class="font-bold text-slate-100">${rec.name} (${rec.outputName})</span>
+              <div class="text-[11px] text-slate-400 mt-1">
+                Custo de Fabricação: <strong class="text-emerald-400">$${rec.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${rec.quality}</strong>
+              </div>
+              <div class="text-[10px] text-slate-500 mt-0.5">${rec.desc}</div>
+            </div>
+            <div>
+              ${isAlreadyActive ? `
+                <span class="text-[10px] text-orange-400 bg-orange-950 px-2 py-1 rounded border border-orange-800 font-bold">Ativa</span>
+              ` : `
+                <button onclick="confirmActivateFactoryRecipe('${rec.id}')" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs font-mono">
+                  Ativar Linha
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('factory-recipe-modal').classList.remove('hidden');
+    }
+
+    function confirmActivateFactoryRecipe(recipeId) {
+      if (!activeFactoryTile?.factory) return;
+      const rec = FACTORY_RECIPES.find(r => r.id === recipeId);
+      if (!rec) return;
+
+      activeFactoryTile.factory.lines[rec.id] = {
+        recipeId: rec.id,
+        recipeName: rec.name,
+        outputProductId: rec.outputProdId,
+        dailyCapacity: rec.dailyCap,
+        unitCost: rec.unitCost,
+        outputQuality: rec.quality,
+        finishedStock: 400,
+        maxStock: 3000
+      };
+
+      addLog(`⚙️ Linha de montagem "${rec.name}" ativada na ${activeFactoryTile.factory.name}!`, 'text-orange-400');
+
+      closeFactoryRecipeModal();
+      renderFacilityPanel(activeFactoryTile);
+      updateUI();
+    }
+
+    function removeFactoryLine(x, y, recipeId) {
+      const tile = worldGrid[x][y];
+      if (!tile?.factory?.lines[recipeId]) return;
+      delete tile.factory.lines[recipeId];
+      addLog(`Linha de montagem desativada.`);
+      renderFacilityPanel(tile);
+    }
+
+    function closeFactoryRecipeModal() {
+      document.getElementById('factory-recipe-modal').classList.add('hidden');
+      activeFactoryTile = null;
     }
 
     // ===========================================================================
-    // 7. WIZARD DE ABERTURA DE LOJA
+    // 10. CENTRAL DE MARKETING, MÍDIA & CAMPANHAS PUBLICITÁRIAS
+    // ===========================================================================
+    let currentMarketingFilterOutletId = null;
+
+    function getTotalMonthlyMarketingBudget() {
+      let total = 0;
+      for (const contractKey of activeMarketingContracts) {
+        const [outletId, prodId] = contractKey.split('::');
+        const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
+        if (outlet) {
+          total += prodId === '__institutional__' ? outlet.institutionalMonthlyCost : outlet.monthlyCost;
+        }
+      }
+      return total;
+    }
+
+    function openMarketingCentralModal(filterOutletId = null) {
+      if (filterOutletId !== undefined) {
+        currentMarketingFilterOutletId = filterOutletId;
+      }
+      const list = document.getElementById('media-outlets-list');
+      const products = Object.values(PRODUCT_CATALOG);
+
+      const totalMonthlyMkt = getTotalMonthlyMarketingBudget();
+      const totalDailyMkt = totalMonthlyMkt / 30;
+
+      document.getElementById('mkt-summary-contracts').textContent = `${activeMarketingContracts.size} campanha(s) ativa(s)`;
+      document.getElementById('mkt-summary-monthly-cost').textContent = `-$${totalMonthlyMkt.toLocaleString('en-US', { minimumFractionDigits: 2 })}/mês`;
+      document.getElementById('mkt-summary-daily-cost').textContent = `-$${totalDailyMkt.toLocaleString('en-US', { minimumFractionDigits: 2 })}/dia`;
+
+      const outletsToShow = currentMarketingFilterOutletId
+        ? MEDIA_OUTLETS.filter(o => o.id === currentMarketingFilterOutletId)
+        : MEDIA_OUTLETS;
+
+      if (currentMarketingFilterOutletId && outletsToShow.length > 0) {
+        const outlet = outletsToShow[0];
+        document.getElementById('marketing-modal-title').innerHTML = `
+          <span>${outlet.emoji} ${outlet.name} — Contratação de Anúncios</span>
+          <button onclick="openMarketingCentralModal(null)" class="ml-auto text-[11px] text-indigo-300 hover:text-white bg-indigo-900/60 px-2.5 py-1 rounded-lg border border-indigo-700 font-mono">
+            ← Ver Todas as Emissoras
+          </button>
+        `;
+        document.getElementById('marketing-modal-subtitle').textContent =
+          `Tipo: ${outlet.type} · Localização: ${outlet.district.toUpperCase()} · Alcance: ${outlet.reachDescription}`;
+      } else {
+        document.getElementById('marketing-modal-title').innerHTML = `<span>📢 Central de Mídia & Publicidade Corporativa</span>`;
+        document.getElementById('marketing-modal-subtitle').textContent =
+          `Contrate campanhas institucionais da rede ou publicidade individual para cada produto do catálogo.`;
+      }
+
+      list.innerHTML = outletsToShow.map(outlet => {
+        const instKey = `${outlet.id}::__institutional__`;
+        const isInstActive = activeMarketingContracts.has(instKey);
+
+        return `
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-800/80">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-base">${outlet.emoji}</span>
+                  <span class="text-sm font-bold text-slate-100">${outlet.name}</span>
+                  <span class="text-[10px] bg-indigo-950 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-800 font-mono">${outlet.type}</span>
+                </div>
+                <div class="text-[11px] text-slate-400 mt-1 font-mono">
+                  Alcance: <strong class="text-slate-300">${outlet.reachDescription}</strong> · Impulso: <strong class="text-emerald-400">+${outlet.brandBoostMonthly} pts/mês</strong> (Teto: ${outlet.brandCap})
+                </div>
+              </div>
+            </div>
+
+            <!-- OPÇÃO 1: CAMPANHA INSTITUCIONAL DA REDE (MARCA DA LOJA) -->
+            <div class="p-3 rounded-xl border ${isInstActive ? 'border-amber-500 bg-amber-950/30' : 'border-slate-800 bg-slate-900/80'} flex items-center justify-between font-mono text-xs">
+              <div>
+                <div class="font-bold text-amber-300 flex items-center gap-1.5">
+                  <span>🏢 Campanha Institucional da Rede OIKONOMIA</span>
+                  <span class="text-[9px] bg-amber-950 text-amber-300 px-1.5 py-0.2 rounded border border-amber-800">Marca Corporativa</span>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-0.5">
+                  Eleva o Brand Rating de <strong>TODAS as gôndolas de todas as lojas</strong> simultaneamente!
+                </div>
+                <div class="text-[11px] text-slate-300 mt-1">
+                  Custo Único: <strong class="text-rose-400 font-bold">$${outlet.institutionalMonthlyCost.toLocaleString()}/mês</strong>
+                </div>
+              </div>
+              <button onclick="toggleMarketingContract('${outlet.id}', '__institutional__')"
+                class="px-3.5 py-1.5 rounded-xl font-bold text-xs transition ${isInstActive ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
+                ${isInstActive ? '📢 ATIVA' : 'Contratar Rede'}
+              </button>
+            </div>
+
+            <!-- OPÇÃO 2: CAMPANHAS DE PRODUTO ÚNICO -->
+            <div>
+              <span class="text-[10px] text-slate-400 uppercase font-mono block mb-2">Ou Anunciar Produtos Individuais ($${outlet.monthlyCost.toLocaleString()}/mês cada):</span>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                ${products.map(prod => {
+                  const contractKey = `${outlet.id}::${prod.id}`;
+                  const isActive = activeMarketingContracts.has(contractKey);
+                  const brand = playerBrandRating[prod.id] || 20;
+
+                  return `
+                    <div onclick="toggleMarketingContract('${outlet.id}', '${prod.id}')"
+                      class="cursor-pointer p-2 rounded-lg border text-[11px] font-mono flex items-center justify-between transition
+                        ${isActive ? 'border-indigo-500 bg-indigo-950/40 text-indigo-200 ring-1 ring-indigo-500' : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'}">
+                      <div class="truncate pr-1">
+                        <div class="font-bold truncate">${prod.name}</div>
+                        <div class="text-[9px] text-slate-500">Marca: ${brand}/100</div>
+                      </div>
+                      <span class="text-xs ${isActive ? 'text-indigo-300 font-bold' : 'text-slate-600'}">
+                        ${isActive ? '📢 ON' : 'OFF'}
+                      </span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('marketing-modal').classList.remove('hidden');
+    }
+
+    function toggleMarketingContract(outletId, prodId) {
+      const contractKey = `${outletId}::${prodId}`;
+      const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
+
+      if (activeMarketingContracts.has(contractKey)) {
+        activeMarketingContracts.delete(contractKey);
+        addLog(`📢 Contrato na ${outlet.name} cancelado.`, 'text-slate-400');
+      } else {
+        activeMarketingContracts.add(contractKey);
+        const nameStr = prodId === '__institutional__' ? 'Marca Corporativa da Rede' : PRODUCT_CATALOG[prodId]?.name;
+        addLog(`📺 Contrato firmado na ${outlet.name}: Campanha de ${nameStr} no ar!`, 'text-indigo-400 font-bold');
+      }
+
+      openMarketingCentralModal(currentMarketingFilterOutletId);
+      if (activeManagedTile) renderFacilityPanel(activeManagedTile);
+      updateUI();
+    }
+
+    function closeMarketingModal() {
+      document.getElementById('marketing-modal').classList.add('hidden');
+    }
+
+    // ===========================================================================
+    // 11. OUTROS MODAIS (WIZARDS, FORNECEDORES, GÔNDOLAS)
     // ===========================================================================
     function openStoreWizard(tile) {
       pendingTile = tile;
@@ -1039,6 +1710,7 @@
         const isDisabled = (!isSelected && usedSlots >= maxSlots) || !hasOffer;
 
         const initStockCost = currentOffer ? Math.round(300 * currentOffer.landedCost) : 0;
+        const isInternal = currentOffer?.type === 'internal_factory';
 
         return `
           <div class="product-card rounded-xl border p-3 flex flex-col gap-2 ${isSelected ? 'border-emerald-600 bg-emerald-950/30' : 'border-slate-800 bg-slate-800/30'}">
@@ -1056,19 +1728,17 @@
             </div>
 
             ${hasOffer ? `
-              <div class="bg-slate-900/80 rounded-lg p-2 text-[10px] font-mono border border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
+              <div class="bg-slate-900/80 rounded-lg p-2 text-[10px] font-mono border ${isInternal ? 'border-orange-800 bg-orange-950/20' : 'border-slate-800/80'} flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-1.5">
-                  <span class="text-amber-400">⚓ ${currentOffer.portName.split('(')[0].trim()}</span>
+                  <span class="${isInternal ? 'text-orange-400 font-bold' : 'text-amber-400'}">${currentOffer.supplierName.split('(')[0].trim()}</span>
                   <span class="text-slate-500">(${currentOffer.distance} tiles)</span>
                   <span class="text-cyan-300 bg-cyan-950 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${currentOffer.quality}</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span>Atacado: <strong class="text-slate-300">$${currentOffer.wholesalePrice.toFixed(2)}</strong></span>
-                  <span>Frete: <strong class="text-amber-300">+$${currentOffer.freight.toFixed(2)}</strong></span>
-                  <span>Custo Efetivo: <strong class="text-emerald-400 font-bold">$${currentOffer.landedCost.toFixed(2)}</strong></span>
+                  <span>Custo Landed: <strong class="text-emerald-400 font-bold">$${currentOffer.landedCost.toFixed(2)}</strong></span>
                 </div>
               </div>
-            ` : `<div class="text-[10px] text-rose-400 font-mono">❌ Nenhum porto com remessas atracadas para este item.</div>`}
+            ` : `<div class="text-[10px] text-rose-400 font-mono">❌ Sem fornecedores atracados ou fabricando este item.</div>`}
           </div>
         `;
       }).join('');
@@ -1087,15 +1757,13 @@
       } else {
         if (selectedProductsMap.size >= pendingStoreType.maxShelves) return;
         const offers = getSupplierOffersForProduct(prodId, pendingTile);
-        if (offers.length > 0) {
-          selectedProductsMap.set(prodId, offers[0]);
-        }
+        if (offers.length > 0) selectedProductsMap.set(prodId, offers[0]);
       }
       renderProductSelector();
     }
 
     function updateCostSummary() {
-      const buildCost  = pendingStoreType.cost;
+      const buildCost = pendingStoreType.cost;
       let stockCost = 0;
       for (const [prodId, offer] of selectedProductsMap.entries()) {
         stockCost += Math.round(300 * offer.landedCost);
@@ -1144,8 +1812,8 @@
           maxCapacity: 1000,
           dailyRestock: Math.round(prod.perCapitaDailyDemand * pendingTile.district.population * 0.5),
           quality: offer.quality,
-          supplierId: offer.portId,
-          supplierName: offer.portName,
+          supplierId: offer.supplierId,
+          supplierName: offer.supplierName,
           wholesalePrice: offer.wholesalePrice,
           unitFreight: offer.freight,
           landedCost: offer.landedCost
@@ -1165,11 +1833,11 @@
       };
       pendingTile.buildingHeight = 20;
 
-      addLog(`🏗️ ${storeName} inaugurada por $${totalCost.toLocaleString()}! Fornecedores portuários vinculados.`, 'text-emerald-400 font-bold');
+      addLog(`🏗️ ${storeName} inaugurada por $${totalCost.toLocaleString()}!`, 'text-emerald-400 font-bold');
 
       closeModal();
       activeManagedTile = pendingTile;
-      renderGondolaPanel(pendingTile);
+      renderFacilityPanel(pendingTile);
       renderTileInspector(pendingTile);
       renderMap();
       updateUI();
@@ -1182,179 +1850,76 @@
       selectedProductsMap.clear();
     }
 
-    // ===========================================================================
-    // 8. PAINEL DE GÔNDOLAS
-    // ===========================================================================
-    function renderIdlePanel() {
-      document.getElementById('store-title').textContent = '🛒 Selecione uma loja no mapa';
-      document.getElementById('store-subtitle').textContent = 'Clique numa loja verde para gerir gôndolas e fornecedores.';
-      document.getElementById('store-rent-badge').classList.add('hidden');
-      document.getElementById('btn-upgrade-store').classList.add('hidden');
-      document.getElementById('add-product-row').classList.add('hidden');
-      document.getElementById('gondola-panel').innerHTML = `
-        <p class="text-[11px] text-slate-500 font-mono text-center py-3">Nenhuma loja selecionada.</p>
-      `;
+    function openSupplierModal(x, y, prodId) {
+      const tile = worldGrid[x][y];
+      if (!tile?.store?.shelves[prodId]) return;
+      supplierTargetShelf = { tile, prodId };
+
+      const prod = PRODUCT_CATALOG[prodId];
+      const offers = getSupplierOffersForProduct(prodId, tile);
+
+      document.getElementById('supplier-modal-title').textContent = `🔗 Fornecedores de ${prod.name}`;
+      document.getElementById('supplier-modal-subtitle').textContent = `Loja: ${tile.store.name} (${tile.x}, ${tile.y})`;
+
+      const list = document.getElementById('supplier-options-list');
+      list.innerHTML = offers.map(offer => {
+        const isCurrent = tile.store.shelves[prodId].supplierId === offer.supplierId;
+        const isInternal = offer.type === 'internal_factory';
+
+        return `
+          <div class="bg-slate-950 p-3 rounded-xl border ${isCurrent ? 'border-emerald-500 bg-emerald-950/20' : (isInternal ? 'border-orange-800 bg-orange-950/20' : 'border-slate-800')} flex items-center justify-between text-xs font-mono">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold ${isInternal ? 'text-orange-400' : 'text-amber-300'}">${offer.supplierName}</span>
+                <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${offer.quality}</span>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-1">
+                Distância: <strong class="text-slate-300">${offer.distance} tiles</strong> · Origem: <strong>${offer.origin}</strong>
+              </div>
+              <div class="text-[11px] text-slate-300 mt-1">
+                Preço Base: $${offer.wholesalePrice.toFixed(2)} + Frete: <span class="text-amber-400">+$${offer.freight.toFixed(2)}</span> = Custo: <strong class="text-emerald-400 font-bold">$${offer.landedCost.toFixed(2)}</strong>
+              </div>
+            </div>
+            <div>
+              ${isCurrent ? `
+                <span class="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-1 rounded border border-emerald-800 font-bold">Ativo</span>
+              ` : `
+                <button onclick="applySupplierChange('${offer.supplierId}')" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold font-mono">
+                  Contratar
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('supplier-modal').classList.remove('hidden');
     }
 
-    function renderGondolaPanel(tile) {
-      if (!tile || !tile.store) { renderIdlePanel(); return; }
-      const store = tile.store;
-      const d = tile.district;
+    function applySupplierChange(supplierId) {
+      if (!supplierTargetShelf) return;
+      const { tile, prodId } = supplierTargetShelf;
+      const offers = getSupplierOffersForProduct(prodId, tile);
+      const chosen = offers.find(o => o.supplierId === supplierId);
 
-      document.getElementById('store-title').textContent = store.name;
-      document.getElementById('store-subtitle').textContent = `${d.name} · ${Object.keys(store.shelves).length}/${store.maxShelves} gôndolas`;
-      
-      const badge = document.getElementById('store-rent-badge');
-      badge.textContent = `-$${store.dailyRent.toFixed(2)}/dia`;
-      badge.classList.remove('hidden');
+      if (chosen && tile.store?.shelves[prodId]) {
+        const shelf = tile.store.shelves[prodId];
+        shelf.supplierId = chosen.supplierId;
+        shelf.supplierName = chosen.supplierName;
+        shelf.wholesalePrice = chosen.wholesalePrice;
+        shelf.unitFreight = chosen.freight;
+        shelf.landedCost = chosen.landedCost;
+        shelf.quality = chosen.quality;
 
-      const btnUpgrade = document.getElementById('btn-upgrade-store');
-      if (store.storeTypeId !== 'supermercado') {
-        btnUpgrade.classList.remove('hidden');
-      } else {
-        btnUpgrade.classList.add('hidden');
+        addLog(`🔗 Fornecedor de ${PRODUCT_CATALOG[prodId].name} alterado para ${chosen.supplierName} (Custo: $${chosen.landedCost.toFixed(2)} | QR: ${chosen.quality}).`, 'text-cyan-400');
+        closeSupplierModal();
+        renderFacilityPanel(tile);
       }
+    }
 
-      const panel = document.getElementById('gondola-panel');
-      panel.innerHTML = '';
-
-      for (const [prodId, shelf] of Object.entries(store.shelves)) {
-        const prod = PRODUCT_CATALOG[prodId];
-        if (!prod) continue;
-
-        if (!shelf.landedCost) {
-          const offers = getSupplierOffersForProduct(prodId, tile);
-          if (offers.length > 0) {
-            shelf.supplierId = offers[0].portId;
-            shelf.supplierName = offers[0].portName;
-            shelf.wholesalePrice = offers[0].wholesalePrice;
-            shelf.unitFreight = offers[0].freight;
-            shelf.landedCost = offers[0].landedCost;
-            shelf.quality = offers[0].quality;
-          } else {
-            shelf.landedCost = prod.baseCost;
-            shelf.quality = 50;
-          }
-        }
-
-        const brand = playerBrandRating[prodId] || 20;
-        const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
-        const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
-        const estSales = Math.floor(d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast);
-        const stockPct = Math.round((shelf.stock / shelf.maxCapacity) * 100);
-        const markupPct = Math.round(((shelf.price - shelf.landedCost) / shelf.landedCost) * 100);
-        const isStockout = shelf.stock < 30;
-
-        const cost200 = Math.round(200 * shelf.landedCost);
-        const missingUnits = shelf.maxCapacity - shelf.stock;
-        const costFill = Math.round(missingUnits * shelf.landedCost);
-
-        // Identifica campanhas ativas para este produto
-        const activeMktForProd = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}::${prodId}`));
-
-        const card = document.createElement('div');
-        card.className = `rounded-xl border ${isStockout ? 'border-rose-800 stockout-alert' : 'border-slate-800'} bg-slate-950 p-2.5 space-y-2`;
-        card.innerHTML = `
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-1.5 flex-wrap">
-              <span class="text-[11px] font-bold text-slate-200">${prod.name}</span>
-              <span class="text-[9px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800 font-mono">QR: ${shelf.quality}</span>
-              <button onclick="openMarketingCentralModal()" class="text-[9px] ${activeMktForProd.length > 0 ? 'bg-indigo-950 text-indigo-300 border-indigo-700' : 'bg-slate-900 text-slate-400 border-slate-700'} px-1.5 py-0.5 rounded border font-mono hover:border-indigo-500">
-                ⭐ Marca: ${brand} ${activeMktForProd.length > 0 ? '📢' : ''}
-              </button>
-            </div>
-            <button onclick="removeProductFromStore(${tile.x}, ${tile.y}, '${prodId}')" class="text-[10px] text-slate-600 hover:text-rose-400 font-mono px-1">✕</button>
-          </div>
-
-          <!-- Badges de Campanhas de Mídia Ativas -->
-          ${activeMktForProd.length > 0 ? `
-            <div class="flex items-center gap-1 text-[9px] font-mono text-indigo-300 bg-indigo-950/40 px-2 py-0.5 rounded border border-indigo-900">
-              <span class="text-slate-400">Campanhas:</span>
-              ${activeMktForProd.map(m => `<span>${m.emoji} ${m.name.split(' ')[0]}</span>`).join(', ')}
-            </div>
-          ` : ''}
-
-          <!-- Dados do Fornecedor Portuário -->
-          <div class="bg-slate-900 p-1.5 rounded-lg text-[10px] font-mono flex items-center justify-between border border-slate-800">
-            <div class="truncate max-w-[180px]">
-              <span class="text-amber-400">⚓ ${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Porto Padrão'}</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-slate-400">Custo: <strong class="text-emerald-400 font-bold">$${shelf.landedCost.toFixed(2)}</strong></span>
-              <button onclick="openSupplierModal(${tile.x}, ${tile.y}, '${prodId}')" class="bg-slate-800 hover:bg-slate-700 text-teal-300 px-1.5 py-0.5 rounded text-[9px] font-bold">Trocar</button>
-            </div>
-          </div>
-
-          <!-- Barra de Estoque & Botões de Compra Imediata -->
-          <div>
-            <div class="flex justify-between text-[10px] font-mono text-slate-400 mb-0.5">
-              <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-400'}">Estoque: ${shelf.stock.toLocaleString()} / ${shelf.maxCapacity.toLocaleString()} un</span>
-              <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-500'}">${isStockout ? '⚠ BAIXO' : `${stockPct}%`}</span>
-            </div>
-            <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden mb-1.5">
-              <div class="stock-bar-fill h-full rounded-full ${isStockout ? 'bg-rose-500' : stockPct > 50 ? 'bg-emerald-500' : 'bg-amber-500'}" style="width:${stockPct}%"></div>
-            </div>
-
-            <!-- Botões de Compra Rápida de Estoque -->
-            <div class="flex items-center gap-1.5 text-[9px] font-mono">
-              <span class="text-slate-500">Injetar:</span>
-              <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', 200)"
-                class="bg-slate-900 hover:bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700 hover:border-emerald-600 transition">
-                +200 un (-$${cost200})
-              </button>
-              ${missingUnits > 50 ? `
-                <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', ${missingUnits})"
-                  class="bg-slate-900 hover:bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded border border-slate-700 hover:border-emerald-600 transition">
-                  Encher (-$${costFill})
-                </button>
-              ` : ''}
-              <button onclick="openMarketingCentralModal()" class="ml-auto text-indigo-400 hover:text-indigo-300 font-bold">
-                📢 Anunciar
-              </button>
-            </div>
-          </div>
-
-          <!-- Preço & Reposição Diária -->
-          <div class="grid grid-cols-2 gap-2 text-[10px] font-mono pt-1 border-t border-slate-900">
-            <div>
-              <span class="text-slate-400 block">Preço de Venda ($):</span>
-              <input type="number" step="0.10" value="${shelf.price.toFixed(2)}"
-                onchange="updateShelfPrice(${tile.x}, ${tile.y}, '${prodId}', this.value)"
-                class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-emerald-400 font-bold text-right focus:outline-none focus:border-emerald-500">
-              <span class="text-[9px] ${markupPct >= 0 ? 'text-emerald-500' : 'text-rose-500'}">Margem: ${markupPct > 0 ? '+' : ''}${markupPct}%</span>
-            </div>
-            <div>
-              <span class="text-slate-400 block">Reposição Diária (un):</span>
-              <input type="number" step="50" value="${shelf.dailyRestock}"
-                onchange="updateShelfRestock(${tile.x}, ${tile.y}, '${prodId}', this.value)"
-                class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-slate-200 font-bold text-right focus:outline-none focus:border-cyan-500">
-            </div>
-          </div>
-
-          <!-- Indicadores -->
-          <div class="flex justify-between text-[10px] font-mono text-slate-400 border-t border-slate-800/60 pt-1.5">
-            <span>Rating: <strong class="text-cyan-300">${rating.toFixed(1)}/100</strong></span>
-            <span>Elast: <strong class="text-amber-300">${elast.toFixed(2)}x</strong></span>
-            <span>Est./dia: <strong class="text-teal-300">~${estSales} un</strong></span>
-          </div>
-        `;
-        panel.appendChild(card);
-      }
-
-      const addRow = document.getElementById('add-product-row');
-      const freeSlots = store.maxShelves - Object.keys(store.shelves).length;
-      if (freeSlots > 0) {
-        addRow.classList.remove('hidden');
-        addRow.innerHTML = `
-          <button onclick="openAddProductModal(${tile.x}, ${tile.y})"
-            class="w-full text-center text-xs font-bold text-teal-300 hover:text-white bg-teal-950/60 hover:bg-teal-800/80 font-mono py-2 rounded-xl border border-teal-700/60 shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
-            <span>➕ Adicionar Novo Produto às Gôndolas</span>
-            <span class="bg-teal-900 px-1.5 py-0.5 rounded text-[10px]">(${freeSlots} livre${freeSlots > 1 ? 's' : ''})</span>
-          </button>
-        `;
-      } else {
-        addRow.classList.add('hidden');
-      }
+    function closeSupplierModal() {
+      document.getElementById('supplier-modal').classList.add('hidden');
+      supplierTargetShelf = null;
     }
 
     function buyInstantStock(x, y, prodId, qty) {
@@ -1365,39 +1930,22 @@
       const maxPossible = shelf.maxCapacity - shelf.stock;
       const actualQty = Math.min(qty, maxPossible);
 
-      if (actualQty <= 0) {
-        addLog(`⚠️ Estoque de ${PRODUCT_CATALOG[prodId].name} já está cheio (${shelf.maxCapacity} un)!`, 'text-amber-400');
-        return;
-      }
-
+      if (actualQty <= 0) return;
       const cost = Math.round(actualQty * shelf.landedCost);
-      if (cash < cost) {
-        addLog(`❌ Caixa insuficiente para comprar ${actualQty} un de ${PRODUCT_CATALOG[prodId].name} (Necessário: $${cost.toLocaleString()})!`, 'text-rose-400');
-        return;
-      }
+      if (cash < cost) return;
 
       cash -= cost;
       shelf.stock += actualQty;
       addLog(`📦 Compradas ${actualQty} un de ${PRODUCT_CATALOG[prodId].name} por $${cost.toLocaleString()}!`, 'text-emerald-400');
 
-      renderGondolaPanel(tile);
+      renderFacilityPanel(tile);
       updateUI();
     }
 
-    // ===========================================================================
-    // 9. MODAL DE ADICIONAR PRODUTO À LOJA EXISTENTE
-    // ===========================================================================
     function openAddProductModal(x, y) {
       const tile = worldGrid[x][y];
       if (!tile?.store) return;
       addProductTargetTile = tile;
-
-      const store = tile.store;
-      const freeSlots = store.maxShelves - Object.keys(store.shelves).length;
-
-      document.getElementById('add-prod-modal-title').textContent = `📦 Adicionar Produto — ${store.name}`;
-      document.getElementById('add-prod-modal-subtitle').textContent = `Gôndolas livres: ${freeSlots} de ${store.maxShelves} | Caixa disponível: $${cash.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-
       renderAddProductModalList();
       document.getElementById('add-product-modal').classList.remove('hidden');
     }
@@ -1433,39 +1981,27 @@
       list.innerHTML = availableProds.map(prod => {
         const offers = getSupplierOffersForProduct(prod.id, tile);
         const bestOffer = offers[0] || null;
-
-        if (!bestOffer) {
-          return `
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs font-mono opacity-50">
-              <span class="font-bold text-slate-300">${prod.name}</span>
-              <span class="text-rose-400 block text-[10px] mt-1">Sem fornecedores atracados no porto</span>
-            </div>
-          `;
-        }
+        if (!bestOffer) return '';
 
         const initCost = Math.round(300 * bestOffer.landedCost);
         const canAfford = cash >= initCost;
-        const markup = Math.round(((prod.standardPrice - bestOffer.landedCost) / bestOffer.landedCost) * 100);
 
         return `
-          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-slate-700 flex items-center justify-between text-xs font-mono gap-3">
-            <div class="flex-1">
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
+            <div>
               <div class="flex items-center gap-2">
-                <span class="font-bold text-slate-100 text-sm">${prod.name}</span>
-                <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">${prod.category}</span>
+                <span class="font-bold text-slate-100">${prod.name}</span>
                 <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${bestOffer.quality}</span>
               </div>
-              <div class="text-[10px] text-slate-400 mt-1 flex flex-wrap gap-x-3">
-                <span>Fornecedor: <strong class="text-amber-400">${bestOffer.portName.split('(')[0].trim()}</strong></span>
-                <span>Custo Landed: <strong class="text-emerald-400">$${bestOffer.landedCost.toFixed(2)}/un</strong></span>
-                <span>Preço Padrão: <strong class="text-slate-300">$${prod.standardPrice.toFixed(2)}</strong> (+${markup}%)</span>
+              <div class="text-[10px] text-slate-400 mt-1">
+                Fornecedor: <strong class="text-amber-400">${bestOffer.supplierName.split('(')[0].trim()}</strong> · Custo: <strong class="text-emerald-400">$${bestOffer.landedCost.toFixed(2)}/un</strong>
               </div>
             </div>
-            <div class="text-right flex-shrink-0">
+            <div class="text-right">
               <div class="text-[10px] text-slate-400 mb-1">1º Estoque (300 un): <strong class="text-rose-400 font-bold">$${initCost.toLocaleString()}</strong></div>
               <button onclick="confirmAddNewProductToStore('${prod.id}')" ${!canAfford ? 'disabled' : ''}
-                class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono transition">
-                ${canAfford ? '➕ Adicionar Gôndola' : '❌ Saldo Baixo'}
+                class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono">
+                ➕ Adicionar
               </button>
             </div>
           </div>
@@ -1478,22 +2014,12 @@
       const tile = addProductTargetTile;
       const store = tile.store;
 
-      const freeSlots = store.maxShelves - Object.keys(store.shelves).length;
-      if (freeSlots <= 0) {
-        addLog(`⚠️ Loja já atingiu a capacidade máxima de ${store.maxShelves} gôndolas!`, 'text-amber-400');
-        closeAddProductModal();
-        return;
-      }
-
       const offers = getSupplierOffersForProduct(prodId, tile);
       if (offers.length === 0) return;
       const offer = offers[0];
 
       const initCost = Math.round(300 * offer.landedCost);
-      if (cash < initCost) {
-        addLog(`❌ Caixa insuficiente para abastecer ${PRODUCT_CATALOG[prodId].name}!`, 'text-rose-400');
-        return;
-      }
+      if (cash < initCost) return;
 
       cash -= initCost;
       const prod = PRODUCT_CATALOG[prodId];
@@ -1504,22 +2030,18 @@
         maxCapacity: 1000,
         dailyRestock: Math.round(prod.perCapitaDailyDemand * tile.district.population * 0.5),
         quality: offer.quality,
-        supplierId: offer.portId,
-        supplierName: offer.portName,
+        supplierId: offer.supplierId,
+        supplierName: offer.supplierName,
         wholesalePrice: offer.wholesalePrice,
         unitFreight: offer.freight,
         landedCost: offer.landedCost
       };
 
-      addLog(`✨ ${prod.name} adicionado às gôndolas de ${store.name} por $${initCost.toLocaleString()}!`, 'text-emerald-400 font-bold');
+      addLog(`✨ ${prod.name} adicionado às gôndolas de ${store.name}!`, 'text-emerald-400 font-bold');
 
       renderAddProductModalList();
-      renderGondolaPanel(tile);
+      renderFacilityPanel(tile);
       updateUI();
-
-      if (store.maxShelves - Object.keys(store.shelves).length <= 0) {
-        closeAddProductModal();
-      }
     }
 
     function closeAddProductModal() {
@@ -1527,281 +2049,37 @@
       addProductTargetTile = null;
     }
 
-    // ===========================================================================
-    // 10. MODAL DE UPGRADE DE PORTE
-    // ===========================================================================
-    function openUpgradeStoreModal() {
-      if (!activeManagedTile?.store) return;
-      const tile = activeManagedTile;
-      const store = tile.store;
-
-      document.getElementById('upgrade-modal-title').textContent = `⭐ Expandir Porte — ${store.name}`;
-      document.getElementById('upgrade-modal-subtitle').textContent = `Porte Atual: ${store.storeTypeId.toUpperCase()} (${Object.keys(store.shelves).length}/${store.maxShelves} gôndolas)`;
-
-      const list = document.getElementById('upgrade-options-list');
-      const currentCost = STORE_TYPES.find(s => s.id === store.storeTypeId)?.cost || 8000;
-      const availableUpgrades = STORE_TYPES.filter(s => s.cost > currentCost);
-
-      list.innerHTML = availableUpgrades.map(targetType => {
-        const upgradeCost = targetType.cost - currentCost;
-        const canAfford = cash >= upgradeCost;
-        const newRent = (tile.district.landRentDaily * targetType.rentMultiplier).toFixed(0);
-
+    function openPortModal(port) {
+      document.getElementById('port-modal-title').textContent = `⚓ ${port.name}`;
+      document.getElementById('port-modal-subtitle').textContent = `Local: Cais Norte (${port.tile.x}, ${port.tile.y})`;
+      const list = document.getElementById('port-cargo-list');
+      list.innerHTML = Object.entries(port.supplies).map(([prodId, sup]) => {
+        const prod = PRODUCT_CATALOG[prodId];
         return `
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
             <div>
-              <div class="text-base font-bold text-slate-100 flex items-center gap-1.5">
-                <span>${targetType.emoji}</span> <span>${targetType.name}</span>
-              </div>
-              <div class="text-[11px] text-slate-400 mt-1">
-                Gôndolas: <strong class="text-emerald-400">${targetType.maxShelves} slots</strong> · Aluguel: <strong class="text-rose-400">$${newRent}/dia</strong>
-              </div>
-              <div class="text-[10px] text-slate-500 mt-1">${targetType.desc}</div>
+              <span class="font-bold text-slate-200">${prod.name}</span>
+              <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800 ml-2">QR: ${sup.quality}</span>
+              <div class="text-[10px] text-slate-400 mt-1">Origem: ${sup.origin} · Cota: ${sup.quota} un/dia</div>
             </div>
             <div class="text-right">
-              <div class="text-sm font-bold text-amber-400 mb-1">$${upgradeCost.toLocaleString()}</div>
-              <button onclick="confirmUpgradeStore('${targetType.id}', ${upgradeCost})" ${!canAfford ? 'disabled' : ''}
-                class="bg-amber-600 hover:bg-amber-500 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-bold px-3.5 py-1.5 rounded-xl text-xs font-mono transition">
-                ${canAfford ? 'Fazer Upgrade' : 'Saldo Baixo'}
-              </button>
+              <span class="text-sm font-bold text-emerald-400">$${sup.wholesalePrice.toFixed(2)}/un</span>
             </div>
           </div>
         `;
       }).join('');
-
-      document.getElementById('upgrade-modal').classList.remove('hidden');
+      document.getElementById('port-modal').classList.remove('hidden');
     }
 
-    function confirmUpgradeStore(targetTypeId, cost) {
-      if (!activeManagedTile?.store) return;
-      if (cash < cost) return;
-
-      const tile = activeManagedTile;
-      const target = STORE_TYPES.find(s => s.id === targetTypeId);
-      if (!target) return;
-
-      cash -= cost;
-      tile.store.storeTypeId = target.id;
-      tile.store.name = `${target.emoji} ${target.name} (${tile.district.name})`;
-      tile.store.maxShelves = target.maxShelves;
-      tile.store.rentMultiplier = target.rentMultiplier;
-      tile.store.dailyRent = tile.district.landRentDaily * target.rentMultiplier;
-
-      addLog(`⭐ Loja expandida com sucesso para ${target.name} por $${cost.toLocaleString()}!`, 'text-amber-300 font-bold');
-
-      closeUpgradeModal();
-      renderGondolaPanel(tile);
-      renderTileInspector(tile);
-      updateUI();
-    }
-
-    function closeUpgradeModal() {
-      document.getElementById('upgrade-modal').classList.add('hidden');
-    }
-
-    // ===========================================================================
-    // 11. CENTRAL DE MARKETING, MÍDIA & CAMPANHAS PUBLICITÁRIAS
-    // ===========================================================================
-    function getTotalMonthlyMarketingBudget() {
-      let total = 0;
-      for (const contractKey of activeMarketingContracts) {
-        const [outletId] = contractKey.split('::');
-        const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
-        if (outlet) total += outlet.monthlyCost;
-      }
-      return total;
-    }
-
-    let currentMarketingFilterOutletId = null;
-
-    function openMarketingCentralModal(filterOutletId = null) {
-      if (filterOutletId !== undefined) {
-        currentMarketingFilterOutletId = filterOutletId;
-      }
-      const list = document.getElementById('media-outlets-list');
-      const products = Object.values(PRODUCT_CATALOG);
-
-      const totalMonthlyMkt = getTotalMonthlyMarketingBudget();
-      const totalDailyMkt = totalMonthlyMkt / 30;
-
-      document.getElementById('mkt-summary-contracts').textContent = `${activeMarketingContracts.size} campanha(s) ativa(s)`;
-      document.getElementById('mkt-summary-monthly-cost').textContent = `-$${totalMonthlyMkt.toLocaleString('en-US', { minimumFractionDigits: 2 })}/mês`;
-      document.getElementById('mkt-summary-daily-cost').textContent = `-$${totalDailyMkt.toLocaleString('en-US', { minimumFractionDigits: 2 })}/dia`;
-
-      const outletsToShow = currentMarketingFilterOutletId
-        ? MEDIA_OUTLETS.filter(o => o.id === currentMarketingFilterOutletId)
-        : MEDIA_OUTLETS;
-
-      if (currentMarketingFilterOutletId && outletsToShow.length > 0) {
-        const outlet = outletsToShow[0];
-        document.getElementById('marketing-modal-title').innerHTML = `
-          <span>${outlet.emoji} ${outlet.name} — Contratação de Anúncios</span>
-          <button onclick="openMarketingCentralModal(null)" class="ml-auto text-[11px] text-indigo-300 hover:text-white bg-indigo-900/60 px-2.5 py-1 rounded-lg border border-indigo-700 font-mono">
-            ← Ver Todas as Emissoras
-          </button>
-        `;
-        document.getElementById('marketing-modal-subtitle').textContent =
-          `Tipo: ${outlet.type} · Localização: ${outlet.district.toUpperCase()} · Alcance: ${outlet.reachDescription}`;
-      } else {
-        document.getElementById('marketing-modal-title').innerHTML = `<span>📢 Central de Mídia & Publicidade Corporativa</span>`;
-        document.getElementById('marketing-modal-subtitle').textContent =
-          `Contrate campanhas publicitárias em emissoras locais para impulsionar o conhecimento e valor de marca.`;
-      }
-
-      list.innerHTML = outletsToShow.map(outlet => {
-        return `
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-            <div class="flex items-center justify-between pb-2 border-b border-slate-800/80">
-              <div>
-                <div class="flex items-center gap-2">
-                  <span class="text-base">${outlet.emoji}</span>
-                  <span class="text-sm font-bold text-slate-100">${outlet.name}</span>
-                  <span class="text-[10px] bg-indigo-950 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-800 font-mono">${outlet.type}</span>
-                </div>
-                <div class="text-[11px] text-slate-400 mt-1 font-mono">
-                  Alcance: <strong class="text-slate-300">${outlet.reachDescription}</strong> · Impulso: <strong class="text-emerald-400">+${outlet.brandBoostMonthly} pts/mês</strong> (Teto: ${outlet.brandCap})
-                </div>
-              </div>
-              <div class="text-right">
-                <span class="text-[10px] text-slate-500 block font-mono">Custo por Produto</span>
-                <span class="text-sm font-bold text-rose-400 font-mono">$${outlet.monthlyCost.toLocaleString()}/mês</span>
-                <span class="text-[9px] text-slate-500 block font-mono">($${(outlet.monthlyCost / 30).toFixed(2)}/dia)</span>
-              </div>
-            </div>
-
-            <!-- Seleção de Produtos para anunciar nesta emissora -->
-            <div>
-              <span class="text-[10px] text-slate-400 uppercase font-mono block mb-2">Produtos no Portfólio (Ligar/Desligar Contrato):</span>
-              <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                ${products.map(prod => {
-                  const contractKey = `${outlet.id}::${prod.id}`;
-                  const isActive = activeMarketingContracts.has(contractKey);
-                  const brand = playerBrandRating[prod.id] || 20;
-
-                  return `
-                    <div onclick="toggleMarketingContract('${outlet.id}', '${prod.id}')"
-                      class="cursor-pointer p-2 rounded-lg border text-[11px] font-mono flex items-center justify-between transition
-                        ${isActive ? 'border-indigo-500 bg-indigo-950/40 text-indigo-200 ring-1 ring-indigo-500' : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'}">
-                      <div class="truncate pr-1">
-                        <div class="font-bold truncate">${prod.name}</div>
-                        <div class="text-[9px] text-slate-500">Marca: ${brand}/100</div>
-                      </div>
-                      <span class="text-xs ${isActive ? 'text-indigo-300 font-bold' : 'text-slate-600'}">
-                        ${isActive ? '📢 ON' : 'OFF'}
-                      </span>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      document.getElementById('marketing-modal').classList.remove('hidden');
-    }
-
-    function toggleMarketingContract(outletId, prodId) {
-      const contractKey = `${outletId}::${prodId}`;
-      const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
-      const prod = PRODUCT_CATALOG[prodId];
-
-      if (activeMarketingContracts.has(contractKey)) {
-        activeMarketingContracts.delete(contractKey);
-        addLog(`📢 Contrato de publicidade de ${prod.name} na ${outlet.name} cancelado.`, 'text-slate-400');
-      } else {
-        activeMarketingContracts.add(contractKey);
-        addLog(`📺 Contrato firmado: ${prod.name} agora está no ar na ${outlet.name} (-$${outlet.monthlyCost}/mês)!`, 'text-indigo-400 font-bold');
-      }
-
-      openMarketingCentralModal(currentMarketingFilterOutletId);
-      if (activeManagedTile?.store) renderGondolaPanel(activeManagedTile);
-      updateUI();
-    }
-
-    function closeMarketingModal() {
-      document.getElementById('marketing-modal').classList.add('hidden');
-    }
-
-    // ===========================================================================
-    // 12. GESTÃO DE FORNECEDORES NAS GÔNDOLAS ATIVAS
-    // ===========================================================================
-    function openSupplierModal(x, y, prodId) {
-      const tile = worldGrid[x][y];
-      if (!tile?.store?.shelves[prodId]) return;
-      supplierTargetShelf = { tile, prodId };
-
-      const prod = PRODUCT_CATALOG[prodId];
-      const offers = getSupplierOffersForProduct(prodId, tile);
-
-      document.getElementById('supplier-modal-title').textContent = `🔗 Fornecedores de ${prod.name}`;
-      document.getElementById('supplier-modal-subtitle').textContent = `Loja: ${tile.store.name} (${tile.x}, ${tile.y})`;
-
-      const list = document.getElementById('supplier-options-list');
-      list.innerHTML = offers.map(offer => {
-        const isCurrent = tile.store.shelves[prodId].supplierId === offer.portId;
-        return `
-          <div class="bg-slate-950 p-3 rounded-xl border ${isCurrent ? 'border-emerald-500 bg-emerald-950/20' : 'border-slate-800'} flex items-center justify-between text-xs font-mono">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="font-bold text-amber-300">${offer.portName}</span>
-                <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${offer.quality}</span>
-              </div>
-              <div class="text-[10px] text-slate-400 mt-1">
-                Distância: <strong class="text-slate-300">${offer.distance} tiles</strong> · Origem: <strong>${offer.origin}</strong>
-              </div>
-              <div class="text-[11px] text-slate-300 mt-1">
-                Preço Porto: $${offer.wholesalePrice.toFixed(2)} + Frete: <span class="text-amber-400">+$${offer.freight.toFixed(2)}</span> = Custo: <strong class="text-emerald-400 font-bold">$${offer.landedCost.toFixed(2)}</strong>
-              </div>
-            </div>
-            <div>
-              ${isCurrent ? `
-                <span class="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-1 rounded border border-emerald-800 font-bold">Ativo</span>
-              ` : `
-                <button onclick="applySupplierChange('${offer.portId}')" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold font-mono">
-                  Contratar
-                </button>
-              `}
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      document.getElementById('supplier-modal').classList.remove('hidden');
-    }
-
-    function applySupplierChange(portId) {
-      if (!supplierTargetShelf) return;
-      const { tile, prodId } = supplierTargetShelf;
-      const offers = getSupplierOffersForProduct(prodId, tile);
-      const chosen = offers.find(o => o.portId === portId);
-
-      if (chosen && tile.store?.shelves[prodId]) {
-        const shelf = tile.store.shelves[prodId];
-        shelf.supplierId = chosen.portId;
-        shelf.supplierName = chosen.portName;
-        shelf.wholesalePrice = chosen.wholesalePrice;
-        shelf.unitFreight = chosen.freight;
-        shelf.landedCost = chosen.landedCost;
-        shelf.quality = chosen.quality;
-
-        addLog(`🔗 Fornecedor de ${PRODUCT_CATALOG[prodId].name} alterado para ${chosen.portName} (Novo custo: $${chosen.landedCost.toFixed(2)} | QR: ${chosen.quality}).`, 'text-cyan-400');
-        closeSupplierModal();
-        renderGondolaPanel(tile);
-      }
-    }
-
-    function closeSupplierModal() {
-      document.getElementById('supplier-modal').classList.add('hidden');
-      supplierTargetShelf = null;
+    function closePortModal() {
+      document.getElementById('port-modal').classList.add('hidden');
     }
 
     function removeProductFromStore(x, y, prodId) {
       const tile = worldGrid[x][y];
       if (!tile?.store) return;
       delete tile.store.shelves[prodId];
-      addLog(`🔻 ${PRODUCT_CATALOG[prodId]?.name} retirado das gôndolas de ${tile.store.name}.`);
-      renderGondolaPanel(tile);
+      renderFacilityPanel(tile);
     }
 
     function updateShelfPrice(x, y, prodId, val) {
@@ -1810,8 +2088,7 @@
       const p = parseFloat(val);
       if (p > 0) {
         tile.store.shelves[prodId].price = p;
-        addLog(`💲 Preço de ${PRODUCT_CATALOG[prodId].name} ajustado para $${p.toFixed(2)}.`);
-        if (activeManagedTile?.x === x && activeManagedTile?.y === y) renderGondolaPanel(tile);
+        if (activeManagedTile?.x === x && activeManagedTile?.y === y) renderFacilityPanel(tile);
       }
     }
 
@@ -1823,7 +2100,7 @@
     }
 
     // ===========================================================================
-    // 13. MOTOR ECONÔMICO & SIMULAÇÃO DIÁRIA
+    // 12. MOTOR ECONÔMICO & SIMULAÇÃO DIÁRIA
     // ===========================================================================
     function calcPriceRating(standardPrice, price) {
       if (price <= 0) return 100;
@@ -1854,57 +2131,75 @@
     function simulateDay() {
       let dailyRev = 0, dailyCogs = 0, dailyFixed = 0;
 
-      // Custo diário de Marketing ativo
+      // Despesa diária de Marketing
       let dailyMarketing = 0;
       for (const contractKey of activeMarketingContracts) {
-        const [outletId] = contractKey.split('::');
+        const [outletId, prodId] = contractKey.split('::');
         const outlet = MEDIA_OUTLETS.find(o => o.id === outletId);
-        if (outlet) dailyMarketing += outlet.monthlyCost / 30;
+        if (outlet) {
+          dailyMarketing += (prodId === '__institutional__' ? outlet.institutionalMonthlyCost : outlet.monthlyCost) / 30;
+        }
       }
 
       for (let x = 0; x < GRID_SIZE; x++) {
         for (let y = 0; y < GRID_SIZE; y++) {
           const tile = worldGrid[x][y];
           const d = tile.district;
-          if (!tile.store && !tile.competitor) continue;
 
           if (tile.store) dailyFixed += tile.store.dailyRent;
+          if (tile.farm) dailyFixed += tile.district.landRentDaily;
+          if (tile.factory) dailyFixed += tile.district.landRentDaily;
 
-          for (const [prodId, shelf] of Object.entries(tile.store?.shelves || {})) {
-            const prod = PRODUCT_CATALOG[prodId];
-            if (!prod) continue;
-            const noise = 0.94 + Math.random() * 0.12;
-            const baseDem = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * noise;
-            const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
-            const brand = playerBrandRating[prodId] || 20;
-            const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
+          // Produção Diária de Fazenda
+          if (tile.farm) {
+            tile.farm.stock = Math.min(tile.farm.maxCapacity, tile.farm.stock + tile.farm.dailyYield);
+          }
 
-            let compRating = 0;
-            const nb = worldGrid[x+1]?.[y]?.competitor || worldGrid[x]?.[y+1]?.competitor || worldGrid[x]?.[y]?.competitor;
-            if (nb?.shelves[prodId]) {
-              const cs = nb.shelves[prodId];
-              compRating = calcProductRating(prod, cs.price, cs.quality, cs.brand);
+          // Produção Diária de Fábrica
+          if (tile.factory) {
+            for (const line of Object.values(tile.factory.lines)) {
+              line.finishedStock = Math.min(line.maxStock, line.finishedStock + line.dailyCapacity);
             }
+          }
 
-            const pW = Math.pow(rating, 2);
-            const cW = Math.pow(compRating, 2);
-            const uW = Math.pow(25, 2);
-            const share = pW / (pW + cW + uW);
+          // Vendas de Loja
+          if (tile.store) {
+            for (const [prodId, shelf] of Object.entries(tile.store.shelves)) {
+              const prod = PRODUCT_CATALOG[prodId];
+              if (!prod) continue;
+              const noise = 0.94 + Math.random() * 0.12;
+              const baseDem = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * noise;
+              const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
+              const brand = playerBrandRating[prodId] || 20;
+              const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
 
-            const potDemand = Math.floor(baseDem * elast * share);
-            const sold = Math.min(shelf.stock, potDemand);
+              let compRating = 0;
+              const nb = worldGrid[x+1]?.[y]?.competitor || worldGrid[x]?.[y+1]?.competitor || worldGrid[x]?.[y]?.competitor;
+              if (nb?.shelves[prodId]) {
+                const cs = nb.shelves[prodId];
+                compRating = calcProductRating(prod, cs.price, cs.quality, cs.brand);
+              }
 
-            if (shelf.stock === 0 && potDemand > 10 && Math.random() < 0.15)
-              addLog(`⚠ Stockout de "${prod.name}" na ${tile.store?.name ?? ''}! Clientes perdidos.`, 'text-amber-400');
+              const pW = Math.pow(rating, 2);
+              const cW = Math.pow(compRating, 2);
+              const uW = Math.pow(25, 2);
+              const share = pW / (pW + cW + uW);
 
-            shelf.stock = Math.max(0, shelf.stock - sold);
-            dailyRev  += sold * shelf.price;
-            dailyCogs += sold * (shelf.landedCost || prod.baseCost);
+              const potDemand = Math.floor(baseDem * elast * share);
+              const sold = Math.min(shelf.stock, potDemand);
 
-            const restock = Math.min(shelf.dailyRestock, shelf.maxCapacity - shelf.stock);
-            if (restock > 0) {
-              const rc = restock * (shelf.landedCost || prod.baseCost);
-              if (cash >= rc) { cash -= rc; shelf.stock += restock; }
+              if (shelf.stock === 0 && potDemand > 10 && Math.random() < 0.15)
+                addLog(`⚠ Stockout de "${prod.name}" na ${tile.store?.name ?? ''}! Clientes perdidos.`, 'text-amber-400');
+
+              shelf.stock = Math.max(0, shelf.stock - sold);
+              dailyRev  += sold * shelf.price;
+              dailyCogs += sold * (shelf.landedCost || prod.baseCost);
+
+              const restock = Math.min(shelf.dailyRestock, shelf.maxCapacity - shelf.stock);
+              if (restock > 0) {
+                const rc = restock * (shelf.landedCost || prod.baseCost);
+                if (cash >= rc) { cash -= rc; shelf.stock += restock; }
+              }
             }
           }
 
@@ -1938,24 +2233,29 @@
     function closeMonthEnd() {
       const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses;
       addLog(
-        `📊 FIM DO MÊS ${String(month).padStart(2,'0')}: Receita $${monthRevenue.toLocaleString('en-US',{maximumFractionDigits:0})} | Marketing: $${monthMarketingExpenses.toLocaleString('en-US',{maximumFractionDigits:0})} | Lucro Líq: $${net.toLocaleString('en-US',{maximumFractionDigits:0})}`,
+        `📊 FIM DO MÊS ${String(month).padStart(2,'0')}: Receita $${monthRevenue.toLocaleString('en-US',{maximumFractionDigits:0})} | Lucro Líq: $${net.toLocaleString('en-US',{maximumFractionDigits:0})}`,
         net >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'
       );
 
-      // Atualiza Marca com Campanhas de Mídia e Decaimento
+      // Verifica se há campanhas institucionais ativas
+      const activeInstOutlets = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}::__institutional__`));
+      const instBoost = activeInstOutlets.reduce((s, o) => s + Math.floor(o.brandBoostMonthly * 0.75), 0);
+
+      // Atualiza Marca com Campanhas de Mídia, Institucional e Decaimento
       for (const prodId of Object.keys(PRODUCT_CATALOG)) {
         const activeOutletsForProd = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}::${prodId}`));
         const currentBrand = playerBrandRating[prodId] || 20;
 
-        if (activeOutletsForProd.length > 0) {
-          let totalBoost = activeOutletsForProd.reduce((sum, o) => sum + o.brandBoostMonthly, 0);
+        if (activeOutletsForProd.length > 0 || instBoost > 0) {
+          let totalBoost = activeOutletsForProd.reduce((sum, o) => sum + o.brandBoostMonthly, 0) + instBoost;
           if (net > 0) totalBoost += 1;
-          const maxCap = Math.max(...activeOutletsForProd.map(o => o.brandCap));
+          const maxCap = activeOutletsForProd.length > 0
+            ? Math.max(...activeOutletsForProd.map(o => o.brandCap))
+            : (activeInstOutlets.length > 0 ? Math.max(...activeInstOutlets.map(o => o.brandCap)) : 70);
+          
           const newBrand = Math.min(maxCap, currentBrand + totalBoost);
           playerBrandRating[prodId] = newBrand;
-          addLog(`📢 Publicidade de ${PRODUCT_CATALOG[prodId].name} impulsionou marca para ${newBrand}/100 (+${newBrand - currentBrand} pts)!`, 'text-indigo-300');
         } else {
-          // Decaimento natural de marca se não há publicidade ativa
           const decay = net > 0 ? 1 : 2;
           playerBrandRating[prodId] = Math.max(10, currentBrand - decay);
         }
@@ -1981,7 +2281,7 @@
       }
 
       monthRevenue = 0; monthCogs = 0; monthFixedExpenses = 0; monthMarketingExpenses = 0;
-      if (activeManagedTile?.store) renderGondolaPanel(activeManagedTile);
+      if (activeManagedTile) renderFacilityPanel(activeManagedTile);
     }
 
     function setSpeed(s) {
@@ -2009,14 +2309,16 @@
         closePortModal();
         closeSupplierModal();
         closeAddProductModal();
-        closeUpgradeModal();
         closeMarketingModal();
+        closeFarmModal();
+        closeFactoryModal();
+        closeFactoryRecipeModal();
       }
     });
 
     function setHeatmap(mode) {
       currentHeatmap = mode;
-      const btns = { terrain:'hm-terrain', traffic:'hm-traffic', pop:'hm-pop', comp:'hm-comp', ports:'hm-ports', media:'hm-media' };
+      const btns = { terrain:'hm-terrain', traffic:'hm-traffic', pop:'hm-pop', comp:'hm-comp', ports:'hm-ports', ind:'hm-ind', media:'hm-media' };
       for (const [m, id] of Object.entries(btns)) {
         const btn = document.getElementById(id);
         if (!btn) continue;
@@ -2054,11 +2356,11 @@
       dn.textContent = `${net >= 0 ? '+' : ''}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2})}`;
       dn.className = `text-sm font-black font-mono ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
 
-      if (activeManagedTile?.store) renderGondolaPanel(activeManagedTile);
+      if (activeManagedTile) renderFacilityPanel(activeManagedTile);
     }
 
     // ===========================================================================
-    // 14. INICIALIZAÇÃO
+    // 13. INICIALIZAÇÃO
     // ===========================================================================
     window.addEventListener('resize', () => { resizeCanvas(); renderMap(); });
 

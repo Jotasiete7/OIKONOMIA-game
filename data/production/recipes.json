@@ -1,0 +1,100 @@
+{
+  "recipes": [
+    {
+      "id": "recipe_bread",
+      "name": "Panificação Artesanal",
+      "outputProductId": "bread",
+      "outputName": "Pão Artesanal",
+      "processingCost": 0.30,
+      "inputs": {
+        "wheat": { "name": "Trigo Agrícola", "quantity": 1, "standardCost": 0.45, "defaultQuality": 60 }
+      },
+      "dailyCapacity": 500,
+      "qualityBonus": 5
+    },
+    {
+      "id": "recipe_beer",
+      "name": "Cervejaria Puro Malte",
+      "outputProductId": "beer",
+      "outputName": "Cerveja Especial",
+      "processingCost": 0.40,
+      "inputs": {
+        "wheat": { "name": "Trigo / Cevada", "quantity": 1, "standardCost": 0.45, "defaultQuality": 60 },
+        "sugar": { "name": "Açúcar Refinado", "quantity": 1, "standardCost": 0.30, "defaultQuality": 55 }
+      },
+      "dailyCapacity": 400,
+      "qualityBonus": 12
+    },
+    {
+      "id": "recipe_milk",
+      "name": "Usina de Pasteurização de Leite",
+      "outputProductId": "milk",
+      "outputName": "Leite Integral",
+      "processingCost": 0.25,
+      "inputs": {
+        "raw_milk": { "name": "Leite Cru", "quantity": 1, "standardCost": 0.35, "defaultQuality": 65 }
+      },
+      "dailyCapacity": 450,
+      "qualityBonus": 8
+    },
+    {
+      "id": "recipe_cookies",
+      "name": "Confeitaria & Biscoitos",
+      "outputProductId": "cookies",
+      "outputName": "Biscoito Recheado",
+      "processingCost": 0.35,
+      "inputs": {
+        "wheat": { "name": "Farinha de Trigo", "quantity": 1, "standardCost": 0.45, "defaultQuality": 60 },
+        "cocoa": { "name": "Cacau Puro", "quantity": 1, "standardCost": 0.35, "defaultQuality": 60 }
+      },
+      "dailyCapacity": 350,
+      "qualityBonus": 10
+    }
+  ],
+  "farms": [
+    {
+      "id": "farm_wheat",
+      "name": "Fazenda de Grãos & Trigo",
+      "emoji": "🌾",
+      "cropId": "wheat",
+      "cropName": "Trigo & Cereais",
+      "cost": 22000,
+      "dailyOperatingCost": 0.45,
+      "quality": 60,
+      "dailyYield": 450,
+      "desc": "Cultivo de grãos e cereais essenciais para panificação e cervejarias."
+    },
+    {
+      "id": "farm_milk",
+      "name": "Fazenda de Pecuária & Leite",
+      "emoji": "🥛",
+      "cropId": "raw_milk",
+      "cropName": "Leite Cru",
+      "cost": 24000,
+      "dailyOperatingCost": 0.35,
+      "quality": 65,
+      "dailyYield": 400,
+      "desc": "Criação de gado leiteiro para suprir usinas de laticínios."
+    },
+    {
+      "id": "farm_sugar",
+      "name": "Plantação de Cana & Cacau",
+      "emoji": "🍫",
+      "cropId": "sugar",
+      "cropName": "Cana de Açúcar & Cacau",
+      "cost": 20000,
+      "dailyOperatingCost": 0.30,
+      "quality": 55,
+      "dailyYield": 500,
+      "desc": "Produção de insumos doces para bebidas, chocolates e confeitarias."
+    }
+  ],
+  "factory": {
+    "id": "factory_general",
+    "name": "Fábrica de Manufatura",
+    "emoji": "🏭",
+    "cost": 48000,
+    "maxLines": 3,
+    "desc": "Complexo fabril para processar insumos agrícolas em produtos acabados de alto valor agregado."
+  }
+}

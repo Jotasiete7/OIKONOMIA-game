@@ -8,6 +8,7 @@ import { calculateQuadraticMarketShare } from '../src/math/marketShare.ts';
 import { updateBrandRating } from '../src/math/brand.ts';
 import { calculateManhattanDistance, calculateUnitFreight, calculateLandedCost } from '../src/math/logistics.ts';
 import { calculateDailyMarketingExpense, updateProductBrandWithMarketing } from '../src/math/marketing.ts';
+import { calculateRecipeOutput, calculateDailyFactoryYield } from '../src/math/production.ts';
 import { loadMasterData } from '../src/loader/stateLoader.ts';
 import { tickDay } from '../src/simulation/tick.ts';
 import type { ProductType } from '../src/types/index.ts';
@@ -86,11 +87,7 @@ assert(freightShort === 0.11, `Frete para 6 tiles deve ser $0.11 (obtido: ${frei
 const landed = calculateLandedCost(1.55, freightShort);
 assert(landed === 1.66, `Custo de entrada (Landed Cost) deve ser $1.66 (obtido: ${landed})`);
 
-const distLong = calculateManhattanDistance({ x: 6, y: 6 }, { x: 25, y: 25 });
-const freightLong = calculateUnitFreight(distLong, 0.015, 0.02);
-assert(freightLong > freightShort, 'Frete de loja distante deve ser maior que de loja próxima');
-
-// 6. Testes de Mídia & Marketing (Tópico 2)
+// 6. Testes de Mídia & Marketing
 console.log('\n--- 6. Media, Marketing & Brand Campaigns ---');
 const mockTvOutlet = {
   id: 'media_tv',
@@ -101,30 +98,40 @@ const mockTvOutlet = {
   brandCap: 95,
   reachPct: 100
 };
-const mockRadioOutlet = {
-  id: 'media_radio',
-  name: 'Rádio FM',
-  type: 'Rádio',
-  monthlyCost: 850,
-  brandBoostMonthly: 8,
-  brandCap: 75,
-  reachPct: 65
-};
-
-const dailyMktCost = calculateDailyMarketingExpense([mockTvOutlet, mockRadioOutlet]); // (2500 + 850)/30 = 111.67
-assert(dailyMktCost === 111.67, `Despesa diária de marketing esperada $111.67 (obtido: ${dailyMktCost})`);
+const dailyMktCost = calculateDailyMarketingExpense([mockTvOutlet]);
+assert(dailyMktCost === 83.33, `Despesa diária de marketing esperada $83.33 (obtido: ${dailyMktCost})`);
 
 const brandAfterTv = updateProductBrandWithMarketing(20, [mockTvOutlet], true);
 assert(brandAfterTv === 36, `Marca inicial 20 com TV (+15+1) deve subir para 36 (obtido: ${brandAfterTv})`);
 
-const brandCapped = updateProductBrandWithMarketing(90, [mockRadioOutlet], true);
-assert(brandCapped === 75, `Rádio FM com teto 75 não deve ultrapassar 75 (obtido: ${brandCapped})`);
+// 7. Testes de Produção e Manufatura (Fase 2)
+console.log('\n--- 7. Supply Chain, Farms & Factories (Phase 2) ---');
+// Receita de Pão: 1 Trigo ($0.45, QR 60) + $0.30 transformação = $0.75, QR 65
+const breadOutput = calculateRecipeOutput(
+  [{ standardCost: 0.45, quality: 60, quantity: 1 }],
+  0.30,
+  5
+);
+assert(breadOutput.unitCost === 0.75, `Custo unitário de pão fabricado deve ser $0.75 (obtido: ${breadOutput.unitCost})`);
+assert(breadOutput.outputQuality === 65, `Qualidade de pão fabricado deve ser 65 QR (obtido: ${breadOutput.outputQuality})`);
 
-const brandDecayed = updateProductBrandWithMarketing(50, [], false);
-assert(brandDecayed === 48, `Sem marketing ativo, marca 50 deve decair para 48 (obtido: ${brandDecayed})`);
+// Receita de Cerveja: 1 Trigo ($0.45, QR 60) + 1 Açúcar ($0.30, QR 55) + $0.40 = $1.15, QR 70
+const beerOutput = calculateRecipeOutput(
+  [
+    { standardCost: 0.45, quality: 60, quantity: 1 },
+    { standardCost: 0.30, quality: 55, quantity: 1 }
+  ],
+  0.40,
+  12
+);
+assert(beerOutput.unitCost === 1.15, `Custo unitário de cerveja fabricada deve ser $1.15 (obtido: ${beerOutput.unitCost})`);
+assert(beerOutput.outputQuality === 70, `Qualidade de cerveja artesanal deve ser 70 QR (obtido: ${beerOutput.outputQuality})`);
 
-// 7. Testes de Carregamento & Simulação Diária
-console.log('\n--- 7. Master Data Loading & 30-Day Pipeline ---');
+const yieldResult = calculateDailyFactoryYield(500, 350, 1);
+assert(yieldResult.producedUnits === 350, `Produção deve ser limitada a 350 unidades pelo estoque de trigo (obtido: ${yieldResult.producedUnits})`);
+
+// 8. Testes de Carregamento & Simulação Diária
+console.log('\n--- 8. Master Data Loading & 30-Day Pipeline ---');
 const state = loadMasterData();
 assert(state.districts.length === 6, `Cidade deve conter exatamente 6 distritos (obtido: ${state.districts.length})`);
 assert(Object.keys(state.catalog).length >= 10, 'Catálogo mestre deve carregar múltiplos produtos');

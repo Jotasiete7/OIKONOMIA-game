@@ -78,6 +78,38 @@ export interface StoreState {
   shelves: Record<string, ShelfState>;
 }
 
+export interface FarmState {
+  id: string;
+  farmTypeId: string;
+  name: string;
+  cropId: string;
+  cropName: string;
+  quality: number;
+  dailyYield: number;
+  dailyOperatingCost: number;
+  stock: number;
+  maxCapacity: number;
+}
+
+export interface ProductionLineState {
+  recipeId: string;
+  recipeName: string;
+  outputProductId: string;
+  dailyCapacity: number;
+  unitCost: number;
+  outputQuality: number;
+  finishedStock: number;
+  maxStock: number;
+}
+
+export interface FactoryState {
+  id: string;
+  name: string;
+  maxLines: number;
+  dailyRent: number;
+  lines: Record<string, ProductionLineState>;
+}
+
 export interface CompetitorStoreState {
   id: string;
   name: string;
