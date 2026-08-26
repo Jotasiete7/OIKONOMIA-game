@@ -1,7 +1,6 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <script src="map_data.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.7)</title>
@@ -83,14 +82,6 @@
           🗺️ Neo Capital
           <span class="text-[10px] text-emerald-400 font-mono bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">36×36 Isométrico</span>
         </span>
-                <!-- CIDADES / ATALHOS -->
-        <div class="flex items-center gap-1 bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] font-mono">
-          <span class="text-slate-500 px-1">Cidades:</span>
-          <button onclick="jumpToCity('nova_atenas')" class="px-2 py-0.5 rounded-md text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas">ðŸ›ï¸ Nova Atenas</button>
-          <button onclick="jumpToCity('porto_real')" class="px-2 py-0.5 rounded-md text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real">ðŸš¢ Porto Real</button>
-          <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-2 py-0.5 rounded-md text-slate-400 hover:bg-slate-800" title="Polo Industrial">ðŸ­ Montargis <span id="lock-montargis">ðŸ”’</span></button>
-          <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-2 py-0.5 rounded-md text-slate-400 hover:bg-slate-800" title="CinturÃ£o AgrÃ­cola">ðŸŒ¾ VÃ¡rzea <span id="lock-varzea">ðŸ”’</span></button>
-        </div>
         <!-- LENTES -->
         <div class="flex items-center gap-1 bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] font-mono">
           <span class="text-slate-500 px-1">Lente:</span>
@@ -2083,7 +2074,7 @@
       const offers = [];
 
       // 1. Portos Marítimos
-      for (const port of (typeof SEAPORTS_128 !== 'undefined' ? SEAPORTS_128 : SEAPORTS)) {
+      for (const port of SEAPORTS) {
         if (port.supplies[prodId]) {
           const sup = port.supplies[prodId];
           const dist = getManhattanDist(port.tile, storeTile);
@@ -2135,7 +2126,7 @@
       // Fallback caso não tenha estoque local: Fornecedor Portuário Global padrão
       if (offers.length === 0 && PRODUCT_CATALOG[prodId]) {
         const prod = PRODUCT_CATALOG[prodId];
-        const dist = getManhattanDist({ x: 85, y: 34 }, storeTile);
+        const dist = getManhattanDist({ x: 6, y: 6 }, storeTile);
         const wholesale = Number((prod.baseCost * 1.6).toFixed(2));
         const freight = Number((0.02 + dist * 0.015).toFixed(3));
         offers.push({
@@ -2184,252 +2175,78 @@
     let activeFactoryTile = null;
 
     // ===========================================================================
-    // 4. MOTOR DO MAPA ISOMÉTRICO 128x128 & CIDADES DO OIKONOMIA
+    // 4. WORLD GRID 36x36
     // ===========================================================================
-    const GRID_SIZE = (typeof MAP_WIDTH !== 'undefined') ? MAP_WIDTH : 128;
+    const GRID_SIZE = 36;
     const TILE_W = 64, TILE_H = 32;
     const worldGrid = [];
 
-    // Estado de Desbloqueio das Cidades
-    const unlockedCities = {
-      nova_atenas: true,
-      porto_real: true,
-      montargis: false,
-      varzea: false
-    };
-
-    function checkCityUnlocks() {
-      // 1. Montargis: Patrimônio Líquido >= $500.000
-      let totalAssets = cash;
-      for (let x = 0; x < GRID_SIZE; x++) {
-        for (let y = 0; y < GRID_SIZE; y++) {
-          const t = worldGrid[x] && worldGrid[x][y];
-          if (t) {
-            if (t.store) totalAssets += t.store.cost || 15000;
-            if (t.mine) totalAssets += t.mine.cost || 40000;
-            if (t.farm) totalAssets += t.farm.cost || 20000;
-            if (t.factory) totalAssets += t.factory.cost || 50000;
-          }
-        }
-      }
-      if (!unlockedCities.montargis && totalAssets >= 500000) {
-        unlockedCities.montargis = true;
-        const btn = document.getElementById('btn-jump-montargis');
-        const lock = document.getElementById('lock-montargis');
-        if (btn) btn.classList.add('text-amber-300', 'font-bold');
-        if (lock) lock.textContent = '🔓';
-        addGameLog('🎉 CIDADE DESBLOQUEADA: Montargis atingiu o critério de $500k em patrimônio e agora está aberta para investimentos!');
-      }
-
-      // 2. Várzea: Pelo menos 1 Fazenda Ativa
-      let farmCount = 0;
-      for (let x = 0; x < GRID_SIZE; x++) {
-        for (let y = 0; y < GRID_SIZE; y++) {
-          if (worldGrid[x] && worldGrid[x][y] && worldGrid[x][y].farm) farmCount++;
-        }
-      }
-      if (!unlockedCities.varzea && farmCount >= 1) {
-        unlockedCities.varzea = true;
-        const btn = document.getElementById('btn-jump-varzea');
-        const lock = document.getElementById('lock-varzea');
-        if (btn) btn.classList.add('text-amber-300', 'font-bold');
-        if (lock) lock.textContent = '🔓';
-        addGameLog('🎉 CIDADE DESBLOQUEADA: Várzea conectada ao cinturão agrícola pela sua primeira Fazenda em operação!');
-      }
+    function getDistrictForTile(x, y) {
+      if (x + y < 11) return 'water';
+      if (x + y >= 11 && x + y <= 14 && (x < 12 || y < 12)) return 'harbor';
+      if (x === 18 || y === 18) return 'road';
+      if (x >= 14 && x <= 22 && y >= 12 && y <= 20) return 'downtown';
+      if (x >= 12 && x <= 24 && y >= 5 && y <= 12) return 'uptown';
+      if (x >= 22 && y < 22) return 'northside';
+      if (x < 14 && y >= 14 && y < 28) return 'west_suburbs';
+      if (y >= 26 || (x >= 24 && y >= 22)) return 'industrial';
+      return 'west_suburbs';
     }
 
-    // Configuração dos Portos no Mapa 128x128
-    const SEAPORTS_128 = [
-      {
-        id: 'port_real_main',
-        name: 'Porto Real (Terminal Internacional de Cargas & Grãos)',
-        tile: { x: 85, y: 34 },
-        freightRatePerTile: 0.008,
-        supplies: {}
-      },
-      {
-        id: 'port_real_south',
-        name: 'Porto Real (Doca Sul & Manufaturas)',
-        tile: { x: 89, y: 44 },
-        freightRatePerTile: 0.010,
-        supplies: {}
-      },
-      {
-        id: 'port_atenas_bay',
-        name: 'Porto Nova Atenas (Doca da Baía Central)',
-        tile: { x: 34, y: 46 },
-        freightRatePerTile: 0.012,
-        supplies: {}
-      }
-    ];
-
-    // Identificador de Cidade por Proximidade
-    function getCityForTile(x, y) {
-      if (typeof CITY_PROFILES_DATA === 'undefined') return { cityId: 'nova_atenas', cityName: 'Nova Atenas', wealthIndex: 85, isLocked: false };
-      
-      const cities = CITY_PROFILES_DATA.cities;
-      let closest = cities[0];
-      let minD = 999999;
-      for (const c of cities) {
-        const d = Math.sqrt(Math.pow(x - c.mapTileCenter.x, 2) + Math.pow(y - c.mapTileCenter.y, 2));
-        if (d < minD) {
-          minD = d;
-          closest = c;
-        }
-      }
-      const isLocked = !unlockedCities[closest.id];
-      return {
-        cityId: closest.id,
-        cityName: closest.name,
-        wealthIndex: closest.economy.wealthIndex,
-        priceElasticity: closest.economy.priceElasticity,
-        distToCenter: minD,
-        isLocked: isLocked,
-        profile: closest
-      };
-    }
-
-    // Inicialização da Matriz do Mundo 128x128
     for (let x = 0; x < GRID_SIZE; x++) {
       worldGrid[x] = [];
       for (let y = 0; y < GRID_SIZE; y++) {
-        // Leitura dos blocos do Tiled (TMX)
-        const gidWater = (typeof TMX_LAYERS !== 'undefined' && TMX_LAYERS['01_Agua_Base']) ? TMX_LAYERS['01_Agua_Base'][y][x] : 0;
-        const gidTerrain = (typeof TMX_LAYERS !== 'undefined' && TMX_LAYERS['02_Terreno_Relevo']) ? TMX_LAYERS['02_Terreno_Relevo'][y][x] : 4;
-        const gidRes = (typeof TMX_LAYERS !== 'undefined' && TMX_LAYERS['03_Recursos_Naturais']) ? TMX_LAYERS['03_Recursos_Naturais'][y][x] : 0;
-        const gidRoad = (typeof TMX_LAYERS !== 'undefined' && TMX_LAYERS['04_Infraestrutura_Vias']) ? TMX_LAYERS['04_Infraestrutura_Vias'][y][x] : 0;
-        const gidBuild = (typeof TMX_LAYERS !== 'undefined' && TMX_LAYERS['05_Edificios_Zonamento']) ? TMX_LAYERS['05_Edificios_Zonamento'][y][x] : 0;
-
-        const isWater = gidWater > 0;
-        const isRoad = gidRoad > 0;
-        const isPort = gidBuild === 13;
-        const isCommercialCenter = gidBuild === 14;
-        const isResidential = gidBuild === 15;
-        const isFactoryTile = gidBuild === 16;
-        const isFarmTile = gidBuild === 17 || gidTerrain === 5;
-
-        const cityInfo = getCityForTile(x, y);
-
-        // Classificação do Distrito
-        let districtId = 'west_suburbs';
-        let dType = 'Planície / Interior';
-        let dName = 'Terreno Livre';
-        let traffic = 12;
-        let pop = 800;
-        let rent = 8.00;
-
-        if (isWater) {
-          districtId = 'water';
-          dType = 'Água / Oceano';
-          dName = gidWater === 1 ? 'Oceano Profundo' : 'Águas Costeiras';
-          traffic = 0; pop = 0; rent = 0;
-        } else if (isPort) {
-          districtId = 'harbor';
-          dType = 'Porto / Logística';
-          dName = `Porto Comercial (${cityInfo.cityName})`;
-          traffic = 55; pop = 3000; rent = 24.00;
-        } else if (isCommercialCenter) {
-          districtId = 'downtown';
-          dType = 'Centro Comercial Nobre';
-          dName = `Centro de ${cityInfo.cityName}`;
-          traffic = Math.floor(cityInfo.profile.economy.trafficBaseIndex * 1.15);
-          pop = Math.floor(cityInfo.profile.growth.initialPopulation * 0.4);
-          rent = Math.floor(35 * cityInfo.profile.economy.landRentMultiplier);
-        } else if (isResidential) {
-          districtId = 'northside';
-          dType = 'Bairro Residencial';
-          dName = `Distrito Residencial (${cityInfo.cityName})`;
-          traffic = Math.floor(cityInfo.profile.economy.trafficBaseIndex * 0.7);
-          pop = Math.floor(cityInfo.profile.growth.initialPopulation * 0.35);
-          rent = Math.floor(18 * cityInfo.profile.economy.landRentMultiplier);
-        } else if (isRoad) {
-          districtId = 'road';
-          dType = 'Rodovia Principal';
-          dName = 'Eixo Rodoviário Logístico';
-          traffic = 75; pop = 0; rent = 0;
-        } else if (gidTerrain === 7) {
-          dType = 'Montanhas';
-          dName = 'Cadeia de Montanhas (Mineração)';
-          traffic = 5; pop = 200; rent = 5.00;
-        } else if (gidTerrain === 6) {
-          dType = 'Colinas';
-          dName = 'Região de Colinas';
-          traffic = 8; pop = 400; rent = 6.00;
-        } else if (gidTerrain === 5) {
-          dType = 'Terra Fértil';
-          dName = 'Cinturão Agrícola Fértil';
-          traffic = 15; pop = 1200; rent = 7.00;
-        }
-
-        const districtObj = {
-          id: districtId,
-          name: dName,
-          type: dType,
-          population: pop,
-          trafficIndex: traffic,
-          landRentDaily: rent
-        };
-
-        // Dados de Porto
+        const districtId = getDistrictForTile(x, y);
+        const district = CITY_DISTRICTS[districtId];
+        const isWater = districtId === 'water';
+        const isRoad  = districtId === 'road';
+        
         let portData = null;
-        if (isPort) {
-          portData = SEAPORTS_128.find(p => p.tile.x === x && p.tile.y === y) || {
-            id: `port_${x}_${y}`,
-            name: `Porto Marítimo (${cityInfo.cityName})`,
-            tile: { x, y },
-            freightRatePerTile: 0.010,
-            supplies: {}
-          };
-        }
+        if (x === 6 && y === 6) portData = SEAPORTS[0];
+        if (x === 7 && y === 5) portData = SEAPORTS[1];
 
-        // Dados de Mídia
         let mediaData = null;
-        if (x === 40 && y === 42) mediaData = { id:'media_tv', name:'Rede Capital TV (Nova Atenas)', type:'Televisão', emoji:'📺', tile:{x:40,y:42}, district:'downtown', monthlyCost:2500.00, institutionalMonthlyCost:3500.00, brandBoostMonthly:15, brandCap:95, reachPct:100, reachDescription:'Toda a Região Metropolitana (100% da População)' };
-        if (x === 86 && y === 38) mediaData = { id:'media_radio', name:'Rádio Porto Real FM 104.5', type:'Rádio', emoji:'📻', tile:{x:86,y:38}, district:'downtown', monthlyCost:850.00, institutionalMonthlyCost:1200.00, brandBoostMonthly:8, brandCap:75, reachPct:65, reachDescription:'Porto Real e Cais Costeiro' };
+        if (x === 14 && y === 8) mediaData = MEDIA_OUTLETS[0];
+        if (x === 17 && y === 13) mediaData = MEDIA_OUTLETS[1];
+        if (x === 23 && y === 14) mediaData = MEDIA_OUTLETS[2];
 
         worldGrid[x][y] = {
           x, y,
-          gidWater, gidTerrain, gidRes, gidRoad, gidBuild,
           districtId,
-          district: districtObj,
-          city: cityInfo,
+          district,
           isWater,
           isRoad,
-          isPort,
           portData,
-          isMedia: !!mediaData,
+          isPort: !!portData,
           mediaData,
-          hasIronDeposit: gidRes === 9,
-          hasOilDeposit: gidRes === 10,
-          hasTimberDeposit: gidRes === 8,
-          isFertile: gidTerrain === 5 || gidBuild === 17,
-          buildingHeight: isWater || isRoad ? 0 : (portData ? 16 : (isCommercialCenter ? 22 : (isResidential ? 14 : 0))),
+          isMedia: !!mediaData,
+          buildingHeight: isWater || isRoad ? 0 : (portData ? 16 : (mediaData ? (mediaData.id === 'media_tv' ? 26 : 18) : 0)),
           store: null,
           mine: null,
           farm: null,
           factory: null,
-          competitor: (x === 87 && y === 39) ? {
-            name: 'MegaMart Porto Real (IA)',
+          competitor: (x === 25 && y === 15) ? {
+            name: 'MegaMart North (IA)',
             shelves: {
-              bread: { price: 3.40, quality: 45, brand: 25 },
-              beer:  { price: 3.90, quality: 48, brand: 25 },
-              cola:  { price: 2.10, quality: 45, brand: 25 },
-              milk:  { price: 2.70, quality: 45, brand: 20 },
+              bread: { price: 3.60, quality: 48, brand: 30 },
+              beer:  { price: 4.10, quality: 50, brand: 30 },
+              cola:  { price: 2.30, quality: 48, brand: 30 },
+              milk:  { price: 2.90, quality: 48, brand: 20 },
             },
-            lastShare: 0.40,
-          } : null
+            lastShare: 0.45,
+          } : null,
         };
       }
     }
 
     // ===========================================================================
-    // 5. MOTOR DE RENDERIZAÇÃO ISOMÉTRICO (128x128 COM RADAR MINIMAP & FOG OF WAR)
+    // 5. MOTOR DE RENDERIZAÇÃO ISOMÉTRICO
     // ===========================================================================
     const canvas  = document.getElementById('iso-canvas');
     const ctx     = canvas.getContext('2d');
     const tooltip = document.getElementById('iso-tooltip');
 
-    const camera = { panX: 0, panY: 0, zoom: 0.85, isDragging: false, dragStartX: 0, dragStartY: 0 };
+    const camera = { panX: 0, panY: 0, zoom: 1.0, isDragging: false, dragStartX: 0, dragStartY: 0 };
 
     function resizeCanvas() {
       const r = canvas.getBoundingClientRect();
@@ -2439,24 +2256,15 @@
     }
 
     function resetCamera() {
-      jumpToCity('nova_atenas');
-    }
-
-    function jumpToCity(cityId) {
       const r = canvas.getBoundingClientRect();
-      let targetX = 40, targetY = 42;
-      if (cityId === 'porto_real') { targetX = 86; targetY = 38; }
-      else if (cityId === 'montargis') { targetX = 42; targetY = 86; }
-      else if (cityId === 'varzea') { targetX = 88; targetY = 84; }
-
       camera.zoom = 1.0;
-      camera.panX = (r.width / 2) - (targetX - targetY) * (TILE_W / 2) * camera.zoom;
-      camera.panY = (r.height / 2) - (targetX + targetY) * (TILE_H / 2) * camera.zoom;
+      camera.panX = r.width  / 2;
+      camera.panY = r.height / 2 - (18 + 18) * (TILE_H / 2);
       renderMap();
     }
 
     function changeZoom(d) {
-      camera.zoom = Math.min(2.4, Math.max(0.35, camera.zoom + d));
+      camera.zoom = Math.min(2.2, Math.max(0.5, camera.zoom + d));
       renderMap();
     }
 
@@ -2482,7 +2290,7 @@
       ctx.closePath();
       ctx.fillStyle = fill;
       ctx.fill();
-      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 0.6; ctx.stroke(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 0.8; ctx.stroke(); }
     }
 
     function drawBuilding(sx, sy, w, h, hPx, topC, leftC, rightC) {
@@ -2492,7 +2300,7 @@
       ctx.beginPath(); ctx.moveTo(sx, sy + h); ctx.lineTo(sx + w/2, sy + h/2); ctx.lineTo(sx + w/2, tsy + h/2); ctx.lineTo(sx, tsy + h); ctx.closePath();
       ctx.fillStyle = rightC; ctx.fill();
       ctx.beginPath(); ctx.moveTo(sx, tsy); ctx.lineTo(sx + w/2, tsy + h/2); ctx.lineTo(sx, tsy + h); ctx.lineTo(sx - w/2, tsy + h/2); ctx.closePath();
-      ctx.fillStyle = topC; ctx.fill(); ctx.strokeStyle = '#010c14'; ctx.lineWidth = 0.6; ctx.stroke();
+      ctx.fillStyle = topC; ctx.fill(); ctx.strokeStyle = '#010c14'; ctx.lineWidth = 0.8; ctx.stroke();
     }
 
     function renderMap() {
@@ -2503,8 +2311,6 @@
       const w = TILE_W * camera.zoom;
       const h = TILE_H * camera.zoom;
 
-      checkCityUnlocks();
-
       for (let depth = 0; depth <= 2 * GRID_SIZE; depth++) {
         for (let gx = 0; gx < GRID_SIZE; gx++) {
           const gy = depth - gx;
@@ -2512,76 +2318,43 @@
           const tile = worldGrid[gx][gy];
           const { sx, sy } = gridToScreen(gx, gy);
 
-          // Culling inteligente para render a 60 FPS
-          if (sx < -140 || sx > r.width + 140 || sy < -140 || sy > r.height + 220) continue;
+          if (sx < -120 || sx > r.width + 120 || sy < -120 || sy > r.height + 200) continue;
 
-          let fill = '#0f291e';
+          let fill = '#0c2218';
           const d = tile.districtId;
-          const tTerrain = tile.gidTerrain;
+          if (tile.isWater)          fill = '#031e33';
+          else if (tile.isPort)      fill = '#23382b';
+          else if (tile.isMedia)     fill = '#2e1065';
+          else if (d === 'road')     fill = '#1a2535';
+          else if (d === 'harbor')   fill = '#1a2e25';
+          else if (d === 'downtown') fill = '#0d1f4a';
+          else if (d === 'uptown')   fill = '#1a1040';
+          else if (d === 'northside')fill = '#1a1e40';
+          else if (d === 'industrial')fill= '#1f1f1f';
 
-          if (tile.isWater) {
-            fill = tile.gidWater === 1 ? '#031e33' : '#073252';
-          } else if (tTerrain === 3) {
-            fill = '#8c7847'; // Areia de praia
-          } else if (tTerrain === 5) {
-            fill = '#194226'; // Terra fértil agrícola
-          } else if (tTerrain === 6) {
-            fill = '#3b3a2a'; // Colina
-          } else if (tTerrain === 7) {
-            fill = '#3a3a42'; // Montanha
-          } else if (tile.isRoad) {
-            fill = '#1e293b'; // Rodovia
-          } else if (tile.isPort) {
-            fill = '#854d0e'; // Porto
-          } else if (d === 'downtown') {
-            fill = '#0f2744';
-          } else if (d === 'northside') {
-            fill = '#1a2238';
-          }
-
-          // Lentes de Heatmap
           if (currentHeatmap === 'traffic' && tile.district.trafficIndex > 0) {
             const t = tile.district.trafficIndex / 100;
-            fill = `rgba(239, 68, 68, ${Math.min(0.9, 0.2 + t * 0.7)})`;
+            fill = `rgba(5, ${Math.floor(80 + 100 * t)}, ${Math.floor(50 + 30 * t)}, 0.85)`;
           } else if (currentHeatmap === 'pop' && tile.district.population > 0) {
             const t = Math.min(1, tile.district.population / 18000);
-            fill = `rgba(59, 130, 246, ${Math.min(0.9, 0.2 + t * 0.7)})`;
+            fill = `rgba(29, ${Math.floor(40 + 60 * t)}, ${Math.floor(130 + 100 * t)}, 0.85)`;
           } else if (currentHeatmap === 'comp') {
             if (tile.store) fill = '#044a28';
             else if (tile.competitor) fill = '#4a0416';
           } else if (currentHeatmap === 'ports') {
-            if (tile.isPort) fill = '#f59e0b';
+            if (tile.isPort) fill = '#854d0e';
           } else if (currentHeatmap === 'ind') {
-            if (tile.mine || tile.hasIronDeposit || tile.hasOilDeposit) fill = '#0284c7';
-            else if (tile.farm || tile.isFertile) fill = '#eab308';
-            else if (tile.factory) fill = '#ea580c';
+            if (tile.mine) fill = '#0284c7';
+            else if (tile.farm) fill = '#854d0e';
+            else if (tile.factory) fill = '#9a3412';
           } else if (currentHeatmap === 'media') {
-            if (tile.isMedia) fill = '#c084fc';
-          }
-
-          // Efeito de Névoa de Guerra em cidades bloqueadas
-          if (tile.city.isLocked) {
-            fill = '#0f172a';
+            if (tile.isMedia) fill = '#7c3aed';
           }
 
           drawDiamond(sx, sy, w, h, fill);
 
-          // Recursos Naturais Brutos desenhados no terreno
-          if (!tile.city.isLocked) {
-            if (tile.hasIronDeposit && !tile.mine) {
-              ctx.fillStyle = '#f87171';
-              ctx.font = `bold ${Math.max(8, 9 * camera.zoom)}px monospace`;
-              ctx.fillText('⛏️', sx - 6 * camera.zoom, sy + 18 * camera.zoom);
-            } else if (tile.hasOilDeposit && !tile.mine) {
-              ctx.fillStyle = '#38bdf8';
-              ctx.font = `bold ${Math.max(8, 9 * camera.zoom)}px monospace`;
-              ctx.fillText('🛢️', sx - 6 * camera.zoom, sy + 18 * camera.zoom);
-            }
-          }
-
-          // Renderização de Edifícios 3D Isométricos
           const hPx = tile.buildingHeight * camera.zoom;
-          if (hPx > 0 && !tile.city.isLocked) {
+          if (hPx > 0) {
             let topC='#38bdf8', leftC='#0284c7', rightC='#0369a1';
             if (tile.store) {
               topC='#10b981'; leftC='#059669'; rightC='#047857';
@@ -2624,11 +2397,11 @@
             } else if (tile.isPort) {
               ctx.fillStyle = '#fde047';
               ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText(`⚓ PORTO`, sx - 22 * camera.zoom, sy - hPx - 5);
+              ctx.fillText(`⚓ ${tile.portData.id === 'port_alpha' ? 'P. ALFA' : 'P. BETA'}`, sx - 25 * camera.zoom, sy - hPx - 5);
             } else if (tile.isMedia) {
               ctx.fillStyle = '#e879f9';
               ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText(`${tile.mediaData.emoji} MÍDIA`, sx - 22 * camera.zoom, sy - hPx - 5);
+              ctx.fillText(`${tile.mediaData.emoji} ${tile.mediaData.name.split(' ')[0]}`, sx - 25 * camera.zoom, sy - hPx - 5);
             }
           }
 
@@ -2638,75 +2411,12 @@
             drawDiamond(sx, sy, w, h, 'rgba(251,191,36,0.28)', '#fbbf24');
         }
       }
-
-      // =========================================================================
-      // RENDERIZAR O RADAR MINIMAP (128x128 NO CANTO INFERIOR ESQUERDO)
-      // =========================================================================
-      const mmSize = 110;
-      const mmX = 12, mmY = r.height - mmSize - 12;
-
-      ctx.fillStyle = 'rgba(2, 6, 23, 0.88)';
-      ctx.fillRect(mmX - 3, mmY - 3, mmSize + 6, mmSize + 6);
-      ctx.strokeStyle = '#334155';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(mmX - 3, mmY - 3, mmSize + 6, mmSize + 6);
-
-      const step = GRID_SIZE / mmSize;
-      for (let mx = 0; mx < mmSize; mx++) {
-        for (let my = 0; my < mmSize; my++) {
-          const gx = Math.min(GRID_SIZE - 1, Math.floor(mx * step));
-          const gy = Math.min(GRID_SIZE - 1, Math.floor(my * step));
-          const tile = worldGrid[gx][gy];
-
-          let c = '#0f291e';
-          if (tile.isWater) c = '#073252';
-          else if (tile.isRoad) c = '#94a3b8';
-          else if (tile.isPort) c = '#f59e0b';
-          else if (tile.store) c = '#10b981';
-          else if (tile.city.isLocked) c = '#1e293b';
-          else if (tile.districtId === 'downtown') c = '#ef4444';
-
-          ctx.fillStyle = c;
-          ctx.fillRect(mmX + mx, mmY + my, 1, 1);
-        }
-      }
-
-      // Marcadores das 4 cidades no radar
-      ctx.fillStyle = '#f8fafc';
-      ctx.font = 'bold 8px monospace';
-      ctx.fillText('🏛️ Atenas', mmX + (40 / step) - 12, mmY + (42 / step) - 2);
-      ctx.fillText('🚢 P. Real', mmX + (86 / step) - 14, mmY + (38 / step) - 2);
-      ctx.fillText(unlockedCities.montargis ? '🏭 Montargis' : '🔒 Montargis', mmX + (42 / step) - 16, mmY + (86 / step) - 2);
-      ctx.fillText(unlockedCities.varzea ? '🌾 Várzea' : '🔒 Várzea', mmX + (88 / step) - 12, mmY + (84 / step) - 2);
-
-      // Caixa da Câmera Atual no Minimap
-      const camCenter = screenToGrid(r.width / 2, r.height / 2);
-      const camMmX = Math.max(0, Math.min(mmSize - 12, (camCenter.gx / step) - 6));
-      const camMmY = Math.max(0, Math.min(mmSize - 12, (camCenter.gy / step) - 6));
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 1.2;
-      ctx.strokeRect(mmX + camMmX, mmY + camMmY, 14, 14);
     }
 
     // ===========================================================================
-    // 6. EVENTOS DO MOUSE (COM SUPORTE A CLIQUE NO MINIMAP)
+    // 6. EVENTOS DO MOUSE
     // ===========================================================================
     canvas.addEventListener('mousedown', (e) => {
-      const r = canvas.getBoundingClientRect();
-      const mx = e.clientX - r.left, my = e.clientY - r.top;
-
-      // Clique dentro do Radar Minimapa: Teletransporta a câmera imediatamente
-      const mmSize = 110, mmX = 12, mmY = r.height - mmSize - 12;
-      if (mx >= mmX && mx <= mmX + mmSize && my >= mmY && my <= mmY + mmSize) {
-        const step = GRID_SIZE / mmSize;
-        const targetGx = Math.floor((mx - mmX) * step);
-        const targetGy = Math.floor((my - mmY) * step);
-        camera.panX = (r.width / 2) - (targetGx - targetGy) * (TILE_W / 2) * camera.zoom;
-        camera.panY = (r.height / 2) - (targetGx + targetGy) * (TILE_H / 2) * camera.zoom;
-        renderMap();
-        return;
-      }
-
       camera.isDragging = true;
       wasDragging = false;
       camera.dragStartX = e.clientX - camera.panX;
@@ -2740,12 +2450,7 @@
         tooltip.style.left = `${mx + 14}px`;
         tooltip.style.top  = `${my + 10}px`;
 
-        if (tile.city.isLocked) {
-          tooltip.innerHTML = `
-            <div class="font-bold text-slate-400 text-xs">🔒 Região Bloqueada: ${tile.city.cityName}</div>
-            <div class="text-[10px] text-amber-400 mt-1">${tile.city.profile.unlockCondition.description}</div>
-          `;
-        } else if (tile.isPort) {
+        if (tile.isPort) {
           tooltip.innerHTML = `<div class="font-bold text-amber-300 text-xs">⚓ ${tile.portData.name}</div><div class="text-[10px] text-slate-400">Terminal Marítimo (${gx},${gy})</div>`;
         } else if (tile.isMedia) {
           tooltip.innerHTML = `<div class="font-bold text-purple-300 text-xs">${tile.mediaData.emoji} ${tile.mediaData.name}</div><div class="text-[10px] text-slate-400">${tile.mediaData.type} (${gx},${gy})</div>`;
@@ -2758,7 +2463,7 @@
         } else {
           tooltip.innerHTML = `
             <div class="font-bold text-amber-300 text-xs">${tile.store ? tile.store.name : (tile.competitor ? tile.competitor.name : d.name)}</div>
-            <div class="text-[10px] text-slate-400">(${gx},${gy}) · ${d.type} · ${tile.city.cityName}</div>
+            <div class="text-[10px] text-slate-400">(${gx},${gy}) · ${d.type}</div>
             <div class="text-[10px] text-slate-300 mt-0.5">🚶 ${d.trafficIndex}/100 · 👥 ${d.population.toLocaleString()} hab · 💰 $${d.landRentDaily}/dia</div>
           `;
         }
@@ -2777,30 +2482,17 @@
 
     canvas.addEventListener('wheel', (e) => {
       e.preventDefault();
-      changeZoom(e.deltaY < 0 ? 0.08 : -0.08);
+      changeZoom(e.deltaY < 0 ? 0.1 : -0.1);
     }, { passive: false });
 
     canvas.addEventListener('click', (e) => {
       if (wasDragging) return;
       const r = canvas.getBoundingClientRect();
-      const mx = e.clientX - r.left, my = e.clientY - r.top;
-
-      // Ignora clique se foi no minimapa
-      const mmSize = 110, mmX = 12, mmY = r.height - mmSize - 12;
-      if (mx >= mmX && mx <= mmX + mmSize && my >= mmY && my <= mmY + mmSize) return;
-
-      const { gx, gy } = screenToGrid(mx, my);
+      const { gx, gy } = screenToGrid(e.clientX - r.left, e.clientY - r.top);
       if (gx < 0 || gx >= GRID_SIZE || gy < 0 || gy >= GRID_SIZE) return;
 
       selectedTileX = gx; selectedTileY = gy;
       const tile = worldGrid[gx][gy];
-
-      if (tile.city.isLocked) {
-        addGameLog(`🔒 Região de ${tile.city.cityName} bloqueada: ${tile.city.profile.unlockCondition.description}`);
-        renderTileInspector(tile);
-        renderMap();
-        return;
-      }
 
       if (tile.isPort) {
         openPortModal(tile.portData);
