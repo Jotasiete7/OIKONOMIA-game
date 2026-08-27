@@ -5078,9 +5078,78 @@
     }
 
     // ===========================================================================
-    // 14. SISTEMA DE PERSISTÊNCIA & GERENCIADOR DE SAVES (MULTI-SLOT & BACKUP)
+    // 14. SISTEMA DE PERSISTÊNCIA, VERSIONAMENTO & MIGRAÇÕES DE SAVES
     // ===========================================================================
     const SAVES_STORAGE_KEY = 'oikonomia_save_slots_v1';
+    const CURRENT_SAVE_VERSION = '0.7.2';
+
+    // Pipeline de Migração e Sanitização de Saves
+    function migrateSaveData(rawSave) {
+      if (!rawSave || typeof rawSave !== 'object') return null;
+
+      const migrated = { ...rawSave };
+      const rawVer = String(migrated.saveVersion || '0.1.0');
+
+      // 1. Sanitização do Perfil da Empresa
+      const prof = migrated.playerProfile || {};
+      const validAvatar = AVATAR_CATALOG.some(a => a.id === prof.avatarId) ? prof.avatarId : 'human_ceo';
+      const validColor = COLOR_PALETTES.some(c => c.id === prof.themeColor) ? prof.themeColor : 'emerald';
+      const validDiff = DIFFICULTY_PRESETS.some(d => d.id === prof.difficulty) ? prof.difficulty : 'standard';
+
+      migrated.playerProfile = {
+        playerName: (typeof prof.playerName === 'string' && prof.playerName.trim()) ? prof.playerName.trim().slice(0, 30) : 'Arthur Vance',
+        companyName: (typeof prof.companyName === 'string' && prof.companyName.trim()) ? prof.companyName.trim().slice(0, 35) : 'OikoCorp Holding',
+        avatarId: validAvatar,
+        themeColor: validColor,
+        difficulty: validDiff
+      };
+
+      // 2. Sanitização Numérica de Finanças e Tempo
+      const numCash = Number(migrated.cash);
+      migrated.cash = (!isNaN(numCash) && isFinite(numCash)) ? Number(numCash.toFixed(2)) : 100000.00;
+
+      const numDay = parseInt(migrated.day, 10);
+      migrated.day = (!isNaN(numDay) && numDay >= 1 && numDay <= 30) ? numDay : 1;
+
+      const numMonth = parseInt(migrated.month, 10);
+      migrated.month = (!isNaN(numMonth) && numMonth >= 1 && numMonth <= 12) ? numMonth : 1;
+
+      const numYear = parseInt(migrated.year, 10);
+      migrated.year = (!isNaN(numYear) && numYear >= 1) ? numYear : 1;
+
+      const numPlaytime = parseInt(migrated.playtimeSeconds, 10);
+      migrated.playtimeSeconds = (!isNaN(numPlaytime) && numPlaytime >= 0) ? numPlaytime : 0;
+
+      // 3. Sanitização de Cidades Desbloqueadas
+      const rawCities = migrated.unlockedCities || {};
+      migrated.unlockedCities = {
+        nova_atenas: true,
+        porto_real: true,
+        montargis: Boolean(rawCities.montargis),
+        varzea: Boolean(rawCities.varzea)
+      };
+
+      // 4. Sanitização de Marca e Marketing
+      migrated.playerBrandRating = (migrated.playerBrandRating && typeof migrated.playerBrandRating === 'object')
+        ? { ...migrated.playerBrandRating }
+        : {};
+      
+      migrated.activeMarketingContracts = Array.isArray(migrated.activeMarketingContracts)
+        ? migrated.activeMarketingContracts.filter(c => typeof c === 'string' && c.includes('::'))
+        : [];
+
+      // 5. Sanitização de Lotes Construídos (builtTiles)
+      const rawTiles = Array.isArray(migrated.builtTiles) ? migrated.builtTiles : [];
+      migrated.builtTiles = rawTiles.filter(t => {
+        return t && typeof t.x === 'number' && t.x >= 0 && t.x < GRID_SIZE &&
+               typeof t.y === 'number' && t.y >= 0 && t.y < GRID_SIZE &&
+               (t.store || t.mine || t.farm || t.factory || t.competitor);
+      });
+
+      migrated.saveVersion = CURRENT_SAVE_VERSION;
+      migrated.migratedFromVersion = rawVer;
+      return migrated;
+    }
 
     function getSavesIndex() {
       try {
@@ -5142,7 +5211,7 @@
 
     function serializeCurrentGame() {
       return {
-        saveVersion: '0.7.0',
+        saveVersion: CURRENT_SAVE_VERSION,
         timestamp: new Date().toISOString(),
         playerProfile: { ...playerProfile },
         cash,
@@ -5210,37 +5279,30 @@
       }
     }
 
-    function loadGameFromData(saveData) {
-      if (!saveData || !saveData.builtTiles) {
+    function loadGameFromData(rawSaveData) {
+      const saveData = migrateSaveData(rawSaveData);
+      if (!saveData) {
         alert('Arquivo de save inválido ou incompatível.');
         return false;
       }
 
-      // Restaura dados do perfil
-      if (saveData.playerProfile) {
-        playerProfile = { ...playerProfile, ...saveData.playerProfile };
-      }
+      // Restaura dados do perfil com garantia de migração
+      playerProfile = { ...saveData.playerProfile };
+      cash = saveData.cash;
+      day = saveData.day;
+      month = saveData.month;
+      year = saveData.year;
+      playtimeSeconds = saveData.playtimeSeconds;
 
-      cash = Number(saveData.cash) || 100000;
-      day = Number(saveData.day) || 1;
-      month = Number(saveData.month) || 1;
-      year = Number(saveData.year) || 1;
-      playtimeSeconds = Number(saveData.playtimeSeconds) || 0;
+      Object.assign(unlockedCities, saveData.unlockedCities);
 
-      if (saveData.unlockedCities) {
-        Object.assign(unlockedCities, saveData.unlockedCities);
-      }
-
-      if (saveData.playerBrandRating) {
-        Object.assign(playerBrandRating, saveData.playerBrandRating);
-      }
+      Object.keys(playerBrandRating).forEach(k => delete playerBrandRating[k]);
+      Object.assign(playerBrandRating, saveData.playerBrandRating);
 
       activeMarketingContracts.clear();
-      if (Array.isArray(saveData.activeMarketingContracts)) {
-        saveData.activeMarketingContracts.forEach(c => activeMarketingContracts.add(c));
-      }
+      saveData.activeMarketingContracts.forEach(c => activeMarketingContracts.add(c));
 
-      // Reconstrói a malha base do mapa e aplica as instalações
+      // Reconstrói a malha base do mapa e aplica as instalações sanitizadas
       initWorldGrid();
       applyBuiltTiles(saveData.builtTiles);
 
@@ -5254,7 +5316,11 @@
       closeAllInGameModals();
       setSpeed(1);
       jumpToCity('nova_atenas');
-      addLog(`📂 SAVE CARREGADO: Empresa [${playerProfile.companyName}] iniciada.`, 'text-sky-300 font-bold');
+      
+      const verInfo = saveData.migratedFromVersion && saveData.migratedFromVersion !== CURRENT_SAVE_VERSION
+        ? ` (migrado de v${saveData.migratedFromVersion})`
+        : '';
+      addLog(`📂 SAVE CARREGADO: Empresa [${playerProfile.companyName}] iniciada${verInfo}.`, 'text-sky-300 font-bold');
       return true;
     }
 
