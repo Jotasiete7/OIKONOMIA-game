@@ -7,7 +7,7 @@
   <script src="audio.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.7)</title>
+  <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.7.4)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     canvas { image-rendering: pixelated; }
@@ -22,6 +22,30 @@
     .stock-bar-fill { transition: width 0.3s ease; }
     @keyframes stockout-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     .stockout-alert { animation: stockout-pulse 0.8s infinite ease-in-out; }
+
+    /* Janelas e painéis arrastáveis (Draggable Windows) */
+    .draggable-panel { touch-action: none; }
+    .draggable-window { touch-action: none; max-height: calc(100vh - 24px); }
+    .draggable-window .drag-handle, .drag-handle { cursor: grab; user-select: none; touch-action: none; }
+    .drag-handle:active, .is-dragging .drag-handle { cursor: grabbing !important; }
+    .is-dragging { transition: none !important; user-select: none !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75) !important; }
+    .drag-grip-icon { opacity: 0.45; transition: opacity 0.15s; font-size: 13px; line-height: 1; letter-spacing: -2px; cursor: grab; }
+    .drag-handle:hover .drag-grip-icon { opacity: 0.95; }
+
+    /* Responsividade inteligente do Top HUD para evitar sobreposições e empurrões */
+    @media (max-width: 1440px) {
+      .hud-btn-text { display: none; }
+      .city-btn-name { display: none; }
+      #hud-company-name, #hud-player-name { max-width: 70px; }
+      #floating-lenses-bar { top: 3.75rem; }
+    }
+    @media (max-width: 1120px) {
+      #hud-corp-badge { display: none; }
+      #floating-lenses-bar { top: 3.75rem; }
+    }
+    @media (max-width: 880px) {
+      #floating-lenses-bar { display: none; }
+    }
   </style>
 </head>
 
@@ -42,7 +66,7 @@
       <div class="shrink-0">
         <div class="flex items-center gap-1">
           <h1 class="text-xs font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
-          <span class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.7</span>
+          <span id="hud-version-tag" class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.7.4</span>
         </div>
       </div>
       <!-- EMPRESA / AVATAR BADGE -->
@@ -55,10 +79,10 @@
       </div>
       <!-- CIDADES / ATALHOS -->
       <div class="flex items-center gap-0.5 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1 shrink-0">
-        <button onclick="jumpToCity('nova_atenas')" class="px-1.5 py-0.5 rounded text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ Atenas</button>
-        <button onclick="jumpToCity('porto_real')" class="px-1.5 py-0.5 rounded text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real (Porto)">🚢 P. Real</button>
-        <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Polo Industrial">🏭 Montargis <span id="lock-montargis">🔒</span></button>
-        <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Cinturão Agrícola">🌾 Várzea <span id="lock-varzea">🔒</span></button>
+        <button onclick="jumpToCity('nova_atenas')" class="px-1.5 py-0.5 rounded text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ <span class="city-btn-name">Atenas</span></button>
+        <button onclick="jumpToCity('porto_real')" class="px-1.5 py-0.5 rounded text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real (Porto)">🚢 <span class="city-btn-name">P. Real</span></button>
+        <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Polo Industrial">🏭 <span class="city-btn-name">Montargis</span> <span id="lock-montargis">🔒</span></button>
+        <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Cinturão Agrícola">🌾 <span class="city-btn-name">Várzea</span> <span id="lock-varzea">🔒</span></button>
       </div>
     </div>
 
@@ -86,31 +110,31 @@
       <!-- Gavetas Flutuantes -->
       <div class="flex items-center gap-1 border-l border-slate-800 pl-1.5 shrink-0">
         <button onclick="toggleDREModal()" class="bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Demonstrativo de Resultados do Exercício">
-          📊 DRE
+          📊 <span class="hud-btn-text">DRE</span>
         </button>
         <button onclick="toggleDiaryModal()" class="bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Diário de Bordo & Log em Tempo Real">
-          📑 Diário
+          📑 <span class="hud-btn-text">Diário</span>
         </button>
         <button onclick="openMarketingCentralModal()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Central de Publicidade">
           📢 <span id="active-campaigns-badge" class="bg-indigo-700 px-1 rounded text-[8px] text-white">0</span>
         </button>
         <button onclick="togglePauseMenu()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Menu Principal & Configurações (ESC)">
-          ⚙️ Menu
+          ⚙️ <span class="hud-btn-text">Menu</span>
         </button>
       </div>
     </div>
   </header>
 
   <!-- 2.1 FLOATING LENSES & CAMERA BAR (Barra flutuante de Lentes e Zoom independente) -->
-  <div class="absolute top-12 left-1/2 -translate-x-1/2 z-30 pointer-events-auto hidden md:flex items-center gap-1 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2 py-1 shadow-2xl font-mono text-[10px]">
-    <span class="text-slate-500 px-1 text-[9px]">Lentes:</span>
+  <div id="floating-lenses-bar" class="absolute top-14 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex items-center gap-1 bg-slate-900/95 backdrop-blur-md border border-slate-800/90 rounded-xl px-2 py-1 shadow-2xl font-mono text-[10px] select-none">
+    <span class="text-slate-500 px-1 text-[9px] hidden sm:inline">Lentes:</span>
     <button id="hm-terrain" onclick="setHeatmap('terrain')" class="px-1.5 py-0.5 rounded font-bold bg-slate-800 text-slate-200 text-[9px]">Terreno</button>
-    <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🔥 Tráfego</button>
-    <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">👥 Pop.</button>
-    <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏪 Varejo</button>
-    <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">⚓ Portos</button>
-    <button id="hm-ind"     onclick="setHeatmap('ind')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏭 Indústria</button>
-    <button id="hm-media"   onclick="setHeatmap('media')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">📡 Mídia</button>
+    <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🔥 <span class="hidden md:inline">Tráfego</span></button>
+    <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">👥 <span class="hidden md:inline">Pop.</span></button>
+    <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏪 <span class="hidden md:inline">Varejo</span></button>
+    <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">⚓ <span class="hidden md:inline">Portos</span></button>
+    <button id="hm-ind"     onclick="setHeatmap('ind')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏭 <span class="hidden md:inline">Indústria</span></button>
+    <button id="hm-media"   onclick="setHeatmap('media')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">📡 <span class="hidden md:inline">Mídia</span></button>
     <div class="h-3.5 w-px bg-slate-700 mx-0.5"></div>
     <button onclick="changeZoom(-0.2)" class="w-4 h-4 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold leading-none" title="Zoom Out (Q / -)">−</button>
     <button onclick="resetCamera()"    class="px-1 h-4 rounded bg-slate-950 border border-slate-800 text-slate-400 text-[8px] leading-none">Centro</button>
@@ -129,12 +153,13 @@
 
   <!-- 4. BOTTOM TELEMETRY & DIAGNOSTICS BAR (PERMANENTE PARA PRINTS & DEBUG) -->
   <footer id="bottom-telemetry-bar" class="absolute bottom-0 left-0 right-0 z-30 pointer-events-auto bg-slate-950/95 backdrop-blur-md border-t border-slate-800/80 px-3 py-1 text-[10px] font-mono text-slate-400 flex items-center justify-between shadow-2xl select-none">
-    <!-- Esquerda: Lote sob mouse / Inspetor rápido -->
-    <div class="flex items-center gap-2">
+    <!-- Esquerda: Lote sob mouse / Inspetor rápido & Botões de Ação -->
+    <div class="flex items-center gap-2 flex-wrap">
       <span id="telemetry-tile-info" class="text-slate-300 font-bold flex items-center gap-1">
         📍 <span>Lote (-- , --) · Clique em um lote</span>
       </span>
       <span id="telemetry-district-info" class="text-slate-500 hidden sm:inline">| Terreno Padrão</span>
+      <div id="telemetry-actions" class="inline-flex items-center gap-1"></div>
     </div>
 
     <!-- Centro: Telemetria da Simulação -->
@@ -154,7 +179,7 @@
         🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
       </button>
       <span id="telemetry-version-badge" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-bold text-[9px]" title="Versão Oficial do Jogo & Build">
-        🏛️ OIKONOMIA <span class="text-emerald-400">v0.7.2</span> <span class="text-slate-500 text-[8px]">bld.20260827</span>
+        🏛️ OIKONOMIA <span class="text-emerald-400">v0.7.4</span> <span class="text-slate-500 text-[8px]">bld.20260827.05</span>
       </span>
     </div>
   </footer>
@@ -162,8 +187,9 @@
   <!-- 5. FLOATING MANAGEMENT CARD (JANELA FLUTUANTE DE GESTÃO - ESTILO CAPITALISM) -->
   <div id="floating-facility-window" class="fixed top-14 right-3 bottom-3 w-[430px] z-40 bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-200">
     <!-- Header do Card -->
-    <div class="bg-slate-800/90 border-b border-slate-700 px-4 py-3 flex items-center justify-between">
+    <div class="bg-slate-800/90 border-b border-slate-700 px-4 py-3 flex items-center justify-between drag-handle">
       <div class="flex items-center gap-2.5">
+        <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
         <div id="facility-icon" class="w-8 h-8 rounded-xl bg-emerald-950 border border-emerald-700/60 flex items-center justify-center text-base">🏢</div>
         <div>
           <h2 id="facility-title" class="text-xs font-bold text-emerald-300">Gestão de Instalação</h2>
@@ -186,8 +212,11 @@
   <!-- 6. GAVETA FLUTUANTE DRE -->
   <div id="dre-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
-      <div class="bg-slate-800 px-5 py-3 border-b border-slate-700 flex items-center justify-between">
-        <h3 class="text-sm font-bold text-emerald-400 flex items-center gap-2">📊 Demonstrativo de Resultados (DRE Consolidada)</h3>
+      <div class="bg-slate-800 px-5 py-3 border-b border-slate-700 flex items-center justify-between drag-handle">
+        <h3 class="text-sm font-bold text-emerald-400 flex items-center gap-2">
+          <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
+          📊 Demonstrativo de Resultados (DRE Consolidada)
+        </h3>
         <button onclick="toggleDREModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
       </div>
       <div class="p-5 space-y-3 font-mono text-xs">
@@ -218,8 +247,11 @@
   <!-- 7. GAVETA FLUTUANTE DIÁRIO DE BORDO -->
   <div id="diary-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
-      <div class="bg-slate-800 px-5 py-3 border-b border-slate-700 flex items-center justify-between">
-        <h3 class="text-sm font-bold text-cyan-400 flex items-center gap-2">📑 Diário de Bordo & Registro de Operações</h3>
+      <div class="bg-slate-800 px-5 py-3 border-b border-slate-700 flex items-center justify-between drag-handle">
+        <h3 class="text-sm font-bold text-cyan-400 flex items-center gap-2">
+          <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
+          📑 Diário de Bordo & Registro de Operações
+        </h3>
         <button onclick="toggleDiaryModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
       </div>
       <div class="p-4">
@@ -579,7 +611,7 @@
     <div class="flex justify-between items-center text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-4">
       <div class="flex items-center gap-2">
         <span class="text-slate-400 font-bold">OIKONOMIA PROJECT © 2026</span>
-        <span class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.7.2 Oficial (bld.20260827)</span>
+        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.7.4 Oficial (bld.20260827.05)</span>
       </div>
       <div class="flex gap-4">
         <span>Atalho: <strong>F3</strong> (Dev Dashboard)</span>
@@ -744,7 +776,7 @@
       </div>
 
       <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-800 pt-3">
-        <span>OIKONOMIA <strong class="text-emerald-400">v0.7.2</strong></span>
+        <span>OIKONOMIA <strong id="pause-version-tag" class="text-emerald-400">v0.7.4</strong></span>
         <button onclick="openDevDashboard()" class="text-indigo-400 hover:text-indigo-300 font-bold">🛠️ Dev Dashboard [F3]</button>
       </div>
     </div>
@@ -831,12 +863,13 @@
   <div id="dev-dashboard-modal" class="fixed inset-0 z-[97] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
     <div class="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col font-mono text-xs max-h-[90vh]">
       <!-- Header -->
-      <div class="bg-slate-800/90 border-b border-slate-700 px-6 py-3.5 flex items-center justify-between">
+      <div class="bg-slate-800/90 border-b border-slate-700 px-6 py-3.5 flex items-center justify-between drag-handle">
         <div class="flex items-center gap-2.5">
+          <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
           <div class="w-8 h-8 rounded-xl bg-indigo-950 border border-indigo-700/60 flex items-center justify-center text-sm">🛠️</div>
           <div>
             <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">Painel de Desenvolvimento & Diagnóstico</h3>
-            <span class="text-[10px] text-indigo-400">OIKONOMIA v0.7.2 · Build 2026.08.27 (Oficial)</span>
+            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.7.4 · Build 20260827.05 (Oficial)</span>
           </div>
         </div>
         <button onclick="closeDevDashboard()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
@@ -856,11 +889,11 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Versão Oficial</span>
-              <span class="text-xs font-bold text-emerald-400">v0.7.2 (bld.20260827)</span>
+              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.7.4 (bld.20260827.05)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Schema de Saves</span>
-              <span class="text-xs font-bold text-amber-400">v0.7.2 (Compatível)</span>
+              <span id="dev-card-save-schema" class="text-xs font-bold text-amber-400">v0.7.2 (Compatível)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Sparse Index</span>
@@ -1600,6 +1633,7 @@
 
       if (_needsRender) {
         renderMap();
+        renderMinimap();
         _needsRender = false;
       }
       requestAnimationFrame(_rafLoop);
@@ -1768,54 +1802,6 @@
             drawDiamond(sx, sy, w, h, 'rgba(251,191,36,0.28)', '#fbbf24');
         }
       }
-
-      // =========================================================================
-      // RENDERIZAR O RADAR MINIMAP (128x128 NO CANTO INFERIOR ESQUERDO)
-      // =========================================================================
-      const mmSize = 110;
-      const mmX = 12, mmY = r.height - mmSize - 12;
-
-      ctx.fillStyle = 'rgba(2, 6, 23, 0.88)';
-      ctx.fillRect(mmX - 3, mmY - 3, mmSize + 6, mmSize + 6);
-      ctx.strokeStyle = '#334155';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(mmX - 3, mmY - 3, mmSize + 6, mmSize + 6);
-
-      const step = GRID_SIZE / mmSize;
-      for (let mx = 0; mx < mmSize; mx++) {
-        for (let my = 0; my < mmSize; my++) {
-          const gx = Math.min(GRID_SIZE - 1, Math.floor(mx * step));
-          const gy = Math.min(GRID_SIZE - 1, Math.floor(my * step));
-          const tile = worldGrid[gx][gy];
-
-          let c = '#0f291e';
-          if (tile.isWater) c = '#073252';
-          else if (tile.isRoad) c = '#94a3b8';
-          else if (tile.isPort) c = '#f59e0b';
-          else if (tile.store) c = '#10b981';
-          else if (tile.city.isLocked) c = '#1e293b';
-          else if (tile.districtId === 'downtown') c = '#ef4444';
-
-          ctx.fillStyle = c;
-          ctx.fillRect(mmX + mx, mmY + my, 1, 1);
-        }
-      }
-
-      // Marcadores das 4 cidades no radar
-      ctx.fillStyle = '#f8fafc';
-      ctx.font = 'bold 8px monospace';
-      ctx.fillText('🏛️ Atenas', mmX + (40 / step) - 12, mmY + (42 / step) - 2);
-      ctx.fillText('🚢 P. Real', mmX + (86 / step) - 14, mmY + (38 / step) - 2);
-      ctx.fillText(unlockedCities.montargis ? '🏭 Montargis' : '🔒 Montargis', mmX + (42 / step) - 16, mmY + (86 / step) - 2);
-      ctx.fillText(unlockedCities.varzea ? '🌾 Várzea' : '🔒 Várzea', mmX + (88 / step) - 12, mmY + (84 / step) - 2);
-
-      // Caixa da Câmera Atual no Minimap
-      const camCenter = screenToGrid(r.width / 2, r.height / 2);
-      const camMmX = Math.max(0, Math.min(mmSize - 12, (camCenter.gx / step) - 6));
-      const camMmY = Math.max(0, Math.min(mmSize - 12, (camCenter.gy / step) - 6));
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 1.2;
-      ctx.strokeRect(mmX + camMmX, mmY + camMmY, 14, 14);
     }
 
     // ===========================================================================
@@ -2004,8 +1990,8 @@
       selectedTileX = gx; selectedTileY = gy;
       const tile = worldGrid[gx][gy];
 
-      if (tile.city.isLocked) {
-        addGameLog(`🔒 Região de ${tile.city.cityName} bloqueada: ${tile.city.profile.unlockCondition.description}`);
+      if (tile.city && tile.city.isLocked) {
+        addGameLog(`🔒 Região de ${tile.city.cityName || 'Metrópole'} bloqueada: ${tile.city.profile.unlockCondition.description}`);
         renderTileInspector(tile);
         scheduleRender();
         return;
@@ -2018,6 +2004,11 @@
       } else if (tile.store || tile.mine || tile.farm || tile.factory) {
         activeManagedTile = tile;
         renderFacilityPanel(tile);
+        const win = document.getElementById('floating-facility-window');
+        if (win) win.classList.remove('hidden');
+      } else if (!tile.isWater && !tile.isRoad) {
+        activeManagedTile = tile;
+        renderEmptyLotPanel(tile);
       } else {
         activeManagedTile = null;
         renderIdlePanel();
@@ -2033,63 +2024,57 @@
     function renderTileInspector(tile) {
       const tileInfoEl = document.getElementById('telemetry-tile-info');
       const distInfoEl = document.getElementById('telemetry-district-info');
+      const actionsEl = document.getElementById('telemetry-actions');
 
       if (!tile) {
         if (tileInfoEl) tileInfoEl.innerHTML = '📍 <span>Lote (-- , --) · Clique em um lote</span>';
         if (distInfoEl) distInfoEl.textContent = '| Terreno Padrão';
+        if (actionsEl) actionsEl.innerHTML = '';
         return;
       }
 
       const d = tile.district;
-      const isLocked = tile.city.isLocked;
+      const isLocked = tile.city ? tile.city.isLocked : false;
+      const cityName = tile.city ? (tile.city.cityName || tile.city.name || 'Metrópole') : 'Zona Rural';
 
       if (tileInfoEl) {
-        const typeName = tile.store?.name || tile.mine?.name || tile.farm?.name || tile.factory?.name || (tile.isPort ? 'Porto Marítimo' : (tile.isWater ? 'Oceano' : (isLocked ? '🔒 Bloqueado' : 'Terreno Livre')));
+        const typeName = tile.store?.name || tile.mine?.name || tile.farm?.name || tile.factory?.name || (tile.isPort ? 'Porto Marítimo' : (tile.isWater ? 'Oceano' : (isLocked ? '🔒 Bloqueado' : (tile.isRoad ? 'Rodovia' : 'Terreno Livre'))));
         tileInfoEl.innerHTML = `📍 <span class="text-amber-300">Lote (${tile.x}, ${tile.y})</span> <span class="text-slate-300">· ${typeName}</span>`;
       }
       if (distInfoEl) {
-        distInfoEl.textContent = `| ${tile.city.name} (${d.name})`;
+        distInfoEl.textContent = `| ${cityName} (${d.name})`;
       }
 
-      let statusBadge = '<span class="text-slate-400 bg-slate-800 px-2 py-0.5 rounded font-mono">Terreno Livre</span>';
-      let actionBtn = '';
-
-      if (isLocked) {
-        statusBadge = '<span class="text-rose-400 bg-rose-950 px-2 py-0.5 rounded font-mono">🔒 Cidade Bloqueada</span>';
-      } else if (tile.store) {
-        statusBadge = '<span class="text-teal-300 bg-teal-950 border border-teal-800 px-2 py-0.5 rounded font-mono font-bold">🛒 ' + tile.store.name + '</span>';
-        actionBtn = '<button onclick="openFloatingFacilityWindow(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-teal-600 hover:bg-teal-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] ml-2">Gerir Loja</button>';
-      } else if (tile.mine) {
-        statusBadge = '<span class="text-sky-300 bg-sky-950 border border-sky-800 px-2 py-0.5 rounded font-mono font-bold">⛏️ ' + tile.mine.name + '</span>';
-        actionBtn = '<button onclick="openFloatingFacilityWindow(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] ml-2">Gerir Mina</button>';
-      } else if (tile.farm) {
-        statusBadge = '<span class="text-amber-300 bg-amber-950 border border-amber-800 px-2 py-0.5 rounded font-mono font-bold">🌾 ' + tile.farm.name + '</span>';
-        actionBtn = '<button onclick="openFloatingFacilityWindow(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] ml-2">Gerir Fazenda</button>';
-      } else if (tile.factory) {
-        statusBadge = '<span class="text-orange-300 bg-orange-950 border border-orange-800 px-2 py-0.5 rounded font-mono font-bold">🏭 ' + tile.factory.name + '</span>';
-        actionBtn = '<button onclick="openFloatingFacilityWindow(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] ml-2">Gerir Fábrica</button>';
-      } else if (tile.isPort) {
-        statusBadge = '<span class="text-yellow-400 bg-yellow-950 border border-yellow-800 px-2 py-0.5 rounded font-mono font-bold">⚓ Porto Marítimo</span>';
-        actionBtn = '<button onclick="openPortModal(' + tile.x + ',' + tile.y + ')" class="bg-yellow-600 hover:bg-yellow-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] ml-2">Ver Cargas</button>';
-      } else if (!tile.isWater) {
-        actionBtn = '<div class="flex items-center gap-1 ml-2">' +
-          '<button onclick="openStoreModal(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[10px]">🏪 Loja</button>' +
-          '<button onclick="openFactoryModal(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-orange-700 hover:bg-orange-600 text-white font-bold px-2 py-0.5 rounded text-[10px]">🏭 Fábrica</button>' +
-          '<button onclick="openFarmModal(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded text-[10px]">🌾 Fazenda</button>' +
-          (tile.hasIronDeposit || tile.hasOilDeposit ? '<button onclick="openMineModal(worldGrid[' + tile.x + '][' + tile.y + '])" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[10px]">⛏️ Mina</button>' : '') +
-          '</div>';
+      if (actionsEl) {
+        let buttonsHtml = '';
+        if (isLocked) {
+          buttonsHtml = '<span class="text-rose-400 font-bold text-[9px] bg-rose-950/80 px-2 py-0.5 rounded border border-rose-800">🔒 Região Bloqueada</span>';
+        } else if (tile.store) {
+          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-teal-700 hover:bg-teal-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🛒 Gerir Loja</button>`;
+        } else if (tile.mine) {
+          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">⛏️ Gerir Mina</button>`;
+        } else if (tile.farm) {
+          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🌾 Gerir Fazenda</button>`;
+        } else if (tile.factory) {
+          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-700 hover:bg-orange-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🏭 Gerir Fábrica</button>`;
+        } else if (tile.isPort) {
+          buttonsHtml = `<button onclick="openPortModal(worldGrid[${tile.x}][${tile.y}].portData)" class="bg-yellow-700 hover:bg-yellow-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">⚓ Ver Cargas</button>`;
+        } else if (tile.isMedia) {
+          buttonsHtml = `<button onclick="openMarketingCentralModal(worldGrid[${tile.x}][${tile.y}].mediaData.id)" class="bg-indigo-700 hover:bg-indigo-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">📢 Contratar Mídia</button>`;
+        } else if (!tile.isWater && !tile.isRoad) {
+          buttonsHtml = `
+            <span class="text-slate-600">|</span>
+            <div class="inline-flex items-center gap-1">
+              <span class="text-[9px] text-slate-400 font-bold hidden sm:inline">Construir:</span>
+              <button onclick="openStoreModal(worldGrid[${tile.x}][${tile.y}])" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Inaugurar Estabelecimento Comercial">🏪 +Loja</button>
+              <button onclick="openFactoryModal(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-700 hover:bg-orange-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Construir Parque Fabril">🏭 +Fábrica</button>
+              <button onclick="openFarmModal(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Iniciar Fazenda Agropecuária">🌾 +Fazenda</button>
+              ${tile.hasIronDeposit || tile.hasOilDeposit ? `<button onclick="openMineModal(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Mina de Extração">⛏️ +Mina</button>` : ''}
+            </div>
+          `;
+        }
+        actionsEl.innerHTML = buttonsHtml;
       }
-
-      pill.innerHTML = `
-        <div class="flex items-center gap-3 flex-wrap">
-          <strong class="text-slate-100">${d.name} (${tile.x}, ${tile.y})</strong>
-          ${statusBadge}
-          <span class="text-slate-400">🚦 ${d.trafficIndex}/100</span>
-          <span class="text-slate-400">👥 ${d.population.toLocaleString()} hab</span>
-          <span class="text-rose-400">Aluguel: $${d.landRentDaily}/dia</span>
-          ${actionBtn}
-        </div>
-      `;
     }
 
     // ===========================================================================
@@ -2252,12 +2237,81 @@
       document.getElementById('facility-content-panel').innerHTML = `<p class="text-[11px] text-slate-500 font-mono text-center py-3">Nenhuma instalação selecionada.</p>`;
     }
 
+    function renderEmptyLotPanel(tile) {
+      const d = tile.district;
+      const cityName = tile.city ? (tile.city.cityName || tile.city.name || 'Metrópole') : 'Zona Rural';
+      
+      document.getElementById('facility-title').textContent = `🏢 Lote Disponível (${tile.x}, ${tile.y})`;
+      document.getElementById('facility-subtitle').textContent = `${cityName} · ${d.name}`;
+      
+      const badge = document.getElementById('facility-rent-badge');
+      badge.textContent = `-$${d.landRentDaily}/dia`;
+      badge.classList.remove('hidden');
+      
+      document.getElementById('facility-action-row').classList.add('hidden');
+      
+      const hasMineDeposit = tile.hasIronDeposit || tile.hasOilDeposit;
+      const depositName = tile.hasIronDeposit ? 'Minério de Ferro' : (tile.hasOilDeposit ? 'Petróleo Bruto' : null);
+
+      document.getElementById('facility-content-panel').innerHTML = `
+        <div class="space-y-3 font-mono text-xs">
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-slate-300 text-[11px]">
+            <div class="flex justify-between"><span>Tráfego Urbano:</span> <strong class="text-amber-400">🚦 ${d.trafficIndex}/100</strong></div>
+            <div class="flex justify-between"><span>População Local:</span> <strong class="text-sky-400">👥 ${d.population.toLocaleString()} hab</strong></div>
+            <div class="flex justify-between"><span>Custo de Ocupação:</span> <strong class="text-rose-400">-$${d.landRentDaily}/dia</strong></div>
+            ${depositName ? `<div class="flex justify-between text-emerald-400 font-bold"><span>Depósito Natural:</span> <span>⛏️ ${depositName}</span></div>` : ''}
+          </div>
+
+          <div class="text-[11px] font-bold text-slate-300">Escolha o empreendimento para inaugurar:</div>
+
+          <div class="grid grid-cols-1 gap-2">
+            <button onclick="openStoreModal(worldGrid[${tile.x}][${tile.y}])" class="bg-emerald-950/70 hover:bg-emerald-900/90 border border-emerald-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
+              <div>
+                <div class="font-bold text-emerald-300 flex items-center gap-1.5 text-xs">🏪 Inaugurar Estabelecimento Comercial</div>
+                <div class="text-[10px] text-slate-400">Venda no varejo (alimentos, eletrônicos, vestuário, conveniência...)</div>
+              </div>
+              <span class="text-emerald-400 group-hover:translate-x-1 transition font-bold">➔</span>
+            </button>
+
+            <button onclick="openFactoryModal(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-950/70 hover:bg-orange-900/90 border border-orange-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
+              <div>
+                <div class="font-bold text-orange-300 flex items-center gap-1.5 text-xs">🏭 Construir Parque Fabril</div>
+                <div class="text-[10px] text-slate-400">Transformação de insumos em produtos acabados de alto valor</div>
+              </div>
+              <span class="text-orange-400 group-hover:translate-x-1 transition font-bold">➔</span>
+            </button>
+
+            <button onclick="openFarmModal(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-950/70 hover:bg-amber-900/90 border border-amber-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
+              <div>
+                <div class="font-bold text-amber-300 flex items-center gap-1.5 text-xs">🌾 Iniciar Fazenda / Agropecuária</div>
+                <div class="text-[10px] text-slate-400">Cultivo de grãos, café, algodão, cana e criação de gado</div>
+              </div>
+              <span class="text-amber-400 group-hover:translate-x-1 transition font-bold">➔</span>
+            </button>
+
+            ${hasMineDeposit ? `
+            <button onclick="openMineModal(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-950/70 hover:bg-sky-900/90 border border-sky-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
+              <div>
+                <div class="font-bold text-sky-300 flex items-center gap-1.5 text-xs">⛏️ Instalar Mina de Extração (${depositName})</div>
+                <div class="text-[10px] text-slate-400">Extração contínua de matérias-primas minerais pesadas</div>
+              </div>
+              <span class="text-sky-400 group-hover:translate-x-1 transition font-bold">➔</span>
+            </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+      const win = document.getElementById('floating-facility-window');
+      if (win) win.classList.remove('hidden');
+    }
+
     function renderFacilityPanel(tile) {
       if (!tile) { renderIdlePanel(); return; }
       if (tile.store) renderStorePanel(tile);
       else if (tile.mine) renderMinePanel(tile);
       else if (tile.farm) renderFarmPanel(tile);
       else if (tile.factory) renderFactoryPanel(tile);
+      else if (!tile.isWater && !tile.isRoad) renderEmptyLotPanel(tile);
       else renderIdlePanel();
     }
 
@@ -3625,8 +3679,8 @@
         "===================================================================",
         "🏛️ OIKONOMIA — RELATÓRIO DE DIAGNÓSTICO DO SISTEMA & SUPORTE",
         "===================================================================",
-        `Versão Oficial: ${CURRENT_SAVE_VERSION} (Build 2026.08.27)`,
-        `Save Schema: ${CURRENT_SAVE_VERSION}`,
+        `Versão Oficial: ${GAME_VERSION_INFO.fullString}`,
+        `Save Schema: ${GAME_VERSION_INFO.saveSchema}`,
         `Ambiente / Protocolo: ${window.location.protocol}`,
         `Data da Partida: Dia ${day} / Mês ${month} / Ano ${year}`,
         `Empresa: ${playerProfile.companyName} (CEO: ${playerProfile.playerName})`,
@@ -3798,8 +3852,18 @@
     // ===========================================================================
     // 14. SISTEMA DE PERSISTÊNCIA, VERSIONAMENTO & MIGRAÇÕES DE SAVES
     // ===========================================================================
+    const GAME_VERSION_INFO = {
+      major: 0,
+      minor: 7,
+      patch: 4,
+      build: '20260827.05',
+      saveSchema: '0.7.2',
+      get version() { return `${this.major}.${this.minor}.${this.patch}`; },
+      get fullString() { return `v${this.version} (bld.${this.build})`; }
+    };
+
     const SAVES_STORAGE_KEY = 'oikonomia_save_slots_v1';
-    const CURRENT_SAVE_VERSION = '0.7.2';
+    const CURRENT_SAVE_VERSION = GAME_VERSION_INFO.saveSchema;
 
     // Pipeline de Migração e Sanitização de Saves
     function migrateSaveData(rawSave) {
@@ -4120,13 +4184,13 @@
       currentAppScreen = 'BOOT';
 
       console.log(
-        "%c🏛️ OIKONOMIA ENGINE v0.7.2 (Build 2026.08.27)\n%c📦 CoreMath v1.0 | Sparse Index O(k) | Save Schema v0.7.2\n🌐 Protocolo: " + window.location.protocol + " | 60 FPS Canvas Renderer\n🛠️ Pressione F3 a qualquer momento para abrir o Painel de Desenvolvimento.",
+        `%c🏛️ OIKONOMIA ENGINE ${GAME_VERSION_INFO.fullString}\n%c📦 CoreMath v1.0 | Sparse Index O(k) | Save Schema v${GAME_VERSION_INFO.saveSchema}\n🌐 Protocolo: ${window.location.protocol} | 60 FPS Canvas Renderer\n🛠️ Pressione F3 a qualquer momento para abrir o Painel de Desenvolvimento.`,
         "font-weight: bold; font-size: 13px; color: #10b981;",
         "font-size: 11px; color: #38bdf8;"
       );
 
       logDebug('Iniciando sequência de Boot da simulação.', 'BOOT');
-      logDebug(`Versão Oficial: ${CURRENT_SAVE_VERSION} (Build 2026.08.27) | Protocolo: ${window.location.protocol}`, 'VERSION');
+      logDebug(`Versão Oficial: ${GAME_VERSION_INFO.fullString} | Schema: v${GAME_VERSION_INFO.saveSchema} | Protocolo: ${window.location.protocol}`, 'VERSION');
 
       const loadingScreen = document.getElementById('loading-screen');
       const barFill = document.getElementById('loading-bar-fill');
@@ -4648,6 +4712,151 @@
       if (modal) modal.classList.add('hidden');
     }
 
+    // ===========================================================================
+    // 16. SISTEMA DE JANELAS ARRASTÁVEIS & PERSISTÊNCIA DE POSIÇÃO (DRAGGABLE)
+    // ===========================================================================
+    let _windowZIndexCounter = 70;
+
+    function bringWindowToFront(panel) {
+      if (!panel) return;
+      _windowZIndexCounter += 2;
+      panel.style.zIndex = _windowZIndexCounter;
+    }
+
+    function makeDraggable(panel, handle, storageKey) {
+      if (!panel || !handle) return;
+
+      // Restaura posição salva no localStorage
+      if (storageKey) {
+        try {
+          const saved = localStorage.getItem(storageKey);
+          if (saved) {
+            const pos = JSON.parse(saved);
+            if (typeof pos.left === 'number' && typeof pos.top === 'number') {
+              const maxL = Math.max(0, window.innerWidth - (panel.offsetWidth || 320));
+              const maxT = Math.max(0, window.innerHeight - 50);
+              panel.style.position = 'fixed';
+              panel.style.left = Math.max(0, Math.min(pos.left, maxL)) + 'px';
+              panel.style.top = Math.max(0, Math.min(pos.top, maxT)) + 'px';
+              panel.style.right = 'auto';
+              panel.style.bottom = 'auto';
+              panel.style.transform = 'none';
+            }
+          }
+        } catch (_) {}
+      }
+
+      handle.classList.add('drag-handle');
+      panel.classList.add('draggable-window');
+
+      let dragging = false;
+      let startX = 0, startY = 0;
+      let initLeft = 0, initTop = 0;
+
+      panel.addEventListener('pointerdown', () => bringWindowToFront(panel));
+
+      handle.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('button, input, select, textarea, label, a')) return;
+        dragging = true;
+        bringWindowToFront(panel);
+
+        const r = panel.getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        initLeft = r.left;
+        initTop = r.top;
+
+        panel.style.position = 'fixed';
+        panel.style.left = initLeft + 'px';
+        panel.style.top = initTop + 'px';
+        panel.style.right = 'auto';
+        panel.style.bottom = 'auto';
+        panel.style.transform = 'none';
+        panel.classList.add('is-dragging');
+
+        try {
+          handle.setPointerCapture(e.pointerId);
+        } catch (_) {}
+
+        e.preventDefault();
+      });
+
+      handle.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        const maxL = Math.max(0, window.innerWidth - panel.offsetWidth);
+        const maxT = Math.max(0, window.innerHeight - 40);
+
+        const newL = Math.max(0, Math.min(initLeft + dx, maxL));
+        const newT = Math.max(0, Math.min(initTop + dy, maxT));
+
+        panel.style.left = newL + 'px';
+        panel.style.top = newT + 'px';
+      });
+
+      const stopDrag = (e) => {
+        if (!dragging) return;
+        dragging = false;
+        panel.classList.remove('is-dragging');
+
+        try {
+          if (e.pointerId && handle.hasPointerCapture(e.pointerId)) {
+            handle.releasePointerCapture(e.pointerId);
+          }
+        } catch (_) {}
+
+        if (storageKey) {
+          const r = panel.getBoundingClientRect();
+          localStorage.setItem(storageKey, JSON.stringify({ left: Math.round(r.left), top: Math.round(r.top) }));
+        }
+      };
+
+      handle.addEventListener('pointerup', stopDrag);
+      handle.addEventListener('pointercancel', stopDrag);
+    }
+
+    function initAllDraggableWindows() {
+      // 1. Janela de Gestão de Instalação Flutuante
+      const facWin = document.getElementById('floating-facility-window');
+      if (facWin) {
+        const facHandle = facWin.querySelector('.drag-handle') || facWin.firstElementChild;
+        if (facHandle) makeDraggable(facWin, facHandle, 'oiko_pos_facility_window');
+      }
+
+      // 2. Mapeamento de todos os modais do jogo
+      const modalList = [
+        { id: 'dre-modal', key: 'oiko_pos_dre' },
+        { id: 'diary-modal', key: 'oiko_pos_diary' },
+        { id: 'store-modal', key: 'oiko_pos_store' },
+        { id: 'supplier-modal', key: 'oiko_pos_supplier' },
+        { id: 'add-product-modal', key: 'oiko_pos_add_product' },
+        { id: 'factory-modal', key: 'oiko_pos_factory' },
+        { id: 'factory-recipe-modal', key: 'oiko_pos_factory_recipe' },
+        { id: 'mine-modal', key: 'oiko_pos_mine' },
+        { id: 'farm-modal', key: 'oiko_pos_farm' },
+        { id: 'port-modal', key: 'oiko_pos_port' },
+        { id: 'marketing-central-modal', key: 'oiko_pos_marketing' },
+        { id: 'dev-dashboard-modal', key: 'oiko_pos_dev_dashboard' },
+        { id: 'save-load-modal', key: 'oiko_pos_save_load' },
+        { id: 'settings-modal', key: 'oiko_pos_settings' }
+      ];
+
+      modalList.forEach(({ id, key }) => {
+        const modal = document.getElementById(id);
+        if (!modal) return;
+        const win = modal.querySelector('div.bg-slate-900');
+        if (!win) return;
+        const handle = win.querySelector('.drag-handle') || win.querySelector('div[class*="border-b"]') || win.firstElementChild;
+        if (handle) {
+          makeDraggable(win, handle, key);
+        }
+      });
+
+      logDebug('Sistema universal de janelas arrastáveis inicializado.', 'DRAG_UI');
+    }
+
     window.addEventListener('resize', () => { resizeCanvas(); scheduleRender(); });
 
     setTimeout(async () => {
@@ -4659,6 +4868,7 @@
       renderIdlePanel();
       updatePlayerProfileHUD();
       updateUI();
+      initAllDraggableWindows();
       startBootSequence();
     }, 50);
   </script>
