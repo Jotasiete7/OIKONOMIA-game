@@ -34,103 +34,130 @@
   </div>
 
   <!-- 2. TOP FLOATING HUD BAR (CAPITALISM LAB STYLE) -->
-  <header class="absolute top-2 left-2 right-2 z-30 flex items-center justify-between gap-2 pointer-events-none">
+  <header class="absolute top-2 left-2 right-2 z-30 flex items-center justify-between gap-2 pointer-events-none max-w-[calc(100vw-16px)]">
     
-    <!-- Top Left: Logo & City Jump -->
-    <div class="pointer-events-auto flex items-center gap-2 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-3 py-1.5 shadow-2xl">
-      <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/40 flex items-center justify-center text-sm">🏛️</div>
-      <div>
-        <div class="flex items-center gap-1.5">
+    <!-- Top Left: Logo, Empresa & Cidades -->
+    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2.5 py-1 shadow-2xl shrink-0">
+      <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/40 flex items-center justify-center text-xs shrink-0">🏛️</div>
+      <div class="shrink-0">
+        <div class="flex items-center gap-1">
           <h1 class="text-xs font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
           <span class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.7</span>
         </div>
       </div>
       <!-- EMPRESA / AVATAR BADGE -->
-      <div id="hud-corp-badge" class="flex items-center gap-1.5 bg-slate-950/80 px-2 py-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1">
-        <span id="hud-player-avatar" class="text-sm">👨‍💼</span>
+      <div id="hud-corp-badge" class="flex items-center gap-1 bg-slate-950/80 px-1.5 py-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1 shrink-0">
+        <span id="hud-player-avatar" class="text-xs">👨‍💼</span>
         <div class="leading-tight">
-          <span id="hud-company-name" class="font-bold text-emerald-400 block truncate max-w-[110px]">OikoCorp Holding</span>
-          <span id="hud-player-name" class="text-[8px] text-slate-400 block truncate max-w-[110px]">Arthur Vance</span>
+          <span id="hud-company-name" class="font-bold text-emerald-400 block truncate max-w-[90px]">OikoCorp Holding</span>
+          <span id="hud-player-name" class="text-[7px] text-slate-400 block truncate max-w-[90px]">Arthur Vance</span>
         </div>
       </div>
       <!-- CIDADES / ATALHOS -->
-      <div class="flex items-center gap-1 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-2">
-        <button onclick="jumpToCity('nova_atenas')" class="px-2 py-0.5 rounded text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ Atenas</button>
-        <button onclick="jumpToCity('porto_real')" class="px-2 py-0.5 rounded text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real (Porto)">🚢 P. Real</button>
-        <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-2 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Polo Industrial">🏭 Montargis <span id="lock-montargis">🔒</span></button>
-        <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-2 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Cinturão Agrícola">🌾 Várzea <span id="lock-varzea">🔒</span></button>
+      <div class="flex items-center gap-0.5 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1 shrink-0">
+        <button onclick="jumpToCity('nova_atenas')" class="px-1.5 py-0.5 rounded text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ Atenas</button>
+        <button onclick="jumpToCity('porto_real')" class="px-1.5 py-0.5 rounded text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real (Porto)">🚢 P. Real</button>
+        <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Polo Industrial">🏭 Montargis <span id="lock-montargis">🔒</span></button>
+        <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Cinturão Agrícola">🌾 Várzea <span id="lock-varzea">🔒</span></button>
       </div>
     </div>
 
-    <!-- Top Center: Lenses & Zoom -->
-    <div class="pointer-events-auto hidden md:flex items-center gap-1 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2.5 py-1.5 shadow-2xl font-mono text-[10px]">
-      <span class="text-slate-500 px-1">Lentes:</span>
-      <button id="hm-terrain" onclick="setHeatmap('terrain')" class="px-2 py-0.5 rounded font-bold bg-slate-800 text-slate-200">Terreno</button>
-      <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">🔥 Tráfego</button>
-      <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">👥 Pop.</button>
-      <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">🏪 Varejo</button>
-      <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">⚓ Portos</button>
-      <button id="hm-ind"     onclick="setHeatmap('ind')"     class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">🏭 Indústria</button>
-      <button id="hm-media"   onclick="setHeatmap('media')"   class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200">📡 Mídia</button>
-      <div class="h-4 w-px bg-slate-700 mx-1"></div>
-      <button onclick="changeZoom(-0.2)" class="w-5 h-5 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold" title="Zoom Out (Q / -)">−</button>
-      <button onclick="resetCamera()"    class="px-1.5 h-5 rounded bg-slate-950 border border-slate-800 text-slate-400 text-[9px]">Centro</button>
-      <button onclick="changeZoom(0.2)"  class="w-5 h-5 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold" title="Zoom In (E / +)">+</button>
-    </div>
-
     <!-- Top Right: Relógio, Finanças & Gavetas Flutuantes -->
-    <div class="pointer-events-auto flex items-center gap-2 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-3 py-1.5 shadow-2xl">
+    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2.5 py-1 shadow-2xl shrink-0 flex-nowrap">
       <!-- Relógio & Velocidades -->
-      <div class="flex items-center gap-1 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono">
-        <span id="clock-date" class="px-2 font-bold text-amber-400">Dia 01 / Mês 01</span>
+      <div class="flex items-center gap-1 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono whitespace-nowrap shrink-0">
+        <span id="clock-date" class="px-1.5 font-bold text-amber-400 whitespace-nowrap inline-block">Dia 01 / Mês 01</span>
         <button id="btn-p"  onclick="setSpeed(0)" class="px-1.5 py-0.5 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">⏸</button>
         <button id="btn-1x" onclick="setSpeed(1)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800">1x</button>
         <button id="btn-2x" onclick="setSpeed(2)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800">2x</button>
         <button id="btn-5x" onclick="setSpeed(5)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800">5x</button>
       </div>
 
-      <!-- Finanças -->
-      <div class="border-l border-slate-800 pl-2 font-mono text-right">
+      <!-- Finanças (Formatação inteligente com valor completo no tooltip) -->
+      <div class="border-l border-slate-800 pl-1.5 font-mono text-right shrink-0">
         <span class="text-[8px] text-slate-400 block uppercase leading-none">Caixa</span>
-        <span id="corp-cash" class="text-xs font-black text-emerald-400 leading-tight">$100,000.00</span>
+        <span id="corp-cash" class="text-xs font-black text-emerald-400 leading-tight whitespace-nowrap block cursor-help" title="$100,000.00">$100,000.00</span>
       </div>
-      <div class="border-l border-slate-800 pl-2 font-mono text-right">
+      <div class="border-l border-slate-800 pl-1.5 font-mono text-right shrink-0">
         <span class="text-[8px] text-slate-400 block uppercase leading-none">Lucro Mês</span>
-        <span id="month-profit" class="text-xs font-bold text-slate-300 leading-tight">$0.00</span>
+        <span id="month-profit" class="text-xs font-bold text-slate-300 leading-tight whitespace-nowrap block cursor-help" title="$0.00">$0.00</span>
       </div>
 
       <!-- Gavetas Flutuantes -->
-      <div class="flex items-center gap-1 border-l border-slate-800 pl-2">
-        <button onclick="toggleDREModal()" class="bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition" title="Demonstrativo de Resultados do Exercício">
+      <div class="flex items-center gap-1 border-l border-slate-800 pl-1.5 shrink-0">
+        <button onclick="toggleDREModal()" class="bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Demonstrativo de Resultados do Exercício">
           📊 DRE
         </button>
-        <button onclick="toggleDiaryModal()" class="bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition" title="Diário de Bordo & Log em Tempo Real">
+        <button onclick="toggleDiaryModal()" class="bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Diário de Bordo & Log em Tempo Real">
           📑 Diário
         </button>
-        <button onclick="openMarketingCentralModal()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition" title="Central de Publicidade">
+        <button onclick="openMarketingCentralModal()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Central de Publicidade">
           📢 <span id="active-campaigns-badge" class="bg-indigo-700 px-1 rounded text-[8px] text-white">0</span>
         </button>
-        <button onclick="togglePauseMenu()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition" title="Menu Principal & Configurações (ESC)">
+        <button onclick="togglePauseMenu()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Menu Principal & Configurações (ESC)">
           ⚙️ Menu
         </button>
       </div>
     </div>
   </header>
 
+  <!-- 2.1 FLOATING LENSES & CAMERA BAR (Barra flutuante de Lentes e Zoom independente) -->
+  <div class="absolute top-12 left-1/2 -translate-x-1/2 z-30 pointer-events-auto hidden md:flex items-center gap-1 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2 py-1 shadow-2xl font-mono text-[10px]">
+    <span class="text-slate-500 px-1 text-[9px]">Lentes:</span>
+    <button id="hm-terrain" onclick="setHeatmap('terrain')" class="px-1.5 py-0.5 rounded font-bold bg-slate-800 text-slate-200 text-[9px]">Terreno</button>
+    <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🔥 Tráfego</button>
+    <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">👥 Pop.</button>
+    <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏪 Varejo</button>
+    <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">⚓ Portos</button>
+    <button id="hm-ind"     onclick="setHeatmap('ind')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏭 Indústria</button>
+    <button id="hm-media"   onclick="setHeatmap('media')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">📡 Mídia</button>
+    <div class="h-3.5 w-px bg-slate-700 mx-0.5"></div>
+    <button onclick="changeZoom(-0.2)" class="w-4 h-4 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold leading-none" title="Zoom Out (Q / -)">−</button>
+    <button onclick="resetCamera()"    class="px-1 h-4 rounded bg-slate-950 border border-slate-800 text-slate-400 text-[8px] leading-none">Centro</button>
+    <button onclick="changeZoom(0.2)"  class="w-4 h-4 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold leading-none" title="Zoom In (E / +)">+</button>
+  </div>
+
   <!-- 3. BOTTOM-LEFT HUD (RADAR MINIMAP & CONTROLS) -->
-  <div class="absolute bottom-3 left-3 z-30 flex flex-col gap-1 pointer-events-none">
+  <div class="absolute bottom-8 left-3 z-30 flex flex-col gap-1 pointer-events-none">
     <div class="pointer-events-auto bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl p-1.5 shadow-2xl">
       <canvas id="minimap-canvas" width="128" height="128" class="rounded-lg border border-slate-800 cursor-crosshair block" title="Clique no radar para teletransportar a câmera"></canvas>
     </div>
     <div class="bg-slate-900/85 backdrop-blur-sm border border-slate-800/80 rounded-lg px-2 py-1 text-[9px] font-mono text-slate-400 pointer-events-none">
-      🎮 <strong>WASD</strong>: Mover · 🔍 <strong>Scroll / Q-E</strong>: Zoom · 🖱 <strong>Clique</strong>: Lote / Prédio
+      🎮 <strong>WASD</strong>: Mover · 🔍 <strong>Scroll / Q-E</strong>: Zoom · 🖱 <strong>Clique</strong>: Lote
     </div>
   </div>
 
-  <!-- 4. BOTTOM-CENTER HUD (INSPETOR RÁPIDO DO LOTE SOB O MOUSE / SELECIONADO) -->
-  <div id="tile-inspector-pill" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 pointer-events-auto bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-4 py-1.5 shadow-2xl font-mono text-xs text-slate-300 flex items-center gap-4 transition-all">
-    <span class="text-slate-400">Clique em qualquer lote ou prédio no mapa para gerir</span>
-  </div>
+  <!-- 4. BOTTOM TELEMETRY & DIAGNOSTICS BAR (PERMANENTE PARA PRINTS & DEBUG) -->
+  <footer id="bottom-telemetry-bar" class="absolute bottom-0 left-0 right-0 z-30 pointer-events-auto bg-slate-950/95 backdrop-blur-md border-t border-slate-800/80 px-3 py-1 text-[10px] font-mono text-slate-400 flex items-center justify-between shadow-2xl select-none">
+    <!-- Esquerda: Lote sob mouse / Inspetor rápido -->
+    <div class="flex items-center gap-2">
+      <span id="telemetry-tile-info" class="text-slate-300 font-bold flex items-center gap-1">
+        📍 <span>Lote (-- , --) · Clique em um lote</span>
+      </span>
+      <span id="telemetry-district-info" class="text-slate-500 hidden sm:inline">| Terreno Padrão</span>
+    </div>
+
+    <!-- Centro: Telemetria da Simulação -->
+    <div class="hidden md:flex items-center gap-3 text-slate-400">
+      <span id="telemetry-facilities-count" title="Total de instalações ativas no Sparse Index">🏢 0 Prédios</span>
+      <span class="text-slate-700">·</span>
+      <span id="telemetry-pop-count" title="População mundial consumidora">👥 45,000 Hab</span>
+      <span class="text-slate-700">·</span>
+      <span id="telemetry-save-status" class="text-emerald-400" title="Status do último salvamento">💾 Salvo</span>
+      <span class="text-slate-700">·</span>
+      <span id="telemetry-fps" class="text-amber-400 font-bold">⚡ 60 FPS</span>
+    </div>
+
+    <!-- Direita: Carimbo Oficial de Versão & Botão Dev -->
+    <div class="flex items-center gap-2">
+      <button onclick="toggleDevDashboard()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-300 px-1.5 py-0.5 rounded text-[9px] font-bold flex items-center gap-1 shadow transition cursor-pointer" title="Abrir Painel de Desenvolvimento & Logs de Debug (Atalho F3)">
+        🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
+      </button>
+      <span id="telemetry-version-badge" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-bold text-[9px]" title="Versão Oficial do Jogo & Build">
+        🏛️ OIKONOMIA <span class="text-emerald-400">v0.7.2</span> <span class="text-slate-500 text-[8px]">bld.20260827</span>
+      </span>
+    </div>
+  </footer>
 
   <!-- 5. FLOATING MANAGEMENT CARD (JANELA FLUTUANTE DE GESTÃO - ESTILO CAPITALISM) -->
   <div id="floating-facility-window" class="fixed top-14 right-3 bottom-3 w-[430px] z-40 bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-200">
@@ -548,10 +575,14 @@
       </div>
     </div>
 
-    <!-- Rodapé: Créditos & Atalhos -->
+    <!-- Rodapé: Créditos, Versão & Atalhos -->
     <div class="flex justify-between items-center text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-4">
-      <span>OIKONOMIA PROJECT © 2026 — MOTOR ESTRATÉGICO INTEGRADO</span>
+      <div class="flex items-center gap-2">
+        <span class="text-slate-400 font-bold">OIKONOMIA PROJECT © 2026</span>
+        <span class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.7.2 Oficial (bld.20260827)</span>
+      </div>
       <div class="flex gap-4">
+        <span>Atalho: <strong>F3</strong> (Dev Dashboard)</span>
         <span>Atalho: <strong>ESPAÇO</strong> (Pausa)</span>
         <span>Atalho: <strong>ESC</strong> (Menu / Fechar)</span>
       </div>
@@ -712,8 +743,9 @@
         </button>
       </div>
 
-      <div class="text-center text-[10px] font-mono text-slate-500 border-t border-slate-800 pt-3">
-        Pressione <strong>ESC</strong> para retomar a qualquer momento
+      <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-800 pt-3">
+        <span>OIKONOMIA <strong class="text-emerald-400">v0.7.2</strong></span>
+        <button onclick="openDevDashboard()" class="text-indigo-400 hover:text-indigo-300 font-bold">🛠️ Dev Dashboard [F3]</button>
       </div>
     </div>
   </div>
@@ -789,6 +821,129 @@
 
       <div class="bg-slate-950 border-t border-slate-800 px-6 py-3 flex justify-end">
         <button onclick="closeSettingsModal()" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 8: DASHBOARD DE DESENVOLVIMENTO, TELEMETRIA & DEBUG (F3)        -->
+  <!-- ======================================================================= -->
+  <div id="dev-dashboard-modal" class="fixed inset-0 z-[97] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col font-mono text-xs max-h-[90vh]">
+      <!-- Header -->
+      <div class="bg-slate-800/90 border-b border-slate-700 px-6 py-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-indigo-950 border border-indigo-700/60 flex items-center justify-center text-sm">🛠️</div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">Painel de Desenvolvimento & Diagnóstico</h3>
+            <span class="text-[10px] text-indigo-400">OIKONOMIA v0.7.2 · Build 2026.08.27 (Oficial)</span>
+          </div>
+        </div>
+        <button onclick="closeDevDashboard()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <!-- Abas de Navegação -->
+      <div class="bg-slate-950/80 border-b border-slate-800 px-6 py-2 flex items-center gap-2 text-[11px]">
+        <button id="dev-tab-btn-diag" onclick="switchDevTab('diag')" class="px-3 py-1 rounded-lg font-bold bg-indigo-600 text-white">🏷️ Diagnóstico</button>
+        <button id="dev-tab-btn-logs" onclick="switchDevTab('logs')" class="px-3 py-1 rounded-lg font-bold text-slate-400 hover:bg-slate-800">📜 Logs de Debug (<span id="dev-logs-count">0</span>)</button>
+        <button id="dev-tab-btn-tools" onclick="switchDevTab('tools')" class="px-3 py-1 rounded-lg font-bold text-slate-400 hover:bg-slate-800">⚡ Sandbox / Testes</button>
+      </div>
+
+      <!-- Conteúdo das Abas -->
+      <div class="p-6 overflow-y-auto space-y-4 flex-1">
+        <!-- ABA 1: DIAGNÓSTICO -->
+        <div id="dev-tab-diag" class="space-y-4">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Versão Oficial</span>
+              <span class="text-xs font-bold text-emerald-400">v0.7.2 (bld.20260827)</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Schema de Saves</span>
+              <span class="text-xs font-bold text-amber-400">v0.7.2 (Compatível)</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Sparse Index</span>
+              <span id="dev-stat-sparse-tiles" class="text-xs font-bold text-sky-400">0 tiles ativos</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Renderizador</span>
+              <span class="text-xs font-bold text-slate-200">Canvas 2D (rAF 60 FPS)</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Módulo Matemático</span>
+              <span class="text-xs font-bold text-purple-400">CoreMath v1.0 [Ativo]</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Ambiente</span>
+              <span id="dev-stat-protocol" class="text-xs font-bold text-slate-300">file://</span>
+            </div>
+          </div>
+
+          <!-- Informações da Sessão Atual -->
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-[11px]">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+              <span class="text-slate-400">Empresa / Jogador:</span>
+              <span id="dev-session-company" class="font-bold text-slate-200">--</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+              <span class="text-slate-400">Data da Simulação:</span>
+              <span id="dev-session-date" class="font-bold text-amber-400">Dia 01 / Mês 01 / Ano 1</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+              <span class="text-slate-400">Caixa Atual:</span>
+              <span id="dev-session-cash" class="font-bold text-emerald-400">$100,000.00</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">Cidades Desbloqueadas:</span>
+              <span id="dev-session-cities" class="font-bold text-sky-400">2 / 4</span>
+            </div>
+          </div>
+
+          <!-- Botão Copiar Relatório -->
+          <div class="flex justify-between items-center pt-2">
+            <span id="dev-copy-feedback" class="text-[10px] text-emerald-400 font-bold hidden">✅ Relatório copiado para a Área de Transferência!</span>
+            <button onclick="copyDiagnosticReport()" class="ml-auto px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold flex items-center gap-1.5 shadow">
+              📋 Copiar Relatório de Diagnóstico
+            </button>
+          </div>
+        </div>
+
+        <!-- ABA 2: LOGS DE DEBUG -->
+        <div id="dev-tab-logs" class="space-y-3 hidden">
+          <div class="flex justify-between items-center text-[10px]">
+            <span class="text-slate-400">Histórico de eventos internos do motor (limite de 300 entradas):</span>
+            <button onclick="clearDebugLogs()" class="text-rose-400 hover:text-rose-300 font-bold">🧹 Limpar Logs</button>
+          </div>
+          <div id="dev-logs-terminal" class="bg-slate-950 p-3 rounded-2xl border border-slate-800 font-mono text-[10px] text-slate-300 h-64 overflow-y-auto space-y-1 select-text">
+            <!-- Entradas de Log injetadas aqui -->
+          </div>
+        </div>
+
+        <!-- ABA 3: SANDBOX & FERRAMENTAS DE TESTE -->
+        <div id="dev-tab-tools" class="space-y-3 hidden">
+          <span class="text-slate-400 block text-[11px]">Ferramentas de sandbox para testes rápidos de balanceamento e mecânicas:</span>
+          <div class="grid grid-cols-2 gap-2.5">
+            <button onclick="devAddCash(100000)" class="bg-slate-950 hover:bg-slate-800 border border-slate-700 text-emerald-400 p-3 rounded-xl font-bold flex items-center gap-2">
+              💵 +$100.000 no Caixa
+            </button>
+            <button onclick="devAdvanceMonth()" class="bg-slate-950 hover:bg-slate-800 border border-slate-700 text-amber-400 p-3 rounded-xl font-bold flex items-center gap-2">
+              ⏩ Avançar 30 Dias (1 Mês)
+            </button>
+            <button onclick="devUnlockAllCities()" class="bg-slate-950 hover:bg-slate-800 border border-slate-700 text-sky-400 p-3 rounded-xl font-bold flex items-center gap-2">
+              🔓 Desbloquear Todas as Cidades
+            </button>
+            <button onclick="devDumpGameState()" class="bg-slate-950 hover:bg-slate-800 border border-slate-700 text-purple-400 p-3 rounded-xl font-bold flex items-center gap-2">
+              📦 Exportar Dump GameState JSON
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="bg-slate-950 border-t border-slate-800 px-6 py-3 flex justify-between items-center">
+        <span class="text-[9px] text-slate-500">Pressione <strong>F3</strong> ou <strong>ESC</strong> a qualquer momento para fechar este painel.</span>
+        <button onclick="closeDevDashboard()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold">Fechar</button>
       </div>
     </div>
   </div>
@@ -1425,8 +1580,24 @@
 
     // ===== rAF RENDER LOOP — Dirty flag elimina redesenhos desnecessários =====
     let _needsRender = true;
+    let _lastFpsTime = performance.now();
+    let _framesCount = 0;
+    let _currentFps = 60;
+
     function scheduleRender() { _needsRender = true; }
-    function _rafLoop() {
+    function _rafLoop(now = performance.now()) {
+      _framesCount++;
+      if (now - _lastFpsTime >= 500) {
+        _currentFps = Math.max(1, Math.round((_framesCount * 1000) / (now - _lastFpsTime)));
+        _framesCount = 0;
+        _lastFpsTime = now;
+        const fpsEl = document.getElementById('telemetry-fps');
+        if (fpsEl) {
+          fpsEl.textContent = `⚡ ${_currentFps} FPS`;
+          fpsEl.className = _currentFps >= 50 ? 'text-emerald-400 font-bold' : (_currentFps >= 30 ? 'text-amber-400 font-bold' : 'text-rose-400 font-bold');
+        }
+      }
+
       if (_needsRender) {
         renderMap();
         _needsRender = false;
@@ -1860,15 +2031,26 @@
     // 7. INSPETOR DE TILE & BOTÕES DE CONSTRUÇÃO POLIMÓRFICA
     // ===========================================================================
     function renderTileInspector(tile) {
-      const pill = document.getElementById('tile-inspector-pill');
-      if (!pill) return;
+      const tileInfoEl = document.getElementById('telemetry-tile-info');
+      const distInfoEl = document.getElementById('telemetry-district-info');
+
       if (!tile) {
-        pill.innerHTML = '<span class="text-slate-400">Clique em qualquer lote ou prédio no mapa</span>';
+        if (tileInfoEl) tileInfoEl.innerHTML = '📍 <span>Lote (-- , --) · Clique em um lote</span>';
+        if (distInfoEl) distInfoEl.textContent = '| Terreno Padrão';
         return;
       }
 
       const d = tile.district;
       const isLocked = tile.city.isLocked;
+
+      if (tileInfoEl) {
+        const typeName = tile.store?.name || tile.mine?.name || tile.farm?.name || tile.factory?.name || (tile.isPort ? 'Porto Marítimo' : (tile.isWater ? 'Oceano' : (isLocked ? '🔒 Bloqueado' : 'Terreno Livre')));
+        tileInfoEl.innerHTML = `📍 <span class="text-amber-300">Lote (${tile.x}, ${tile.y})</span> <span class="text-slate-300">· ${typeName}</span>`;
+      }
+      if (distInfoEl) {
+        distInfoEl.textContent = `| ${tile.city.name} (${d.name})`;
+      }
+
       let statusBadge = '<span class="text-slate-400 bg-slate-800 px-2 py-0.5 rounded font-mono">Terreno Livre</span>';
       let actionBtn = '';
 
@@ -3312,6 +3494,12 @@
     }
 
     window.addEventListener('keydown', (e) => {
+      if (e.key === 'F3') {
+        e.preventDefault();
+        toggleDevDashboard();
+        return;
+      }
+
       if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
         if (e.key === 'Escape') document.activeElement.blur();
         return;
@@ -3342,26 +3530,238 @@
       scheduleRender();
     }
 
+    // ===========================================================================
+    // 12.1 TELEMETRIA, SISTEMA DE DEBUG & DEV DASHBOARD (F3)
+    // ===========================================================================
+    const systemDebugLogs = [];
+
+    function logDebug(message, category = 'ENGINE') {
+      const time = new Date().toLocaleTimeString('pt-BR', { hour12: false });
+      const entry = { time, category, message };
+      systemDebugLogs.push(entry);
+      if (systemDebugLogs.length > 300) systemDebugLogs.shift();
+
+      const countEl = document.getElementById('dev-logs-count');
+      if (countEl) countEl.textContent = systemDebugLogs.length;
+
+      const term = document.getElementById('dev-logs-terminal');
+      if (term) {
+        const line = document.createElement('div');
+        const color = category === 'ERROR' ? 'text-rose-400 font-bold' : (category === 'WARN' ? 'text-amber-400 font-bold' : (category === 'SAVE' ? 'text-emerald-400' : (category === 'SANDBOX' ? 'text-purple-300' : 'text-sky-300')));
+        line.innerHTML = `<span class="text-slate-500">[${time}]</span> <span class="${color}">[${category}]</span> ${message}`;
+        term.appendChild(line);
+        term.scrollTop = term.scrollHeight;
+      }
+    }
+
+    function clearDebugLogs() {
+      systemDebugLogs.length = 0;
+      const term = document.getElementById('dev-logs-terminal');
+      if (term) term.innerHTML = '<div class="text-slate-600 italic">Logs limpos.</div>';
+      const countEl = document.getElementById('dev-logs-count');
+      if (countEl) countEl.textContent = '0';
+    }
+
+    function toggleDevDashboard() {
+      const modal = document.getElementById('dev-dashboard-modal');
+      if (!modal) return;
+      if (modal.classList.contains('hidden')) {
+        openDevDashboard();
+      } else {
+        closeDevDashboard();
+      }
+    }
+
+    function openDevDashboard() {
+      const modal = document.getElementById('dev-dashboard-modal');
+      if (!modal) return;
+
+      const sparseEl = document.getElementById('dev-stat-sparse-tiles');
+      if (sparseEl) sparseEl.textContent = `${activeFacilitySet.size} tiles indexados`;
+
+      const protoEl = document.getElementById('dev-stat-protocol');
+      if (protoEl) protoEl.textContent = window.location.protocol;
+
+      const compEl = document.getElementById('dev-session-company');
+      if (compEl) compEl.textContent = `${playerProfile.playerName} (${playerProfile.companyName})`;
+
+      const dateEl = document.getElementById('dev-session-date');
+      if (dateEl) dateEl.textContent = `Dia ${String(day).padStart(2,'0')} / Mês ${String(month).padStart(2,'0')} / Ano ${year}`;
+
+      const cashEl = document.getElementById('dev-session-cash');
+      if (cashEl) cashEl.textContent = `$${cash.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+
+      const citiesEl = document.getElementById('dev-session-cities');
+      if (citiesEl) {
+        const unlocked = Object.values(unlockedCities).filter(Boolean).length;
+        citiesEl.textContent = `${unlocked} / ${Object.keys(unlockedCities).length} cidades`;
+      }
+
+      modal.classList.remove('hidden');
+      switchDevTab('diag');
+      logDebug('Painel de Desenvolvimento aberto.', 'DEV_UI');
+    }
+
+    function closeDevDashboard() {
+      const modal = document.getElementById('dev-dashboard-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function switchDevTab(tab) {
+      ['diag', 'logs', 'tools'].forEach(t => {
+        const content = document.getElementById(`dev-tab-${t}`);
+        const btn = document.getElementById(`dev-tab-btn-${t}`);
+        if (content) content.classList.toggle('hidden', t !== tab);
+        if (btn) {
+          btn.className = t === tab 
+            ? 'px-3 py-1 rounded-lg font-bold bg-indigo-600 text-white' 
+            : 'px-3 py-1 rounded-lg font-bold text-slate-400 hover:bg-slate-800';
+        }
+      });
+    }
+
+    function copyDiagnosticReport() {
+      const report = [
+        "===================================================================",
+        "🏛️ OIKONOMIA — RELATÓRIO DE DIAGNÓSTICO DO SISTEMA & SUPORTE",
+        "===================================================================",
+        `Versão Oficial: ${CURRENT_SAVE_VERSION} (Build 2026.08.27)`,
+        `Save Schema: ${CURRENT_SAVE_VERSION}`,
+        `Ambiente / Protocolo: ${window.location.protocol}`,
+        `Data da Partida: Dia ${day} / Mês ${month} / Ano ${year}`,
+        `Empresa: ${playerProfile.companyName} (CEO: ${playerProfile.playerName})`,
+        `Dificuldade: ${playerProfile.difficulty} | Avatar: ${playerProfile.avatarId}`,
+        `Caixa: $${cash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        `Instalações no Sparse Index: ${activeFacilitySet.size} tiles`,
+        `Cidades Desbloqueadas: ${JSON.stringify(unlockedCities)}`,
+        `Contratos de Marketing Ativos: ${activeMarketingContracts.size}`,
+        `Tempo de Jogo (Playtime): ${playtimeSeconds}s`,
+        "-------------------------------------------------------------------",
+        "Últimos 10 Logs de Debug:",
+        ...systemDebugLogs.slice(-10).map(l => `[${l.time}] [${l.category}] ${l.message}`),
+        "==================================================================="
+      ].join("\n");
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(report).then(() => showCopyFeedback());
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = report;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showCopyFeedback();
+      }
+    }
+
+    function showCopyFeedback() {
+      const fb = document.getElementById('dev-copy-feedback');
+      if (fb) {
+        fb.classList.remove('hidden');
+        setTimeout(() => fb.classList.add('hidden'), 3500);
+      }
+      playSuccessChime();
+      logDebug('Relatório de diagnóstico copiado com sucesso.', 'REPORT');
+    }
+
+    // Sandbox dev helpers
+    function devAddCash(amt) {
+      cash += amt;
+      updateUI();
+      addLog(`💵 DEV SANDBOX: Adicionado +$${amt.toLocaleString()} ao caixa.`, 'text-emerald-400 font-bold');
+      logDebug(`Injetado +$${amt} no caixa via Dev Sandbox. Novo saldo: $${cash}`, 'SANDBOX');
+    }
+
+    function devAdvanceMonth() {
+      for (let i = 0; i < 30; i++) {
+        simulateDay();
+      }
+      addLog(`⏩ DEV SANDBOX: Avançados 30 dias de simulação instantaneamente.`, 'text-amber-400 font-bold');
+      logDebug('Avançados 30 dias via Dev Sandbox.', 'SANDBOX');
+    }
+
+    function devUnlockAllCities() {
+      Object.keys(unlockedCities).forEach(c => unlockedCities[c] = true);
+      checkCityUnlocks();
+      updateUI();
+      addLog(`🔓 DEV SANDBOX: Todas as 4 cidades foram desbloqueadas.`, 'text-sky-400 font-bold');
+      logDebug('Todas as cidades desbloqueadas via Dev Sandbox.', 'SANDBOX');
+    }
+
+    function devDumpGameState() {
+      const dump = serializeCurrentGame();
+      const str = JSON.stringify(dump, null, 2);
+      const blob = new Blob([str], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Oikonomia_GameState_Dump_v${CURRENT_SAVE_VERSION}_${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      logDebug('Dump completo de GameState exportado.', 'SANDBOX');
+    }
+
     function updateUI() {
       const clockEl = document.getElementById('clock-date');
       if (clockEl) clockEl.textContent = `Dia ${String(day).padStart(2,'0')} / Mês ${String(month).padStart(2,'0')} / Ano ${year}`;
 
       const cashEl = document.getElementById('corp-cash');
-      if (cashEl) cashEl.textContent = `$${cash.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+      if (cashEl) {
+        const fullCashStr = `$${cash.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+        cashEl.title = `Caixa Total da Empresa: ${fullCashStr}`;
+        if (Math.abs(cash) >= 1_000_000_000) {
+          cashEl.textContent = `$${(cash / 1_000_000_000).toFixed(2)}B`;
+        } else if (Math.abs(cash) >= 10_000_000) {
+          cashEl.textContent = `$${(cash / 1_000_000).toFixed(2)}M`;
+        } else if (Math.abs(cash) >= 1_000_000) {
+          cashEl.textContent = `$${(cash / 1_000_000).toFixed(2)}M`;
+        } else {
+          cashEl.textContent = `$${cash.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})}`;
+        }
+      }
 
       const totalContractedMonthlyMkt = getTotalMonthlyMarketingBudget();
       const badge = document.getElementById('active-campaigns-badge');
       if (badge) {
-        badge.textContent = activeMarketingContracts.size > 0 
-          ? `${activeMarketingContracts.size} ($${(totalContractedMonthlyMkt/1000).toFixed(1)}k/mês)` 
-          : '0';
+        badge.textContent = activeMarketingContracts.size > 0 ? String(activeMarketingContracts.size) : '0';
+        badge.title = activeMarketingContracts.size > 0 
+          ? `${activeMarketingContracts.size} contratos de mídia ativos ($${(totalContractedMonthlyMkt/1000).toFixed(1)}k/mês)` 
+          : 'Nenhuma campanha ativa';
       }
 
       const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses;
       const pe = document.getElementById('month-profit');
       if (pe) {
-        pe.textContent = `${net >= 0 ? '+' : ''}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
-        pe.className = `text-xs font-bold leading-tight ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+        const fullNetStr = `${net >= 0 ? '+' : '-'}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+        pe.title = `Resultado do Mês Vigente: ${fullNetStr}`;
+        const sign = net >= 0 ? '+' : '-';
+        const absNet = Math.abs(net);
+        if (absNet >= 1_000_000) {
+          pe.textContent = `${sign}$${(absNet / 1_000_000).toFixed(2)}M`;
+        } else if (absNet >= 10_000) {
+          pe.textContent = `${sign}$${(absNet / 1_000).toFixed(1)}k`;
+        } else {
+          pe.textContent = `${sign}$${absNet.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})}`;
+        }
+        pe.className = `text-xs font-bold leading-tight whitespace-nowrap block ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      }
+
+      // Atualiza a Barra de Telemetria de Rodapé
+      const facEl = document.getElementById('telemetry-facilities-count');
+      if (facEl) {
+        facEl.textContent = `🏢 ${activeFacilitySet.size} Prédios`;
+        facEl.title = `Total de instalações ativas no Sparse Index: ${activeFacilitySet.size}`;
+      }
+
+      const popEl = document.getElementById('telemetry-pop-count');
+      if (popEl) {
+        popEl.textContent = `👥 45,000 Hab`;
+      }
+
+      const saveStatEl = document.getElementById('telemetry-save-status');
+      if (saveStatEl) {
+        saveStatEl.textContent = currentSaveSlotId ? `💾 Salvo (${currentSaveSlotId.replace('slot_','')})` : '💾 Pronto';
       }
 
       syncDREValues(monthRevenue, monthCogs, monthFixedExpenses, monthMarketingExpenses, net);
@@ -3375,21 +3775,24 @@
     // 13. INICIALIZAÇÃO ASSÍNCRONA E CARGA DE DADOS
     // ===========================================================================
     async function initMasterData() {
-      try {
-        const catRes = await fetch('../data/products/catalog.json');
-        const catData = await catRes.json();
-        PRODUCT_CATALOG = catData.products;
-
-        const recRes = await fetch('../data/production/recipes.json');
-        const recData = await recRes.json();
-        FACTORY_RECIPES = recData.recipes;
-
-        Object.keys(PRODUCT_CATALOG).forEach(id => {
-          if (!playerBrandRating[id]) playerBrandRating[id] = 20;
-        });
-      } catch (e) {
-        console.warn('Carga via Fetch local indisponível, usando catálogo integrado.');
+      if (window.location.protocol.startsWith('http')) {
+        try {
+          const catRes = await fetch('../data/products/catalog.json');
+          if (catRes.ok) {
+            const catData = await catRes.json();
+            if (catData && catData.products) PRODUCT_CATALOG = catData.products;
+          }
+          const recRes = await fetch('../data/production/recipes.json');
+          if (recRes.ok) {
+            const recData = await recRes.json();
+            if (recData && recData.recipes) RECIPES = recData.recipes;
+          }
+        } catch (e) {}
       }
+
+      Object.keys(PRODUCT_CATALOG).forEach(id => {
+        if (!playerBrandRating[id]) playerBrandRating[id] = 20;
+      });
     }
 
     // ===========================================================================
@@ -3715,6 +4118,16 @@
     let loadingTipTimer = null;
     function startBootSequence() {
       currentAppScreen = 'BOOT';
+
+      console.log(
+        "%c🏛️ OIKONOMIA ENGINE v0.7.2 (Build 2026.08.27)\n%c📦 CoreMath v1.0 | Sparse Index O(k) | Save Schema v0.7.2\n🌐 Protocolo: " + window.location.protocol + " | 60 FPS Canvas Renderer\n🛠️ Pressione F3 a qualquer momento para abrir o Painel de Desenvolvimento.",
+        "font-weight: bold; font-size: 13px; color: #10b981;",
+        "font-size: 11px; color: #38bdf8;"
+      );
+
+      logDebug('Iniciando sequência de Boot da simulação.', 'BOOT');
+      logDebug(`Versão Oficial: ${CURRENT_SAVE_VERSION} (Build 2026.08.27) | Protocolo: ${window.location.protocol}`, 'VERSION');
+
       const loadingScreen = document.getElementById('loading-screen');
       const barFill = document.getElementById('loading-bar-fill');
       const pctText = document.getElementById('loading-pct-text');
