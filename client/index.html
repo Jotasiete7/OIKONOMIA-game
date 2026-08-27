@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <script src="map_data.js"></script>
@@ -40,6 +40,14 @@
         <div class="flex items-center gap-1.5">
           <h1 class="text-xs font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
           <span class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.7</span>
+        </div>
+      </div>
+      <!-- EMPRESA / AVATAR BADGE -->
+      <div id="hud-corp-badge" class="flex items-center gap-1.5 bg-slate-950/80 px-2 py-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1">
+        <span id="hud-player-avatar" class="text-sm">👨‍💼</span>
+        <div class="leading-tight">
+          <span id="hud-company-name" class="font-bold text-emerald-400 block truncate max-w-[110px]">OikoCorp Holding</span>
+          <span id="hud-player-name" class="text-[8px] text-slate-400 block truncate max-w-[110px]">Arthur Vance</span>
         </div>
       </div>
       <!-- CIDADES / ATALHOS -->
@@ -98,6 +106,9 @@
         </button>
         <button onclick="openMarketingCentralModal()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition" title="Central de Publicidade">
           📢 <span id="active-campaigns-badge" class="bg-indigo-700 px-1 rounded text-[8px] text-white">0</span>
+        </button>
+        <button onclick="togglePauseMenu()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition" title="Menu Principal & Configurações (ESC)">
+          ⚙️ Menu
         </button>
       </div>
     </div>
@@ -420,6 +431,362 @@
         <button onclick="closeFactoryRecipeModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
       </div>
       <div class="p-6 space-y-3 max-h-96 overflow-y-auto custom-scrollbar pr-1" id="factory-available-recipes-list"></div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 1: TELA DE BOOT / CARREGAMENTO AAA                              -->
+  <!-- ======================================================================= -->
+  <div id="loading-screen" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-between p-8 select-none transition-opacity duration-700">
+    <div class="w-full flex justify-between items-center text-xs font-mono text-slate-500">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>OIKONOMIA SIMULATION ENGINE</span>
+      </div>
+      <span>VERSÃO 0.7.0 (BUILD 2026)</span>
+    </div>
+
+    <!-- Centro: Logo e Apresentação -->
+    <div class="flex flex-col items-center text-center space-y-4 max-w-lg">
+      <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 shadow-2xl shadow-emerald-500/20 flex items-center justify-center animate-bounce">
+        <div class="w-full h-full bg-slate-950 rounded-[22px] flex items-center justify-center text-4xl">🏛️</div>
+      </div>
+      <div>
+        <h1 class="text-4xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-200 to-sky-400 font-sans">
+          OIKONOMIA
+        </h1>
+        <p class="text-xs uppercase tracking-widest text-slate-400 font-mono mt-1">Simulador de Império Industrial & Varejo Macroeconômico</p>
+      </div>
+
+      <!-- Barra de Carregamento -->
+      <div class="w-full bg-slate-900 border border-slate-800 rounded-full h-3 p-0.5 overflow-hidden shadow-inner mt-6">
+        <div id="loading-bar-fill" class="bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400 h-full rounded-full w-0 transition-all duration-300"></div>
+      </div>
+      <div class="flex justify-between w-full text-[11px] font-mono text-slate-400">
+        <span id="loading-status-text">Inicializando malha isométrica 128x128...</span>
+        <span id="loading-pct-text">0%</span>
+      </div>
+    </div>
+
+    <!-- Rodapé: Dicas de Mercado Rotativas -->
+    <div class="w-full max-w-xl bg-slate-900/80 border border-slate-800 rounded-2xl p-4 text-center backdrop-blur-md">
+      <span class="text-[10px] uppercase font-mono tracking-wider text-emerald-400 font-bold block mb-1">Dica Estratégica</span>
+      <p id="loading-tip-text" class="text-xs text-slate-300 font-sans transition-opacity duration-300">
+        💡 Terrenos no Centro Urbano (Downtown) possuem aluguel mais alto, mas tráfego intenso de consumidores.
+      </p>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 2: MENU PRINCIPAL DE ENTRADA (AAA GRADE)                         -->
+  <!-- ======================================================================= -->
+  <div id="main-menu-screen" class="fixed inset-0 z-[90] bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-8 select-none hidden">
+    <!-- Header do Menu -->
+    <div class="flex justify-between items-center text-xs font-mono text-slate-500">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50"></span>
+        <span class="text-slate-300 font-bold">OIKONOMIA GRAND STRATEGY</span>
+      </div>
+      <div class="flex gap-4">
+        <span>4 METRÓPOLES</span>
+        <span>70+ PRODUTOS</span>
+        <span>100% PERSISTENTE</span>
+      </div>
+    </div>
+
+    <!-- Bloco Central: Hero & Opções -->
+    <div class="flex flex-col md:flex-row items-center justify-between max-w-6xl w-full mx-auto gap-12">
+      <!-- Coluna Esquerda: Branding & Lore -->
+      <div class="flex-1 space-y-4 text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-800 text-emerald-400 text-xs font-mono">
+          <span>✨ Simulação Econômica Profunda</span>
+        </div>
+        <h1 class="text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-200 to-sky-300 leading-tight">
+          OIKONOMIA
+        </h1>
+        <p class="text-sm text-slate-400 max-w-md leading-relaxed">
+          Comande redes de suprimentos de ponta a ponta. Extraia matérias-primas, manufacture em escala industrial, domine portos marítimos e conquiste as quatro grandes metrópoles.
+        </p>
+        <div class="flex items-center gap-3 pt-2 text-xs font-mono text-slate-500">
+          <span class="flex items-center gap-1">💾 Saves Locais</span>
+          <span>•</span>
+          <span class="flex items-center gap-1">📦 Exportação .oiko</span>
+          <span>•</span>
+          <span class="flex items-center gap-1">🎮 Teclado + Mouse</span>
+        </div>
+      </div>
+
+      <!-- Coluna Direita: Botões de Ação do Menu -->
+      <div class="w-full md:w-80 flex flex-col gap-3 font-mono">
+        <button id="btn-menu-continue" onclick="continueLastGame()" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-sm shadow-xl shadow-emerald-900/30 flex items-center justify-between group transition transform active:scale-98 disabled:opacity-40 disabled:pointer-events-none">
+          <span class="flex items-center gap-2">▶ Continuar Empresa</span>
+          <span class="text-xs text-emerald-200 group-hover:translate-x-1 transition">➔</span>
+        </button>
+
+        <button onclick="openNewGameWizard()" class="w-full py-3.5 px-6 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500/50 text-slate-100 font-bold text-sm shadow-lg flex items-center justify-between group transition transform active:scale-98">
+          <span class="flex items-center gap-2">🏢 Nova Empresa</span>
+          <span class="text-xs text-slate-400 group-hover:text-emerald-400 group-hover:translate-x-1 transition">➔</span>
+        </button>
+
+        <button onclick="openSaveLoadModal('load')" class="w-full py-3.5 px-6 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-sky-500/50 text-slate-100 font-bold text-sm shadow-lg flex items-center justify-between group transition transform active:scale-98">
+          <span class="flex items-center gap-2">📂 Carregar Jogo (<span id="menu-save-count">0</span>)</span>
+          <span class="text-xs text-slate-400 group-hover:text-sky-400 group-hover:translate-x-1 transition">➔</span>
+        </button>
+
+        <button onclick="openSettingsModal()" class="w-full py-3 px-6 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs flex items-center justify-between group transition">
+          <span class="flex items-center gap-2">⚙️ Configurações</span>
+          <span class="text-xs text-slate-500 group-hover:translate-x-1 transition">➔</span>
+        </button>
+
+        <button onclick="toggleDiaryModal()" class="w-full py-3 px-6 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs flex items-center justify-between group transition">
+          <span class="flex items-center gap-2">📖 Manual & Economia</span>
+          <span class="text-xs text-slate-500 group-hover:translate-x-1 transition">➔</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Rodapé: Créditos & Atalhos -->
+    <div class="flex justify-between items-center text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-4">
+      <span>OIKONOMIA PROJECT © 2026 — MOTOR ESTRATÉGICO INTEGRADO</span>
+      <div class="flex gap-4">
+        <span>Atalho: <strong>ESPAÇO</strong> (Pausa)</span>
+        <span>Atalho: <strong>ESC</strong> (Menu / Fechar)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 3: WIZARD DE CRIAÇÃO DE NOVA EMPRESA & PERFIL                   -->
+  <!-- ======================================================================= -->
+  <div id="new-game-modal" class="fixed inset-0 z-[95] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+      <!-- Header do Wizard -->
+      <div class="bg-slate-800/90 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-emerald-950 border border-emerald-700 flex items-center justify-center text-lg">🚀</div>
+          <div>
+            <h2 class="text-sm font-bold text-emerald-300 font-mono">Fundar Nova Corporação</h2>
+            <p class="text-xs text-slate-400">Configure seu perfil corporativo, identidade visual e capital inicial</p>
+          </div>
+        </div>
+        <button onclick="closeNewGameWizard()" class="w-8 h-8 rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <!-- Conteúdo do Formulário -->
+      <div class="p-6 space-y-5 overflow-y-auto custom-scrollbar font-mono text-xs">
+        <!-- Nomes: Jogador & Empresa -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-slate-300 font-bold block flex justify-between">
+              <span>👤 Nome do Fundador / CEO:</span>
+              <button onclick="randomizePlayerName()" class="text-[10px] text-emerald-400 hover:underline">🎲 Sortear</button>
+            </label>
+            <input type="text" id="wiz-player-name" value="Arthur Vance" maxlength="28" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500" placeholder="Ex: Arthur Vance">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-slate-300 font-bold block flex justify-between">
+              <span>🏛️ Razão Social / Empresa:</span>
+              <button onclick="randomizeCompanyName()" class="text-[10px] text-emerald-400 hover:underline">🎲 Sortear</button>
+            </label>
+            <input type="text" id="wiz-company-name" value="OikoCorp Holding" maxlength="32" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500" placeholder="Ex: Apex Industries">
+          </div>
+        </div>
+
+        <!-- Seletor de Avatar (12 Opções Oficiais) -->
+        <div class="space-y-2">
+          <label class="text-slate-300 font-bold block">🎭 Foto de Perfil / Avatar Corporativo (12 Pré-definidos):</label>
+          <div id="wiz-avatar-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5"></div>
+        </div>
+
+        <!-- Seletor de Cor Corporativa -->
+        <div class="space-y-2">
+          <label class="text-slate-300 font-bold block">🎨 Identidade Visual / Cor da Marca:</label>
+          <div id="wiz-color-selector" class="flex flex-wrap gap-3"></div>
+        </div>
+
+        <!-- Aporte Inicial / Dificuldade -->
+        <div class="space-y-2">
+          <label class="text-slate-300 font-bold block">💰 Aporte de Capital & Dificuldade Macroeconômica:</label>
+          <div id="wiz-difficulty-selector" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+        </div>
+      </div>
+
+      <!-- Rodapé do Wizard -->
+      <div class="bg-slate-950 border-t border-slate-800 px-6 py-4 flex items-center justify-between font-mono">
+        <button onclick="closeNewGameWizard()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs">Cancelar</button>
+        <button onclick="startNewGameFromWizard()" class="px-7 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-xs shadow-lg shadow-emerald-900/30 flex items-center gap-2">
+          <span>Inaugurar Empresa</span>
+          <span>➔</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 4: GERENCIADOR DE SAVES & CARREGAMENTO (MULTI-SLOT + EXPORT/IMPORT)-->
+  <!-- ======================================================================= -->
+  <div id="save-load-modal" class="fixed inset-0 z-[95] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+      <!-- Header -->
+      <div class="bg-slate-800/90 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-sky-950 border border-sky-700 flex items-center justify-center text-lg">📂</div>
+          <div>
+            <h2 id="save-load-modal-title" class="text-sm font-bold text-sky-300 font-mono">Histórico de Arquivos Salvos</h2>
+            <p class="text-xs text-slate-400">Armazenamento local persistente + exportação de backups (.oiko)</p>
+          </div>
+        </div>
+        <button onclick="closeSaveLoadModal()" class="w-8 h-8 rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <!-- Barra de Ações Rápidas (Exportar / Importar / Novo Save) -->
+      <div class="bg-slate-950 border-b border-slate-800 px-6 py-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div class="flex items-center gap-2">
+          <button id="btn-create-new-save-slot" onclick="saveGameInNewSlot()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-1 shadow">
+            💾 Salvar em Novo Slot
+          </button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="exportSaveFile()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1" title="Baixar arquivo .oiko com todo o progresso">
+            ⬇️ Exportar (.oiko)
+          </button>
+          <label class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1 cursor-pointer" title="Importar arquivo .oiko ou .json">
+            ⬆️ Importar Backup
+            <input type="file" id="import-save-file-input" accept=".oiko,.json" class="hidden" onchange="handleImportSaveFile(event)">
+          </label>
+        </div>
+      </div>
+
+      <!-- Lista de Saves Rolável -->
+      <div id="saves-list-container" class="p-6 space-y-3 overflow-y-auto custom-scrollbar flex-1 font-mono text-xs"></div>
+
+      <!-- Rodapé -->
+      <div class="bg-slate-950 border-t border-slate-800 px-6 py-3 flex justify-between items-center text-xs font-mono text-slate-500">
+        <span>Saves ordenados cronologicamente: Mais recentes no topo</span>
+        <button onclick="closeSaveLoadModal()" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 5: MENU DE PAUSA (ESC)                                          -->
+  <!-- ======================================================================= -->
+  <div id="pause-menu-modal" class="fixed inset-0 z-[85] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col p-6 space-y-6">
+      <div class="text-center space-y-1">
+        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-2xl flex items-center justify-center mx-auto mb-2">
+          ⏸
+        </div>
+        <h2 class="text-xl font-black text-slate-100 font-sans tracking-wide">SIMULAÇÃO PAUSADA</h2>
+        <p id="pause-company-tag" class="text-xs text-emerald-400 font-mono">OikoCorp Holding • Arthur Vance</p>
+      </div>
+
+      <!-- Ações do Menu de Pausa -->
+      <div class="space-y-2.5 font-mono text-xs">
+        <button onclick="resumeGame()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold flex items-center justify-between shadow-lg shadow-emerald-900/20">
+          <span>▶ Retomar Jogo</span>
+          <span class="text-[10px] text-emerald-200">ESC</span>
+        </button>
+
+        <button onclick="quickSaveGame()" class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-100 font-bold flex items-center justify-between">
+          <span>💾 Salvar Progresso Rápido</span>
+          <span id="quicksave-status-badge" class="text-[10px] text-slate-400"></span>
+        </button>
+
+        <button onclick="openSaveLoadModal('save')" class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 flex items-center justify-between">
+          <span>📂 Gerenciar Slots de Salvar / Carregar</span>
+          <span>➔</span>
+        </button>
+
+        <button onclick="openSettingsModal()" class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 flex items-center justify-between">
+          <span>⚙️ Configurações & Volume</span>
+          <span>➔</span>
+        </button>
+
+        <button onclick="promptExitToMainMenu()" class="w-full py-3 px-4 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/80 text-rose-300 font-bold flex items-center justify-between transition mt-3">
+          <span>🚪 Sair para o Menu Principal</span>
+          <span>✕</span>
+        </button>
+      </div>
+
+      <div class="text-center text-[10px] font-mono text-slate-500 border-t border-slate-800 pt-3">
+        Pressione <strong>ESC</strong> para retomar a qualquer momento
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 6: MODAL DE CONFIRMAÇÃO DE SAÍDA (SEGURANÇA CONTRA PERDAS)      -->
+  <!-- ======================================================================= -->
+  <div id="confirm-exit-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col p-6 space-y-4 font-mono text-xs">
+      <div class="text-center space-y-2">
+        <div class="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-2xl flex items-center justify-center mx-auto">
+          ⚠️
+        </div>
+        <h3 class="text-base font-bold text-slate-100 font-sans">Deseja sair para o Menu Principal?</h3>
+        <p class="text-slate-400 text-xs">Qualquer progresso não salvo desde o último salvamento poderá ser perdido.</p>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <button onclick="saveAndExitToMainMenu()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2">
+          💾 Salvar e Sair
+        </button>
+        <button onclick="exitToMainMenuWithoutSaving()" class="w-full py-2.5 rounded-xl bg-rose-950/60 hover:bg-rose-900 border border-rose-800 text-rose-300 font-bold">
+          🚪 Sair Sem Salvar
+        </button>
+        <button onclick="closeConfirmExitModal()" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 7: MODAL DE CONFIGURAÇÕES (ÁUDIO, AUTOSAVE, INTERFACE)          -->
+  <!-- ======================================================================= -->
+  <div id="settings-modal" class="fixed inset-0 z-[96] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col font-mono text-xs">
+      <div class="bg-slate-800/90 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">⚙️ Configurações do Jogo</h3>
+        <button onclick="closeSettingsModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <div class="p-6 space-y-5">
+        <!-- Frequência de Auto-Save -->
+        <div class="space-y-1.5">
+          <label class="text-slate-300 font-bold block">💾 Salvamento Automático (Auto-Save):</label>
+          <select id="setting-autosave" onchange="saveGameSettings()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+            <option value="monthly">Ao final de cada mês (Recomendado)</option>
+            <option value="yearly">Apenas ao final de cada ano fiscal</option>
+            <option value="disabled">Desativado (Apenas manual)</option>
+          </select>
+        </div>
+
+        <!-- Volume de Efeitos Sonoros -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center">
+            <label class="text-slate-300 font-bold">🔊 Volume de Efeitos Sonoros (SFX):</label>
+            <span id="setting-sfx-label" class="text-emerald-400">70%</span>
+          </div>
+          <input type="range" id="setting-sfx-volume" min="0" max="1" step="0.05" value="0.7" oninput="saveGameSettings()" class="w-full accent-emerald-500">
+        </div>
+
+        <!-- Guia de Teclado e Acessibilidade -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-[11px] text-slate-400">
+          <span class="text-slate-200 font-bold block">🎮 Guia Rápido de Teclas & Acessibilidade:</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div><strong class="text-emerald-400">WASD / Setas</strong>: Mover Câmera</div>
+            <div><strong class="text-emerald-400">Q / E ou Scroll</strong>: Zoom In/Out</div>
+            <div><strong class="text-emerald-400">ESPAÇO</strong>: Pausar / Continuar</div>
+            <div><strong class="text-emerald-400">ESC</strong>: Fechar Janela / Pausa</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-950 border-t border-slate-800 px-6 py-3 flex justify-end">
+        <button onclick="closeSettingsModal()" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold">Pronto</button>
+      </div>
     </div>
   </div>
 
@@ -2168,15 +2535,120 @@
     }
 
     // ===========================================================================
-    // 3. ESTADO GLOBAL DO JOGO
+    // 3. ESTADO GLOBAL DO JOGO & MÁQUINA DE ESTADOS DE UI
     // ===========================================================================
+    let currentAppScreen = 'BOOT'; // 'BOOT', 'MAIN_MENU', 'PLAYING', 'PAUSED'
     let day = 1, month = 1, year = 1;
     let cash = 100000.00;
     let monthRevenue = 0, monthCogs = 0, monthFixedExpenses = 0, monthMarketingExpenses = 0;
     let gameSpeed = 0, timerInterval = null;
+    let previousSpeedBeforePause = 1;
+    let playtimeSeconds = 0;
+
+    let playerProfile = {
+      playerName: 'Arthur Vance',
+      companyName: 'OikoCorp Holding',
+      avatarId: 'human_ceo',
+      themeColor: 'emerald',
+      difficulty: 'standard'
+    };
+
+    let currentSaveSlotId = null;
+    let lastSavedStateSnapshot = null;
+    let gameSettings = {
+      autoSave: 'monthly',
+      sfxVolume: 0.7
+    };
 
     const playerBrandRating = {};
     const activeMarketingContracts = new Set();
+
+    // Catálogo dos 12 Avatares Oficiais (4 Humanos, 4 Animais, 4 Robôs)
+    const AVATAR_CATALOG = [
+      { id: 'human_ceo',    category: 'Humanos',   name: 'Executivo Magnata',     emoji: '👨‍💼', desc: 'Estrategista corporativo e fusões.' },
+      { id: 'human_tech',   category: 'Humanos',   name: 'Diretora de Inovação',  emoji: '👩‍🔬', desc: 'P&D industrial e chips de alta densidade.' },
+      { id: 'human_miner',  category: 'Humanos',   name: 'Barão da Mineração',    emoji: '👷‍♂️', desc: 'Extração pesada de recursos e minérios.' },
+      { id: 'human_banker', category: 'Humanos',   name: 'Banqueira Financeira',  emoji: '👩‍💼', desc: 'Gestão de liquidez e expansão de crédito.' },
+      
+      { id: 'animal_fox',   category: 'Animais',   name: 'Raposa Estrategista',   emoji: '🦊', desc: 'Faro apurado para margens e arbitragem.' },
+      { id: 'animal_wolf',  category: 'Animais',   name: 'Lobo de Negócios',      emoji: '🐺', desc: 'Agressividade comercial e market share.' },
+      { id: 'animal_owl',   category: 'Animais',   name: 'Coruja Analista',       emoji: '🦉', desc: 'Auditoria de custos e eficiência contábil.' },
+      { id: 'animal_bull',  category: 'Animais',   name: 'Touro Trader',          emoji: '🐂', desc: 'Crescimento implacável e escala fabril.' },
+
+      { id: 'robot_alpha',  category: 'Robôs & IA',name: 'Androide Alpha-9',      emoji: '🤖', desc: 'Logística autônoma e roteamento de frotas.' },
+      { id: 'robot_drone',  category: 'Robôs & IA',name: 'Drone Logístico',       emoji: '🛸', desc: 'Distribuição ultrarrápida de ponta a ponta.' },
+      { id: 'robot_core',   category: 'Robôs & IA',name: 'IA Oiko-Core',          emoji: '🧠', desc: 'Previsão de demanda macroeconômica.' },
+      { id: 'robot_mecha',  category: 'Robôs & IA',name: 'Mecha Industrial',      emoji: '🦾', desc: 'Automação pesada e manufatura 24/7.' }
+    ];
+
+    // Paletas de Cores Corporativas
+    const COLOR_PALETTES = [
+      { id: 'emerald', name: 'Esmeralda', hex: '#10b981', borderClass: 'border-emerald-500', bgClass: 'bg-emerald-500', textClass: 'text-emerald-400' },
+      { id: 'sky',     name: 'Safira',    hex: '#0284c7', borderClass: 'border-sky-500',     bgClass: 'bg-sky-500',     textClass: 'text-sky-400' },
+      { id: 'amber',   name: 'Dourado',   hex: '#f59e0b', borderClass: 'border-amber-500',   bgClass: 'bg-amber-500',   textClass: 'text-amber-400' },
+      { id: 'purple',  name: 'Cyberpunk', hex: '#a855f7', borderClass: 'border-purple-500',  bgClass: 'bg-purple-500',  textClass: 'text-purple-400' },
+      { id: 'rose',    name: 'Carmim',    hex: '#f43f5e', borderClass: 'border-rose-500',    bgClass: 'bg-rose-500',    textClass: 'text-rose-400' },
+      { id: 'cyan',    name: 'Titânio',   hex: '#06b6d4', borderClass: 'border-cyan-500',    bgClass: 'bg-cyan-500',    textClass: 'text-cyan-400' }
+    ];
+
+    // Predefinições de Dificuldade
+    const DIFFICULTY_PRESETS = [
+      { id: 'easy',     name: '🌱 Empreendedor',   startingCash: 250000, desc: 'Aporte de $250k. Expansão rápida e fôlego de caixa.' },
+      { id: 'standard', name: '🏛️ Magnata Padrão', startingCash: 100000, desc: 'Aporte de $100k. Experiência de mercado clássica.' },
+      { id: 'hard',     name: '⚡ Hardcore',       startingCash: 35000,  desc: 'Aporte de $35k. Margem de erro mínima e disciplina rígida.' }
+    ];
+
+    // Dicas Estratégicas para o Loading
+    const ECONOMIC_TIPS = [
+      "💡 Terrenos no Downtown (Centro) têm aluguel diário maior, mas tráfego massivo para produtos de alto giro.",
+      "💡 A integração vertical (Minas/Fazendas ➔ Fábricas ➔ Lojas) elimina intermediários e maximiza a rentabilidade.",
+      "💡 Produtos de primeira necessidade (Pão, Leite, Ovos) possuem demanda contínua mesmo durante flutuações.",
+      "💡 Contratar campanhas de publicidade na TV e Rádio expande seu Brand Rating em toda a região metropolitana.",
+      "💡 Portos Marítimos oferecem insumos internacionais com custo de frete baseado na distância até seu lote.",
+      "💡 Acompanhe periodicamente a DRE consolidada para garantir que suas receitas superem custos fixos e aluguéis.",
+      "💡 Desbloqueie Montargis ao atingir $500k de patrimônio e Várzea ao inaugurar sua primeira Fazenda em operação.",
+      "💡 O atalho ESPAÇO pausa e acelera a passagem do tempo. ESC fecha janelas ativas ou abre o Menu de Pausa.",
+      "💡 Salve seus jogos regularmente no navegador ou exporte arquivos .oiko para manter backups no computador.",
+      "💡 Vender ou demolir instalações deficitárias recupera parte do capital investido e zera despesas diárias de solo."
+    ];
+
+    // Gerador de Som Sintetizado (Web Audio API)
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playBeep(freq = 440, type = 'sine', duration = 0.08, gainVal = 0.05) {
+      try {
+        const vol = parseFloat(gameSettings.sfxVolume);
+        if (isNaN(vol) || vol <= 0) return;
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(gainVal * vol, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playSuccessChime() {
+      playBeep(523.25, 'triangle', 0.08, 0.08);
+      setTimeout(() => playBeep(659.25, 'triangle', 0.08, 0.08), 70);
+      setTimeout(() => playBeep(783.99, 'triangle', 0.12, 0.1), 140);
+    }
 
     let selectedTileX = -1, selectedTileY = -1;
     let hoveredTileX  = -1, hoveredTileY  = -1;
@@ -2195,7 +2667,18 @@
     let activeAddProductCategoryTab = 'Alimentos';
     let activeFactoryTile = null;
 
-    // ===========================================================================
+    // === SPARSE INDEX — tiles com instalações ativas (O(k) em vez de O(n²)) ===
+    // Chave: "x,y" | Valor: referência ao tile
+    const activeFacilitySet = new Map();
+    function _tileKey(x, y) { return `${x},${y}`; }
+    function _indexTile(tile) {
+      if (tile.store || tile.mine || tile.farm || tile.factory || tile.competitor) {
+        activeFacilitySet.set(_tileKey(tile.x, tile.y), tile);
+      } else {
+        activeFacilitySet.delete(_tileKey(tile.x, tile.y));
+      }
+    }
+
     // 4. MOTOR DO MAPA ISOMÉTRICO 128x128 & CIDADES DO OIKONOMIA
     // ===========================================================================
     const GRID_SIZE = (typeof MAP_WIDTH !== 'undefined') ? MAP_WIDTH : 128;
@@ -2226,11 +2709,7 @@
       }
       if (!unlockedCities.montargis && totalAssets >= 500000) {
         unlockedCities.montargis = true;
-        const btn = document.getElementById('btn-jump-montargis');
-        const lock = document.getElementById('lock-montargis');
-        if (btn) btn.classList.add('text-amber-300', 'font-bold');
-        if (lock) lock.textContent = '🔓';
-        addGameLog('🎉 CIDADE DESBLOQUEADA: Montargis atingiu o critério de $500k em patrimônio e agora está aberta para investimentos!');
+        addLog('🎉 CIDADE DESBLOQUEADA: Montargis atingiu o critério de $500k em patrimônio e agora está aberta para investimentos!', 'text-amber-400 font-bold');
       }
 
       // 2. Várzea: Pelo menos 1 Fazenda Ativa
@@ -2242,12 +2721,27 @@
       }
       if (!unlockedCities.varzea && farmCount >= 1) {
         unlockedCities.varzea = true;
-        const btn = document.getElementById('btn-jump-varzea');
-        const lock = document.getElementById('lock-varzea');
-        if (btn) btn.classList.add('text-amber-300', 'font-bold');
-        if (lock) lock.textContent = '🔓';
-        addGameLog('🎉 CIDADE DESBLOQUEADA: Várzea conectada ao cinturão agrícola pela sua primeira Fazenda em operação!');
+        addLog('🎉 CIDADE DESBLOQUEADA: Várzea conectada ao cinturão agrícola pela sua primeira Fazenda em operação!', 'text-emerald-400 font-bold');
       }
+
+      // Atualiza os botões e cadeados no HUD superior
+      const btnMont = document.getElementById('btn-jump-montargis');
+      const lockMont = document.getElementById('lock-montargis');
+      if (btnMont) {
+        btnMont.className = unlockedCities.montargis 
+          ? 'px-2 py-0.5 rounded text-amber-300 hover:bg-slate-800 font-bold' 
+          : 'px-2 py-0.5 rounded text-slate-400 hover:bg-slate-800';
+      }
+      if (lockMont) lockMont.textContent = unlockedCities.montargis ? '🔓' : '🔒';
+
+      const btnVarz = document.getElementById('btn-jump-varzea');
+      const lockVarz = document.getElementById('lock-varzea');
+      if (btnVarz) {
+        btnVarz.className = unlockedCities.varzea 
+          ? 'px-2 py-0.5 rounded text-emerald-300 hover:bg-slate-800 font-bold' 
+          : 'px-2 py-0.5 rounded text-slate-400 hover:bg-slate-800';
+      }
+      if (lockVarz) lockVarz.textContent = unlockedCities.varzea ? '🔓' : '🔒';
     }
 
     // Configuração dos Portos no Mapa 128x128
@@ -2277,7 +2771,14 @@
 
     // Identificador de Cidade por Proximidade
     function getCityForTile(x, y) {
-      if (typeof CITY_PROFILES_DATA === 'undefined') return { cityId: 'nova_atenas', cityName: 'Nova Atenas', wealthIndex: 85, isLocked: false };
+      if (typeof CITY_PROFILES_DATA === 'undefined') {
+        return {
+          cityId: 'nova_atenas',
+          cityName: 'Nova Atenas',
+          wealthIndex: 85,
+          get isLocked() { return !unlockedCities['nova_atenas']; }
+        };
+      }
       
       const cities = CITY_PROFILES_DATA.cities;
       let closest = cities[0];
@@ -2289,23 +2790,26 @@
           closest = c;
         }
       }
-      const isLocked = !unlockedCities[closest.id];
       return {
         cityId: closest.id,
         cityName: closest.name,
         wealthIndex: closest.economy.wealthIndex,
         priceElasticity: closest.economy.priceElasticity,
         distToCenter: minD,
-        isLocked: isLocked,
+        get isLocked() {
+          return !unlockedCities[closest.id];
+        },
         profile: closest
       };
     }
 
     // Inicialização da Matriz do Mundo 128x128
-    for (let x = 0; x < GRID_SIZE; x++) {
-      worldGrid[x] = [];
-      for (let y = 0; y < GRID_SIZE; y++) {
-        // Leitura dos blocos do Tiled (TMX)
+    function initWorldGrid() {
+      activeFacilitySet.clear();
+      for (let x = 0; x < GRID_SIZE; x++) {
+        worldGrid[x] = [];
+        for (let y = 0; y < GRID_SIZE; y++) {
+          // Leitura dos blocos do Tiled (TMX)
         const gidWater = (typeof TMX_LAYERS !== 'undefined' && TMX_LAYERS['01_Agua_Base']) ? TMX_LAYERS['01_Agua_Base'][y][x] : 0;
         const gidTerrain = (typeof TMX_LAYERS !== 'undefined' && TMX_LAYERS['02_Terreno_Relevo']) ? TMX_LAYERS['02_Terreno_Relevo'][y][x] : 4;
         const gidRes = (typeof TMX_LAYERS !== 'undefined' && TMX_LAYERS['03_Recursos_Naturais']) ? TMX_LAYERS['03_Recursos_Naturais'][y][x] : 0;
@@ -2431,8 +2935,11 @@
             lastShare: 0.40,
           } : null
         };
+        _indexTile(worldGrid[x][y]);
       }
     }
+    }
+    initWorldGrid();
 
     // ===========================================================================
     // 5. MOTOR DE RENDERIZAÇÃO ISOMÉTRICO (128x128 COM RADAR MINIMAP & FOG OF WAR)
@@ -2464,12 +2971,12 @@
       camera.zoom = 1.0;
       camera.panX = (r.width / 2) - (targetX - targetY) * (TILE_W / 2) * camera.zoom;
       camera.panY = (r.height / 2) - (targetX + targetY) * (TILE_H / 2) * camera.zoom;
-      renderMap();
+      scheduleRender();
     }
 
     function changeZoom(d) {
       camera.zoom = Math.min(2.4, Math.max(0.35, camera.zoom + d));
-      renderMap();
+      scheduleRender();
     }
 
     function gridToScreen(gx, gy) {
@@ -2591,12 +3098,25 @@
           const targetSy = (targetGx + targetGy) * (TILE_H / 2) * camera.zoom;
           camera.panX = (canvas.width / 2) - targetSx;
           camera.panY = (canvas.height / 2) - targetSy;
-          renderMap();
+          scheduleRender();
         });
       }
     });
 
+    // ===== rAF RENDER LOOP — Dirty flag elimina redesenhos desnecessários =====
+    let _needsRender = true;
+    function scheduleRender() { _needsRender = true; }
+    function _rafLoop() {
+      if (_needsRender) {
+        renderMap();
+        _needsRender = false;
+      }
+      requestAnimationFrame(_rafLoop);
+    }
+    requestAnimationFrame(_rafLoop);
+
     function renderMap() {
+
       const r = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, r.width, r.height);
       ctx.fillStyle = '#010d18'; ctx.fillRect(0, 0, r.width, r.height);
@@ -2690,7 +3210,16 @@
           }
 
           // Renderização de Edifícios 3D Isométricos
-          const hPx = tile.buildingHeight * camera.zoom;
+          let heightVal = tile.buildingHeight || 0;
+          if (tile.factory) heightVal = 22;
+          else if (tile.mine) heightVal = 20;
+          else if (tile.farm) heightVal = 18;
+          else if (tile.store) heightVal = 16;
+          else if (tile.competitor) heightVal = 18;
+          else if (tile.isPort) heightVal = 16;
+          else if (tile.isMedia) heightVal = 20;
+
+          const hPx = heightVal * camera.zoom;
           if (hPx > 0 && !tile.city.isLocked) {
             let topC='#38bdf8', leftC='#0284c7', rightC='#0369a1';
             if (tile.store) {
@@ -2831,7 +3360,7 @@
         if (btn) btn.innerHTML = '⛶ Expandir Mapa';
       }
       setTimeout(() => { resizeCanvas();
-    window.addEventListener('resize', resizeCanvas); renderMap(); }, 50);
+    window.addEventListener('resize', resizeCanvas); scheduleRender(); }, 50);
     }
 
     window.addEventListener('keydown', (e) => {
@@ -2872,7 +3401,7 @@
         if (activeKeys.has('d') || activeKeys.has('arrowright')) {
           camera.panX -= speed;
         }
-        renderMap();
+        scheduleRender();
       }
       requestAnimationFrame(updateKeyboardCamera);
     }
@@ -2892,7 +3421,7 @@
         const targetGy = Math.floor((my - mmY) * step);
         camera.panX = (r.width / 2) - (targetGx - targetGy) * (TILE_W / 2) * camera.zoom;
         camera.panY = (r.height / 2) - (targetGx + targetGy) * (TILE_H / 2) * camera.zoom;
-        renderMap();
+        scheduleRender();
         return;
       }
 
@@ -2915,7 +3444,7 @@
         camera.panX = e.clientX - camera.dragStartX;
         camera.panY = e.clientY - camera.dragStartY;
         tooltip.classList.add('hidden');
-        renderMap();
+        scheduleRender();
         return;
       }
 
@@ -2955,13 +3484,13 @@
         hoveredTileX = -1; hoveredTileY = -1;
         tooltip.classList.add('hidden');
       }
-      renderMap();
+      scheduleRender();
     });
 
     canvas.addEventListener('mouseleave', () => {
       hoveredTileX = -1; hoveredTileY = -1;
       tooltip.classList.add('hidden');
-      renderMap();
+      scheduleRender();
     });
 
     canvas.addEventListener('wheel', (e) => {
@@ -2987,7 +3516,7 @@
       if (tile.city.isLocked) {
         addGameLog(`🔒 Região de ${tile.city.cityName} bloqueada: ${tile.city.profile.unlockCondition.description}`);
         renderTileInspector(tile);
-        renderMap();
+        scheduleRender();
         return;
       }
 
@@ -3004,7 +3533,7 @@
       }
 
       renderTileInspector(tile);
-      renderMap();
+      scheduleRender();
     });
 
     // ===========================================================================
@@ -3128,11 +3657,12 @@
       tile.farm = null;
       tile.factory = null;
       tile.buildingHeight = 0;
+      _indexTile(tile);
 
       activeManagedTile = null;
       renderIdlePanel();
       renderTileInspector(tile);
-      renderMap();
+      scheduleRender();
       updateUI();
     }
 
@@ -3158,11 +3688,12 @@
       tile.farm = null;
       tile.factory = null;
       tile.buildingHeight = 0;
+      _indexTile(tile);
 
       activeManagedTile = null;
       renderIdlePanel();
       renderTileInspector(tile);
-      renderMap();
+      scheduleRender();
       updateUI();
     }
 
@@ -3480,13 +4011,14 @@
         maxCapacity: 8000
       };
       pendingTile.buildingHeight = 18;
+      _indexTile(pendingTile);
 
       addLog(`⛏️ ${m.name} inaugurada por $${m.cost.toLocaleString()}!`, 'text-sky-400 font-bold');
       closeMineModal();
       activeManagedTile = pendingTile;
       renderFacilityPanel(pendingTile);
       renderTileInspector(pendingTile);
-      renderMap();
+      scheduleRender();
       updateUI();
     }
 
@@ -3536,13 +4068,14 @@
         maxCapacity: 5000
       };
       pendingTile.buildingHeight = 18;
+      _indexTile(pendingTile);
 
       addLog(`🌾 ${ft.name} construída com sucesso por $${ft.cost.toLocaleString()}!`, 'text-amber-400 font-bold');
       closeFarmModal();
       activeManagedTile = pendingTile;
       renderFacilityPanel(pendingTile);
       renderTileInspector(pendingTile);
-      renderMap();
+      scheduleRender();
       updateUI();
     }
 
@@ -3568,13 +4101,14 @@
         lines: {}
       };
       pendingTile.buildingHeight = 22;
+      _indexTile(pendingTile);
 
       addLog(`🏭 Fábrica de Manufatura construída por $48.000!`, 'text-orange-400 font-bold');
       closeFactoryModal();
       activeManagedTile = pendingTile;
       renderFacilityPanel(pendingTile);
       renderTileInspector(pendingTile);
-      renderMap();
+      scheduleRender();
       updateUI();
     }
 
@@ -4008,6 +4542,7 @@
         shelves,
       };
       pendingTile.buildingHeight = 20;
+      _indexTile(pendingTile);
 
       addLog(`🏗️ ${storeName} inaugurada por $${totalCost.toLocaleString()}!`, 'text-emerald-400 font-bold');
 
@@ -4015,7 +4550,7 @@
       activeManagedTile = pendingTile;
       renderFacilityPanel(pendingTile);
       renderTileInspector(pendingTile);
-      renderMap();
+      scheduleRender();
       updateUI();
     }
 
@@ -4286,18 +4821,20 @@
     }
 
     function addLog(text, color = 'text-slate-300') {
-      const logs = document.getElementById('game-logs');
+      const logs = document.getElementById('game-log-floating') || document.getElementById('game-logs');
+      if (!logs) return;
       const item = document.createElement('div');
       item.className = color;
       item.innerText = `[${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')}/A${year}] ${text}`;
       logs.prepend(item);
-      while (logs.children.length > 60) logs.removeChild(logs.lastChild);
+      while (logs.children.length > 80) logs.removeChild(logs.lastChild);
     }
+    const addGameLog = addLog;
 
     function simulateDay() {
       let dailyRev = 0, dailyCogs = 0, dailyFixed = 0;
 
-      // Marketing
+      // Marketing (contrato por contrato — já é O(k))
       let dailyMarketing = 0;
       for (const contractKey of activeMarketingContracts) {
         const [outletId, prodId] = contractKey.split('::');
@@ -4307,85 +4844,84 @@
         }
       }
 
-      for (let x = 0; x < GRID_SIZE; x++) {
-        for (let y = 0; y < GRID_SIZE; y++) {
-          const tile = worldGrid[x][y];
-          const d = tile.district;
+      // === SPARSE INDEX: itera apenas tiles com instalações (O(k)) ===
+      for (const tile of activeFacilitySet.values()) {
+        const d = tile.district;
 
-          if (tile.store) dailyFixed += tile.store.dailyRent;
-          if (tile.mine) dailyFixed += tile.district.landRentDaily;
-          if (tile.farm) dailyFixed += tile.district.landRentDaily;
-          if (tile.factory) dailyFixed += tile.district.landRentDaily;
+        if (tile.store) dailyFixed += tile.store.dailyRent;
+        if (tile.mine)  dailyFixed += d.landRentDaily;
+        if (tile.farm)  dailyFixed += d.landRentDaily;
+        if (tile.factory) dailyFixed += d.landRentDaily;
 
-          // Produção de Minas
-          if (tile.mine) {
-            tile.mine.stock = Math.min(tile.mine.maxCapacity, tile.mine.stock + tile.mine.dailyYield);
+        // Produção de Minas
+        if (tile.mine) {
+          tile.mine.stock = Math.min(tile.mine.maxCapacity, tile.mine.stock + tile.mine.dailyYield);
+        }
+
+        // Produção de Fazendas
+        if (tile.farm) {
+          tile.farm.stock = Math.min(tile.farm.maxCapacity, tile.farm.stock + tile.farm.dailyYield);
+        }
+
+        // Produção de Fábricas
+        if (tile.factory) {
+          for (const line of Object.values(tile.factory.lines)) {
+            line.finishedStock = Math.min(line.maxStock, line.finishedStock + line.dailyCapacity);
           }
+        }
 
-          // Produção de Fazendas
-          if (tile.farm) {
-            tile.farm.stock = Math.min(tile.farm.maxCapacity, tile.farm.stock + tile.farm.dailyYield);
-          }
+        // Vendas no Varejo
+        if (tile.store) {
+          for (const [prodId, shelf] of Object.entries(tile.store.shelves)) {
+            const prod = PRODUCT_CATALOG[prodId];
+            if (!prod) continue;
+            const noise = 0.94 + Math.random() * 0.12;
+            const baseDem = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * noise;
+            const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
+            const brand = playerBrandRating[prodId] || 20;
+            const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
 
-          // Produção de Fábricas
-          if (tile.factory) {
-            for (const line of Object.values(tile.factory.lines)) {
-              line.finishedStock = Math.min(line.maxStock, line.finishedStock + line.dailyCapacity);
+            let compRating = 0;
+            const nb = worldGrid[tile.x+1]?.[tile.y]?.competitor || worldGrid[tile.x]?.[tile.y+1]?.competitor || worldGrid[tile.x]?.[tile.y]?.competitor;
+            if (nb?.shelves[prodId]) {
+              const cs = nb.shelves[prodId];
+              compRating = calcProductRating(prod, cs.price, cs.quality, cs.brand);
+            }
+
+            const pW = Math.pow(rating, 2);
+            const cW = Math.pow(compRating, 2);
+            const uW = Math.pow(25, 2);
+            const share = pW / (pW + cW + uW);
+
+            const potDemand = Math.floor(baseDem * elast * share);
+            const sold = Math.min(shelf.stock, potDemand);
+
+            if (shelf.stock === 0 && potDemand > 5 && Math.random() < 0.15)
+              addLog(`⚠ Stockout de "${prod.name}" na ${tile.store?.name ?? ''}!`, 'text-amber-400');
+
+            shelf.stock = Math.max(0, shelf.stock - sold);
+            dailyRev  += sold * shelf.price;
+            dailyCogs += sold * (shelf.landedCost || prod.baseCost);
+
+            const restock = Math.min(shelf.dailyRestock, shelf.maxCapacity - shelf.stock);
+            if (restock > 0) {
+              const rc = restock * (shelf.landedCost || prod.baseCost);
+              if (cash >= rc) { cash -= rc; shelf.stock += restock; }
             }
           }
+        }
 
-          // Vendas no Varejo
-          if (tile.store) {
-            for (const [prodId, shelf] of Object.entries(tile.store.shelves)) {
-              const prod = PRODUCT_CATALOG[prodId];
-              if (!prod) continue;
-              const noise = 0.94 + Math.random() * 0.12;
-              const baseDem = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * noise;
-              const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
-              const brand = playerBrandRating[prodId] || 20;
-              const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
-
-              let compRating = 0;
-              const nb = worldGrid[x+1]?.[y]?.competitor || worldGrid[x]?.[y+1]?.competitor || worldGrid[x]?.[y]?.competitor;
-              if (nb?.shelves[prodId]) {
-                const cs = nb.shelves[prodId];
-                compRating = calcProductRating(prod, cs.price, cs.quality, cs.brand);
-              }
-
-              const pW = Math.pow(rating, 2);
-              const cW = Math.pow(compRating, 2);
-              const uW = Math.pow(25, 2);
-              const share = pW / (pW + cW + uW);
-
-              const potDemand = Math.floor(baseDem * elast * share);
-              const sold = Math.min(shelf.stock, potDemand);
-
-              if (shelf.stock === 0 && potDemand > 5 && Math.random() < 0.15)
-                addLog(`⚠ Stockout de "${prod.name}" na ${tile.store?.name ?? ''}!`, 'text-amber-400');
-
-              shelf.stock = Math.max(0, shelf.stock - sold);
-              dailyRev  += sold * shelf.price;
-              dailyCogs += sold * (shelf.landedCost || prod.baseCost);
-
-              const restock = Math.min(shelf.dailyRestock, shelf.maxCapacity - shelf.stock);
-              if (restock > 0) {
-                const rc = restock * (shelf.landedCost || prod.baseCost);
-                if (cash >= rc) { cash -= rc; shelf.stock += restock; }
-              }
-            }
-          }
-
-          if (tile.competitor?.shelves) {
-            for (const [pId, cs] of Object.entries(tile.competitor.shelves)) {
-              const prod = PRODUCT_CATALOG[pId];
-              if (!prod) continue;
-              const noise = 0.90 + Math.random() * 0.15;
-              const baseDem = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * noise;
-              const cR = calcProductRating(prod, cs.price, cs.quality, cs.brand);
-              const cW = Math.pow(cR, 2);
-              const uW = Math.pow(25, 2);
-              tile.competitor.lastShare = cW / (cW + uW);
-            }
+        // Competidores (apenas tiles com competitor no índice)
+        if (tile.competitor?.shelves) {
+          for (const [pId, cs] of Object.entries(tile.competitor.shelves)) {
+            const prod = PRODUCT_CATALOG[pId];
+            if (!prod) continue;
+            const noise = 0.90 + Math.random() * 0.15;
+            const baseDem = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * noise;
+            const cR = calcProductRating(prod, cs.price, cs.quality, cs.brand);
+            const cW = Math.pow(cR, 2);
+            const uW = Math.pow(25, 2);
+            tile.competitor.lastShare = cW / (cW + uW);
           }
         }
       }
@@ -4397,7 +4933,7 @@
       monthMarketingExpenses += dailyMarketing;
 
       day++;
-      if (day > 30) { closeMonthEnd(); day = 1; month++; if (month > 12) { month = 1; year++; } }
+      if (day > 30) { closeMonthEnd(); checkAutoSave(); day = 1; month++; if (month > 12) { month = 1; year++; } }
 
       updateUI();
     }
@@ -4470,20 +5006,20 @@
     }
 
     window.addEventListener('keydown', (e) => {
-      if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
-        e.preventDefault();
-        setSpeed(gameSpeed === 0 ? 2 : 0);
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+        if (e.key === 'Escape') document.activeElement.blur();
+        return;
       }
+
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (currentAppScreen === 'PLAYING') {
+          setSpeed(gameSpeed === 0 ? 2 : 0);
+        }
+      }
+
       if (e.key === 'Escape') {
-        closeModal();
-        closePortModal();
-        closeSupplierModal();
-        closeAddProductModal();
-        closeMarketingModal();
-        closeMineModal();
-        closeFarmModal();
-        closeFactoryModal();
-        closeFactoryRecipeModal();
+        handleGlobalEscapeKey();
       }
     });
 
@@ -4497,12 +5033,15 @@
           ? 'px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-200'
           : 'px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200';
       }
-      renderMap();
+      scheduleRender();
     }
 
     function updateUI() {
-      document.getElementById('clock-date').textContent = `Dia ${String(day).padStart(2,'0')} / Mês ${String(month).padStart(2,'0')} / Ano ${year}`;
-      document.getElementById('corp-cash').textContent  = `$${cash.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+      const clockEl = document.getElementById('clock-date');
+      if (clockEl) clockEl.textContent = `Dia ${String(day).padStart(2,'0')} / Mês ${String(month).padStart(2,'0')} / Ano ${year}`;
+
+      const cashEl = document.getElementById('corp-cash');
+      if (cashEl) cashEl.textContent = `$${cash.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
 
       const totalContractedMonthlyMkt = getTotalMonthlyMarketingBudget();
       const badge = document.getElementById('active-campaigns-badge');
@@ -4513,19 +5052,15 @@
       }
 
       const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses;
-      const pe  = document.getElementById('month-profit');
-      pe.textContent = `${net >= 0 ? '+' : ''}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
-      pe.className = `text-lg font-mono font-bold ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      const pe = document.getElementById('month-profit');
+      if (pe) {
+        pe.textContent = `${net >= 0 ? '+' : ''}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+        pe.className = `text-xs font-bold leading-tight ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      }
 
-      document.getElementById('dre-month-label').textContent  = `Mês ${String(month).padStart(2,'0')}`;
-      document.getElementById('dre-revenue').textContent      = `+$${monthRevenue.toLocaleString('en-US',{minimumFractionDigits:2})}`;
-      document.getElementById('dre-cogs').textContent         = `-$${monthCogs.toLocaleString('en-US',{minimumFractionDigits:2})}`;
-      document.getElementById('dre-fixed').textContent        = `-$${monthFixedExpenses.toLocaleString('en-US',{minimumFractionDigits:2})}`;
-      document.getElementById('dre-marketing').textContent    = `-$${monthMarketingExpenses.toLocaleString('en-US',{minimumFractionDigits:2})}` + (totalContractedMonthlyMkt > 0 ? ` (Contratado: $${totalContractedMonthlyMkt.toLocaleString()}/mês)` : '');
-      
-      const dn = document.getElementById('dre-net-profit');
-      dn.textContent = `${net >= 0 ? '+' : ''}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2})}`;
-      dn.className = `text-sm font-black font-mono ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      syncDREValues(monthRevenue, monthCogs, monthFixedExpenses, monthMarketingExpenses, net);
+
+      checkCityUnlocks();
 
       if (activeManagedTile) renderFacilityPanel(activeManagedTile);
     }
@@ -4551,15 +5086,798 @@
       }
     }
 
-    window.addEventListener('resize', () => { resizeCanvas(); renderMap(); });
+    // ===========================================================================
+    // 14. SISTEMA DE PERSISTÊNCIA & GERENCIADOR DE SAVES (MULTI-SLOT & BACKUP)
+    // ===========================================================================
+    const SAVES_STORAGE_KEY = 'oikonomia_save_slots_v1';
+
+    function getSavesIndex() {
+      try {
+        const raw = localStorage.getItem(SAVES_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        console.error('Erro ao ler índice de saves:', e);
+        return [];
+      }
+    }
+
+    function saveSavesIndex(index) {
+      try {
+        localStorage.setItem(SAVES_STORAGE_KEY, JSON.stringify(index));
+      } catch (e) {
+        console.error('Erro ao salvar índice de saves:', e);
+      }
+    }
+
+    // Extrai apenas os lotes construídos para otimizar payload (saves com ~15-30 KB)
+    function extractBuiltTiles() {
+      const built = [];
+      for (let x = 0; x < GRID_SIZE; x++) {
+        for (let y = 0; y < GRID_SIZE; y++) {
+          const t = worldGrid[x] && worldGrid[x][y];
+          if (t && (t.store || t.mine || t.farm || t.factory || t.competitor)) {
+            built.push({
+              x, y,
+              store: t.store,
+              mine: t.mine,
+              farm: t.farm,
+              factory: t.factory,
+              competitor: t.competitor
+            });
+          }
+        }
+      }
+      return built;
+    }
+
+    // Aplica os lotes construídos sobre a malha 128x128
+    function applyBuiltTiles(builtArray) {
+      if (!Array.isArray(builtArray)) return;
+      activeFacilitySet.clear();
+      for (const b of builtArray) {
+        if (worldGrid[b.x] && worldGrid[b.x][b.y]) {
+          const t = worldGrid[b.x][b.y];
+          t.store = b.store || null;
+          t.mine = b.mine || null;
+          t.farm = b.farm || null;
+          t.factory = b.factory || null;
+          t.competitor = b.competitor || null;
+          if (t.store) t.buildingHeight = 16;
+          else if (t.mine) t.buildingHeight = 20;
+          else if (t.farm) t.buildingHeight = 18;
+          else if (t.factory) t.buildingHeight = 22;
+          else if (t.competitor) t.buildingHeight = 18;
+          _indexTile(t);
+        }
+      }
+    }
+
+    function serializeCurrentGame() {
+      return {
+        saveVersion: '0.7.0',
+        timestamp: new Date().toISOString(),
+        playerProfile: { ...playerProfile },
+        cash,
+        day,
+        month,
+        year,
+        unlockedCities: { ...unlockedCities },
+        playerBrandRating: { ...playerBrandRating },
+        activeMarketingContracts: Array.from(activeMarketingContracts),
+        builtTiles: extractBuiltTiles(),
+        playtimeSeconds
+      };
+    }
+
+    function saveGame(customSlotId = null) {
+      const state = serializeCurrentGame();
+      const slotId = customSlotId || currentSaveSlotId || (`slot_${Date.now()}`);
+      currentSaveSlotId = slotId;
+
+      const metadata = {
+        id: slotId,
+        companyName: playerProfile.companyName,
+        playerName: playerProfile.playerName,
+        avatarId: playerProfile.avatarId,
+        themeColor: playerProfile.themeColor,
+        cash: cash,
+        gameDate: `Dia ${day} / Mês ${month} / Ano ${year}`,
+        dateISO: state.timestamp,
+        builtCount: state.builtTiles.length
+      };
+
+      try {
+        localStorage.setItem(`oiko_save_${slotId}`, JSON.stringify(state));
+        
+        let index = getSavesIndex().filter(s => s.id !== slotId);
+        index.unshift(metadata);
+        saveSavesIndex(index);
+        
+        lastSavedStateSnapshot = state;
+        playSuccessChime();
+        addLog(`💾 JOGO SALVO: [${metadata.companyName}] registrado com sucesso.`, 'text-emerald-400 font-bold');
+        renderSavesCountInMenu();
+        return true;
+      } catch (e) {
+        alert('Aviso: Espaço de armazenamento local cheio ou indisponível.');
+        return false;
+      }
+    }
+
+    function saveGameInNewSlot() {
+      const newId = `slot_${Date.now()}`;
+      if (saveGame(newId)) {
+        renderSavesList();
+      }
+    }
+
+    function quickSaveGame() {
+      if (saveGame()) {
+        const badge = document.getElementById('quicksave-status-badge');
+        if (badge) {
+          badge.textContent = 'Salvo agora!';
+          badge.className = 'text-[10px] text-emerald-400 font-bold';
+          setTimeout(() => { if (badge) badge.textContent = ''; }, 3000);
+        }
+      }
+    }
+
+    function loadGameFromData(saveData) {
+      if (!saveData || !saveData.builtTiles) {
+        alert('Arquivo de save inválido ou incompatível.');
+        return false;
+      }
+
+      // Restaura dados do perfil
+      if (saveData.playerProfile) {
+        playerProfile = { ...playerProfile, ...saveData.playerProfile };
+      }
+
+      cash = Number(saveData.cash) || 100000;
+      day = Number(saveData.day) || 1;
+      month = Number(saveData.month) || 1;
+      year = Number(saveData.year) || 1;
+      playtimeSeconds = Number(saveData.playtimeSeconds) || 0;
+
+      if (saveData.unlockedCities) {
+        Object.assign(unlockedCities, saveData.unlockedCities);
+      }
+
+      if (saveData.playerBrandRating) {
+        Object.assign(playerBrandRating, saveData.playerBrandRating);
+      }
+
+      activeMarketingContracts.clear();
+      if (Array.isArray(saveData.activeMarketingContracts)) {
+        saveData.activeMarketingContracts.forEach(c => activeMarketingContracts.add(c));
+      }
+
+      // Reconstrói a malha base do mapa e aplica as instalações
+      initWorldGrid();
+      applyBuiltTiles(saveData.builtTiles);
+
+      updatePlayerProfileHUD();
+      checkCityUnlocks();
+      updateUI();
+      scheduleRender();
+
+      currentAppScreen = 'PLAYING';
+      hideMainMenu();
+      closeAllInGameModals();
+      setSpeed(1);
+      jumpToCity('nova_atenas');
+      addLog(`📂 SAVE CARREGADO: Empresa [${playerProfile.companyName}] iniciada.`, 'text-sky-300 font-bold');
+      return true;
+    }
+
+    function loadGameById(slotId) {
+      try {
+        const raw = localStorage.getItem(`oiko_save_${slotId}`);
+        if (!raw) {
+          alert('Save não encontrado.');
+          return;
+        }
+        const state = JSON.parse(raw);
+        currentSaveSlotId = slotId;
+        closeSaveLoadModal();
+        loadGameFromData(state);
+      } catch (e) {
+        alert('Erro ao carregar o arquivo salvo.');
+      }
+    }
+
+    function deleteSaveById(slotId, e) {
+      if (e) e.stopPropagation();
+      if (!confirm('Tem certeza que deseja excluir permanentemente este save?')) return;
+
+      try {
+        localStorage.removeItem(`oiko_save_${slotId}`);
+        let index = getSavesIndex().filter(s => s.id !== slotId);
+        saveSavesIndex(index);
+        if (currentSaveSlotId === slotId) currentSaveSlotId = null;
+        renderSavesList();
+        renderSavesCountInMenu();
+      } catch (err) {}
+    }
+
+    function exportSaveFile() {
+      const state = serializeCurrentGame();
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+      const downloadAnchor = document.createElement('a');
+      const dateStr = `${year}_M${String(month).padStart(2,'0')}_D${String(day).padStart(2,'0')}`;
+      const safeName = playerProfile.companyName.replace(/[^a-z0-9_-]/gi, '_');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `Oikonomia_${safeName}_${dateStr}.oiko`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      addLog(`📦 BACKUP EXPORTADO: Arquivo .oiko salvo no seu computador.`, 'text-amber-300');
+    }
+
+    function handleImportSaveFile(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const state = JSON.parse(e.target.result);
+          if (loadGameFromData(state)) {
+            // Salva no armazenamento local também
+            saveGame();
+          }
+        } catch (err) {
+          alert('Arquivo de save corrompido ou formato não suportado.');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function checkAutoSave() {
+      if (gameSettings.autoSave === 'disabled') return;
+      if (gameSettings.autoSave === 'yearly' && month !== 12) return;
+      saveGame();
+    }
+
+    // ===========================================================================
+    // 15. GERENCIADOR DE TELAS: BOOT LOADER & MAIN MENU
+    // ===========================================================================
+    let loadingTipTimer = null;
+    function startBootSequence() {
+      currentAppScreen = 'BOOT';
+      const loadingScreen = document.getElementById('loading-screen');
+      const barFill = document.getElementById('loading-bar-fill');
+      const pctText = document.getElementById('loading-pct-text');
+      const statusText = document.getElementById('loading-status-text');
+
+      if (!loadingScreen) return;
+      loadingScreen.classList.remove('hidden', 'opacity-0');
+
+      let progress = 0;
+      rotateLoadingTip();
+      loadingTipTimer = setInterval(rotateLoadingTip, 2600);
+
+      // Carregamento imersivo de ~6.5 segundos (65 passos de 100ms)
+      const interval = setInterval(() => {
+        progress += (Math.random() * 1.3) + 1.1;
+        if (progress > 100) progress = 100;
+
+        const currentPct = Math.floor(progress);
+        if (barFill) barFill.style.width = `${currentPct}%`;
+        if (pctText) pctText.textContent = `${currentPct}%`;
+
+        if (progress < 20 && statusText) statusText.textContent = 'Carregando malha metropolitana e distritos...';
+        else if (progress < 45 && statusText) statusText.textContent = 'Compilando catálogo de 70+ produtos & fórmulas econômicas...';
+        else if (progress < 70 && statusText) statusText.textContent = 'Simulando redes logísticas, portos e fretes...';
+        else if (progress < 90 && statusText) statusText.textContent = 'Indexando dados corporativos e saves locais...';
+        else if (statusText) statusText.textContent = 'Sincronizando mercado financeiro... Tudo pronto!';
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          clearInterval(loadingTipTimer);
+
+          // Revela o Menu Principal ANTES do fade-out para evitar que o mapa apareça no fundo
+          showMainMenu();
+
+          setTimeout(() => {
+            loadingScreen.classList.add('opacity-0');
+            setTimeout(() => {
+              loadingScreen.classList.add('hidden');
+            }, 750);
+          }, 450);
+        }
+      }, 100);
+    }
+
+    function rotateLoadingTip() {
+      const el = document.getElementById('loading-tip-text');
+      if (!el) return;
+      el.style.opacity = '0';
+      setTimeout(() => {
+        const tip = ECONOMIC_TIPS[Math.floor(Math.random() * ECONOMIC_TIPS.length)];
+        el.textContent = tip;
+        el.style.opacity = '1';
+      }, 200);
+    }
+
+    function showMainMenu() {
+      currentAppScreen = 'MAIN_MENU';
+      const menu = document.getElementById('main-menu-screen');
+      if (menu) menu.classList.remove('hidden');
+      renderSavesCountInMenu();
+
+      const saves = getSavesIndex();
+      const btnContinue = document.getElementById('btn-menu-continue');
+      if (btnContinue) {
+        btnContinue.disabled = (saves.length === 0);
+      }
+    }
+
+    function hideMainMenu() {
+      const menu = document.getElementById('main-menu-screen');
+      if (menu) menu.classList.add('hidden');
+    }
+
+    function continueLastGame() {
+      const saves = getSavesIndex();
+      if (saves.length > 0) {
+        loadGameById(saves[0].id);
+      } else {
+        openNewGameWizard();
+      }
+    }
+
+    // ===========================================================================
+    // 16. WIZARD DE NOVA EMPRESA & PERFIL
+    // ===========================================================================
+    let selectedWizAvatarId = 'human_ceo';
+    let selectedWizColorId = 'emerald';
+    let selectedWizDifficultyId = 'standard';
+
+    const RANDOM_CEO_NAMES = [
+      'Arthur Vance', 'Helena Roitman', 'Kaelen Voss', 'Diana Sterling',
+      'Valentin Cruz', 'Beatriz Castilho', 'Morgan Drake', 'Lorena Thorne'
+    ];
+
+    const RANDOM_COMPANY_NAMES = [
+      'OikoCorp Holding', 'Apex Industrial Group', 'Vanguard S.A.', 'Metrópole Varejo',
+      'Aura Supply & Logística', 'Titanium Manufatura', 'Solaris Alimentos', 'Caelum Capital'
+    ];
+
+    function randomizePlayerName() {
+      const name = RANDOM_CEO_NAMES[Math.floor(Math.random() * RANDOM_CEO_NAMES.length)];
+      const input = document.getElementById('wiz-player-name');
+      if (input) input.value = name;
+    }
+
+    function randomizeCompanyName() {
+      const name = RANDOM_COMPANY_NAMES[Math.floor(Math.random() * RANDOM_COMPANY_NAMES.length)];
+      const input = document.getElementById('wiz-company-name');
+      if (input) input.value = name;
+    }
+
+    function openNewGameWizard() {
+      selectedWizAvatarId = 'human_ceo';
+      selectedWizColorId = 'emerald';
+      selectedWizDifficultyId = 'standard';
+
+      randomizePlayerName();
+      randomizeCompanyName();
+
+      renderWizAvatars();
+      renderWizColors();
+      renderWizDifficulties();
+
+      const modal = document.getElementById('new-game-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeNewGameWizard() {
+      const modal = document.getElementById('new-game-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function renderWizAvatars() {
+      const container = document.getElementById('wiz-avatar-grid');
+      if (!container) return;
+
+      container.innerHTML = AVATAR_CATALOG.map(av => {
+        const isSel = av.id === selectedWizAvatarId;
+        return `
+          <button onclick="selectWizAvatar('${av.id}')" class="p-2.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 ${
+            isSel ? 'bg-emerald-950/80 border-emerald-400 shadow-lg shadow-emerald-900/30' : 'bg-slate-950/80 border-slate-800 hover:border-slate-600'
+          }">
+            <span class="text-2xl block">${av.emoji}</span>
+            <span class="text-[9px] font-bold text-slate-200 truncate w-full block">${av.name}</span>
+            <span class="text-[8px] text-slate-500 block">${av.category}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectWizAvatar(id) {
+      selectedWizAvatarId = id;
+      renderWizAvatars();
+      playBeep(480, 'sine', 0.05);
+    }
+
+    function renderWizColors() {
+      const container = document.getElementById('wiz-color-selector');
+      if (!container) return;
+
+      container.innerHTML = COLOR_PALETTES.map(c => {
+        const isSel = c.id === selectedWizColorId;
+        return `
+          <button onclick="selectWizColor('${c.id}')" class="flex items-center gap-2 px-3 py-1.5 rounded-xl border transition ${
+            isSel ? 'border-white bg-slate-800 font-bold' : 'border-slate-800 bg-slate-950/80 text-slate-400'
+          }">
+            <span class="w-3.5 h-3.5 rounded-full" style="background-color: ${c.hex}"></span>
+            <span>${c.name}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectWizColor(id) {
+      selectedWizColorId = id;
+      renderWizColors();
+      playBeep(520, 'sine', 0.05);
+    }
+
+    function renderWizDifficulties() {
+      const container = document.getElementById('wiz-difficulty-selector');
+      if (!container) return;
+
+      container.innerHTML = DIFFICULTY_PRESETS.map(d => {
+        const isSel = d.id === selectedWizDifficultyId;
+        return `
+          <button onclick="selectWizDifficulty('${d.id}')" class="p-3 rounded-2xl border text-left transition space-y-1 ${
+            isSel ? 'bg-emerald-950/60 border-emerald-400 shadow-md' : 'bg-slate-950/80 border-slate-800 hover:border-slate-700'
+          }">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-slate-100 text-xs">${d.name}</span>
+              <span class="text-[10px] text-emerald-400 font-mono">$${(d.startingCash/1000).toFixed(0)}k</span>
+            </div>
+            <p class="text-[10px] text-slate-400 leading-tight">${d.desc}</p>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectWizDifficulty(id) {
+      selectedWizDifficultyId = id;
+      renderWizDifficulties();
+      playBeep(580, 'sine', 0.05);
+    }
+
+    function startNewGameFromWizard() {
+      const pName = document.getElementById('wiz-player-name')?.value.trim() || 'Arthur Vance';
+      const cName = document.getElementById('wiz-company-name')?.value.trim() || 'OikoCorp Holding';
+
+      const diff = DIFFICULTY_PRESETS.find(d => d.id === selectedWizDifficultyId) || DIFFICULTY_PRESETS[1];
+
+      playerProfile = {
+        playerName: pName,
+        companyName: cName,
+        avatarId: selectedWizAvatarId,
+        themeColor: selectedWizColorId,
+        difficulty: selectedWizDifficultyId
+      };
+
+      cash = diff.startingCash;
+      day = 1;
+      month = 1;
+      year = 1;
+      playtimeSeconds = 0;
+      currentSaveSlotId = null;
+
+      unlockedCities.nova_atenas = true;
+      unlockedCities.porto_real = true;
+      unlockedCities.montargis = false;
+      unlockedCities.varzea = false;
+
+      activeMarketingContracts.clear();
+      Object.keys(PRODUCT_CATALOG).forEach(id => playerBrandRating[id] = 20);
+
+      initWorldGrid();
+      closeNewGameWizard();
+      hideMainMenu();
+      updatePlayerProfileHUD();
+      updateUI();
+      scheduleRender();
+
+      currentAppScreen = 'PLAYING';
+      setSpeed(1);
+      jumpToCity('nova_atenas');
+      playSuccessChime();
+      addLog(`🎉 NOVA EMPRESA FUNDADA: Bem-vindo ao comando de ${playerProfile.companyName}!`, 'text-emerald-400 font-bold');
+    }
+
+    function updatePlayerProfileHUD() {
+      const avatarObj = AVATAR_CATALOG.find(a => a.id === playerProfile.avatarId) || AVATAR_CATALOG[0];
+      const avEl = document.getElementById('hud-player-avatar');
+      const compEl = document.getElementById('hud-company-name');
+      const nameEl = document.getElementById('hud-player-name');
+
+      if (avEl) avEl.textContent = avatarObj.emoji;
+      if (compEl) compEl.textContent = playerProfile.companyName;
+      if (nameEl) nameEl.textContent = playerProfile.playerName;
+
+      const pauseTag = document.getElementById('pause-company-tag');
+      if (pauseTag) pauseTag.textContent = `${playerProfile.companyName} • ${playerProfile.playerName}`;
+    }
+
+    // ===========================================================================
+    // 17. MENU DE PAUSA & CONFIRMAÇÃO DE SAÍDA (ESC)
+    // ===========================================================================
+    function togglePauseMenu() {
+      if (currentAppScreen === 'MAIN_MENU' || currentAppScreen === 'BOOT') return;
+
+      if (currentAppScreen === 'PAUSED') {
+        resumeGame();
+      } else {
+        pauseGameAndShowMenu();
+      }
+    }
+
+    function pauseGameAndShowMenu() {
+      previousSpeedBeforePause = gameSpeed || 1;
+      setSpeed(0);
+      currentAppScreen = 'PAUSED';
+      const modal = document.getElementById('pause-menu-modal');
+      if (modal) modal.classList.remove('hidden');
+      updatePlayerProfileHUD();
+    }
+
+    function resumeGame() {
+      const modal = document.getElementById('pause-menu-modal');
+      if (modal) modal.classList.add('hidden');
+      currentAppScreen = 'PLAYING';
+      setSpeed(previousSpeedBeforePause || 1);
+    }
+
+    function promptExitToMainMenu() {
+      const confirmModal = document.getElementById('confirm-exit-modal');
+      if (confirmModal) confirmModal.classList.remove('hidden');
+    }
+
+    function closeConfirmExitModal() {
+      const confirmModal = document.getElementById('confirm-exit-modal');
+      if (confirmModal) confirmModal.classList.add('hidden');
+    }
+
+    function saveAndExitToMainMenu() {
+      saveGame();
+      closeConfirmExitModal();
+      const pauseModal = document.getElementById('pause-menu-modal');
+      if (pauseModal) pauseModal.classList.add('hidden');
+      showMainMenu();
+    }
+
+    function exitToMainMenuWithoutSaving() {
+      closeConfirmExitModal();
+      const pauseModal = document.getElementById('pause-menu-modal');
+      if (pauseModal) pauseModal.classList.add('hidden');
+      showMainMenu();
+    }
+
+    function handleGlobalEscapeKey() {
+      // Prioridade 1: Modal de Confirmação de Saída
+      const confirmModal = document.getElementById('confirm-exit-modal');
+      if (confirmModal && !confirmModal.classList.contains('hidden')) {
+        closeConfirmExitModal();
+        return;
+      }
+
+      // Prioridade 2: Modal de Configurações
+      const setModal = document.getElementById('settings-modal');
+      if (setModal && !setModal.classList.contains('hidden')) {
+        closeSettingsModal();
+        return;
+      }
+
+      // Prioridade 3: Modal de Saves
+      const saveModal = document.getElementById('save-load-modal');
+      if (saveModal && !saveModal.classList.contains('hidden')) {
+        closeSaveLoadModal();
+        return;
+      }
+
+      // Prioridade 4: Wizard de Nova Empresa
+      const wizModal = document.getElementById('new-game-modal');
+      if (wizModal && !wizModal.classList.contains('hidden')) {
+        closeNewGameWizard();
+        return;
+      }
+
+      // Prioridade 5: Modais em jogo e janelas flutuantes
+      const openInGameModals = [
+        'floating-facility-window', 'store-modal', 'mine-modal', 'farm-modal',
+        'factory-modal', 'factory-recipe-modal', 'port-modal', 'supplier-modal',
+        'add-product-modal', 'marketing-modal', 'dre-modal', 'diary-modal'
+      ];
+      let closedAny = false;
+      for (const id of openInGameModals) {
+        const el = document.getElementById(id);
+        if (el && !el.classList.contains('hidden')) {
+          el.classList.add('hidden');
+          closedAny = true;
+        }
+      }
+      if (closedAny) return;
+
+      // Prioridade 6: Menu de Pausa
+      if (currentAppScreen === 'PAUSED') {
+        resumeGame();
+      } else if (currentAppScreen === 'PLAYING') {
+        pauseGameAndShowMenu();
+      }
+    }
+
+    function closeAllInGameModals() {
+      const openInGameModals = [
+        'floating-facility-window', 'store-modal', 'mine-modal', 'farm-modal',
+        'factory-modal', 'factory-recipe-modal', 'port-modal', 'supplier-modal',
+        'add-product-modal', 'marketing-modal', 'dre-modal', 'diary-modal',
+        'confirm-exit-modal', 'save-load-modal', 'settings-modal', 'new-game-modal'
+      ];
+      for (const id of openInGameModals) {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      }
+    }
+
+    // ===========================================================================
+    // 18. GERENCIADOR DE SLOTS DE SAVE / LOAD UI
+    // ===========================================================================
+    let currentSaveLoadMode = 'load';
+
+    function openSaveLoadModal(mode = 'load') {
+      currentSaveLoadMode = mode;
+      const modal = document.getElementById('save-load-modal');
+      const title = document.getElementById('save-load-modal-title');
+      const btnNew = document.getElementById('btn-create-new-save-slot');
+
+      if (title) title.textContent = mode === 'save' ? '💾 Salvar Jogo nos Slots' : '📂 Carregar Jogo do Histórico';
+      if (btnNew) btnNew.style.display = (mode === 'save' || currentAppScreen === 'PAUSED' || currentAppScreen === 'PLAYING') ? 'inline-flex' : 'none';
+
+      renderSavesList();
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeSaveLoadModal() {
+      const modal = document.getElementById('save-load-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function renderSavesList() {
+      const container = document.getElementById('saves-list-container');
+      if (!container) return;
+
+      const saves = getSavesIndex();
+      if (saves.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-slate-500 space-y-2">
+            <span class="text-3xl block">📭</span>
+            <p>Nenhum jogo salvo encontrado no histórico local.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = saves.map((s, idx) => {
+        const av = AVATAR_CATALOG.find(a => a.id === s.avatarId) || AVATAR_CATALOG[0];
+        const dateFormatted = new Date(s.dateISO).toLocaleString('pt-BR');
+        const isCurrent = s.id === currentSaveSlotId;
+
+        return `
+          <div class="p-4 rounded-2xl border transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
+            isCurrent ? 'bg-slate-800/90 border-emerald-500/70 shadow-lg' : 'bg-slate-950/80 border-slate-800 hover:border-slate-700'
+          }">
+            <div class="flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-2xl bg-slate-900 border border-slate-700 flex items-center justify-center text-2xl shadow">
+                ${av.emoji}
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h4 class="font-bold text-slate-100 text-sm">${s.companyName}</h4>
+                  ${isCurrent ? '<span class="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-800">ATUAL</span>' : ''}
+                </div>
+                <div class="text-[10px] text-slate-400 flex flex-wrap gap-2 mt-0.5">
+                  <span>👤 ${s.playerName}</span>
+                  <span>•</span>
+                  <span class="text-emerald-400 font-bold">$${(s.cash || 0).toLocaleString('en-US',{maximumFractionDigits:0})}</span>
+                  <span>•</span>
+                  <span>🗓️ ${s.gameDate}</span>
+                </div>
+                <span class="text-[9px] text-slate-500 block mt-1">Salvo em: ${dateFormatted} (${s.builtCount || 0} instalações)</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 self-end sm:self-center font-mono">
+              <button onclick="loadGameById('${s.id}')" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow flex items-center gap-1">
+                📂 Carregar
+              </button>
+              ${currentSaveLoadMode === 'save' ? `
+                <button onclick="saveGame('${s.id}')" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs" title="Sobrescrever este slot">
+                  💾 Sobrescrever
+                </button>
+              ` : ''}
+              <button onclick="deleteSaveById('${s.id}', event)" class="p-2 rounded-xl bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-slate-700" title="Excluir save">
+                🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderSavesCountInMenu() {
+      const saves = getSavesIndex();
+      const countEl = document.getElementById('menu-save-count');
+      if (countEl) countEl.textContent = saves.length;
+    }
+
+    // ===========================================================================
+    // 19. CONFIGURAÇÕES DO JOGO (ÁUDIO & AUTOSAVE)
+    // ===========================================================================
+    const SETTINGS_STORAGE_KEY = 'oikonomia_settings_v1';
+
+    function loadGameSettings() {
+      try {
+        const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
+        if (raw) Object.assign(gameSettings, JSON.parse(raw));
+      } catch (e) {}
+
+      const autoEl = document.getElementById('setting-autosave');
+      const sfxEl = document.getElementById('setting-sfx-volume');
+      const lbl = document.getElementById('setting-sfx-label');
+
+      if (autoEl) autoEl.value = gameSettings.autoSave || 'monthly';
+      if (sfxEl) sfxEl.value = gameSettings.sfxVolume !== undefined ? gameSettings.sfxVolume : 0.7;
+      if (lbl) lbl.textContent = `${Math.round((gameSettings.sfxVolume !== undefined ? gameSettings.sfxVolume : 0.7) * 100)}%`;
+    }
+
+    function saveGameSettings() {
+      const autoEl = document.getElementById('setting-autosave');
+      const sfxEl = document.getElementById('setting-sfx-volume');
+      const lbl = document.getElementById('setting-sfx-label');
+
+      if (autoEl) gameSettings.autoSave = autoEl.value;
+      if (sfxEl) {
+        gameSettings.sfxVolume = parseFloat(sfxEl.value);
+        if (lbl) lbl.textContent = `${Math.round(gameSettings.sfxVolume * 100)}%`;
+      }
+
+      try {
+        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(gameSettings));
+      } catch (e) {}
+    }
+
+    function openSettingsModal() {
+      loadGameSettings();
+      const modal = document.getElementById('settings-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeSettingsModal() {
+      const modal = document.getElementById('settings-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    window.addEventListener('resize', () => { resizeCanvas(); scheduleRender(); });
 
     setTimeout(async () => {
+      loadGameSettings();
       await initMasterData();
       resizeCanvas();
       resetCamera();
       renderTileInspector(null);
       renderIdlePanel();
+      updatePlayerProfileHUD();
       updateUI();
+      startBootSequence();
     }, 50);
   </script>
 </body>
