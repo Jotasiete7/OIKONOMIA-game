@@ -190,7 +190,7 @@
         🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
       </button>
       <span id="telemetry-version-badge" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-bold text-[9px]" title="Versão Oficial do Jogo & Build">
-        🏛️ OIKONOMIA <span class="text-emerald-400">v0.7.4</span> <span class="text-slate-500 text-[8px]">bld.20260827.06</span>
+        🏛️ OIKONOMIA <span class="text-emerald-400">v0.7.4</span> <span class="text-slate-500 text-[8px]">bld.20260827.07</span>
       </span>
     </div>
   </footer>
@@ -880,7 +880,7 @@
           <div class="w-8 h-8 rounded-xl bg-indigo-950 border border-indigo-700/60 flex items-center justify-center text-sm">🛠️</div>
           <div>
             <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">Painel de Desenvolvimento & Diagnóstico</h3>
-            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.7.4 · Build 20260827.06 (Oficial)</span>
+            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.7.4 · Build 20260827.07 (Oficial)</span>
           </div>
         </div>
         <button onclick="closeDevDashboard()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
@@ -900,7 +900,7 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Versão Oficial</span>
-              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.7.4 (bld.20260827.06)</span>
+              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.7.4 (bld.20260827.07)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Schema de Saves</span>
@@ -2060,14 +2060,16 @@
         let buttonsHtml = '';
         if (isLocked) {
           buttonsHtml = '<span class="text-rose-400 font-bold text-[9px] bg-rose-950/80 px-2 py-0.5 rounded border border-rose-800">🔒 Região Bloqueada</span>';
-        } else if (tile.store) {
-          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-teal-700 hover:bg-teal-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🛒 Gerir Loja</button>`;
-        } else if (tile.mine) {
-          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">⛏️ Gerir Mina</button>`;
-        } else if (tile.farm) {
-          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🌾 Gerir Fazenda</button>`;
-        } else if (tile.factory) {
-          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-700 hover:bg-orange-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🏭 Gerir Fábrica</button>`;
+        } else if (tile.store || tile.mine || tile.farm || tile.factory) {
+          const val = calculateFacilityValue(tile);
+          const icon = tile.store ? '🛒' : (tile.mine ? '⛏️' : (tile.farm ? '🌾' : '🏭'));
+          const label = tile.store ? 'Loja' : (tile.mine ? 'Mina' : (tile.farm ? 'Fazenda' : 'Fábrica'));
+          const bg = tile.store ? 'bg-teal-700 hover:bg-teal-600' : (tile.mine ? 'bg-sky-700 hover:bg-sky-600' : (tile.farm ? 'bg-amber-700 hover:bg-amber-600' : 'bg-orange-700 hover:bg-orange-600'));
+          buttonsHtml = `
+            <button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="${bg} text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">${icon} Gerir ${label}</button>
+            <button onclick="sellFacility(${tile.x}, ${tile.y})" class="bg-emerald-950 hover:bg-emerald-900 border border-emerald-700/80 text-emerald-300 font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer" title="Vender instalação (+estoque)">💰 Vender (+$${(val.sellValue/1000).toFixed(1)}k)</button>
+            <button onclick="demolishFacility(${tile.x}, ${tile.y})" class="bg-rose-950 hover:bg-rose-900 border border-rose-800/80 text-rose-300 font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer" title="Demolir edifício">🗑️ Demolir</button>
+          `;
         } else if (tile.isPort) {
           buttonsHtml = `<button onclick="openPortModal(worldGrid[${tile.x}][${tile.y}].portData)" class="bg-yellow-700 hover:bg-yellow-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">⚓ Ver Cargas</button>`;
         } else if (tile.isMedia) {
@@ -2326,6 +2328,35 @@
       else renderIdlePanel();
     }
 
+    function renderFacilityFooterActions(tile, extraTopHtml = '') {
+      const addRow = document.getElementById('facility-action-row');
+      if (!addRow) return;
+
+      if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory)) {
+        addRow.classList.add('hidden');
+        addRow.innerHTML = '';
+        return;
+      }
+
+      const val = calculateFacilityValue(tile);
+      addRow.classList.remove('hidden');
+      addRow.innerHTML = `
+        ${extraTopHtml}
+        <div class="grid grid-cols-2 gap-2 pt-1.5 border-t border-slate-800">
+          <button onclick="sellFacility(${tile.x}, ${tile.y})"
+            class="w-full text-center text-xs font-bold text-emerald-300 hover:text-white bg-emerald-950/70 hover:bg-emerald-800/90 font-mono py-2 rounded-xl border border-emerald-700/70 shadow transition cursor-pointer flex items-center justify-center gap-1"
+            title="Vender instalação comercial e liquidar mercadorias em caixa">
+            💰 Vender (+$${val.sellValue.toLocaleString()})
+          </button>
+          <button onclick="demolishFacility(${tile.x}, ${tile.y})"
+            class="w-full text-center text-xs font-bold text-rose-300 hover:text-white bg-rose-950/70 hover:bg-rose-800/90 font-mono py-2 rounded-xl border border-rose-800/70 shadow transition cursor-pointer flex items-center justify-center gap-1"
+            title="Demolir estrutura física, recuperar sucata e cancelar aluguel diário">
+            🗑️ Demolir (+$${val.salvageValue.toLocaleString()})
+          </button>
+        </div>
+      `;
+    }
+
     function renderMinePanel(tile) {
       const m = tile.mine;
       document.getElementById('facility-title').textContent = m.name;
@@ -2350,7 +2381,7 @@
           </div>
         </div>
       `;
-      document.getElementById('facility-action-row').classList.add('hidden');
+      renderFacilityFooterActions(tile);
     }
 
     function renderFarmPanel(tile) {
@@ -2377,7 +2408,7 @@
           </div>
         </div>
       `;
-      document.getElementById('facility-action-row').classList.add('hidden');
+      renderFacilityFooterActions(tile);
     }
 
     function renderFactoryPanel(tile) {
@@ -2418,18 +2449,14 @@
       }
 
       const freeLines = factory.maxLines - lines.length;
-      const addRow = document.getElementById('facility-action-row');
-      if (freeLines > 0) {
-        addRow.classList.remove('hidden');
-        addRow.innerHTML = `
-          <button onclick="openFactoryRecipeModal(${tile.x}, ${tile.y})"
-            class="w-full text-center text-xs font-bold text-orange-300 hover:text-white bg-orange-950/60 hover:bg-orange-800/80 font-mono py-2 rounded-xl border border-orange-700/60 shadow-lg transition">
-            ➕ Ativar Linha de Produção (${freeLines} livre${freeLines > 1 ? 's' : ''})
-          </button>
-        `;
-      } else {
-        addRow.classList.add('hidden');
-      }
+      const addLineBtn = freeLines > 0 ? `
+        <button onclick="openFactoryRecipeModal(${tile.x}, ${tile.y})"
+          class="w-full text-center text-xs font-bold text-orange-300 hover:text-white bg-orange-950/60 hover:bg-orange-800/80 font-mono py-2 rounded-xl border border-orange-700/60 shadow-lg transition cursor-pointer">
+          ➕ Ativar Linha de Produção (${freeLines} livre${freeLines > 1 ? 's' : ''})
+        </button>
+      ` : '';
+
+      renderFacilityFooterActions(tile, addLineBtn);
     }
 
     function renderStorePanel(tile) {
@@ -2518,20 +2545,16 @@
         panel.appendChild(card);
       }
 
-      const addRow = document.getElementById('facility-action-row');
       const freeSlots = store.maxShelves - Object.keys(store.shelves).length;
-      if (freeSlots > 0) {
-        addRow.classList.remove('hidden');
-        addRow.innerHTML = `
-          <button onclick="openAddProductModal(${tile.x}, ${tile.y})"
-            class="w-full text-center text-xs font-bold text-teal-300 hover:text-white bg-teal-950/60 hover:bg-teal-800/80 font-mono py-2 rounded-xl border border-teal-700/60 shadow-lg transition flex items-center justify-center gap-1.5">
-            <span>➕ Adicionar Produto às Gôndolas</span>
-            <span class="bg-teal-900 px-1.5 py-0.5 rounded text-[10px]">(${freeSlots} livre${freeSlots > 1 ? 's' : ''})</span>
-          </button>
-        `;
-      } else {
-        addRow.classList.add('hidden');
-      }
+      const addGondolaBtn = freeSlots > 0 ? `
+        <button onclick="openAddProductModal(${tile.x}, ${tile.y})"
+          class="w-full text-center text-xs font-bold text-teal-300 hover:text-white bg-teal-950/60 hover:bg-teal-800/80 font-mono py-2 rounded-xl border border-teal-700/60 shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
+          <span>➕ Adicionar Produto às Gôndolas</span>
+          <span class="bg-teal-900 px-1.5 py-0.5 rounded text-[10px]">(${freeSlots} livre${freeSlots > 1 ? 's' : ''})</span>
+        </button>
+      ` : '';
+
+      renderFacilityFooterActions(tile, addGondolaBtn);
     }
 
     // ===========================================================================
@@ -3867,7 +3890,7 @@
       major: 0,
       minor: 7,
       patch: 4,
-      build: '20260827.06',
+      build: '20260827.07',
       saveSchema: '0.7.2',
       get version() { return `${this.major}.${this.minor}.${this.patch}`; },
       get fullString() { return `v${this.version} (bld.${this.build})`; }
