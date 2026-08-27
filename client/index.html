@@ -32,18 +32,29 @@
     .drag-grip-icon { opacity: 0.45; transition: opacity 0.15s; font-size: 13px; line-height: 1; letter-spacing: -2px; cursor: grab; }
     .drag-handle:hover .drag-grip-icon { opacity: 0.95; }
 
-    /* Responsividade inteligente do Top HUD para evitar sobreposições e empurrões */
-    @media (max-width: 1440px) {
+    /* Responsividade adaptativa universal do Top HUD (1080p, Laptops 1366px, 1280px, Janelas F12) */
+    #clock-date, #corp-cash, #month-profit, .telemetry-chip {
+      white-space: nowrap !important;
+      word-break: keep-all !important;
+      flex-shrink: 0 !important;
+    }
+
+    @media (max-width: 1536px) {
       .hud-btn-text { display: none; }
       .city-btn-name { display: none; }
-      #hud-company-name, #hud-player-name { max-width: 70px; }
+      #hud-company-name, #hud-player-name { max-width: 75px; }
       #floating-lenses-bar { top: 3.75rem; }
     }
-    @media (max-width: 1120px) {
+    @media (max-width: 1280px) {
       #hud-corp-badge { display: none; }
-      #floating-lenses-bar { top: 3.75rem; }
+      #floating-lenses-bar { top: 3.75rem; transform: translateX(-50%) scale(0.92); }
+      #month-profit-box { display: none; }
     }
-    @media (max-width: 880px) {
+    @media (max-width: 1024px) {
+      .lenses-text-label { display: none; }
+      #floating-lenses-bar { top: 3.6rem; transform: translateX(-50%) scale(0.85); }
+    }
+    @media (max-width: 768px) {
       #floating-lenses-bar { display: none; }
     }
   </style>
@@ -102,7 +113,7 @@
         <span class="text-[8px] text-slate-400 block uppercase leading-none">Caixa</span>
         <span id="corp-cash" class="text-xs font-black text-emerald-400 leading-tight whitespace-nowrap block cursor-help" title="$100,000.00">$100,000.00</span>
       </div>
-      <div class="border-l border-slate-800 pl-1.5 font-mono text-right shrink-0">
+      <div id="month-profit-box" class="border-l border-slate-800 pl-1.5 font-mono text-right shrink-0">
         <span class="text-[8px] text-slate-400 block uppercase leading-none">Lucro Mês</span>
         <span id="month-profit" class="text-xs font-bold text-slate-300 leading-tight whitespace-nowrap block cursor-help" title="$0.00">$0.00</span>
       </div>
@@ -126,15 +137,15 @@
   </header>
 
   <!-- 2.1 FLOATING LENSES & CAMERA BAR (Barra flutuante de Lentes e Zoom independente) -->
-  <div id="floating-lenses-bar" class="absolute top-14 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex items-center gap-1 bg-slate-900/95 backdrop-blur-md border border-slate-800/90 rounded-xl px-2 py-1 shadow-2xl font-mono text-[10px] select-none">
+  <div id="floating-lenses-bar" class="absolute top-14 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex items-center gap-1 bg-slate-900/95 backdrop-blur-md border border-slate-800/90 rounded-xl px-2 py-1 shadow-2xl font-mono text-[10px] select-none transition-transform">
     <span class="text-slate-500 px-1 text-[9px] hidden sm:inline">Lentes:</span>
     <button id="hm-terrain" onclick="setHeatmap('terrain')" class="px-1.5 py-0.5 rounded font-bold bg-slate-800 text-slate-200 text-[9px]">Terreno</button>
-    <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🔥 <span class="hidden md:inline">Tráfego</span></button>
-    <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">👥 <span class="hidden md:inline">Pop.</span></button>
-    <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏪 <span class="hidden md:inline">Varejo</span></button>
-    <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">⚓ <span class="hidden md:inline">Portos</span></button>
-    <button id="hm-ind"     onclick="setHeatmap('ind')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏭 <span class="hidden md:inline">Indústria</span></button>
-    <button id="hm-media"   onclick="setHeatmap('media')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">📡 <span class="hidden md:inline">Mídia</span></button>
+    <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🔥 <span class="lenses-text-label hidden md:inline">Tráfego</span></button>
+    <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">👥 <span class="lenses-text-label hidden md:inline">Pop.</span></button>
+    <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏪 <span class="lenses-text-label hidden md:inline">Varejo</span></button>
+    <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">⚓ <span class="lenses-text-label hidden md:inline">Portos</span></button>
+    <button id="hm-ind"     onclick="setHeatmap('ind')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏭 <span class="lenses-text-label hidden md:inline">Indústria</span></button>
+    <button id="hm-media"   onclick="setHeatmap('media')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">📡 <span class="lenses-text-label hidden md:inline">Mídia</span></button>
     <div class="h-3.5 w-px bg-slate-700 mx-0.5"></div>
     <button onclick="changeZoom(-0.2)" class="w-4 h-4 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold leading-none" title="Zoom Out (Q / -)">−</button>
     <button onclick="resetCamera()"    class="px-1 h-4 rounded bg-slate-950 border border-slate-800 text-slate-400 text-[8px] leading-none">Centro</button>
@@ -179,7 +190,7 @@
         🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
       </button>
       <span id="telemetry-version-badge" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-bold text-[9px]" title="Versão Oficial do Jogo & Build">
-        🏛️ OIKONOMIA <span class="text-emerald-400">v0.7.4</span> <span class="text-slate-500 text-[8px]">bld.20260827.05</span>
+        🏛️ OIKONOMIA <span class="text-emerald-400">v0.7.4</span> <span class="text-slate-500 text-[8px]">bld.20260827.06</span>
       </span>
     </div>
   </footer>
@@ -869,7 +880,7 @@
           <div class="w-8 h-8 rounded-xl bg-indigo-950 border border-indigo-700/60 flex items-center justify-center text-sm">🛠️</div>
           <div>
             <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">Painel de Desenvolvimento & Diagnóstico</h3>
-            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.7.4 · Build 20260827.05 (Oficial)</span>
+            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.7.4 · Build 20260827.06 (Oficial)</span>
           </div>
         </div>
         <button onclick="closeDevDashboard()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
@@ -889,7 +900,7 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Versão Oficial</span>
-              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.7.4 (bld.20260827.05)</span>
+              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.7.4 (bld.20260827.06)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Schema de Saves</span>
@@ -1476,7 +1487,7 @@
       else if (cityId === 'montargis') { targetX = 42; targetY = 86; }
       else if (cityId === 'varzea') { targetX = 88; targetY = 84; }
 
-      camera.zoom = 1.0;
+      camera.zoom = window.innerWidth < 1400 ? 0.8 : 1.0;
       camera.panX = (r.width / 2) - (targetX - targetY) * (TILE_W / 2) * camera.zoom;
       camera.panY = (r.height / 2) - (targetX + targetY) * (TILE_H / 2) * camera.zoom;
       scheduleRender();
@@ -3856,7 +3867,7 @@
       major: 0,
       minor: 7,
       patch: 4,
-      build: '20260827.05',
+      build: '20260827.06',
       saveSchema: '0.7.2',
       get version() { return `${this.major}.${this.minor}.${this.patch}`; },
       get fullString() { return `v${this.version} (bld.${this.build})`; }
