@@ -4,7 +4,7 @@
 [![Map Scale](https://img.shields.io/badge/Escala%20do%20Mundo-128×128%20(16.384%20Tiles)-sky.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
 [![Supply Chain](https://img.shields.io/badge/Cadeia%20Produtiva-63%2B%20Produtos%20%7C%2035%2B%20Receitas-amber.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
 [![Architecture](https://img.shields.io/badge/UI-Tela%20Cheia%20%7C%20HUD%20Capitalism%20Lab-purple.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: Dual (MIT + Proprietary Assets)](https://img.shields.io/badge/License-Dual%20(MIT%20%2B%20Assets)-blue.svg)](LICENSE.md)
 
 **OIKONOMIA** é um simulador econômico e empresarial profundo inspirado em clássicos como *Capitalism Lab*, *SimCity* e *Industry Giant*. O jogo combina um motor microeconômico de tempo contínuo com um vasto continente isométrico 2.5D de 128×128 blocos, integrando extração mineral, agropecuária, manufatura industrial, logística marítima e 8 redes especializadas de varejo.
 
@@ -139,5 +139,10 @@ OIKONOMIA/
 
 ---
 
-## 📜 Licença
-Distribuído sob a licença **MIT**. Veja `LICENSE` para mais detalhes.
+## 📜 Licença (Modelo Híbrido)
+
+Este projeto adota um **modelo de licenciamento duplo**:
+* **💻 Motor & Código-fonte:** Licenciado sob a licença permissiva **MIT**.
+* **🎨 Modelos 3D, Sprites, Artes Visuais & Marca "OIKONOMIA":** **Todos os direitos reservados** (*All Rights Reserved* — Copyright © 2026). Proibida a redistribuição ou exploração comercial dos assets artísticos sem autorização expressa.
+
+Consulte o arquivo [LICENSE.md](LICENSE.md) para os termos jurídicos completos.
