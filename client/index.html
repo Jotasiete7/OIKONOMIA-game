@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
   <script src="map_data.js"></script>
+  <script src="core_math.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.7)</title>
@@ -2452,7 +2453,7 @@
     ];
 
     function getManhattanDist(p1, p2) {
-      return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
+      return CoreMath.calculateManhattanDistance(p1, p2);
     }
 
     // ===========================================================================
@@ -2465,9 +2466,9 @@
       for (const port of (typeof SEAPORTS_128 !== 'undefined' ? SEAPORTS_128 : SEAPORTS)) {
         if (port.supplies[prodId]) {
           const sup = port.supplies[prodId];
-          const dist = getManhattanDist(port.tile, storeTile);
-          const freight = Number((0.02 + dist * port.freightRatePerTile).toFixed(3));
-          const landed = Number((sup.wholesalePrice + freight).toFixed(3));
+          const dist = CoreMath.calculateManhattanDistance(port.tile, storeTile);
+          const freight = CoreMath.calculateUnitFreight(dist, port.freightRatePerTile, 0.02);
+          const landed = CoreMath.calculateLandedCost(sup.wholesalePrice, freight);
           offers.push({
             type: 'port',
             supplierId: port.id,
@@ -2483,29 +2484,26 @@
         }
       }
 
-      // 2. Fábricas Próprias
-      for (let x = 0; x < GRID_SIZE; x++) {
-        for (let y = 0; y < GRID_SIZE; y++) {
-          const tile = worldGrid[x][y];
-          if (tile.factory) {
-            for (const [recipeId, line] of Object.entries(tile.factory.lines)) {
-              if (line.outputProductId === prodId) {
-                const dist = getManhattanDist(tile, storeTile);
-                const freight = Number((0.01 + dist * 0.010).toFixed(3));
-                const landed = Number((line.unitCost + freight).toFixed(3));
-                offers.push({
-                  type: 'internal_factory',
-                  supplierId: `factory_${x}_${y}_${recipeId}`,
-                  supplierName: `🏭 ${tile.factory.name} (${line.recipeName})`,
-                  wholesalePrice: line.unitCost,
-                  quality: line.outputQuality,
-                  quota: line.dailyCapacity,
-                  origin: `Fabricação Própria (${x}, ${y})`,
-                  distance: dist,
-                  freight,
-                  landedCost: landed
-                });
-              }
+      // 2. Fábricas Próprias (via Sparse Index activeFacilitySet)
+      for (const tile of activeFacilitySet.values()) {
+        if (tile.factory) {
+          for (const [recipeId, line] of Object.entries(tile.factory.lines)) {
+            if (line.outputProductId === prodId) {
+              const dist = CoreMath.calculateManhattanDistance(tile, storeTile);
+              const freight = CoreMath.calculateUnitFreight(dist, 0.010, 0.01);
+              const landed = CoreMath.calculateLandedCost(line.unitCost, freight);
+              offers.push({
+                type: 'internal_factory',
+                supplierId: `factory_${tile.x}_${tile.y}_${recipeId}`,
+                supplierName: `🏭 ${tile.factory.name} (${line.recipeName})`,
+                wholesalePrice: line.unitCost,
+                quality: line.outputQuality,
+                quota: line.dailyCapacity,
+                origin: `Fabricação Própria (${tile.x}, ${tile.y})`,
+                distance: dist,
+                freight,
+                landedCost: landed
+              });
             }
           }
         }
@@ -2514,9 +2512,9 @@
       // Fallback caso não tenha estoque local: Fornecedor Portuário Global padrão
       if (offers.length === 0 && PRODUCT_CATALOG[prodId]) {
         const prod = PRODUCT_CATALOG[prodId];
-        const dist = getManhattanDist({ x: 85, y: 34 }, storeTile);
+        const dist = CoreMath.calculateManhattanDistance({ x: 85, y: 34 }, storeTile);
         const wholesale = Number((prod.baseCost * 1.6).toFixed(2));
-        const freight = Number((0.02 + dist * 0.015).toFixed(3));
+        const freight = CoreMath.calculateUnitFreight(dist, 0.015, 0.02);
         offers.push({
           type: 'port',
           supplierId: 'port_alpha',
@@ -2527,7 +2525,7 @@
           origin: 'Importação Internacional',
           distance: dist,
           freight,
-          landedCost: Number((wholesale + freight).toFixed(2))
+          landedCost: CoreMath.calculateLandedCost(wholesale, freight)
         });
       }
 
@@ -2535,33 +2533,55 @@
     }
 
     // ===========================================================================
-    // 3. ESTADO GLOBAL DO JOGO & MÁQUINA DE ESTADOS DE UI
+    // 3. ESTADO CENTRALIZADO DO JOGO (GAME STATE CONTAINER)
     // ===========================================================================
-    let currentAppScreen = 'BOOT'; // 'BOOT', 'MAIN_MENU', 'PLAYING', 'PAUSED'
-    let day = 1, month = 1, year = 1;
-    let cash = 100000.00;
-    let monthRevenue = 0, monthCogs = 0, monthFixedExpenses = 0, monthMarketingExpenses = 0;
-    let gameSpeed = 0, timerInterval = null;
-    let previousSpeedBeforePause = 1;
-    let playtimeSeconds = 0;
-
-    let playerProfile = {
-      playerName: 'Arthur Vance',
-      companyName: 'OikoCorp Holding',
-      avatarId: 'human_ceo',
-      themeColor: 'emerald',
-      difficulty: 'standard'
+    const GameState = {
+      currentAppScreen: 'BOOT', // 'BOOT', 'MAIN_MENU', 'PLAYING', 'PAUSED'
+      day: 1, month: 1, year: 1,
+      cash: 100000.00,
+      monthRevenue: 0, monthCogs: 0, monthFixedExpenses: 0, monthMarketingExpenses: 0,
+      gameSpeed: 0, timerInterval: null,
+      previousSpeedBeforePause: 1,
+      playtimeSeconds: 0,
+      playerProfile: {
+        playerName: 'Arthur Vance',
+        companyName: 'OikoCorp Holding',
+        avatarId: 'human_ceo',
+        themeColor: 'emerald',
+        difficulty: 'standard'
+      },
+      currentSaveSlotId: null,
+      lastSavedStateSnapshot: null,
+      gameSettings: {
+        autoSave: 'monthly',
+        sfxVolume: 0.7
+      },
+      playerBrandRating: {},
+      activeMarketingContracts: new Set(),
+      unlockedCities: {
+        nova_atenas: true,
+        porto_real: true,
+        montargis: false,
+        varzea: false
+      }
     };
 
-    let currentSaveSlotId = null;
-    let lastSavedStateSnapshot = null;
-    let gameSettings = {
-      autoSave: 'monthly',
-      sfxVolume: 0.7
-    };
-
-    const playerBrandRating = {};
-    const activeMarketingContracts = new Set();
+    // Aliases globais de interoperabilidade direta
+    let currentAppScreen = GameState.currentAppScreen;
+    let day = GameState.day, month = GameState.month, year = GameState.year;
+    let cash = GameState.cash;
+    let monthRevenue = GameState.monthRevenue, monthCogs = GameState.monthCogs;
+    let monthFixedExpenses = GameState.monthFixedExpenses, monthMarketingExpenses = GameState.monthMarketingExpenses;
+    let gameSpeed = GameState.gameSpeed, timerInterval = GameState.timerInterval;
+    let previousSpeedBeforePause = GameState.previousSpeedBeforePause;
+    let playtimeSeconds = GameState.playtimeSeconds;
+    let playerProfile = GameState.playerProfile;
+    let currentSaveSlotId = GameState.currentSaveSlotId;
+    let lastSavedStateSnapshot = GameState.lastSavedStateSnapshot;
+    let gameSettings = GameState.gameSettings;
+    const playerBrandRating = GameState.playerBrandRating;
+    const activeMarketingContracts = GameState.activeMarketingContracts;
+    const unlockedCities = GameState.unlockedCities;
 
     // Catálogo dos 12 Avatares Oficiais (4 Humanos, 4 Animais, 4 Robôs)
     const AVATAR_CATALOG = [
@@ -2685,40 +2705,25 @@
     const TILE_W = 64, TILE_H = 32;
     const worldGrid = [];
 
-    // Estado de Desbloqueio das Cidades
-    const unlockedCities = {
-      nova_atenas: true,
-      porto_real: true,
-      montargis: false,
-      varzea: false
-    };
-
     function checkCityUnlocks() {
-      // 1. Montargis: Patrimônio Líquido >= $500.000
+      // 1. Montargis ($500k em ativos) e Várzea (1+ fazenda) via Sparse Index
       let totalAssets = cash;
-      for (let x = 0; x < GRID_SIZE; x++) {
-        for (let y = 0; y < GRID_SIZE; y++) {
-          const t = worldGrid[x] && worldGrid[x][y];
-          if (t) {
-            if (t.store) totalAssets += t.store.cost || 15000;
-            if (t.mine) totalAssets += t.mine.cost || 40000;
-            if (t.farm) totalAssets += t.farm.cost || 20000;
-            if (t.factory) totalAssets += t.factory.cost || 50000;
-          }
+      let farmCount = 0;
+      for (const t of activeFacilitySet.values()) {
+        if (t.store) totalAssets += t.store.cost || 15000;
+        if (t.mine) totalAssets += t.mine.cost || 40000;
+        if (t.farm) {
+          totalAssets += t.farm.cost || 20000;
+          farmCount++;
         }
+        if (t.factory) totalAssets += t.factory.cost || 50000;
       }
+
       if (!unlockedCities.montargis && totalAssets >= 500000) {
         unlockedCities.montargis = true;
         addLog('🎉 CIDADE DESBLOQUEADA: Montargis atingiu o critério de $500k em patrimônio e agora está aberta para investimentos!', 'text-amber-400 font-bold');
       }
 
-      // 2. Várzea: Pelo menos 1 Fazenda Ativa
-      let farmCount = 0;
-      for (let x = 0; x < GRID_SIZE; x++) {
-        for (let y = 0; y < GRID_SIZE; y++) {
-          if (worldGrid[x] && worldGrid[x][y] && worldGrid[x][y].farm) farmCount++;
-        }
-      }
       if (!unlockedCities.varzea && farmCount >= 1) {
         unlockedCities.varzea = true;
         addLog('🎉 CIDADE DESBLOQUEADA: Várzea conectada ao cinturão agrícola pela sua primeira Fazenda em operação!', 'text-emerald-400 font-bold');
@@ -4804,20 +4809,15 @@
     // 12. MOTOR ECONÔMICO & SIMULAÇÃO DIÁRIA
     // ===========================================================================
     function calcPriceRating(standardPrice, price) {
-      if (price <= 0) return 100;
-      return Math.min(100, Math.max(0, (standardPrice / price) * 50));
+      return CoreMath.calculatePriceRating(standardPrice, price);
     }
 
     function calcProductRating(prod, price, quality, brand) {
-      const qW = prod.qualityWeight, bW = prod.brandWeight, pW = Math.max(0, 100 - qW - bW);
-      const pr = calcPriceRating(prod.standardPrice, price);
-      return Math.min(100, Math.max(1, (Math.min(100, quality) * qW + Math.min(100, brand) * bW + pr * pW) / 100));
+      return CoreMath.calculateProductRating(prod, price, quality, brand);
     }
 
     function calcElasticity(necessityIndex, standardPrice, price) {
-      if (price <= 0) return 2.5;
-      const exp = 2.20 - 1.85 * (Math.min(100, necessityIndex) / 100);
-      return Math.min(3.0, Math.max(0.05, Math.pow(standardPrice / price, exp)));
+      return CoreMath.calculatePriceElasticityFactor(necessityIndex, standardPrice, price);
     }
 
     function addLog(text, color = 'text-slate-300') {
@@ -4888,11 +4888,7 @@
               compRating = calcProductRating(prod, cs.price, cs.quality, cs.brand);
             }
 
-            const pW = Math.pow(rating, 2);
-            const cW = Math.pow(compRating, 2);
-            const uW = Math.pow(25, 2);
-            const share = pW / (pW + cW + uW);
-
+            const { playerShare: share } = CoreMath.calculateQuadraticMarketShare(rating, compRating, 25);
             const potDemand = Math.floor(baseDem * elast * share);
             const sold = Math.min(shelf.stock, potDemand);
 
@@ -4916,12 +4912,9 @@
           for (const [pId, cs] of Object.entries(tile.competitor.shelves)) {
             const prod = PRODUCT_CATALOG[pId];
             if (!prod) continue;
-            const noise = 0.90 + Math.random() * 0.15;
-            const baseDem = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * noise;
             const cR = calcProductRating(prod, cs.price, cs.quality, cs.brand);
-            const cW = Math.pow(cR, 2);
-            const uW = Math.pow(25, 2);
-            tile.competitor.lastShare = cW / (cW + uW);
+            const { compShare } = CoreMath.calculateQuadraticMarketShare(0, cR, 25);
+            tile.competitor.lastShare = compShare;
           }
         }
       }
@@ -4967,21 +4960,19 @@
         }
       }
 
-      for (let x = 0; x < GRID_SIZE; x++) {
-        for (let y = 0; y < GRID_SIZE; y++) {
-          const tile = worldGrid[x][y];
-          if (!tile.competitor?.shelves) continue;
-          for (const [pId, cs] of Object.entries(tile.competitor.shelves)) {
-            const prod = PRODUCT_CATALOG[pId];
-            if (!prod) continue;
-            if ((tile.competitor.lastShare || 0.5) < 0.38) {
-              const newPrice = Number(Math.max(prod.baseCost * 1.08, cs.price * (0.94 + Math.random() * 0.03)).toFixed(2));
-              const pctDrop  = Math.round((1 - newPrice / cs.price) * 100);
-              cs.price = newPrice;
-              if (pctDrop > 1) addLog(`🤖 ${tile.competitor.name} reduziu ${prod.name} para $${newPrice} (-${pctDrop}%)!`, 'text-purple-400');
-            } else {
-              cs.price = Number(Math.min(prod.standardPrice * 1.25, cs.price * (1.005 + Math.random() * 0.01)).toFixed(2));
-            }
+      // Atualiza preços dos concorrentes apenas para tiles com concorrente (Sparse Index)
+      for (const tile of activeFacilitySet.values()) {
+        if (!tile.competitor?.shelves) continue;
+        for (const [pId, cs] of Object.entries(tile.competitor.shelves)) {
+          const prod = PRODUCT_CATALOG[pId];
+          if (!prod) continue;
+          if ((tile.competitor.lastShare || 0.5) < 0.38) {
+            const newPrice = Number(Math.max(prod.baseCost * 1.08, cs.price * (0.94 + Math.random() * 0.03)).toFixed(2));
+            const pctDrop  = Math.round((1 - newPrice / cs.price) * 100);
+            cs.price = newPrice;
+            if (pctDrop > 1) addLog(`🤖 ${tile.competitor.name} reduziu ${prod.name} para $${newPrice} (-${pctDrop}%)!`, 'text-purple-400');
+          } else {
+            cs.price = Number(Math.min(prod.standardPrice * 1.25, cs.price * (1.005 + Math.random() * 0.01)).toFixed(2));
           }
         }
       }
@@ -5109,22 +5100,19 @@
       }
     }
 
-    // Extrai apenas os lotes construídos para otimizar payload (saves com ~15-30 KB)
+    // Extrai apenas os lotes construídos para otimizar payload (saves com ~15-30 KB via Sparse Index)
     function extractBuiltTiles() {
       const built = [];
-      for (let x = 0; x < GRID_SIZE; x++) {
-        for (let y = 0; y < GRID_SIZE; y++) {
-          const t = worldGrid[x] && worldGrid[x][y];
-          if (t && (t.store || t.mine || t.farm || t.factory || t.competitor)) {
-            built.push({
-              x, y,
-              store: t.store,
-              mine: t.mine,
-              farm: t.farm,
-              factory: t.factory,
-              competitor: t.competitor
-            });
-          }
+      for (const t of activeFacilitySet.values()) {
+        if (t.store || t.mine || t.farm || t.factory || t.competitor) {
+          built.push({
+            x: t.x, y: t.y,
+            store: t.store,
+            mine: t.mine,
+            farm: t.farm,
+            factory: t.factory,
+            competitor: t.competitor
+          });
         }
       }
       return built;
