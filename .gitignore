@@ -1,4 +1,4 @@
-# Dependencies
+﻿# Dependencies
 node_modules/
 package-lock.json
 
@@ -14,3 +14,8 @@ Thumbs.db
 .vscode/
 .idea/
 .gemini/
+
+# Arquivos e Rascunhos Legados Arquivados
+_archive_rascunhos/
+archive_legacy/
+
