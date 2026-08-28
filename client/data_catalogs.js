@@ -1,4 +1,4 @@
-﻿// data_catalogs.js - Master Catalogs (Products, Mines, Farms, Stores, Recipes, Media, Ports)
+// data_catalogs.js - Master Catalogs (Products, Mines, Farms, Stores, Recipes, Media, Ports)
     const CITY_DISTRICTS = {
       water:       { id: 'water',       name: 'Baía de Arquipélago de Neo Capital',           type: 'Oceano',              population: 0,     trafficIndex: 0,  landRentDaily: 0     },
       harbor:      { id: 'harbor',      name: 'Zona Portuária & Trânsito',      type: 'Logística / Hub',     population: 8000,  trafficIndex: 42, landRentDaily: 20    },
@@ -1651,3 +1651,31 @@
         supplies: {}
       }
     ];
+
+    // ===========================================================================
+    // CATÁLOGO DE CATEGORIAS DE P&D (Pesquisa & Desenvolvimento)
+    // Custo base mensal mínimo por categoria, fiel à curva de custos do Capitalism II.
+    // ===========================================================================
+    const RD_CATEGORIES = {
+      "Alimentos":   { baseCost: 2000,  icon: "🌾", label: "Alimentos & Bebidas" },
+      "Bebidas":     { baseCost: 2500,  icon: "🍺", label: "Bebidas & Laticínios" },
+      "Vestuário":   { baseCost: 3500,  icon: "👗", label: "Moda & Têxtil" },
+      "Farmácia":    { baseCost: 4000,  icon: "💊", label: "Farmácia & Saúde" },
+      "Higiene":     { baseCost: 3000,  icon: "🧴", label: "Higiene & Cuidados" },
+      "Cosméticos":  { baseCost: 3500,  icon: "💄", label: "Cosméticos & Perfumaria" },
+      "Eletrônicos": { baseCost: 12000, icon: "💻", label: "Eletrônicos & Tecnologia" },
+      "Automotivo":  { baseCost: 20000, icon: "🚗", label: "Automotivo & Motores" },
+      "Móveis":      { baseCost: 5000,  icon: "🛋️", label: "Móveis & Decoração" },
+      "Joias":       { baseCost: 8000,  icon: "💍", label: "Joias & Luxo" },
+      "Construção":  { baseCost: 6000,  icon: "🔨", label: "Construção & Ferramentas" },
+    };
+
+    // Auto-popula rdBaseCost em cada produto do catálogo a partir da categoria
+    (function populateRDBaseCosts() {
+      for (const prod of Object.values(PRODUCT_CATALOG)) {
+        if (!prod.rdBaseCost) {
+          const cat = RD_CATEGORIES[prod.category];
+          prod.rdBaseCost = cat ? cat.baseCost : 3000;
+        }
+      }
+    })();

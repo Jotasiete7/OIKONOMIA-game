@@ -2,36 +2,75 @@
 
 > **Documento Oficial de Rastreabilidade, Versionamento e EvoluÃ§Ã£o do Projeto**  
 > **RepositÃ³rio:** `Jotasiete7/OIKONOMIA-game`  
-> **Ãšltima AtualizaÃ§Ã£o:** 27 de Agosto de 2026  
-> **VersÃ£o Oficial Corrente:** `v0.7.4 (bld.20260827.07)`  
-> **Save Schema:** `v0.7.2` (Compatibilidade Retroativa Total)
+> **Ãšltima AtualizaÃ§Ã£o:** 28 de Agosto de 2026  
+> **VersÃ£o Oficial Corrente:** `v0.8.0 (bld.20260828.01)`  
+> **Save Schema:** `v0.8.0` (Compatibilidade Retroativa Total)
 
 ---
 
 ## ðŸ›ï¸ PadrÃ£o Oficial de Versionamento da Equipe (SemVer 2.0 + Build Stamp)
 
-Todo o projeto agora segue estritamente a convenÃ§Ã£o:
+Todo o projeto segue estritamente a convenÃ§Ã£o:
 $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 - **MAJOR (v1.0.0, v2.0.0)**: Marcos definitivos de lanÃ§amento comercial / saÃ­da de Beta.
-- **MINOR (v0.7.x -> v0.8.0)**: Grandes mÃ³dulos ou mecÃ¢nicas novas (ex: frotas de caminhÃµes visuais, bolsa).
+- **MINOR (v0.7.x -> v0.8.0)**: Grandes mÃ³dulos ou mecÃ¢nicas novas (ex: P&D, frotas visuais, bolsa).
 - **PATCH (v0.7.3 -> v0.7.4)**: Novas telas, melhorias de UI/UX, janelas arrastÃ¡veis, correÃ§Ãµes de bugs.
 - **BUILD STAMP (`bld.YYYYMMDD.XX`)**: Carimbo diÃ¡rio com a data e o nÃºmero da entrega daquele dia.
-- **SAVE SCHEMA (`0.7.2`)**: Controla a compatibilidade dos saves `.oiko` e do `localStorage`.
+- **SAVE SCHEMA (`0.8.0`)**: Controla a compatibilidade dos saves `.oiko` e do `localStorage`.
 
 ---
 
 ## ðŸ§­ Agenda de Desenvolvimento (PrÃ³ximos Passos Priorizados)
 
-- [ ] **MÃ³dulo de LogÃ­stica AvanÃ§ada**: Adicionar caminhÃµes/frotas visuais navegando pelas avenidas entre cidades.
-- [ ] **IA Competitiva Aprofundada**: Concorrentes abrindo novas fÃ¡bricas e alterando linhas de produÃ§Ã£o dinamicamente.
-- [ ] **Bolsa de Valores & EmprÃ©stimos BancÃ¡rios**: Sistema financeiro para emissÃ£o de debÃªntures e financiamento de galpÃµes.
-- [ ] **Suporte a Novas MetrÃ³poles**: ExpansÃ£o do mapa procedural para alÃ©m do grid 128x128.
+- [ ] **IA Concorrente com P&D DinÃ¢mico**: Concorrentes evoluindo tecnologia mensalmente e disputando patentes de ponta.
+- [ ] **MÃ³dulo de LogÃ­stica Visual**: Adicionar caminhÃµes/frotas navegando pelas avenidas entre metrÃ³poles e fÃ¡bricas.
+- [ ] **QG Corporativo & Diretoria Executiva**: ContrataÃ§Ã£o de CEO, COO e CFO com bÃ´nus setoriais.
+- [ ] **Bolsa de Valores & EmprÃ©stimos BancÃ¡rios**: Sistema financeiro para emissÃ£o de aÃ§Ãµes e debÃªntures.
 - [ ] **Polimento GrÃ¡fico & Efeitos IsomÃ©tricos**: Sombras dinÃ¢micas nos edifÃ­cios e ciclo dia/noite.
 
 ---
 
 ## ðŸ“œ HistÃ³rico de SessÃµes & Registros de EvoluÃ§Ã£o
+
+---
+
+### ðŸ“… SessÃ£o 06: MÃ³dulo EstratÃ©gico de P&D (Pesquisa & Desenvolvimento), Mercado de Patentes & Zoom Ancorado no Cursor
+- **Data:** 28/08/2026 â€” 07:30
+- **VersÃ£o Oficial:** `v0.8.0 (bld.20260828.01)` | **Save Schema:** `v0.8.0`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### ðŸŽ¯ Objetivos:
+- Implementar o sistema completo de **Pesquisa & Desenvolvimento (P&D)** modelado fielmente apÃ³s o **Capitalism II / Capitalism Lab**.
+- Introduzir a mecÃ¢nica de corrida tecnolÃ³gica de qualidade (Quality Rating - QR) de 0 a 100 com curvas de custo exponencial e rendimentos decrescentes (money sink estratÃ©gico).
+- Criar o **Mercado de Patentes & AquisiÃ§Ã£o Direta de Tecnologia** para compra/licenciamento instantÃ¢neo de tecnologias de concorrentes lÃ­deres.
+- Conectar a propagaÃ§Ã£o diÃ¡ria de QR para as gÃ´ndolas de varejo (`propagateQualityToShelf`) e atualizaÃ§Ã£o automÃ¡tica das linhas de manufatura.
+- Integrar a interface do Centro de P&D (`#rd-center-modal` e `#rd-new-project-modal`) com suporte a janelas arrastÃ¡veis (`makeDraggable`).
+- Adicionar indicadores visuais de P&D no Top HUD, na barra de telemetria e nos cards de gestÃ£o de fÃ¡bricas e lojas.
+- Corrigir o zoom do mouse por scroll para pivotar dinamicamente sob o cursor (`changeZoom(delta, pivotX, pivotY)`).
+
+#### ðŸ› ï¸ O Que Foi Implementado:
+1. **Motor MatemÃ¡tico de P&D (`core_math.js`)**:
+   - `CoreMath.calculateRDMonthlyCost(currentQR, categoryBaseCost)`: Custo mensal exponencial $C = C_{base} \times e^{2.5 \cdot (QR/100)}$.
+   - `CoreMath.calculateRDQualityGain(currentQR, targetQR, monthlyBudget, baseMonthlyRequired)`: Ganho de QR com aceleraÃ§Ã£o de verba (atÃ© 2.5x) e atenuaÃ§Ã£o por rendimentos decrescentes $(1 - QR/120)$.
+   - `CoreMath.propagateQualityToShelf(shelfQR, factoryQR, soldToday, shelfCapacity)`: PropagaÃ§Ã£o gradual do QR da fÃ¡brica para a gÃ´ndola conforme o estoque antigo Ã© consumido e reposto.
+2. **CatÃ¡logos & Estruturas de Dados (`data_catalogs.js`)**:
+   - Adicionado catÃ¡logo `RD_CATEGORIES` com custos base e Ã­cones para 11 categorias de produtos.
+   - Auto-populaÃ§Ã£o de `rdBaseCost` em todos os produtos do `PRODUCT_CATALOG`.
+3. **Estado Global & PersistÃªncia (`index.html`)**:
+   - Adicionado `rdLabs: {}` ao `GameState` e alias global.
+   - SanitizaÃ§Ã£o e migraÃ§Ã£o retroativa em `migrateSaveData` e persistÃªncia total em `serializeCurrentGame` / `loadGameFromData`.
+4. **Interface do Centro de P&D & Mercado de Patentes**:
+   - `#rd-center-modal`: Janela arrastÃ¡vel com barra de orÃ§amento mensal, status em tempo real e alternÃ¢ncia entre abas de Projetos Ativos e Mercado de Patentes.
+   - `#rd-new-project-modal`: Wizard com seleÃ§Ã£o de qualquer produto do catÃ¡logo, slider de QR alvo (60-100), input de verba mensal e estimativa de ETA/Custo Total em tempo real.
+   - `buyCompetitorTech`: AquisiÃ§Ã£o direta de patentes de concorrentes com atualizaÃ§Ã£o imediata de linhas de produÃ§Ã£o.
+5. **IntegraÃ§Ã£o com o Loop de SimulaÃ§Ã£o & HUD**:
+   - `propagateQualityRD()` executado diariamente dentro de `simulateDay()`.
+   - `processRDProgress()` executado na virada mensal dentro de `closeMonthEnd()`.
+   - BotÃ£o `ðŸ”¬ P&D` com badge no Top HUD e chip na barra de telemetria.
+   - Indicadores de P&D nos cards de linhas de montagem das fÃ¡bricas e prateleiras das lojas.
+6. **Zoom Ancorado no Cursor**:
+   - `changeZoom` recalculando `camera.panX/panY` com pivÃ´ sob o ponteiro do mouse.
 
 ---
 
@@ -49,51 +88,26 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 - Eliminar a duplicidade de minimapas sobrepostos.
 - Estabelecer a regra oficial de versionamento `GAME_VERSION_INFO` SemVer 2.0 + Build Stamp.
 
-#### ðŸ› ï¸ O Que Foi Implementado:
-1. **Motor Universal `makeDraggable(panel, handle, storageKey)`**:
-   - Suporte unificado a Pointer Events (`pointerdown`, `pointermove`, `pointerup`, `setPointerCapture`).
-   - Bounding box estrito garantindo que janelas nunca fiquem presas fora dos limites visÃ­veis do monitor.
-   - DetecÃ§Ã£o inteligente ignorando cliques em botÃµes de fechar, inputs ou menus.
-   - Sistema de foco com elevaÃ§Ã£o dinÃ¢mica de `z-index` ao clicar na janela ativa (`bringWindowToFront`).
-2. **GestÃ£o ImobiliÃ¡ria & Desinvestimento (Vender / Demolir)**:
-   - RodapÃ© fixo em todas as janelas de instalaÃ§Ãµes (`#facility-action-row`) com botÃµes `ðŸ’° Vender` (recupera 70% da obra + valor do estoque) e `ðŸ—‘ï¸ Demolir` (recupera 40% em sucata e encerra aluguel).
-   - Atalhos rÃ¡pidos na barra de telemetria inferior (`#telemetry-actions`).
-3. **PersistÃªncia de Coordenadas no `localStorage`**:
-   - Cada modal memoriza individualmente sua posiÃ§Ã£o (`left`, `top`) onde o jogador a deixou.
-4. **Layout Multi-ResoluÃ§Ã£o Adaptativo (Anti-Overflow & Anti-Text-Wrap)**:
-   - Trava universal de `whitespace-nowrap` em tempo, finanÃ§as e badges.
-   - Sistema progressivo de breakpoints: em laptops e telas menores que 1536px, botÃµes colapsam para Ã­cones com tooltips e a barra de lentes flutua em linha independente sem nunca empurrar o menu para fora da tela.
-   - Zoom inicial de cÃ¢mera adaptado automaticamente Ã  largura do monitor.
-5. **Menu de ConstruÃ§Ã£o & Atalhos RÃ¡pidos na Telemetria**:
-   - Clique em lote livre abre o seletor de investimentos (Loja, FÃ¡brica, Fazenda, Mina) na janela lateral e atalhos rÃ¡pidos na barra inferior.
-   - RemoÃ§Ã£o da renderizaÃ§Ã£o duplicada do minimapa.
-6. **PadronizaÃ§Ã£o do Objeto Central `GAME_VERSION_INFO`**:
-   - SincronizaÃ§Ã£o automÃ¡tica em `<title>`, Top HUD, barra de rodapÃ©, Dev Dashboard (`F3`), console F12 e relatÃ³rios de diagnÃ³stico.
+---
+
+### ðŸ“… SessÃ£o 04: Motor de Ãudio Web Audio API SintÃ©tico
+- **Data:** 27/08/2026
+- **VersÃ£o:** `v0.7.3 (bld.20260827.04)`
 
 ---
 
-### ðŸ“… SessÃ£o 04: Telemetria, Dev Dashboard (F3) e Layout Anti-Overflow
-- **Data:** 27/08/2026 â€” 15:30
-- **VersÃ£o:** `v0.7.2` | **Commit:** `2a11f3f`
-- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+### ðŸ“… SessÃ£o 03: Sparse Indexing O(k) & OtimizaÃ§Ã£o de Performance
+- **Data:** 27/08/2026
+- **VersÃ£o:** `v0.7.2 (bld.20260827.03)`
 
 ---
 
-### ðŸ“… SessÃ£o 03: ModularizaÃ§Ã£o de CatÃ¡logos e Ãudio Desacoplado
-- **Data:** 27/08/2026 â€” 14:45
-- **VersÃ£o:** `v0.7.2` | **Commit:** `61c7878`
-- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+### ðŸ“… SessÃ£o 02: Pipeline de Saves e MigraÃ§Ãµes Retroativas
+- **Data:** 27/08/2026
+- **VersÃ£o:** `v0.7.1 (bld.20260827.02)`
 
 ---
 
-### ðŸ“… SessÃ£o 02: Pipeline de MigraÃ§Ãµes de Saves & Versionamento Robusto
-- **Data:** 27/08/2026 â€” 14:38
-- **VersÃ£o:** `v0.7.2` | **Commit:** `c611a5c`
-- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
-
----
-
-### ðŸ“… SessÃ£o 01: UnificaÃ§Ã£o MatemÃ¡tica (`core_math.js`) e Sparse Index $O(k)$
-- **Data:** 27/08/2026 â€” 14:15
-- **VersÃ£o:** `v0.7.1` | **Commits:** `6e36fd3`, `cf0d4a3`
-- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+### ðŸ“… SessÃ£o 01: RefatoraÃ§Ã£o da Arquitetura EconÃ´mica & Cadeias Produtivas
+- **Data:** 27/08/2026
+- **VersÃ£o:** `v0.7.0 (bld.20260827.01)`

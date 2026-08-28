@@ -1,4 +1,4 @@
-﻿/**
+/**
  * core_math.js — Motor Matemático Econômico e Logístico de OIKONOMIA
  * Funções puras sem efeitos colaterais para simulação micro e macroeconômica.
  */
@@ -131,6 +131,69 @@ const CoreMath = {
 
     const maxCap = Math.max(...activeOutlets.map(o => o.brandCap || 70));
     return Math.min(100, Math.min(maxCap, brand + totalBoost));
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // P&D — SISTEMA DE PESQUISA & DESENVOLVIMENTO (fiel ao Capitalism II)
+  // ═══════════════════════════════════════════════════════════════════
+
+  /**
+   * Calcula o custo mensal mínimo de pesquisa para um produto.
+   * Usa curva exponencial: C = baseCost × e^(2.5 × QR/100)
+   * Quanto maior o QR atual, mais cara fica cada unidade de ganho.
+   * @param {number} currentQR - QR atual da linha de produção (0-100)
+   * @param {number} categoryBaseCost - Custo base da categoria (ex: Eletrônicos = 12000)
+   * @returns {number} Custo mensal mínimo em dólares
+   */
+  calculateRDMonthlyCost(currentQR, categoryBaseCost) {
+    const qrClamped = Math.min(100, Math.max(0, currentQR || 50));
+    const cost = (categoryBaseCost || 2000) * Math.exp(2.5 * qrClamped / 100);
+    return Math.round(cost);
+  },
+
+  /**
+   * Calcula o ganho de QR no mês baseado na verba alocada vs. mínima necessária.
+   * Lei dos Rendimentos Decrescentes: ganho diminui conforme QR se aproxima de 100.
+   * Fórmula: ΔQRD = baseGain × (verba/mínimo) × (1 - QR_atual/120)
+   * @param {number} currentQR - QR atual (0-100)
+   * @param {number} targetQR - QR alvo definido pelo jogador (60-100)
+   * @param {number} monthlyBudget - Verba mensal alocada ($)
+   * @param {number} baseMonthlyRequired - Custo mensal mínimo para progressão ($)
+   * @returns {number} Delta de QR ganho neste mês (float, pode ser 0 se verba insuficiente)
+   */
+  calculateRDQualityGain(currentQR, targetQR, monthlyBudget, baseMonthlyRequired) {
+    if (!monthlyBudget || monthlyBudget <= 0) return 0;
+    if (currentQR >= targetQR) return 0;
+
+    const minRequired = baseMonthlyRequired || 1;
+    const budgetRatio = Math.min(2.5, monthlyBudget / minRequired); // cap 2.5x aceleração
+    const baseGainPerMonth = 3.0; // ganho base com verba mínima: +3 QR/mês
+
+    // Lei dos Rendimentos Decrescentes (espelha o Capitalism)
+    const diminishingFactor = Math.max(0, 1 - currentQR / 120);
+
+    const rawGain = baseGainPerMonth * budgetRatio * diminishingFactor;
+    const remaining = targetQR - currentQR;
+    return Number(Math.min(rawGain, remaining).toFixed(3));
+  },
+
+  /**
+   * Propaga gradualmente o QR da linha de produção para a gôndola da loja.
+   * O novo QR só aparece na prateleira conforme o estoque antigo é consumido.
+   * Fiel ao Capitalism: o consumidor só "sente" a melhoria quando recebe produto novo.
+   * @param {number} shelfQR - QR atual na gôndola (0-100)
+   * @param {number} factoryQR - QR atual da linha de produção da fábrica (0-100)
+   * @param {number} soldToday - Unidades vendidas hoje nessa gôndola
+   * @param {number} shelfCapacity - Capacidade máxima da gôndola (maxCapacity)
+   * @returns {number} Novo QR da gôndola após a propagação
+   */
+  propagateQualityToShelf(shelfQR, factoryQR, soldToday, shelfCapacity) {
+    if (!shelfCapacity || shelfCapacity <= 0) return shelfQR;
+    if (Math.abs(factoryQR - shelfQR) < 0.1) return shelfQR; // já alinhado
+
+    const turnoverRate = Math.min(1, (soldToday || 0) / shelfCapacity);
+    const newQR = shelfQR + (factoryQR - shelfQR) * turnoverRate;
+    return Number(Math.min(100, Math.max(0, newQR)).toFixed(2));
   }
 };
 

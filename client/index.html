@@ -130,6 +130,9 @@
         <button onclick="openMarketingCentralModal()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Central de Publicidade">
           📢 <span id="active-campaigns-badge" class="bg-indigo-700 px-1 rounded text-[8px] text-white">0</span>
         </button>
+        <button onclick="openRDCenterModal()" class="bg-purple-950/80 hover:bg-purple-900 border border-purple-700/60 text-purple-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Centro de Pesquisa & Desenvolvimento">
+          🔬 <span id="active-rd-badge" class="bg-purple-700 px-1 rounded text-[8px] text-white">0</span>
+        </button>
         <button onclick="togglePauseMenu()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Menu Principal & Configurações (ESC)">
           ⚙️ <span class="hud-btn-text">Menu</span>
         </button>
@@ -180,6 +183,8 @@
       <span class="text-slate-700">·</span>
       <span id="telemetry-pop-count" title="População mundial consumidora">👥 45,000 Hab</span>
       <span class="text-slate-700">·</span>
+      <span id="telemetry-rd-chip" class="text-purple-400 font-bold hidden cursor-pointer hover:underline" onclick="openRDCenterModal()" title="Projetos de P&D em andamento">🔬 0 Pesquisas</span>
+      <span class="text-slate-700">·</span>
       <span id="telemetry-save-status" class="text-emerald-400" title="Status do último salvamento">💾 Salvo</span>
       <span class="text-slate-700">·</span>
       <span id="telemetry-fps" class="text-amber-400 font-bold">⚡ 60 FPS</span>
@@ -191,7 +196,7 @@
         🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
       </button>
       <span id="telemetry-version-badge" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-bold text-[9px]" title="Versão Oficial do Jogo & Build">
-        🏛️ OIKONOMIA <span class="text-emerald-400">v0.7.4</span> <span class="text-slate-500 text-[8px]">bld.20260827.06</span>
+        🏛️ OIKONOMIA <span class="text-emerald-400">v0.8.0</span> <span class="text-slate-500 text-[8px]">bld.20260828.01</span>
       </span>
     </div>
   </footer>
@@ -219,6 +224,116 @@
 
     <!-- Rodapé Fixo de Ações (Venda, Demolição & Adição) -->
     <div id="facility-action-row" class="p-3 bg-slate-950 border-t border-slate-800 flex flex-col gap-2"></div>
+  </div>
+
+  <!-- P&D — MODAL DO CENTRO DE PESQUISA & DESENVOLVIMENTO -->
+  <div id="rd-center-modal" class="fixed inset-0 z-[60] bg-black/75 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-purple-800/60 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden flex flex-col max-h-[90vh] transition-all duration-200">
+      <!-- Header -->
+      <div class="bg-slate-800/90 border-b border-slate-700 px-5 py-3 flex items-center justify-between drag-handle">
+        <div class="flex items-center gap-2.5">
+          <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
+          <div class="w-8 h-8 rounded-xl bg-purple-950 border border-purple-700/60 flex items-center justify-center text-sm">🔬</div>
+          <div>
+            <h3 class="text-sm font-bold text-purple-300">Centro de Pesquisa & Desenvolvimento</h3>
+            <span id="rd-header-subtitle" class="text-[10px] text-slate-400">Carregando projetos...</span>
+          </div>
+        </div>
+        <button onclick="closeRDCenterModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <!-- Orçamento Total & Navegação de Abas -->
+      <div class="bg-purple-950/30 border-b border-purple-800/30 px-5 py-2 flex items-center justify-between text-xs font-mono flex-wrap gap-2">
+        <div class="flex items-center gap-1.5">
+          <button id="rd-tab-projects-btn" onclick="switchRDTab('projects')"
+            class="px-2.5 py-1 rounded-lg font-bold bg-purple-800 text-purple-100 border border-purple-600/60 shadow text-[10px] cursor-pointer">
+            🔬 Projetos Ativos
+          </button>
+          <button id="rd-tab-market-btn" onclick="switchRDTab('market')"
+            class="px-2.5 py-1 rounded-lg font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] cursor-pointer">
+            📜 Mercado de Patentes & Aquisições
+          </button>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="hidden sm:flex items-center gap-1 text-[11px]">
+            <span class="text-slate-400">Orçamento:</span>
+            <span id="rd-total-budget-display" class="text-purple-300 font-bold">$0 / mês</span>
+          </div>
+          <button onclick="openRDNewProjectModal()"
+            class="bg-purple-800/60 hover:bg-purple-700 text-purple-200 font-bold px-3 py-1 rounded-lg text-[10px] border border-purple-600/60 shadow transition flex items-center gap-1.5 cursor-pointer">
+            ➕ Novo Projeto
+          </button>
+        </div>
+      </div>
+
+      <!-- Conteúdo da Aba 1: Lista de Projetos Ativos -->
+      <div id="rd-projects-list" class="p-4 space-y-3 flex-1 overflow-y-auto custom-scrollbar">
+        <p class="text-xs text-slate-500 text-center py-8 font-mono">Nenhum projeto de pesquisa ativo.<br>Clique em "Novo Projeto" para iniciar.</p>
+      </div>
+
+      <!-- Conteúdo da Aba 2: Mercado de Patentes & Compra de Tecnologia -->
+      <div id="rd-market-list" class="p-4 space-y-3 flex-1 overflow-y-auto custom-scrollbar hidden">
+        <p class="text-xs text-slate-500 text-center py-8 font-mono">Carregando tecnologias do mercado...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- P&D — WIZARD DE NOVO PROJETO -->
+  <div id="rd-new-project-modal" class="fixed inset-0 z-[65] bg-black/60 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-purple-700/60 rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+      <!-- Header -->
+      <div class="bg-slate-800 border-b border-slate-700 px-5 py-3 flex items-center justify-between">
+        <h3 class="text-sm font-bold text-purple-300 flex items-center gap-2">⚗️ Iniciar Novo Projeto de Pesquisa</h3>
+        <button onclick="closeRDNewProjectModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
+      </div>
+      <div class="p-5 space-y-4 font-mono text-xs">
+        <!-- Seleção de Produto -->
+        <div>
+          <label class="text-slate-400 block mb-1.5">1. Produto a Pesquisar:</label>
+          <select id="rd-product-select" onchange="updateRDWizardPreview()"
+            class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs focus:outline-none focus:border-purple-600">
+            <option value="">-- Selecione um produto --</option>
+          </select>
+          <span id="rd-product-category-badge" class="text-[10px] text-purple-400 mt-1 block hidden"></span>
+        </div>
+        <!-- QR Alvo -->
+        <div>
+          <label class="text-slate-400 block mb-1.5">2. QR Alvo: <span id="rd-target-qr-display" class="text-purple-300 font-bold">80</span></label>
+          <input type="range" id="rd-target-qr-slider" min="60" max="100" step="1" value="80"
+            oninput="updateRDWizardPreview()"
+            class="w-full accent-purple-500">
+          <div class="flex justify-between text-[9px] text-slate-600 mt-0.5"><span>QR 60</span><span>QR 80</span><span>QR 100</span></div>
+        </div>
+        <!-- Verba Mensal -->
+        <div>
+          <label class="text-slate-400 block mb-1.5">3. Verba Mensal: <span id="rd-budget-warning" class="text-amber-400 hidden">⚠ Abaixo do mínimo!</span></label>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500">$</span>
+            <input type="number" id="rd-budget-input" min="0" step="500" value="5000"
+              oninput="updateRDWizardPreview()"
+              class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-emerald-400 font-bold text-xs focus:outline-none focus:border-purple-600">
+            <span class="text-slate-500 text-[10px]">/mês</span>
+          </div>
+          <p id="rd-min-required-hint" class="text-[10px] text-slate-500 mt-1">Mínimo para progressão: --</p>
+        </div>
+        <!-- Preview / ETA -->
+        <div id="rd-wizard-preview" class="bg-purple-950/40 border border-purple-800/50 rounded-xl p-3 space-y-1 text-[11px] hidden">
+          <div class="flex justify-between"><span class="text-slate-400">Progresso atual do produto:</span><span id="rd-prev-current-qr" class="text-amber-300 font-bold">--</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Custo mínimo / mês:</span><span id="rd-prev-min-cost" class="text-rose-400 font-bold">--</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Ganho estimado / mês:</span><span id="rd-prev-gain" class="text-emerald-400 font-bold">--</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Tempo Estimado (ETA):</span><span id="rd-prev-eta" class="text-purple-300 font-bold">--</span></div>
+          <div class="flex justify-between border-t border-purple-800/50 pt-1 mt-1"><span class="text-slate-400">Custo Total Estimado:</span><span id="rd-prev-total-cost" class="text-slate-100 font-bold">--</span></div>
+        </div>
+        <!-- Botões -->
+        <div class="flex gap-2 pt-1">
+          <button onclick="closeRDNewProjectModal()" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-slate-700 cursor-pointer">Cancelar</button>
+          <button id="rd-start-btn" onclick="startRDProject()" disabled
+            class="flex-1 py-2 rounded-xl bg-purple-800/60 hover:bg-purple-700 text-purple-200 font-bold text-xs border border-purple-600/60 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition">
+            ✅ Iniciar Pesquisa
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- 6. GAVETA FLUTUANTE DRE -->
@@ -623,7 +738,7 @@
     <div class="flex justify-between items-center text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-4">
       <div class="flex items-center gap-2">
         <span class="text-slate-400 font-bold">OIKONOMIA PROJECT © 2026</span>
-        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.7.4 Oficial (bld.20260827.05)</span>
+        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.8.0 Oficial (bld.20260828.01)</span>
       </div>
       <div class="flex gap-4">
         <span>Atalho: <strong>F3</strong> (Dev Dashboard)</span>
@@ -902,11 +1017,11 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Versão Oficial</span>
-              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.7.4 (bld.20260827.06)</span>
+              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.8.0 (bld.20260828.01)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Schema de Saves</span>
-              <span id="dev-card-save-schema" class="text-xs font-bold text-amber-400">v0.7.2 (Compatível)</span>
+              <span id="dev-card-save-schema" class="text-xs font-bold text-amber-400">v0.8.0 (Compatível)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Sparse Index</span>
@@ -1118,6 +1233,7 @@
       },
       playerBrandRating: {},
       activeMarketingContracts: new Set(),
+      rdLabs: {},
       unlockedCities: {
         nova_atenas: true,
         porto_real: true,
@@ -1141,6 +1257,7 @@
     let gameSettings = GameState.gameSettings;
     const playerBrandRating = GameState.playerBrandRating;
     const activeMarketingContracts = GameState.activeMarketingContracts;
+    const rdLabs = GameState.rdLabs;
     const unlockedCities = GameState.unlockedCities;
 
     // Catálogo dos 12 Avatares Oficiais (4 Humanos, 4 Animais, 4 Robôs)
@@ -1504,8 +1621,20 @@
       scheduleRender();
     }
 
-    function changeZoom(d) {
-      camera.zoom = Math.min(2.4, Math.max(0.35, camera.zoom + d));
+    function changeZoom(d, pivotX = null, pivotY = null) {
+      const oldZoom = camera.zoom;
+      const newZoom = Math.min(2.4, Math.max(0.35, oldZoom + d));
+      if (newZoom === oldZoom) return;
+
+      const r = canvas.getBoundingClientRect();
+      const px = pivotX !== null ? pivotX : r.width / 2;
+      const py = pivotY !== null ? pivotY : r.height / 2;
+
+      const scaleRatio = newZoom / oldZoom;
+      camera.panX = px - (px - camera.panX) * scaleRatio;
+      camera.panY = py - (py - camera.panY) * scaleRatio;
+      camera.zoom = newZoom;
+
       scheduleRender();
     }
 
@@ -2032,7 +2161,17 @@
 
     canvas.addEventListener('wheel', (e) => {
       e.preventDefault();
-      changeZoom(e.deltaY < 0 ? 0.08 : -0.08);
+      const r = canvas.getBoundingClientRect();
+      const mx = e.clientX - r.left;
+      const my = e.clientY - r.top;
+      const zoomFactor = e.deltaY < 0 ? 0.08 : -0.08;
+      changeZoom(zoomFactor, mx, my);
+
+      const { gx, gy } = screenToGrid(mx, my);
+      if (gx >= 0 && gx < GRID_SIZE && gy >= 0 && gy < GRID_SIZE) {
+        hoveredTileX = gx;
+        hoveredTileY = gy;
+      }
     }, { passive: false });
 
     canvas.addEventListener('click', (e) => {
@@ -2473,13 +2612,19 @@
         panel.innerHTML = `<p class="text-xs text-slate-500 font-mono text-center py-6">Nenhuma linha de produção ativa. Ative uma linha abaixo.</p>`;
       } else {
         for (const [recipeId, line] of lines) {
+          const rdProj = rdLabs['rd_' + line.outputProductId];
+          const rdBadge = rdProj
+            ? `<button onclick="openRDCenterModal()" class="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-800 font-mono ml-1 hover:bg-purple-900 cursor-pointer" title="P&D: ${rdProj.status === 'completed' ? 'Concluído' : 'Pesquisando'} QR ${rdProj.targetQR} (Atual: ${rdProj.currentQR.toFixed(1)})">🔬 P&D: ${rdProj.currentQR.toFixed(0)}</button>`
+            : '';
+
           const card = document.createElement('div');
           card.className = 'bg-slate-950 p-3 rounded-xl border border-orange-800/80 space-y-2 font-mono text-xs';
           card.innerHTML = `
             <div class="flex items-center justify-between">
-              <div>
+              <div class="flex items-center flex-wrap">
                 <span class="font-bold text-orange-300">${line.recipeName}</span>
                 <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded ml-1.5">${PRODUCT_CATALOG[line.outputProductId]?.category || 'Insumo'}</span>
+                ${rdBadge}
               </div>
               <button onclick="removeFactoryLine(${tile.x}, ${tile.y}, '${recipeId}')" class="text-slate-500 hover:text-rose-400">✕</button>
             </div>
@@ -2529,6 +2674,11 @@
         const prod = PRODUCT_CATALOG[prodId];
         if (!prod) continue;
 
+        const rdProj = rdLabs['rd_' + prodId];
+        const rdBadge = rdProj
+          ? `<button onclick="openRDCenterModal()" class="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-800 font-mono hover:bg-purple-900 cursor-pointer" title="P&D: ${rdProj.status === 'completed' ? 'Concluído' : 'Pesquisando'} QR ${rdProj.targetQR} (Atual: ${rdProj.currentQR.toFixed(1)})">🔬 P&D: ${rdProj.currentQR.toFixed(0)}</button>`
+          : '';
+
         const brand = playerBrandRating[prodId] || 20;
         const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
         const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
@@ -2548,6 +2698,7 @@
               <span class="text-[11px] font-bold text-slate-200">${prod.name}</span>
               <span class="text-[9px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800 font-mono">QR: ${shelf.quality}</span>
               <span class="text-[9px] bg-indigo-950 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-800 font-mono">⭐ Marca: ${brand}</span>
+              ${rdBadge}
             </div>
             <button onclick="removeProductFromStore(${tile.x}, ${tile.y}, '${prodId}')" class="text-[10px] text-slate-600 hover:text-rose-400 font-mono px-1">✕</button>
           </div>
@@ -2816,13 +2967,16 @@
       const rec = FACTORY_RECIPES.find(r => r.id === recipeId);
       if (!rec) return;
 
+      const researchedQR = rdLabs['rd_' + rec.outputProdId]?.currentQR;
+      const initialQuality = researchedQR ? Math.max(rec.quality, researchedQR) : rec.quality;
+
       activeFactoryTile.factory.lines[rec.id] = {
         recipeId: rec.id,
         recipeName: rec.name,
         outputProductId: rec.outputProdId,
         dailyCapacity: rec.dailyCap,
         unitCost: rec.unitCost,
-        outputQuality: rec.quality,
+        outputQuality: initialQuality,
         finishedStock: 200,
         maxStock: 3000
       };
@@ -2860,6 +3014,530 @@
         }
       }
       return total;
+    }
+
+    // ===========================================================================
+    // 🔬 MÓDULO DE P&D — PESQUISA & DESENVOLVIMENTO (CAPITALISM II ENGINE)
+    // ===========================================================================
+
+    /** Abre o modal do Centro de P&D e popula a lista de projetos */
+    function openRDCenterModal() {
+      document.getElementById('rd-center-modal').classList.remove('hidden');
+      renderRDProjectsList();
+    }
+
+    function closeRDCenterModal() {
+      document.getElementById('rd-center-modal').classList.add('hidden');
+    }
+
+    /** Popula e renderiza todos os projetos de P&D ativos/pausados/concluídos */
+    function renderRDProjectsList() {
+      const list = document.getElementById('rd-projects-list');
+      const subtitle = document.getElementById('rd-header-subtitle');
+      const budgetDisplay = document.getElementById('rd-total-budget-display');
+      if (!list) return;
+
+      const projects = Object.values(rdLabs);
+      const active = projects.filter(p => p.status === 'active');
+      const totalBudget = active.reduce((s, p) => s + (p.monthlyBudget || 0), 0);
+      budgetDisplay.textContent = `$${totalBudget.toLocaleString('en-US')} / mês`;
+      subtitle.textContent = `${active.length} projeto${active.length !== 1 ? 's' : ''} ativo${active.length !== 1 ? 's' : ''} · Verba mensal total: $${totalBudget.toLocaleString('en-US')}`;
+
+      if (projects.length === 0) {
+        list.innerHTML = '<p class="text-xs text-slate-500 text-center py-8 font-mono">Nenhum projeto de pesquisa ativo.<br>Clique em "Novo Projeto" para iniciar.</p>';
+        return;
+      }
+
+      list.innerHTML = '';
+      for (const proj of projects.sort((a, b) => (b.status === 'active' ? 1 : 0) - (a.status === 'active' ? 1 : 0))) {
+        const prod = PRODUCT_CATALOG[proj.productId];
+        const cat = RD_CATEGORIES[proj.category] || {};
+        const minCost = CoreMath.calculateRDMonthlyCost(proj.currentQR, prod ? prod.rdBaseCost : 3000);
+        const pct = Math.min(100, Math.round(((proj.currentQR - proj.startQR) / Math.max(1, proj.targetQR - proj.startQR)) * 100));
+
+        const isActive = proj.status === 'active';
+        const isDone = proj.status === 'completed';
+        const statusBadge = isDone
+          ? '<span class="bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-700 text-[9px] font-bold">✅ CONCLUÍDO</span>'
+          : (isActive
+            ? '<span class="bg-purple-950 text-purple-300 px-2 py-0.5 rounded border border-purple-700 text-[9px] font-bold">🟢 ATIVO</span>'
+            : '<span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-700 text-[9px] font-bold">⏸ PAUSADO</span>');
+
+        const gain = CoreMath.calculateRDQualityGain(proj.currentQR, proj.targetQR, proj.monthlyBudget, minCost);
+        const monthsLeft = gain > 0 ? Math.ceil((proj.targetQR - proj.currentQR) / gain) : '∞';
+        const barColor = isDone ? 'bg-emerald-500' : (isActive ? 'bg-purple-500' : 'bg-slate-600');
+
+        const card = document.createElement('div');
+        card.className = `bg-slate-950 border rounded-xl p-3 space-y-2.5 font-mono text-xs ${isDone ? 'border-emerald-800/60' : (isActive ? 'border-purple-800/50' : 'border-slate-800')}`;
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-base">${cat.icon || '🔬'}</span>
+              <div>
+                <div class="font-bold text-slate-100 text-[11px]">${prod ? prod.name : proj.productId}</div>
+                <div class="text-[9px] text-slate-400">${proj.category} · Meses investidos: ${proj.monthsInvested}</div>
+              </div>
+            </div>
+            ${statusBadge}
+          </div>
+          <div>
+            <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+              <span>QR: <strong class="text-amber-300">${proj.currentQR.toFixed(1)}</strong> → <strong class="text-purple-300">${proj.targetQR}</strong></span>
+              <span>${pct}% completo</span>
+            </div>
+            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div class="${barColor} h-full rounded-full transition-all" style="width:${pct}%"></div>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-[10px] text-slate-400">
+            <div>Verba: <strong class="text-emerald-400">$${(proj.monthlyBudget || 0).toLocaleString('en-US')}/mês</strong></div>
+            <div>Ganho: <strong class="text-purple-300">+${gain.toFixed(2)} QR/mês</strong></div>
+            <div>ETA: <strong class="text-slate-200">${isDone ? '--' : (monthsLeft === '∞' ? '∞' : monthsLeft + ' meses')}</strong></div>
+          </div>
+          <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-slate-800">
+            ${!isDone && isActive ? `<button onclick="pauseRDProject('${proj.id}')" class="py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[9px] font-bold border border-slate-700 cursor-pointer">⏸ Pausar</button>` : ''}
+            ${!isDone && !isActive ? `<button onclick="resumeRDProject('${proj.id}')" class="py-1 bg-purple-900/60 hover:bg-purple-800 text-purple-300 rounded-lg text-[9px] font-bold border border-purple-700 cursor-pointer">▶ Retomar</button>` : ''}
+            ${!isDone ? `<button onclick="adjustRDBudget('${proj.id}')" class="py-1 bg-slate-800 hover:bg-slate-700 text-teal-300 rounded-lg text-[9px] font-bold border border-slate-700 cursor-pointer">💰 Ajustar Verba</button>` : ''}
+            <button onclick="cancelRDProject('${proj.id}')" class="py-1 bg-rose-950/60 hover:bg-rose-900 text-rose-300 rounded-lg text-[9px] font-bold border border-rose-800 cursor-pointer">🗑️ Cancelar</button>
+          </div>
+        `;
+        list.appendChild(card);
+      }
+    }
+
+    let currentRDTab = 'projects';
+
+    function switchRDTab(tab) {
+      currentRDTab = tab;
+      const projBtn = document.getElementById('rd-tab-projects-btn');
+      const mktBtn = document.getElementById('rd-tab-market-btn');
+      const projList = document.getElementById('rd-projects-list');
+      const mktList = document.getElementById('rd-market-list');
+
+      if (tab === 'projects') {
+        projBtn.className = 'px-2.5 py-1 rounded-lg font-bold bg-purple-800 text-purple-100 border border-purple-600/60 shadow text-[10px] cursor-pointer';
+        mktBtn.className = 'px-2.5 py-1 rounded-lg font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] cursor-pointer';
+        projList.classList.remove('hidden');
+        mktList.classList.add('hidden');
+        renderRDProjectsList();
+      } else {
+        projBtn.className = 'px-2.5 py-1 rounded-lg font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] cursor-pointer';
+        mktBtn.className = 'px-2.5 py-1 rounded-lg font-bold bg-purple-800 text-purple-100 border border-purple-600/60 shadow text-[10px] cursor-pointer';
+        projList.classList.add('hidden');
+        mktList.classList.remove('hidden');
+        renderRDMarketList();
+      }
+    }
+
+    /** Popula e renderiza o Mercado de Patentes / Aquisição de Tecnologia (fiel ao Capitalism II) */
+    function renderRDMarketList() {
+      const list = document.getElementById('rd-market-list');
+      const subtitle = document.getElementById('rd-header-subtitle');
+      if (!list) return;
+
+      subtitle.textContent = 'Mercado de Patentes & Aquisição Direta de Tecnologia de Concorrentes';
+
+      // Coleta o líder de qualidade do mercado para cada produto
+      const marketTechs = {};
+      for (const tile of activeFacilitySet.values()) {
+        if (tile.competitor?.shelves) {
+          for (const [prodId, cs] of Object.entries(tile.competitor.shelves)) {
+            const currentLeader = marketTechs[prodId];
+            if (!currentLeader || (cs.quality || 50) > currentLeader.quality) {
+              marketTechs[prodId] = {
+                productId: prodId,
+                quality: cs.quality || 50,
+                competitorName: tile.competitor.name,
+                competitorId: tile.competitor.id
+              };
+            }
+          }
+        }
+      }
+
+      const availableForBuyout = [];
+      for (const tech of Object.values(marketTechs)) {
+        const myQR = getRDCurrentQR(tech.productId);
+        if (tech.quality > myQR + 1) { // Só lista se o concorrente tiver tecnologia superior à minha
+          availableForBuyout.push({
+            ...tech,
+            myQR,
+            gain: tech.quality - myQR,
+            prod: PRODUCT_CATALOG[tech.productId]
+          });
+        }
+      }
+
+      if (availableForBuyout.length === 0) {
+        list.innerHTML = `
+          <div class="text-center py-10 font-mono space-y-2">
+            <div class="text-2xl">🏆</div>
+            <p class="text-xs text-emerald-400 font-bold">Liderança Tecnológica Global!</p>
+            <p class="text-[11px] text-slate-500">Nenhum concorrente no mercado possui tecnologia superior às suas linhas no momento.</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = '';
+      for (const item of availableForBuyout.sort((a, b) => b.gain - a.gain)) {
+        const prod = item.prod;
+        if (!prod) continue;
+        const cat = RD_CATEGORIES[prod.category] || { baseCost: 3000 };
+        // Preço de aquisição de patente (fiel ao Capitalism: baseCost × salto_qualidade × 10)
+        const buyoutCost = Math.round((prod.rdBaseCost || cat.baseCost) * item.gain * 8);
+        const canAfford = cash >= buyoutCost;
+
+        const card = document.createElement('div');
+        card.className = 'bg-slate-950 border border-slate-800 hover:border-purple-800/80 rounded-xl p-3 space-y-2 font-mono text-xs transition';
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-base">${cat.icon || '🔬'}</span>
+              <div>
+                <div class="font-bold text-slate-100 text-[11px]">${prod.name}</div>
+                <div class="text-[9px] text-purple-400">Detentor da Patente: <strong>${item.competitorName}</strong></div>
+              </div>
+            </div>
+            <span class="bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded border border-indigo-700 text-[9px] font-bold">Patente Disponível</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-[10px] bg-slate-900/60 p-2 rounded-lg border border-slate-800/80">
+            <div>Seu QR: <strong class="text-amber-300">${item.myQR.toFixed(1)}</strong></div>
+            <div>QR Concorrente: <strong class="text-purple-300">${item.quality.toFixed(1)}</strong></div>
+            <div>Salto Imediato: <strong class="text-emerald-400">+${item.gain.toFixed(1)} QR</strong></div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <div class="text-[11px]">
+              <span class="text-slate-400">Custo de Licenciamento:</span>
+              <strong class="${canAfford ? 'text-emerald-400' : 'text-rose-400'} font-bold ml-1">$${buyoutCost.toLocaleString('en-US')}</strong>
+            </div>
+            <button onclick="buyCompetitorTech('${item.productId}', ${item.quality}, ${buyoutCost}, '${item.competitorName}')"
+              ${canAfford ? '' : 'disabled'}
+              class="px-3 py-1 rounded-lg font-bold text-xs ${canAfford ? 'bg-purple-800 hover:bg-purple-700 text-purple-100 border border-purple-600/60 cursor-pointer shadow' : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'} transition">
+              📜 Adquirir Patente
+            </button>
+          </div>
+        `;
+        list.appendChild(card);
+      }
+    }
+
+    /** Compra imediatamente uma tecnologia/patente de concorrente */
+    function buyCompetitorTech(productId, targetQR, cost, competitorName) {
+      if (cash < cost) {
+        alert('Caixa insuficiente para adquirir esta patente!');
+        return;
+      }
+
+      const prod = PRODUCT_CATALOG[productId];
+      if (!prod) return;
+
+      cash -= cost;
+      const key = 'rd_' + productId;
+      const prevQR = getRDCurrentQR(productId);
+
+      rdLabs[key] = {
+        id: key,
+        productId: productId,
+        productName: prod.name,
+        category: prod.category,
+        monthlyBudget: 0,
+        baseMonthlyRequired: CoreMath.calculateRDMonthlyCost(targetQR, prod.rdBaseCost || 3000),
+        startQR: prevQR,
+        currentQR: targetQR,
+        targetQR: targetQR,
+        monthsInvested: 0,
+        totalSpent: cost,
+        status: 'completed',
+        completedAt: { day, month, year },
+      };
+
+      // Atualiza todas as linhas de produção que fabricam o produto
+      updateAllFactoryLinesQR(productId, targetQR);
+
+      addGameLog(`📜 Patente de "${prod.name}" adquirida de ${competitorName}! QR avançou para ${targetQR.toFixed(1)} (-$${cost.toLocaleString('en-US')})`, 'text-purple-300 font-bold');
+      updateUI();
+      renderRDMarketList();
+    }
+
+    /** Abre o wizard de novo projeto de P&D populando o dropdown com TODOS os produtos do catálogo (fiel ao Capitalism II) */
+    function openRDNewProjectModal() {
+      const sel = document.getElementById('rd-product-select');
+      sel.innerHTML = '<option value="">-- Selecione um produto --</option>';
+
+      // Identifica produtos que o jogador já fabrica ou vende para marcar com badge
+      const activeManufacturing = new Set();
+      const activeSelling = new Set();
+      for (const tile of activeFacilitySet.values()) {
+        if (tile.store) Object.keys(tile.store.shelves).forEach(id => activeSelling.add(id));
+        if (tile.factory) Object.values(tile.factory.lines).forEach(l => activeManufacturing.add(l.outputProductId));
+      }
+
+      const categoryGroups = {};
+      for (const prod of Object.values(PRODUCT_CATALOG)) {
+        if (rdLabs['rd_' + prod.id] && rdLabs['rd_' + prod.id].status === 'active') continue; // já em pesquisa ativa
+        if (!categoryGroups[prod.category]) categoryGroups[prod.category] = [];
+        categoryGroups[prod.category].push(prod);
+      }
+
+      for (const [cat, prods] of Object.entries(categoryGroups)) {
+        const grp = document.createElement('optgroup');
+        grp.label = cat;
+        for (const prod of prods.sort((a, b) => a.name.localeCompare(b.name))) {
+          const opt = document.createElement('option');
+          opt.value = prod.id;
+          let tag = '';
+          if (activeManufacturing.has(prod.id)) tag = ' [🏭 Fabricando]';
+          else if (activeSelling.has(prod.id)) tag = ' [🏪 Vendendo]';
+          opt.textContent = `${prod.name}${tag}`;
+          grp.appendChild(opt);
+        }
+        sel.appendChild(grp);
+      }
+
+      document.getElementById('rd-target-qr-slider').value = 80;
+      document.getElementById('rd-budget-input').value = 5000;
+      document.getElementById('rd-wizard-preview').classList.add('hidden');
+      document.getElementById('rd-start-btn').disabled = true;
+      document.getElementById('rd-new-project-modal').classList.remove('hidden');
+    }
+
+    function closeRDNewProjectModal() {
+      document.getElementById('rd-new-project-modal').classList.add('hidden');
+    }
+
+    /** Atualiza o preview/ETA em tempo real ao mexer nos sliders do wizard */
+    function updateRDWizardPreview() {
+      const prodId = document.getElementById('rd-product-select').value;
+      const targetQR = parseInt(document.getElementById('rd-target-qr-slider').value);
+      const budget = parseFloat(document.getElementById('rd-budget-input').value) || 0;
+
+      document.getElementById('rd-target-qr-display').textContent = targetQR;
+
+      const prod = PRODUCT_CATALOG[prodId];
+      const preview = document.getElementById('rd-wizard-preview');
+      const startBtn = document.getElementById('rd-start-btn');
+      const badge = document.getElementById('rd-product-category-badge');
+      const minHint = document.getElementById('rd-min-required-hint');
+      const warning = document.getElementById('rd-budget-warning');
+
+      if (!prod) {
+        preview.classList.add('hidden');
+        startBtn.disabled = true;
+        badge.classList.add('hidden');
+        return;
+      }
+
+      const cat = RD_CATEGORIES[prod.category] || { baseCost: 3000 };
+      const currentQR = getRDCurrentQR(prodId);
+      const minCost = CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || cat.baseCost);
+      const gain = CoreMath.calculateRDQualityGain(currentQR, targetQR, budget, minCost);
+      const monthsNeeded = gain > 0 ? Math.ceil((targetQR - currentQR) / gain) : Infinity;
+      const totalCost = monthsNeeded < Infinity ? Math.round(monthsNeeded * budget) : null;
+
+      badge.textContent = `${cat.icon || '🔬'} ${prod.category} · Mín: $${minCost.toLocaleString('en-US')}/mês`;
+      badge.classList.remove('hidden');
+      minHint.textContent = `Mínimo para progressão: $${minCost.toLocaleString('en-US')}/mês`;
+
+      const belowMin = budget < minCost;
+      warning.classList.toggle('hidden', !belowMin);
+      document.getElementById('rd-budget-input').classList.toggle('border-amber-600', belowMin);
+
+      document.getElementById('rd-prev-current-qr').textContent = `${currentQR.toFixed(1)} / 100`;
+      document.getElementById('rd-prev-min-cost').textContent = `$${minCost.toLocaleString('en-US')}`;
+      document.getElementById('rd-prev-gain').textContent = gain > 0 ? `+${gain.toFixed(2)} QR/mês` : 'Sem progresso';
+      document.getElementById('rd-prev-eta').textContent = monthsNeeded < Infinity ? `≈ ${monthsNeeded} meses` : 'Indeterminado';
+      document.getElementById('rd-prev-total-cost').textContent = totalCost ? `≈ $${totalCost.toLocaleString('en-US')}` : '--';
+      preview.classList.remove('hidden');
+
+      // Habilita apenas se produto selecionado e verba > 0
+      startBtn.disabled = !prodId || budget <= 0 || currentQR >= targetQR;
+    }
+
+    /** Retorna o QR atual do produto para fins de pesquisa (melhor QR de linha existente ou padrão do catálogo) */
+    function getRDCurrentQR(prodId) {
+      // Se já tem projeto ativo para este produto, usa o QR atual do projeto
+      const existing = rdLabs['rd_' + prodId];
+      if (existing) return existing.currentQR;
+
+      // Caso contrário, pega o melhor outputQuality de qualquer linha de fábrica que produza este produto
+      let bestQR = 0;
+      for (const tile of activeFacilitySet.values()) {
+        if (tile.factory && tile.factory.lines) {
+          for (const line of Object.values(tile.factory.lines)) {
+            if (line.outputProductId === prodId && (line.outputQuality || 0) > bestQR) {
+              bestQR = line.outputQuality;
+            }
+          }
+        }
+      }
+      // Fallback: qualidade base da receita do catálogo
+      if (bestQR === 0) {
+        const recipe = FACTORY_RECIPES.find(r => r.outputProdId === prodId);
+        bestQR = recipe ? (recipe.quality || 60) : 60;
+      }
+      return bestQR;
+    }
+
+    /** Inicia um projeto de P&D novo a partir do wizard */
+    function startRDProject() {
+      const prodId = document.getElementById('rd-product-select').value;
+      const targetQR = parseInt(document.getElementById('rd-target-qr-slider').value);
+      const budget = parseFloat(document.getElementById('rd-budget-input').value) || 0;
+
+      if (!prodId || budget <= 0 || targetQR <= 0) return;
+
+      const prod = PRODUCT_CATALOG[prodId];
+      if (!prod) return;
+
+      const currentQR = getRDCurrentQR(prodId);
+      if (currentQR >= targetQR) {
+        alert(`QR atual (${currentQR.toFixed(1)}) já atingiu o QR alvo (${targetQR})!`);
+        return;
+      }
+
+      const key = 'rd_' + prodId;
+      rdLabs[key] = {
+        id: key,
+        productId: prodId,
+        productName: prod.name,
+        category: prod.category,
+        monthlyBudget: budget,
+        baseMonthlyRequired: CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || 3000),
+        startQR: currentQR,
+        currentQR: currentQR,
+        targetQR: targetQR,
+        monthsInvested: 0,
+        totalSpent: 0,
+        status: 'active',
+        completedAt: null,
+      };
+
+      addGameLog(`🔬 Projeto de P&D iniciado: ${prod.name} → QR ${targetQR} com verba $${budget.toLocaleString('en-US')}/mês`, 'text-purple-400');
+      closeRDNewProjectModal();
+      renderRDProjectsList();
+    }
+
+    function pauseRDProject(id) {
+      if (rdLabs[id]) { rdLabs[id].status = 'paused'; renderRDProjectsList(); }
+    }
+
+    function resumeRDProject(id) {
+      if (rdLabs[id]) { rdLabs[id].status = 'active'; renderRDProjectsList(); }
+    }
+
+    function cancelRDProject(id) {
+      if (!rdLabs[id]) return;
+      if (!confirm(`Cancelar pesquisa de "${rdLabs[id].productName}"? Todo o progresso será perdido.`)) return;
+      delete rdLabs[id];
+      renderRDProjectsList();
+    }
+
+    function adjustRDBudget(id) {
+      const proj = rdLabs[id];
+      if (!proj) return;
+      const newBudget = parseFloat(prompt(`Nova verba mensal para "${proj.productName}" (atual: $${proj.monthlyBudget.toLocaleString('en-US')}):`, proj.monthlyBudget));
+      if (!isNaN(newBudget) && newBudget >= 0) {
+        proj.monthlyBudget = newBudget;
+        addGameLog(`🔬 P&D — Verba ajustada: ${proj.productName} → $${newBudget.toLocaleString('en-US')}/mês`, 'text-purple-400');
+        renderRDProjectsList();
+      }
+    }
+
+    /**
+     * Processa o avanço de todos os projetos de P&D no virada do mês.
+     * Chamado dentro de simulateMonth(). Cobra verba, avança QR, detecta conclusão.
+     */
+    function processRDProgress() {
+      let anyCompleted = false;
+      for (const proj of Object.values(rdLabs)) {
+        if (proj.status !== 'active') continue;
+
+        const prod = PRODUCT_CATALOG[proj.productId];
+        if (!prod) continue;
+
+        const minCost = CoreMath.calculateRDMonthlyCost(proj.currentQR, prod.rdBaseCost || 3000);
+        proj.baseMonthlyRequired = minCost;
+
+        // Cobra a verba mensal do caixa
+        const spent = Math.min(proj.monthlyBudget, cash);
+        cash -= spent;
+        proj.totalSpent += spent;
+        proj.monthsInvested++;
+
+        // Calcula ganho de QR proporcional à verba efetivamente paga
+        const gain = CoreMath.calculateRDQualityGain(proj.currentQR, proj.targetQR, spent, minCost);
+        proj.currentQR = Math.min(proj.targetQR, proj.currentQR + gain);
+
+        // Propaga o novo QR para todas as linhas de fábrica que produzem este produto
+        if (gain > 0) {
+          updateAllFactoryLinesQR(proj.productId, proj.currentQR);
+        }
+
+        // Verifica conclusão
+        if (proj.currentQR >= proj.targetQR) {
+          proj.status = 'completed';
+          proj.completedAt = { day, month, year };
+          anyCompleted = true;
+          addGameLog(`🎉 P&D CONCLUÍDO! "${proj.productName}" atingiu QR ${proj.targetQR.toFixed(1)}! Custo total: $${proj.totalSpent.toLocaleString('en-US')}`, 'text-emerald-400');
+        } else if (gain > 0) {
+          logDebug(`P&D "${proj.productName}": +${gain.toFixed(2)} QR/mês → QR atual: ${proj.currentQR.toFixed(1)} / ${proj.targetQR}`, 'RD');
+        }
+      }
+      updateRDChip();
+      if (anyCompleted && document.getElementById('rd-center-modal') && !document.getElementById('rd-center-modal').classList.contains('hidden')) {
+        renderRDProjectsList();
+      }
+    }
+
+    /** Aplica o QR de pesquisa nas linhas de produção de todas as fábricas do jogador */
+    function updateAllFactoryLinesQR(productId, newQR) {
+      for (const tile of activeFacilitySet.values()) {
+        if (!tile.factory || !tile.factory.lines) continue;
+        for (const line of Object.values(tile.factory.lines)) {
+          if (line.outputProductId === productId) {
+            line.outputQuality = Math.min(100, Math.max(line.outputQuality || 60, newQR));
+          }
+        }
+      }
+    }
+
+    /**
+     * Propaga o QR das linhas de produção para as gôndolas das lojas — chamado no loop diário.
+     * Fiel ao Capitalism: o QR da gôndola sobe gradualmente conforme o estoque antigo é consumido.
+     */
+    function propagateQualityRD() {
+      for (const tile of activeFacilitySet.values()) {
+        if (!tile.store || !tile.store.shelves) continue;
+        for (const [prodId, shelf] of Object.entries(tile.store.shelves)) {
+          const rdKey = 'rd_' + prodId;
+          const proj = rdLabs[rdKey];
+          if (!proj || proj.currentQR <= (shelf.quality || 60)) continue;
+
+          const soldToday = shelf.lastDailySales || 0;
+          shelf.quality = CoreMath.propagateQualityToShelf(
+            shelf.quality || 60,
+            proj.currentQR,
+            soldToday,
+            shelf.maxCapacity || 1000
+          );
+        }
+      }
+    }
+
+    /** Atualiza o chip de P&D na barra de telemetria */
+    function updateRDChip() {
+      const chip = document.getElementById('telemetry-rd-chip');
+      if (!chip) return;
+      const active = Object.values(rdLabs).filter(p => p.status === 'active').length;
+      if (active > 0) {
+        chip.textContent = `🔬 ${active} pesquisa${active > 1 ? 's' : ''}`;
+        chip.classList.remove('hidden');
+      } else {
+        chip.classList.add('hidden');
+      }
     }
 
     function openMarketingCentralModal(filterOutletId = null) {
@@ -3582,6 +4260,9 @@
         }
       }
 
+      // Propagação de P&D para prateleiras de varejo
+      propagateQualityRD();
+
       cash += dailyRev - dailyFixed - dailyMarketing;
       monthRevenue += dailyRev;
       monthCogs += dailyCogs;
@@ -3600,6 +4281,9 @@
         `📊 FIM DO MÊS ${String(month).padStart(2,'0')}: Receita $${monthRevenue.toLocaleString('en-US',{maximumFractionDigits:0})} | Lucro Líq: $${net.toLocaleString('en-US',{maximumFractionDigits:0})}`,
         net >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'
       );
+
+      // Processa o avanço das pesquisas de P&D
+      processRDProgress();
 
       const activeInstOutlets = MEDIA_OUTLETS.filter(o => activeMarketingContracts.has(`${o.id}::__institutional__`));
       const instBoost = activeInstOutlets.reduce((s, o) => s + Math.floor(o.brandBoostMonthly * 0.75), 0);
@@ -3939,6 +4623,16 @@
           : 'Nenhuma campanha ativa';
       }
 
+      const activeRDProjectsCount = Object.values(rdLabs).filter(p => p.status === 'active').length;
+      const rdBadge = document.getElementById('active-rd-badge');
+      if (rdBadge) {
+        rdBadge.textContent = String(activeRDProjectsCount);
+        rdBadge.title = activeRDProjectsCount > 0
+          ? `${activeRDProjectsCount} projetos de P&D ativos`
+          : 'Nenhum projeto de P&D ativo';
+      }
+      updateRDChip();
+
       const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses;
       const pe = document.getElementById('month-profit');
       if (pe) {
@@ -4009,10 +4703,10 @@
     // ===========================================================================
     const GAME_VERSION_INFO = {
       major: 0,
-      minor: 7,
-      patch: 4,
-      build: '20260827.06',
-      saveSchema: '0.7.2',
+      minor: 8,
+      patch: 0,
+      build: '20260828.01',
+      saveSchema: '0.8.0',
       get version() { return `${this.major}.${this.minor}.${this.patch}`; },
       get fullString() { return `v${this.version} (bld.${this.build})`; }
     };
@@ -4075,7 +4769,23 @@
         ? migrated.activeMarketingContracts.filter(c => typeof c === 'string' && c.includes('::'))
         : [];
 
-      // 5. Sanitização de Lotes Construídos (builtTiles)
+      // 5. Migração de P&D — rdLabs (novo em v0.8.0; saves antigos recebem {} vazio)
+      if (!migrated.rdLabs || typeof migrated.rdLabs !== 'object' || Array.isArray(migrated.rdLabs)) {
+        migrated.rdLabs = {};
+      } else {
+        // Sanitizar projetos existentes: apenas manter os que têm estrutura válida
+        const sanitized = {};
+        for (const [key, proj] of Object.entries(migrated.rdLabs)) {
+          if (proj && typeof proj.productId === 'string' && typeof proj.currentQR === 'number') {
+            proj.status = proj.status || 'active';
+            proj.monthsInvested = proj.monthsInvested || 0;
+            proj.totalSpent = proj.totalSpent || 0;
+            sanitized[key] = proj;
+          }
+        }
+        migrated.rdLabs = sanitized;
+      }
+
       const rawTiles = Array.isArray(migrated.builtTiles) ? migrated.builtTiles : [];
       migrated.builtTiles = rawTiles.filter(t => {
         return t && typeof t.x === 'number' && t.x >= 0 && t.x < GRID_SIZE &&
@@ -4158,6 +4868,7 @@
         unlockedCities: { ...unlockedCities },
         playerBrandRating: { ...playerBrandRating },
         activeMarketingContracts: Array.from(activeMarketingContracts),
+        rdLabs: { ...rdLabs },
         builtTiles: extractBuiltTiles(),
         playtimeSeconds
       };
@@ -4238,6 +4949,11 @@
 
       activeMarketingContracts.clear();
       saveData.activeMarketingContracts.forEach(c => activeMarketingContracts.add(c));
+
+      Object.keys(rdLabs).forEach(k => delete rdLabs[k]);
+      if (saveData.rdLabs && typeof saveData.rdLabs === 'object') {
+        Object.assign(rdLabs, saveData.rdLabs);
+      }
 
       // Reconstrói a malha base do mapa e aplica as instalações sanitizadas
       initWorldGrid();
@@ -4580,6 +5296,7 @@
 
       activeMarketingContracts.clear();
       Object.keys(PRODUCT_CATALOG).forEach(id => playerBrandRating[id] = 20);
+      Object.keys(rdLabs).forEach(k => delete rdLabs[k]);
 
       initWorldGrid();
       closeNewGameWizard();
@@ -4993,6 +5710,8 @@
         { id: 'farm-modal', key: 'oiko_pos_farm' },
         { id: 'port-modal', key: 'oiko_pos_port' },
         { id: 'marketing-central-modal', key: 'oiko_pos_marketing' },
+        { id: 'rd-center-modal', key: 'oiko_pos_rd_center' },
+        { id: 'rd-new-project-modal', key: 'oiko_pos_rd_new_project' },
         { id: 'dev-dashboard-modal', key: 'oiko_pos_dev_dashboard' },
         { id: 'save-load-modal', key: 'oiko_pos_save_load' },
         { id: 'settings-modal', key: 'oiko_pos_settings' }
