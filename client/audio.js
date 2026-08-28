@@ -1,4 +1,4 @@
-﻿/**
+/**
  * audio.js — Sintetizador Web Audio API de OIKONOMIA
  * Efeitos sonoros procedurais sem dependência de assets de áudio externos.
  */
@@ -62,6 +62,13 @@ const SoundEngine = {
     setTimeout(() => this.playBeep(1174.66, 'triangle', 0.10, 0.09), 50);
   },
 
+  playYearCelebration() {
+    this.playBeep(440, 'triangle', 0.1, 0.08);
+    setTimeout(() => this.playBeep(554.37, 'triangle', 0.1, 0.09), 80);
+    setTimeout(() => this.playBeep(659.25, 'triangle', 0.12, 0.1), 160);
+    setTimeout(() => this.playBeep(880.00, 'triangle', 0.25, 0.12), 240);
+  },
+
   suspend() {
     if (this.audioCtx && this.audioCtx.state === 'running') {
       this.audioCtx.suspend();
@@ -73,6 +80,7 @@ const SoundEngine = {
 function getAudioContext() { return SoundEngine.getAudioContext(); }
 function playBeep(freq, type, duration, gainVal) { SoundEngine.playBeep(freq, type, duration, gainVal); }
 function playSuccessChime() { SoundEngine.playSuccessChime(); }
+function playYearCelebration() { SoundEngine.playYearCelebration(); }
 
 if (typeof window !== 'undefined') {
   window.SoundEngine = SoundEngine;

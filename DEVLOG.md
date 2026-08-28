@@ -1,61 +1,64 @@
-﻿# ðŸ“” OIKONOMIA â€” DiÃ¡rio dos Desenvolvedores (DevLog & Agenda TÃ©cnica)
+# 🏛️ OIKONOMIA — Diário dos Desenvolvedores (DevLog & Agenda Técnica)
 
-> **Documento Oficial de Rastreabilidade, Versionamento e EvoluÃ§Ã£o do Projeto**  
-> **RepositÃ³rio:** `Jotasiete7/OIKONOMIA-game`  
-> **Ãšltima AtualizaÃ§Ã£o:** 28 de Agosto de 2026  
-> **VersÃ£o Oficial Corrente:** `v0.8.0 (bld.20260828.02)`  
-> **Save Schema:** `v0.8.0` (Compatibilidade Retroativa Total)
+> **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
+> **Repositório:** `Jotasiete7/OIKONOMIA-game`  
+> **Última Atualização:** 28 de Agosto de 2026  
+> **Versão Oficial Corrente:** `v0.8.1 (bld.20260828.03)`  
+> **Save Schema:** `v0.8.1` (Compatibilidade Retroativa Total com Migrações)
 
 ---
 
-## ðŸ›ï¸ PadrÃ£o Oficial de Versionamento da Equipe (SemVer 2.0 + Build Stamp)
+## 🏷️ Padrão Oficial de Versionamento da Equipe (SemVer 2.0 + Build Stamp)
 
-Todo o projeto segue estritamente a convenÃ§Ã£o:
+Todo o projeto segue estritamente a convenção:
 $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
-- **MAJOR (v1.0.0, v2.0.0)**: Marcos definitivos de lanÃ§amento comercial / saÃ­da de Beta.
-- **MINOR (v0.7.x -> v0.8.0)**: Grandes mÃ³dulos ou mecÃ¢nicas novas (ex: P&D, frotas visuais, bolsa).
-- **PATCH (v0.7.3 -> v0.7.4)**: Novas telas, melhorias de UI/UX, janelas arrastÃ¡veis, correÃ§Ãµes de bugs.
-- **BUILD STAMP (`bld.YYYYMMDD.XX`)**: Carimbo diÃ¡rio com a data e o nÃºmero da entrega daquele dia.
-- **SAVE SCHEMA (`0.8.0`)**: Controla a compatibilidade dos saves `.oiko` e do `localStorage`.
+- **MAJOR (v1.0.0, v2.0.0)**: Marcos definitivos de lançamento comercial / saída de Beta.
+- **MINOR (v0.7.x -> v0.8.0 -> v0.9.0)**: Grandes módulos ou mecânicas novas (ex: P&D, QG Corporativo, frotas visuais).
+- **PATCH (v0.8.0 -> v0.8.1)**: Pacotes de usabilidade, balanceamento, sprites, tutorial, IA e refinamentos.
+- **BUILD STAMP (`bld.YYYYMMDD.XX`)**: Carimbo diário com a data e o número da entrega daquele dia.
+- **SAVE SCHEMA (`0.8.1`)**: Controla a compatibilidade dos saves `.oiko` e do `localStorage`.
 
 ---
 
-## ðŸ§­ Agenda de Desenvolvimento (PrÃ³ximos Passos Priorizados)
+## 🧭 Agenda de Desenvolvimento (Próximos Passos Priorizados)
 
-- [ ] **QG Corporativo & Diretoria Executiva (v0.9.0)**: Sede global Ãºnica com contrataÃ§Ã£o de CEO, COO, CMO, CTO e CFO com bÃ´nus setoriais.
-- [ ] **IA Concorrente com P&D DinÃ¢mico**: Concorrentes evoluindo tecnologia mensalmente e disputando patentes de ponta.
-- [ ] **MÃ³dulo de LogÃ­stica Visual**: Adicionar caminhÃµes/frotas navegando pelas avenidas entre metrÃ³poles e fÃ¡bricas.
-- [ ] **Bolsa de Valores & EmprÃ©stimos BancÃ¡rios**: Sistema financeiro para emissÃ£o de aÃ§Ãµes e debÃªntures.
-- [ ] **Polimento GrÃ¡fico & Efeitos IsomÃ©tricos**: Sombras dinÃ¢micas nos edifÃ­cios e ciclo dia/noite.
-
----
-
-## ðŸ“œ HistÃ³rico de SessÃµes & Registros de EvoluÃ§Ã£o
+- [ ] **QG Corporativo & Diretoria Executiva (v0.9.0)**: Sede global única com contratação de CEO, COO, CMO, CTO e CFO com bônus setoriais.
+- [ ] **IA Concorrente com P&D Dinâmico**: Concorrentes evoluindo tecnologia mensalmente e disputando patentes de ponta.
+- [ ] **Módulo de Logística Visual**: Adicionar caminhões/frotas navegando pelas avenidas entre metrópoles e fábricas.
+- [ ] **Bolsa de Valores & Empréstimos Bancários**: Sistema financeiro para emissão de ações e debêntures.
+- [ ] **Polimento Gráfico & Efeitos Isométricos**: Sombras dinâmicas nos edifícios e ciclo dia/noite.
 
 ---
 
-### ðŸ“… SessÃ£o 06: MÃ³dulo EstratÃ©gico de P&D (Pesquisa & Desenvolvimento), ConstruÃ§Ã£o FÃ­sica no Mapa, Mercado de Patentes & Zoom no Cursor
-- **Data:** 28/08/2026 â€” 07:45
-- **VersÃ£o Oficial:** `v0.8.0 (bld.20260828.02)` | **Save Schema:** `v0.8.0`
+## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 07: Pacote Completo de Usabilidade, Sprites Isométricos, Tutorial do Magnata, Multilinhas de Fábrica & IA Comercial
+- **Data:** 28/08/2026 — 13:00
+- **Versão Oficial:** `v0.8.1 (bld.20260828.03)` | **Save Schema:** `v0.8.1`
 - **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
 
-#### ðŸŽ¯ Objetivos:
-- Implementar a **construÃ§Ã£o fÃ­sica do Centro de P&D (LaboratÃ³rio) no mapa**, acessÃ­vel pelo menu de terrenos livres e barra de ferramentas rÃ¡pida.
-- Integrar o sistema de **Pesquisa & Desenvolvimento (P&D)** modelado fielmente apÃ³s o **Capitalism II / Capitalism Lab**.
-- Introduzir a mecÃ¢nica de corrida tecnolÃ³gica de qualidade (Quality Rating - QR) de 0 a 100 com curvas de custo exponencial e rendimentos decrescentes (money sink estratÃ©gico).
-- Criar o **Mercado de Patentes & AquisiÃ§Ã£o Direta de Tecnologia** para compra/licenciamento instantÃ¢neo de tecnologias de concorrentes lÃ­deres.
-- Conectar a propagaÃ§Ã£o diÃ¡ria de QR para as gÃ´ndolas de varejo (`propagateQualityToShelf`) e atualizaÃ§Ã£o automÃ¡tica das linhas de manufatura.
-- Permitir venda e demoliÃ§Ã£o fÃ­sica do Centro de P&D com recuperaÃ§Ã£o de 70% e 40% respectivamente.
+#### 🎯 Objetivos Concluídos:
+1. **Unificação Global de Versão:** Sincronização de todas as tags visuais de versão na tela de boot, menu principal, menu de pausa, HUD superior e Dev Dashboard para `v0.8.1 (bld.20260828.03)`.
+2. **Super Gerador Procedural de Nomes:** Expansão algorítmica para mais de 10.000 combinações realistas de nomes de CEOs e corporações.
+3. **Catálogo de Avatares Expandido & Compacto:** Seletor responsivo com 24 avatares oficiais organizados em 4 categorias (Executivos, Indústria, Mercado e Robôs/IA).
+4. **Alinhamento Geométrico de Sprites (`sprite_manager.js`):** Diagnóstico pixel a pixel corrigindo a ancoragem vertical de vias e a centralização de edifícios residenciais/comerciais largos de 128x64px.
+5. **Tooltip Escuro de Alto Contraste:** Painel de hover do cursor com 98% de opacidade e fundo escuro contrastante eliminando a transparência excessiva.
+6. **Demarcação Nítida de Limites Municipais:** Traçado de linhas pontilhadas ciano nas bordas limítrofes entre distritos e metrópoles no mapa isométrico.
+7. **Sistema de Tutorial do Magnata:** Widget interativo com 5 missões guiadas para iniciantes, acompanhamento em tempo real e recompensa de +$15.000.
+8. **Modulação Acústica em 5x & Celebração de Ano Novo:** Inclusão de arpeggio harmônico procedural `playYearCelebration()` para viradas de ano e silenciamento de beeps mensais repetitivos em velocidade máxima (5x).
+9. **Múltiplas Linhas por Fábrica:** Suporte a até 4 linhas da mesma receita (ou receitas variadas) por parque fabril, permitindo especialização em escala.
+10. **Negociação com IA Concorrente vs Demolição:** Sistema onde concorrentes da IA fazem ofertas de compra (80% da obra + 100% do estoque) e assumem pontos comerciais ativos, além de opção de demolição com 40% de sucata.
+11. **Atalhos de Teclado Universais:** Mapeamento das teclas numéricas `1..5` para velocidades e `ESPAÇO` para pausar/retomar com restauração da velocidade anterior.
+12. **Higienização de Código Legado:** Arquivamento seguro da pasta `core/` legada em `_archive_rascunhos/core_ts_legado/` e consolidação de `client/core_math.js` como motor matemático único.
 
-#### ðŸŽ¯ Objetivos:
-- Implementar o sistema completo de **Pesquisa & Desenvolvimento (P&D)** modelado fielmente apÃ³s o **Capitalism II / Capitalism Lab**.
-- Introduzir a mecÃ¢nica de corrida tecnolÃ³gica de qualidade (Quality Rating - QR) de 0 a 100 com curvas de custo exponencial e rendimentos decrescentes (money sink estratÃ©gico).
-- Criar o **Mercado de Patentes & AquisiÃ§Ã£o Direta de Tecnologia** para compra/licenciamento instantÃ¢neo de tecnologias de concorrentes lÃ­deres.
-- Conectar a propagaÃ§Ã£o diÃ¡ria de QR para as gÃ´ndolas de varejo (`propagateQualityToShelf`) e atualizaÃ§Ã£o automÃ¡tica das linhas de manufatura.
-- Integrar a interface do Centro de P&D (`#rd-center-modal` e `#rd-new-project-modal`) com suporte a janelas arrastÃ¡veis (`makeDraggable`).
-- Adicionar indicadores visuais de P&D no Top HUD, na barra de telemetria e nos cards de gestÃ£o de fÃ¡bricas e lojas.
-- Corrigir o zoom do mouse por scroll para pivotar dinamicamente sob o cursor (`changeZoom(delta, pivotX, pivotY)`).
+---
+
+### 📅 Sessão 06: Módulo Estratégico de P&D (Pesquisa & Desenvolvimento), Construção Física no Mapa, Mercado de Patentes & Zoom no Cursor
+- **Data:** 28/08/2026 — 07:45
+- **Versão Oficial:** `v0.8.0 (bld.20260828.02)` | **Save Schema:** `v0.8.0`
 
 #### ðŸ› ï¸ O Que Foi Implementado:
 1. **Motor MatemÃ¡tico de P&D (`core_math.js`)**:

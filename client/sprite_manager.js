@@ -178,7 +178,7 @@ class SpriteManager {
   }
 
   /**
-   * Renderiza um sprite isométrico 2.5D com ancoragem na base do diamante.
+   * Renderiza um sprite isométrico 2.5D com ancoragem geométrica precisa na base do diamante.
    */
   static draw(ctx, spriteKey, sx, sy, w, h, fallbackFn = null) {
     const img = this.get(spriteKey);
@@ -186,8 +186,23 @@ class SpriteManager {
       const scale = w / 64;
       const destW = img.naturalWidth * scale;
       const destH = img.naturalHeight * scale;
-      const destX = sx - destW / 2;
-      const destY = (sy + h) - destH;
+
+      let destX = sx - destW / 2;
+      let destY = (sy + h) - destH;
+
+      // 1. VIAS & ESTRADAS: Imagens 64x64 têm o diamante centrado no meio (Y=16..48)
+      if (spriteKey.startsWith('vias/') || spriteKey.startsWith('estradas/')) {
+        destX = sx - destW / 2;
+        destY = (sy + h / 2) - (destH / 2);
+      }
+      // 2. EDIFÍCIOS RESIDENCIAIS LARGOS (128x64): Centralizar o conteúdo no diamante 64px
+      else if (spriteKey.includes('apartment_building')) {
+        destX = sx - (80 * scale);
+        destY = (sy + h) - destH;
+      } else if (spriteKey.includes('commercial_tower')) {
+        destX = sx - (74 * scale);
+        destY = (sy + h) - destH;
+      }
 
       ctx.drawImage(img, destX, destY, destW, destH);
       return true;

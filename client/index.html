@@ -8,7 +8,7 @@
   <script src="audio.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.8.0)</title>
+  <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.8.1)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     canvas { image-rendering: pixelated; }
@@ -66,7 +66,7 @@
   <!-- 1. FULLSCREEN CANVAS LAYER -->
   <div id="canvas-container" class="absolute inset-0 w-full h-full z-0 overflow-hidden bg-slate-950">
     <canvas id="iso-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
-    <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-900/96 border border-slate-700 rounded-xl px-3 py-2 shadow-2xl text-[11px] font-mono z-20"></div>
+    <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-950/98 border border-slate-600 rounded-xl px-3.5 py-2.5 shadow-2xl text-[11px] font-mono z-20 backdrop-blur-md"></div>
   </div>
 
   <!-- 2. TOP FLOATING HUD BAR (CAPITALISM LAB STYLE) -->
@@ -78,7 +78,7 @@
       <div class="shrink-0">
         <div class="flex items-center gap-1">
           <h1 class="text-xs font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
-          <span id="hud-version-tag" class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.8.0</span>
+          <span id="hud-version-tag" class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.8.1</span>
         </div>
       </div>
       <!-- EMPRESA / AVATAR BADGE -->
@@ -100,13 +100,15 @@
 
     <!-- Top Right: Relógio, Finanças & Gavetas Flutuantes -->
     <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2.5 py-1 shadow-2xl shrink-0 flex-nowrap">
-      <!-- Relógio & Velocidades -->
+      <!-- Relógio & Velocidades (1x, 2x, 3x, 4x, 5x + Atalho Espaço) -->
       <div class="flex items-center gap-1 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono whitespace-nowrap shrink-0">
         <span id="clock-date" class="px-1.5 font-bold text-amber-400 whitespace-nowrap inline-block">Dia 01 / Mês 01</span>
-        <button id="btn-p"  onclick="setSpeed(0)" class="px-1.5 py-0.5 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">⏸</button>
-        <button id="btn-1x" onclick="setSpeed(1)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800">1x</button>
-        <button id="btn-2x" onclick="setSpeed(2)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800">2x</button>
-        <button id="btn-5x" onclick="setSpeed(5)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800">5x</button>
+        <button id="btn-p"  onclick="setSpeed(0)" class="px-1.5 py-0.5 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40" title="Pausar / Retomar [Espaço]">⏸</button>
+        <button id="btn-1x" onclick="setSpeed(1)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 1x [Tecla 1]">1x</button>
+        <button id="btn-2x" onclick="setSpeed(2)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 2x [Tecla 2]">2x</button>
+        <button id="btn-3x" onclick="setSpeed(3)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 3x [Tecla 3]">3x</button>
+        <button id="btn-4x" onclick="setSpeed(4)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 4x [Tecla 4]">4x</button>
+        <button id="btn-5x" onclick="setSpeed(5)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 5x [Tecla 5]">5x</button>
       </div>
 
       <!-- Finanças (Formatação inteligente com valor completo no tooltip) -->
@@ -121,6 +123,9 @@
 
       <!-- Gavetas Flutuantes -->
       <div class="flex items-center gap-1 border-l border-slate-800 pl-1.5 shrink-0">
+        <button onclick="toggleTutorialWidget()" class="bg-amber-950/80 hover:bg-amber-900 border border-amber-700/60 text-amber-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Guia do Magnata — Missões Iniciais">
+          🎓 <span class="hud-btn-text">Tutorial</span>
+        </button>
         <button onclick="toggleDREModal()" class="bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Demonstrativo de Resultados do Exercício">
           📊 <span class="hud-btn-text">DRE</span>
         </button>
@@ -196,7 +201,7 @@
         🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
       </button>
       <span id="telemetry-version-badge" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-bold text-[9px]" title="Versão Oficial do Jogo & Build">
-        🏛️ OIKONOMIA <span class="text-emerald-400">v0.8.0</span> <span class="text-slate-500 text-[8px]">bld.20260828.02</span>
+        🏛️ OIKONOMIA <span class="text-emerald-400">v0.8.1</span> <span class="text-slate-500 text-[8px]">bld.20260828.03</span>
       </span>
     </div>
   </footer>
@@ -224,6 +229,25 @@
 
     <!-- Rodapé Fixo de Ações (Venda, Demolição & Adição) -->
     <div id="facility-action-row" class="p-3 bg-slate-950 border-t border-slate-800 flex flex-col gap-2"></div>
+  </div>
+
+  <!-- 5.1 WIDGET DO TUTORIAL / GUIA DO MAGNATA (PASSO A PASSO) -->
+  <div id="tutorial-guide-widget" class="fixed top-24 left-4 z-40 w-84 bg-slate-900/95 backdrop-blur-md border border-amber-500/60 rounded-2xl shadow-2xl overflow-hidden flex flex-col font-mono text-xs hidden transition-all">
+    <div class="bg-gradient-to-r from-amber-950/90 to-slate-900 border-b border-amber-700/50 px-3.5 py-2.5 flex items-center justify-between drag-handle">
+      <div class="flex items-center gap-2">
+        <span class="text-base">🎓</span>
+        <div>
+          <h3 class="font-bold text-amber-300 text-xs">Guia do Magnata</h3>
+          <span class="text-[9px] text-slate-400">Primeiros Passos no Mercado</span>
+        </div>
+      </div>
+      <button onclick="toggleTutorialWidget()" class="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
+    </div>
+    <div id="tutorial-steps-container" class="p-3 space-y-2 max-h-72 overflow-y-auto custom-scrollbar"></div>
+    <div class="p-2.5 bg-slate-950 border-t border-slate-800 flex justify-between items-center text-[10px]">
+      <span id="tutorial-reward-badge" class="text-amber-400 font-bold">Recompensa: +$15.000</span>
+      <button id="tutorial-claim-btn" onclick="claimTutorialReward()" class="px-2.5 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold disabled:opacity-40 disabled:pointer-events-none cursor-pointer" disabled>Resgatar</button>
+    </div>
   </div>
 
   <!-- P&D — MODAL DO CENTRO DE PESQUISA & DESENVOLVIMENTO -->
@@ -383,7 +407,7 @@
       </div>
       <div class="p-4">
         <div id="game-log-floating" class="space-y-1.5 font-mono text-[11px] max-h-96 overflow-y-auto custom-scrollbar pr-1">
-          <div class="text-slate-500">OIKONOMIA v0.8.0 inicializado em modo tela cheia com motor de cadeia produtiva e P&D completos.</div>
+          <div class="text-slate-500">OIKONOMIA v0.8.1 inicializado em modo tela cheia com motor de cadeia produtiva e P&D completos.</div>
         </div>
       </div>
     </div>
@@ -632,7 +656,7 @@
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         <span>OIKONOMIA SIMULATION ENGINE</span>
       </div>
-      <span>VERSÃO 0.7.0 (BUILD 2026)</span>
+      <span id="loading-version-tag">VERSÃO 0.8.1 (BUILD 20260828.03)</span>
     </div>
 
     <!-- Centro: Logo e Apresentação -->
@@ -738,11 +762,11 @@
     <div class="flex justify-between items-center text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-4">
       <div class="flex items-center gap-2">
         <span class="text-slate-400 font-bold">OIKONOMIA PROJECT © 2026</span>
-        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.8.0 Oficial (bld.20260828.02)</span>
+        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.8.1 Oficial (bld.20260828.03)</span>
       </div>
       <div class="flex gap-4">
         <span>Atalho: <strong>F3</strong> (Dev Dashboard)</span>
-        <span>Atalho: <strong>ESPAÇO</strong> (Pausa)</span>
+        <span>Atalho: <strong>1..5 / ESPAÇO</strong> (Velocidade)</span>
         <span>Atalho: <strong>ESC</strong> (Menu / Fechar)</span>
       </div>
     </div>
@@ -772,23 +796,23 @@
           <div class="space-y-1.5">
             <label class="text-slate-300 font-bold block flex justify-between">
               <span>👤 Nome do Fundador / CEO:</span>
-              <button onclick="randomizePlayerName()" class="text-[10px] text-emerald-400 hover:underline">🎲 Sortear</button>
+              <button onclick="randomizePlayerName()" class="text-[10px] text-emerald-400 hover:underline cursor-pointer">🎲 Sortear</button>
             </label>
             <input type="text" id="wiz-player-name" value="Arthur Vance" maxlength="28" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500" placeholder="Ex: Arthur Vance">
           </div>
           <div class="space-y-1.5">
             <label class="text-slate-300 font-bold block flex justify-between">
               <span>🏛️ Razão Social / Empresa:</span>
-              <button onclick="randomizeCompanyName()" class="text-[10px] text-emerald-400 hover:underline">🎲 Sortear</button>
+              <button onclick="randomizeCompanyName()" class="text-[10px] text-emerald-400 hover:underline cursor-pointer">🎲 Sortear</button>
             </label>
             <input type="text" id="wiz-company-name" value="OikoCorp Holding" maxlength="32" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500" placeholder="Ex: Apex Industries">
           </div>
         </div>
 
-        <!-- Seletor de Avatar (12 Opções Oficiais) -->
+        <!-- Seletor de Avatar (24 Opções em Seletor Compacto) -->
         <div class="space-y-2">
-          <label class="text-slate-300 font-bold block">🎭 Foto de Perfil / Avatar Corporativo (12 Pré-definidos):</label>
-          <div id="wiz-avatar-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5"></div>
+          <label class="text-slate-300 font-bold block">🎭 Foto de Perfil / Avatar Corporativo (24 Opções):</label>
+          <div id="wiz-avatar-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 max-h-48 overflow-y-auto custom-scrollbar p-1"></div>
         </div>
 
         <!-- Seletor de Cor Corporativa -->
@@ -903,7 +927,7 @@
       </div>
 
       <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-800 pt-3">
-        <span>OIKONOMIA <strong id="pause-version-tag" class="text-emerald-400">v0.8.0</strong></span>
+        <span>OIKONOMIA <strong id="pause-version-tag" class="text-emerald-400">v0.8.1</strong></span>
         <button onclick="openDevDashboard()" class="text-indigo-400 hover:text-indigo-300 font-bold">🛠️ Dev Dashboard [F3]</button>
       </div>
     </div>
@@ -996,7 +1020,7 @@
           <div class="w-8 h-8 rounded-xl bg-indigo-950 border border-indigo-700/60 flex items-center justify-center text-sm">🛠️</div>
           <div>
             <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">Painel de Desenvolvimento & Diagnóstico</h3>
-            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.8.0 · Build 20260828.02 (Oficial)</span>
+            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.8.1 · Build 20260828.03 (Oficial)</span>
           </div>
         </div>
         <button onclick="closeDevDashboard()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
@@ -1017,11 +1041,11 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Versão Oficial</span>
-              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.8.0 (bld.20260828.02)</span>
+              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.8.1 (bld.20260828.03)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Schema de Saves</span>
-              <span id="dev-card-save-schema" class="text-xs font-bold text-amber-400">v0.8.0 (Compatível)</span>
+              <span id="dev-card-save-schema" class="text-xs font-bold text-amber-400">v0.8.1 (Compatível)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Sparse Index</span>
@@ -1260,22 +1284,39 @@
     const rdLabs = GameState.rdLabs;
     const unlockedCities = GameState.unlockedCities;
 
-    // Catálogo dos 12 Avatares Oficiais (4 Humanos, 4 Animais, 4 Robôs)
+    // Catálogo dos 24 Avatares Oficiais (6 Executivos, 6 Especialistas Industriais, 6 Animais de Mercado, 6 Robôs & IA)
     const AVATAR_CATALOG = [
-      { id: 'human_ceo',    category: 'Humanos',   name: 'Executivo Magnata',     emoji: '👨‍💼', desc: 'Estrategista corporativo e fusões.' },
-      { id: 'human_tech',   category: 'Humanos',   name: 'Diretora de Inovação',  emoji: '👩‍🔬', desc: 'P&D industrial e chips de alta densidade.' },
-      { id: 'human_miner',  category: 'Humanos',   name: 'Barão da Mineração',    emoji: '👷‍♂️', desc: 'Extração pesada de recursos e minérios.' },
-      { id: 'human_banker', category: 'Humanos',   name: 'Banqueira Financeira',  emoji: '👩‍💼', desc: 'Gestão de liquidez e expansão de crédito.' },
-      
-      { id: 'animal_fox',   category: 'Animais',   name: 'Raposa Estrategista',   emoji: '🦊', desc: 'Faro apurado para margens e arbitragem.' },
-      { id: 'animal_wolf',  category: 'Animais',   name: 'Lobo de Negócios',      emoji: '🐺', desc: 'Agressividade comercial e market share.' },
-      { id: 'animal_owl',   category: 'Animais',   name: 'Coruja Analista',       emoji: '🦉', desc: 'Auditoria de custos e eficiência contábil.' },
-      { id: 'animal_bull',  category: 'Animais',   name: 'Touro Trader',          emoji: '🐂', desc: 'Crescimento implacável e escala fabril.' },
+      // 1. Executivos & Magnatas
+      { id: 'human_ceo',     category: 'Executivos',  name: 'Executivo Magnata',     emoji: '👨‍💼', desc: 'Estrategista corporativo e fusões.' },
+      { id: 'human_banker',  category: 'Executivos',  name: 'Banqueira Financeira',  emoji: '👩‍💼', desc: 'Gestão de liquidez e expansão de crédito.' },
+      { id: 'human_tycoon',  category: 'Executivos',  name: 'Investidor Anjo',       emoji: '🤵',   desc: 'Aporte de risco e venture capital.' },
+      { id: 'human_diplomat',category: 'Executivos',  name: 'Negociadora Global',    emoji: '🧕',   desc: 'Relações comerciais e portos abertos.' },
+      { id: 'human_elder',   category: 'Executivos',  name: 'Conselheiro Patriarca', emoji: '👴',   desc: 'Tradição industrial e governança sólida.' },
+      { id: 'human_heiress', category: 'Executivos',  name: 'Herdeira Visionária',   emoji: '👑',   desc: 'Reestruturação ágil e marketing agressivo.' },
 
-      { id: 'robot_alpha',  category: 'Robôs & IA',name: 'Androide Alpha-9',      emoji: '🤖', desc: 'Logística autônoma e roteamento de frotas.' },
-      { id: 'robot_drone',  category: 'Robôs & IA',name: 'Drone Logístico',       emoji: '🛸', desc: 'Distribuição ultrarrápida de ponta a ponta.' },
-      { id: 'robot_core',   category: 'Robôs & IA',name: 'IA Oiko-Core',          emoji: '🧠', desc: 'Previsão de demanda macroeconômica.' },
-      { id: 'robot_mecha',  category: 'Robôs & IA',name: 'Mecha Industrial',      emoji: '🦾', desc: 'Automação pesada e manufatura 24/7.' }
+      // 2. Especialistas da Indústria & Ciência
+      { id: 'human_tech',    category: 'Indústria',   name: 'Diretora de Inovação',  emoji: '👩‍🔬', desc: 'P&D industrial e chips de alta densidade.' },
+      { id: 'human_miner',   category: 'Indústria',   name: 'Barão da Mineração',    emoji: '👷‍♂️', desc: 'Extração pesada de recursos e minérios.' },
+      { id: 'human_farmer',  category: 'Indústria',   name: 'Mestre do Agronegócio', emoji: '🧑‍🌾', desc: 'Produtividade de safras e silos graneleiros.' },
+      { id: 'human_captain', category: 'Indústria',   name: 'Capitão Mercante',      emoji: '🧑‍✈️', desc: 'Rotas ultramarinas e comércio de cabotagem.' },
+      { id: 'human_architect',category: 'Indústria',  name: 'Arquiteta Urbana',      emoji: '👷‍♀️', desc: 'Otimização de tráfego e zoneamento.' },
+      { id: 'human_chemist', category: 'Indústria',   name: 'Químico Industrial',    emoji: '🧑‍🔬', desc: 'Refino petroquímico e novos materiais.' },
+      
+      // 3. Animais de Mercado (Wall Street & Estratégia)
+      { id: 'animal_fox',    category: 'Estratégia',  name: 'Raposa Estrategista',   emoji: '🦊', desc: 'Faro apurado para margens e arbitragem.' },
+      { id: 'animal_wolf',   category: 'Estratégia',  name: 'Lobo de Negócios',      emoji: '🐺', desc: 'Agressividade comercial e market share.' },
+      { id: 'animal_owl',    category: 'Estratégia',  name: 'Coruja Analista',       emoji: '🦉', desc: 'Auditoria de custos e eficiência contábil.' },
+      { id: 'animal_bull',   category: 'Estratégia',  name: 'Touro Trader',          emoji: '🐂', desc: 'Crescimento implacável e escala fabril.' },
+      { id: 'animal_bear',   category: 'Estratégia',  name: 'Urso Acumulador',       emoji: '🐻', desc: 'Reserva de liquidez em ciclos de crise.' },
+      { id: 'animal_eagle',  category: 'Estratégia',  name: 'Águia da Logística',    emoji: '🦅', desc: 'Visão panorâmica de fretes e abastecimento.' },
+
+      // 4. Robôs & Cyberpunk
+      { id: 'robot_alpha',   category: 'Robôs & IA',  name: 'Androide Alpha-9',      emoji: '🤖', desc: 'Logística autônoma e roteamento de frotas.' },
+      { id: 'robot_drone',   category: 'Robôs & IA',  name: 'Drone Logístico',       emoji: '🛸', desc: 'Distribuição ultrarrápida de ponta a ponta.' },
+      { id: 'robot_core',    category: 'Robôs & IA',  name: 'IA Oiko-Core',          emoji: '🧠', desc: 'Previsão de demanda macroeconômica.' },
+      { id: 'robot_mecha',   category: 'Robôs & IA',  name: 'Mecha Industrial',      emoji: '🦾', desc: 'Automação pesada e manufatura 24/7.' },
+      { id: 'robot_cyber',   category: 'Robôs & IA',  name: 'Cyborg Operador',      emoji: '🦿', desc: 'Manutenção preditiva de plantas fabris.' },
+      { id: 'robot_satellite',category: 'Robôs & IA', name: 'Satélite de Telemetria',emoji: '🛰️', desc: 'Monitoramento global de consumo e preços.' }
     ];
 
     // Paletas de Cores Corporativas
@@ -1867,6 +1908,34 @@
             }
           }
 
+          // Demarcação Nítida de Limites Municipais (Fronteiras Pontilhadas)
+          const nextCityX = worldGrid[gx + 1]?.[gy]?.city?.cityId;
+          const nextCityY = worldGrid[gx]?.[gy + 1]?.city?.cityId;
+          const thisCity = tile.city?.cityId;
+
+          if (thisCity && nextCityX && nextCityX !== thisCity) {
+            ctx.save();
+            ctx.setLineDash([4, 3]);
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
+            ctx.lineWidth = Math.max(1, 1.3 * camera.zoom);
+            ctx.beginPath();
+            ctx.moveTo(sx + w / 2, sy + h / 2);
+            ctx.lineTo(sx, sy + h);
+            ctx.stroke();
+            ctx.restore();
+          }
+          if (thisCity && nextCityY && nextCityY !== thisCity) {
+            ctx.save();
+            ctx.setLineDash([4, 3]);
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
+            ctx.lineWidth = Math.max(1, 1.3 * camera.zoom);
+            ctx.beginPath();
+            ctx.moveTo(sx - w / 2, sy + h / 2);
+            ctx.lineTo(sx, sy + h);
+            ctx.stroke();
+            ctx.restore();
+          }
+
           // Lentes de Heatmap (sobreposição translúcida)
           if (!tile.city.isLocked && currentHeatmap !== 'terrain') {
             let heatFill = null;
@@ -2339,30 +2408,83 @@
       return { baseCost, stockValue, sellValue, salvageValue, facilityName };
     }
 
+    function renderFacilityFooterActions(tile) {
+      const actionRow = document.getElementById('facility-action-row');
+      if (!actionRow) return;
+      if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter)) {
+        actionRow.classList.add('hidden');
+        return;
+      }
+
+      const val = calculateFacilityValue(tile);
+      actionRow.classList.remove('hidden');
+      actionRow.innerHTML = `
+        <div class="grid grid-cols-2 gap-2 font-mono text-[11px] pt-1">
+          <button onclick="sellFacility(${tile.x}, ${tile.y})" class="py-2 px-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-emerald-700/60 text-emerald-300 font-bold flex items-center justify-center gap-1 transition shadow cursor-pointer text-center" title="Ofertar ao mercado / concorrentes (+70% a 80% do valor)">
+            🏷️ Vender (+$${val.sellValue.toLocaleString()})
+          </button>
+          <button onclick="demolishFacility(${tile.x}, ${tile.y})" class="py-2 px-2 rounded-xl bg-slate-900 hover:bg-rose-950/80 border border-rose-800/60 text-rose-300 font-bold flex items-center justify-center gap-1 transition shadow cursor-pointer text-center" title="Demolir edifício e desocupar lote (+40% sucata)">
+            🗑️ Demolir (+$${val.salvageValue.toLocaleString()})
+          </button>
+        </div>
+      `;
+    }
+
     function sellFacility(x, y) {
       const tile = worldGrid[x] && worldGrid[x][y];
       if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter)) return;
 
       const val = calculateFacilityValue(tile);
-      const msg = 'VENDER INSTALACAO\n\n' +
-        'Instalacao: ' + val.facilityName + '\n' +
-        '• Obra Recuperada (70%): $' + Math.round(val.baseCost * 0.70).toLocaleString() + '\n' +
-        '• Liquidacao de Estoque: $' + Math.round(val.stockValue).toLocaleString() + '\n' +
-        '----------------------------------\n' +
-        'TOTAL CREDITADO NO CAIXA: +$' + val.sellValue.toLocaleString() + '\n\n' +
-        'Confirmar venda do imovel e liquidacao?';
+      const isStore = !!tile.store;
+      const traffic = tile.district?.trafficIndex || 30;
+      const cityName = tile.city?.cityName || 'Metrópole';
+      const competitorName = traffic > 60 ? 'OmniCorp Retail' : (traffic > 40 ? 'Titan Megastores' : 'Fundo Imobiliário Apex');
+
+      let msg = '';
+      if (isStore && traffic >= 35) {
+        msg = `PROPOSTA DE COMPRA DE CONCORRENTE\n\n` +
+          `A rede rival "${competitorName}" tem interesse estratégico neste ponto comercial em ${cityName}!\n\n` +
+          `• Oferta pelo Imóvel (80% da Obra): $${Math.round(val.baseCost * 0.80).toLocaleString()}\n` +
+          `• Liquidação Integral de Estoque: $${Math.round(val.stockValue).toLocaleString()}\n` +
+          `--------------------------------------------------\n` +
+          `TOTAL A RECEBER EM CAIXA: +$${Math.round(val.baseCost * 0.80 + val.stockValue).toLocaleString()}\n\n` +
+          `Se aceitar, a ${competitorName} assumirá a loja e passará a operar como concorrente no lote.\n` +
+          `Confirmar venda da loja para a rede concorrente?`;
+      } else {
+        msg = `VENDER IMÓVEL NO MERCADO COMERCIAL\n\n` +
+          `Instalação: ${val.facilityName}\n` +
+          `• Obra Recuperada (70%): $${Math.round(val.baseCost * 0.70).toLocaleString()}\n` +
+          `• Liquidação de Estoque: $${Math.round(val.stockValue).toLocaleString()}\n` +
+          `--------------------------------------------------\n` +
+          `TOTAL A RECEBER EM CAIXA: +$${val.sellValue.toLocaleString()}\n\n` +
+          `Confirmar venda e desocupação do imóvel?`;
+      }
 
       if (!confirm(msg)) return;
 
-      cash += val.sellValue;
-      addGameLog('💰 ' + val.facilityName + ' vendida! Caixa creditado em +$' + val.sellValue.toLocaleString());
+      const finalCash = isStore && traffic >= 35 ? Math.round(val.baseCost * 0.80 + val.stockValue) : val.sellValue;
+      cash += finalCash;
 
-      tile.store = null;
-      tile.mine = null;
-      tile.farm = null;
-      tile.factory = null;
-      tile.rdCenter = null;
-      tile.buildingHeight = 0;
+      if (isStore && traffic >= 35) {
+        addGameLog(`🤝 ${competitorName} adquiriu ${val.facilityName} por +$${finalCash.toLocaleString()} e assumiu o ponto comercial!`, 'text-purple-400 font-bold');
+        tile.competitor = {
+          name: `${competitorName} ${cityName}`,
+          shelves: { ...tile.store.shelves },
+          lastShare: 0.5
+        };
+        tile.store = null;
+        tile.buildingHeight = 18;
+      } else {
+        addGameLog(`💰 ${val.facilityName} vendida no mercado! Caixa creditado em +$${finalCash.toLocaleString()}`, 'text-emerald-400 font-bold');
+        tile.store = null;
+        tile.mine = null;
+        tile.farm = null;
+        tile.factory = null;
+        tile.rdCenter = null;
+        tile.buildingHeight = 0;
+      }
+
+      playSuccessChime();
       _indexTile(tile);
 
       activeManagedTile = null;
@@ -2377,12 +2499,12 @@
       if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter)) return;
 
       const val = calculateFacilityValue(tile);
-      const msg = 'DEMOLIR EDIFICIO\n\n' +
-        'Instalacao: ' + val.facilityName + '\n' +
-        '• Recuperacao de Sucata (40%): +$' + val.salvageValue.toLocaleString() + '\n' +
-        '• Estoque residual no local sera descartado.\n' +
-        '• Cobranca de aluguel diario sera cancelada.\n\n' +
-        'Confirmar demolicao completa?';
+      const msg = 'DEMOLIR EDIFÍCIO\n\n' +
+        'Instalação: ' + val.facilityName + '\n' +
+        '• Recuperação de Sucata (40%): +$' + val.salvageValue.toLocaleString() + '\n' +
+        '• Estoque residual no local será descartado.\n' +
+        '• Cobrança de aluguel diário será cancelada.\n\n' +
+        'Confirmar demolição completa?';
 
       if (!confirm(msg)) return;
 
@@ -2675,7 +2797,7 @@
           </div>
         </div>
       `;
-      document.getElementById('facility-action-row').classList.add('hidden');
+      renderFacilityFooterActions(tile);
     }
 
     function renderFarmPanel(tile) {
@@ -2704,7 +2826,7 @@
           </div>
         </div>
       `;
-      document.getElementById('facility-action-row').classList.add('hidden');
+      renderFacilityFooterActions(tile);
     }
 
     function renderFactoryPanel(tile) {
@@ -2752,19 +2874,17 @@
         }
       }
 
-      const freeLines = factory.maxLines - lines.length;
-      const addRow = document.getElementById('facility-action-row');
+      const freeLines = (factory.maxLines || 4) - lines.length;
+      let extraBtn = '';
       if (freeLines > 0) {
-        addRow.classList.remove('hidden');
-        addRow.innerHTML = `
+        extraBtn = `
           <button onclick="openFactoryRecipeModal(${tile.x}, ${tile.y})"
             class="w-full text-center text-xs font-bold text-orange-300 hover:text-white bg-orange-950/60 hover:bg-orange-800/80 font-mono py-2 rounded-xl border border-orange-700/60 shadow-lg transition">
             ➕ Ativar Linha de Produção (${freeLines} livre${freeLines > 1 ? 's' : ''})
           </button>
         `;
-      } else {
-        addRow.classList.add('hidden');
       }
+      renderFacilityFooterActions(tile, extraBtn);
     }
 
     function renderStorePanel(tile) {
@@ -2775,7 +2895,6 @@
       if (iconEl) iconEl.innerHTML = `<img src="assets/lojas/${store.storeTypeId}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🏪'">`;
       document.getElementById('facility-title').textContent = store.name;
       document.getElementById('facility-subtitle').textContent = `${d.name} · ${Object.keys(store.shelves).length}/${store.maxShelves} gôndolas`;
-      
       const badge = document.getElementById('facility-rent-badge');
       badge.textContent = `-$${store.dailyRent.toFixed(2)}/dia`;
       badge.classList.remove('hidden');
@@ -2861,20 +2980,18 @@
         panel.appendChild(card);
       }
 
-      const addRow = document.getElementById('facility-action-row');
       const freeSlots = store.maxShelves - Object.keys(store.shelves).length;
+      let extraBtn = '';
       if (freeSlots > 0) {
-        addRow.classList.remove('hidden');
-        addRow.innerHTML = `
+        extraBtn = `
           <button onclick="openAddProductModal(${tile.x}, ${tile.y})"
             class="w-full text-center text-xs font-bold text-teal-300 hover:text-white bg-teal-950/60 hover:bg-teal-800/80 font-mono py-2 rounded-xl border border-teal-700/60 shadow-lg transition flex items-center justify-center gap-1.5">
             <span>➕ Adicionar Produto às Gôndolas</span>
             <span class="bg-teal-900 px-1.5 py-0.5 rounded text-[10px]">(${freeSlots} livre${freeSlots > 1 ? 's' : ''})</span>
           </button>
         `;
-      } else {
-        addRow.classList.add('hidden');
       }
+      renderFacilityFooterActions(tile, extraBtn);
     }
 
     // ===========================================================================
@@ -3044,9 +3161,13 @@
       if (!tile?.factory) return;
       activeFactoryTile = tile;
 
+      const totalLines = Object.keys(tile.factory.lines || {}).length;
+      const maxLines = tile.factory.maxLines || 4;
+      const isFull = totalLines >= maxLines;
+
       const list = document.getElementById('factory-available-recipes-list');
       list.innerHTML = FACTORY_RECIPES.map(rec => {
-        const isAlreadyActive = !!tile.factory.lines[rec.id];
+        const countOfRecipe = Object.values(tile.factory.lines || {}).filter(l => l.recipeId === rec.id).length;
         const spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getFactorySprite(rec.id) : 'empresas/factory_default';
         return `
           <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
@@ -3056,17 +3177,22 @@
                 <span class="text-xl hidden">🏭</span>
               </div>
               <div>
-                <span class="font-bold text-slate-100">${rec.name} (${rec.outputName})</span>
-                <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded ml-1.5">${rec.isIntermediate ? 'Insumo Industrial' : 'Bem de Consumo'}</span>
-                <div class="text-[11px] text-slate-400 mt-1">Custo Fabril: <strong class="text-emerald-400">$${rec.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${rec.quality}</strong> · Capacidade: ${rec.dailyCap} un/dia</div>
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="font-bold text-slate-100">${rec.name} (${rec.outputName})</span>
+                  <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">${rec.isIntermediate ? 'Insumo Industrial' : 'Bem de Consumo'}</span>
+                  ${countOfRecipe > 0 ? `<span class="text-[9px] bg-orange-950 text-orange-300 px-1.5 py-0.5 rounded border border-orange-800 font-bold">${countOfRecipe} linha${countOfRecipe > 1 ? 's' : ''} ativa${countOfRecipe > 1 ? 's' : ''}</span>` : ''}
+                </div>
+                <div class="text-[11px] text-slate-400 mt-1">Custo Fabril: <strong class="text-emerald-400">$${rec.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${rec.quality}</strong> · Capacidade: ${rec.dailyCap} un/dia por linha</div>
                 <div class="text-[10px] text-slate-500 mt-0.5">${rec.desc}</div>
               </div>
             </div>
             <div class="shrink-0">
-              ${isAlreadyActive ? `
-                <span class="text-[10px] text-orange-400 bg-orange-950 px-2 py-1 rounded border border-orange-800 font-bold">Ativa</span>
+              ${isFull ? `
+                <span class="text-[10px] text-slate-500 bg-slate-900 px-2 py-1 rounded border border-slate-800 font-bold">Fábrica Lotada (4/4)</span>
               ` : `
-                <button onclick="confirmActivateFactoryRecipe('${rec.id}')" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs">Ativar</button>
+                <button onclick="confirmActivateFactoryRecipe('${rec.id}')" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer shadow transition">
+                  ${countOfRecipe > 0 ? '+ Adicionar Mais 1 Linha' : 'Ativar Linha'}
+                </button>
               `}
             </div>
           </div>
@@ -3077,13 +3203,23 @@
 
     function confirmActivateFactoryRecipe(recipeId) {
       if (!activeFactoryTile?.factory) return;
+      const factory = activeFactoryTile.factory;
+      const currentLinesCount = Object.keys(factory.lines || {}).length;
+      if (currentLinesCount >= (factory.maxLines || 4)) {
+        alert('Esta fábrica já atingiu a capacidade máxima de 4 linhas de montagem!');
+        return;
+      }
+
       const rec = FACTORY_RECIPES.find(r => r.id === recipeId);
       if (!rec) return;
 
       const researchedQR = rdLabs['rd_' + rec.outputProdId]?.currentQR;
       const initialQuality = researchedQR ? Math.max(rec.quality, researchedQR) : rec.quality;
 
-      activeFactoryTile.factory.lines[rec.id] = {
+      const lineKey = `line_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+
+      factory.lines[lineKey] = {
+        lineId: lineKey,
         recipeId: rec.id,
         recipeName: rec.name,
         outputProductId: rec.outputProdId,
@@ -3094,17 +3230,21 @@
         maxStock: 3000
       };
 
-      addLog(`⚙️ Linha de montagem "${rec.name}" ativada!`, 'text-orange-400');
+      addLog(`⚙️ Linha de montagem "${rec.name}" instalada com sucesso! (${Object.keys(factory.lines).length}/4 linhas operando)`, 'text-orange-400 font-bold');
+      playSuccessChime();
       closeFactoryRecipeModal();
       renderFacilityPanel(activeFactoryTile);
       updateUI();
     }
 
-    function removeFactoryLine(x, y, recipeId) {
+    function removeFactoryLine(x, y, lineKey) {
       const tile = worldGrid[x][y];
-      if (!tile?.factory?.lines[recipeId]) return;
-      delete tile.factory.lines[recipeId];
+      if (!tile?.factory?.lines[lineKey]) return;
+      const lineName = tile.factory.lines[lineKey].recipeName;
+      delete tile.factory.lines[lineKey];
+      addLog(`🛑 Linha de montagem "${lineName}" desativada.`, 'text-slate-400');
       renderFacilityPanel(tile);
+      updateUI();
     }
 
     function closeFactoryRecipeModal() {
@@ -4384,13 +4524,32 @@
       monthMarketingExpenses += dailyMarketing;
 
       day++;
-      if (day > 30) { closeMonthEnd(); checkAutoSave(); day = 1; month++; if (month > 12) { month = 1; year++; } }
+      if (day > 30) {
+        closeMonthEnd();
+        checkAutoSave();
+        day = 1;
+        if (month === 12) {
+          month = 1;
+          year++;
+          playYearCelebration();
+          addLog(`🎆 FELIZ ANO NOVO! Início do Exercício Fiscal do Ano ${year}!`, 'text-amber-300 font-bold');
+        } else {
+          month++;
+          if (gameSpeed < 5) {
+            playSuccessChime();
+          }
+        }
+      }
 
+      checkTutorialProgress();
       updateUI();
     }
 
     function closeMonthEnd() {
       const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses;
+      if (net > 0) {
+        GameState.hasRecordedPositiveMonth = true;
+      }
       addLog(
         `📊 FIM DO MÊS ${String(month).padStart(2,'0')}: Receita $${monthRevenue.toLocaleString('en-US',{maximumFractionDigits:0})} | Lucro Líq: $${net.toLocaleString('en-US',{maximumFractionDigits:0})}`,
         net >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'
@@ -4442,19 +4601,23 @@
       if (activeManagedTile) renderFacilityPanel(activeManagedTile);
     }
 
+    let lastActiveSpeed = 2;
+
     function setSpeed(s) {
+      if (s > 0) lastActiveSpeed = s;
       gameSpeed = s;
       if (timerInterval) clearInterval(timerInterval);
-      const map = { 0:'btn-p', 1:'btn-1x', 2:'btn-2x', 5:'btn-5x' };
+      const map = { 0:'btn-p', 1:'btn-1x', 2:'btn-2x', 3:'btn-3x', 4:'btn-4x', 5:'btn-5x' };
       for (const [spd, id] of Object.entries(map)) {
         const btn = document.getElementById(id);
         if (!btn) continue;
         btn.className = parseInt(spd) === s
-          ? 'px-2 py-1 rounded-lg text-xs font-bold font-mono flex items-center gap-1 bg-amber-500/20 text-amber-300 border border-amber-500/40'
-          : 'px-2 py-1 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800';
+          ? 'px-1.5 py-0.5 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40'
+          : 'px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800';
       }
       if (s === 0) return;
-      timerInterval = setInterval(simulateDay, { 1:600, 2:250, 5:80 }[s] || 250);
+      const speedIntervals = { 1: 650, 2: 300, 3: 170, 4: 100, 5: 55 };
+      timerInterval = setInterval(simulateDay, speedIntervals[s] || 250);
     }
 
     window.addEventListener('keydown', (e) => {
@@ -4472,8 +4635,17 @@
       if (e.code === 'Space') {
         e.preventDefault();
         if (currentAppScreen === 'PLAYING') {
-          setSpeed(gameSpeed === 0 ? 2 : 0);
+          setSpeed(gameSpeed === 0 ? (lastActiveSpeed || 2) : 0);
         }
+        return;
+      }
+
+      if (currentAppScreen === 'PLAYING') {
+        if (['Digit1', 'Numpad1'].includes(e.code)) { e.preventDefault(); setSpeed(1); return; }
+        if (['Digit2', 'Numpad2'].includes(e.code)) { e.preventDefault(); setSpeed(2); return; }
+        if (['Digit3', 'Numpad3'].includes(e.code)) { e.preventDefault(); setSpeed(3); return; }
+        if (['Digit4', 'Numpad4'].includes(e.code)) { e.preventDefault(); setSpeed(4); return; }
+        if (['Digit5', 'Numpad5'].includes(e.code)) { e.preventDefault(); setSpeed(5); return; }
       }
 
       if (e.key === 'Escape') {
@@ -4818,9 +4990,9 @@
     const GAME_VERSION_INFO = {
       major: 0,
       minor: 8,
-      patch: 0,
-      build: '20260828.02',
-      saveSchema: '0.8.0',
+      patch: 1,
+      build: '20260828.03',
+      saveSchema: '0.8.1',
       get version() { return `${this.major}.${this.minor}.${this.patch}`; },
       get fullString() { return `v${this.version} (bld.${this.build})`; }
     };
@@ -4986,6 +5158,7 @@
         playerBrandRating: { ...playerBrandRating },
         activeMarketingContracts: Array.from(activeMarketingContracts),
         rdLabs: { ...rdLabs },
+        tutorialState: { ...tutorialState },
         builtTiles: extractBuiltTiles(),
         playtimeSeconds
       };
@@ -5071,6 +5244,13 @@
       if (saveData.rdLabs && typeof saveData.rdLabs === 'object') {
         Object.assign(rdLabs, saveData.rdLabs);
       }
+
+      if (saveData.tutorialState && typeof saveData.tutorialState === 'object') {
+        Object.assign(tutorialState, saveData.tutorialState);
+      } else {
+        tutorialState = { completedSteps: {}, rewardClaimed: false };
+      }
+      renderTutorialGuide();
 
       // Reconstrói a malha base do mapa e aplica as instalações sanitizadas
       initWorldGrid();
@@ -5269,24 +5449,48 @@
     let selectedWizColorId = 'emerald';
     let selectedWizDifficultyId = 'standard';
 
-    const RANDOM_CEO_NAMES = [
-      'Arthur Vance', 'Helena Roitman', 'Kaelen Voss', 'Diana Sterling',
-      'Valentin Cruz', 'Beatriz Castilho', 'Morgan Drake', 'Lorena Thorne'
+    const CEO_FIRST_NAMES = [
+      'Arthur', 'Helena', 'Valentin', 'Diana', 'Beatriz', 'Morgan', 'Kaelen', 'Lorena',
+      'Marcus', 'Cecília', 'Gabriel', 'Yasmin', 'Rodrigo', 'Alistair', 'Naomi', 'Octavio',
+      'Sofia', 'Leonardo', 'Victoria', 'Dante', 'Isadora', 'Henrik', 'Clarice', 'Thales',
+      'Melissa', 'Xavier', 'Mirela', 'Viktor', 'Lavinia', 'Lorenzo', 'Renata', 'Mateus'
     ];
 
-    const RANDOM_COMPANY_NAMES = [
-      'OikoCorp Holding', 'Apex Industrial Group', 'Vanguard S.A.', 'Metrópole Varejo',
-      'Aura Supply & Logística', 'Titanium Manufatura', 'Solaris Alimentos', 'Caelum Capital'
+    const CEO_LAST_NAMES = [
+      'Vance', 'Roitman', 'Voss', 'Sterling', 'Cruz', 'Castilho', 'Drake', 'Thorne',
+      'Alencastro', 'Moreau', 'Sampaio', 'Hashimoto', 'Blackwood', 'Falcão', 'Lindqvist', 'Prado',
+      'Rothschild', 'Valadares', 'Kensington', 'Albuquerque', 'Delacroix', 'Meireles',
+      'Van Der Berg', 'Fontes', 'Brandão', 'Silveira', 'Gouveia', 'Novaes', 'Belmont', 'Cavalcante'
+    ];
+
+    const CORP_PREFIXES = [
+      'Apex', 'Vanguard', 'Solaris', 'Titanium', 'Aura', 'Metrópole', 'Caelum', 'Orion',
+      'Horizon', 'Zenith', 'Atlas', 'Quantum', 'Nova', 'Imperium', 'Vertex', 'Prime',
+      'Valhalla', 'Nexus', 'Omni', 'Genesis', 'Chronos', 'Ironclad', 'Lumina', 'Astra', 'Hyperion'
+    ];
+
+    const CORP_ROOTS = [
+      'Industrial', 'Supply & Logística', 'Capital', 'Holding', 'Manufatura', 'Varejo',
+      'Agropecuária', 'Logística Global', 'Alimentos', 'Tech & Chips', 'Enterprises',
+      'Commodities', 'Corporação', 'Participações', 'Distribuição', 'Mineração'
+    ];
+
+    const CORP_SUFFIXES = [
+      'S.A.', 'Group', '& Co.', 'Holding', 'Corporation', 'Brasil', 'Internacional', 'Alliance', 'Consortium', 'Corp'
     ];
 
     function randomizePlayerName() {
-      const name = RANDOM_CEO_NAMES[Math.floor(Math.random() * RANDOM_CEO_NAMES.length)];
+      const first = CEO_FIRST_NAMES[Math.floor(Math.random() * CEO_FIRST_NAMES.length)];
+      const last = CEO_LAST_NAMES[Math.floor(Math.random() * CEO_LAST_NAMES.length)];
       const input = document.getElementById('wiz-player-name');
-      if (input) input.value = name;
+      if (input) input.value = `${first} ${last}`;
     }
 
     function randomizeCompanyName() {
-      const name = RANDOM_COMPANY_NAMES[Math.floor(Math.random() * RANDOM_COMPANY_NAMES.length)];
+      const p = CORP_PREFIXES[Math.floor(Math.random() * CORP_PREFIXES.length)];
+      const r = CORP_ROOTS[Math.floor(Math.random() * CORP_ROOTS.length)];
+      const s = CORP_SUFFIXES[Math.floor(Math.random() * CORP_SUFFIXES.length)];
+      const name = Math.random() < 0.4 ? `${p} ${r}` : `${p} ${r} ${s}`;
       const input = document.getElementById('wiz-company-name');
       if (input) input.value = name;
     }
@@ -5319,12 +5523,12 @@
       container.innerHTML = AVATAR_CATALOG.map(av => {
         const isSel = av.id === selectedWizAvatarId;
         return `
-          <button onclick="selectWizAvatar('${av.id}')" class="p-2.5 rounded-2xl border text-center transition flex flex-col items-center gap-1 ${
-            isSel ? 'bg-emerald-950/80 border-emerald-400 shadow-lg shadow-emerald-900/30' : 'bg-slate-950/80 border-slate-800 hover:border-slate-600'
-          }">
-            <span class="text-2xl block">${av.emoji}</span>
-            <span class="text-[9px] font-bold text-slate-200 truncate w-full block">${av.name}</span>
-            <span class="text-[8px] text-slate-500 block">${av.category}</span>
+          <button onclick="selectWizAvatar('${av.id}')" class="p-2 rounded-xl border text-center transition flex flex-col items-center gap-0.5 cursor-pointer relative group ${
+            isSel ? 'bg-emerald-950/90 border-emerald-400 shadow-md shadow-emerald-900/40 ring-1 ring-emerald-400' : 'bg-slate-950/80 border-slate-800 hover:border-slate-600 hover:bg-slate-900'
+          }" title="${av.name} (${av.category}) — ${av.desc}">
+            <span class="text-xl block leading-none py-0.5">${av.emoji}</span>
+            <span class="text-[8px] font-bold text-slate-200 truncate w-full block">${av.name.split(' ')[0]}</span>
+            <span class="text-[7px] text-slate-500 block truncate w-full">${av.category}</span>
           </button>
         `;
       }).join('');
@@ -5425,8 +5629,125 @@
       currentAppScreen = 'PLAYING';
       setSpeed(1);
       jumpToCity('nova_atenas');
+      tutorialState = { completedSteps: {}, rewardClaimed: false };
+      renderTutorialGuide();
       playSuccessChime();
       addLog(`🎉 NOVA EMPRESA FUNDADA: Bem-vindo ao comando de ${playerProfile.companyName}!`, 'text-emerald-400 font-bold');
+    }
+
+    // ===========================================================================
+    // SISTEMA DE TUTORIAL — GUIA DO MAGNATA (PASSOS INICIAIS)
+    // ===========================================================================
+    const TUTORIAL_MISSIONS = [
+      {
+        id: 'inspect_tile',
+        title: '1. Reconhecimento de Terreno',
+        desc: 'Navegue pelo mapa isométrico e clique em qualquer lote com tráfego urbano.',
+        check: () => selectedTileX >= 0 && selectedTileY >= 0
+      },
+      {
+        id: 'open_store',
+        title: '2. Primeira Operação de Varejo',
+        desc: 'Inaugure seu primeiro estabelecimento comercial (Kombini, Mercadinho ou Loja).',
+        check: () => {
+          for (const t of activeFacilitySet.values()) {
+            if (t.store) return true;
+          }
+          return false;
+        }
+      },
+      {
+        id: 'stock_goods',
+        title: '3. Logística de Suprimentos',
+        desc: 'Abasteça ao menos 1 prateleira da sua loja com produtos do Porto ou Fornecedor.',
+        check: () => {
+          for (const t of activeFacilitySet.values()) {
+            if (t.store?.shelves && Object.values(t.store.shelves).some(sh => sh.stock > 0)) return true;
+          }
+          return false;
+        }
+      },
+      {
+        id: 'monthly_profit',
+        title: '4. Lucro Operacional Positivo',
+        desc: 'Atraia clientes e feche um mês completo com Lucro Líquido Positivo.',
+        check: () => !!GameState.hasRecordedPositiveMonth
+      },
+      {
+        id: 'expand_chain',
+        title: '5. Domínio da Cadeia de Valor',
+        desc: 'Construa sua primeira Fábrica, Fazenda ou Centro de P&D para dominar o mercado.',
+        check: () => {
+          for (const t of activeFacilitySet.values()) {
+            if (t.factory || t.farm || t.rdCenter) return true;
+          }
+          return false;
+        }
+      }
+    ];
+
+    let tutorialState = {
+      completedSteps: {},
+      rewardClaimed: false
+    };
+
+    function toggleTutorialWidget() {
+      const el = document.getElementById('tutorial-guide-widget');
+      if (!el) return;
+      el.classList.toggle('hidden');
+      if (!el.classList.contains('hidden')) {
+        renderTutorialGuide();
+      }
+    }
+
+    function checkTutorialProgress() {
+      let anyNew = false;
+      for (const m of TUTORIAL_MISSIONS) {
+        if (!tutorialState.completedSteps[m.id] && m.check()) {
+          tutorialState.completedSteps[m.id] = true;
+          anyNew = true;
+          addLog(`🎓 Missão Concluída: "${m.title}"!`, 'text-amber-400 font-bold');
+          playSuccessChime();
+        }
+      }
+      if (anyNew) {
+        renderTutorialGuide();
+      }
+    }
+
+    function renderTutorialGuide() {
+      const container = document.getElementById('tutorial-steps-container');
+      if (!container) return;
+
+      const allDone = TUTORIAL_MISSIONS.every(m => tutorialState.completedSteps[m.id]);
+      const claimBtn = document.getElementById('tutorial-claim-btn');
+      if (claimBtn) {
+        claimBtn.disabled = !allDone || tutorialState.rewardClaimed;
+        claimBtn.textContent = tutorialState.rewardClaimed ? '✓ Resgatado' : (allDone ? '🎉 Resgatar (+$15k)' : 'Resgatar');
+      }
+
+      container.innerHTML = TUTORIAL_MISSIONS.map((m) => {
+        const done = !!tutorialState.completedSteps[m.id];
+        return `
+          <div class="p-2 rounded-xl border transition ${done ? 'bg-emerald-950/40 border-emerald-700/60' : 'bg-slate-950/80 border-slate-800'}">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-bold text-xs ${done ? 'text-emerald-300' : 'text-slate-200'}">${m.title}</span>
+              <span class="text-xs">${done ? '✅' : '⏳'}</span>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-0.5 leading-snug">${m.desc}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function claimTutorialReward() {
+      if (tutorialState.rewardClaimed) return;
+      tutorialState.rewardClaimed = true;
+      cash += 15000;
+      addGameLog('🎓 Parabéns! Você concluiu o Guia do Magnata e recebeu +$15.000 de incentivo corporativo!', 'text-amber-400 font-black');
+      playYearCelebration();
+      renderTutorialGuide();
+      updateUI();
     }
 
     function updatePlayerProfileHUD() {
