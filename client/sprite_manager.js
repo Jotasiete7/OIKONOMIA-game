@@ -1,6 +1,16 @@
 /**
  * sprite_manager.js — Gerenciador de Sprites & Assets Isométricos do OIKONOMIA
- * Suporta carregamento assíncrono, cache, auto-detecção de vias/estruturas e fallback geométrico 3D.
+ * Suporta a distribuição oficial do OIKONOMIA-buildings:
+ * - residencial/
+ * - industrial/
+ * - comercial/
+ * - agricultura/
+ * - portuario/
+ * - utilidade_publica/
+ * - decoracao/
+ * - vias/
+ * - minas/
+ * - terrenos/
  */
 
 class SpriteManager {
@@ -11,7 +21,19 @@ class SpriteManager {
   static onProgress = null;
 
   static ASSET_CATALOG = {
-    // 1. LOJAS & VAREJO
+    // 1. COMERCIAL / LOJAS & VAREJO
+    'comercial/supermarket': 'assets/comercial/supermarket.png',
+    'comercial/kombini': 'assets/comercial/kombini.png',
+    'comercial/apparel': 'assets/comercial/apparel.png',
+    'comercial/electronics': 'assets/comercial/electronics.png',
+    'comercial/automotive': 'assets/comercial/automotive.png',
+    'comercial/pharmacy': 'assets/comercial/pharmacy.png',
+    'comercial/furniture': 'assets/comercial/furniture.png',
+    'comercial/jewelry': 'assets/comercial/jewelry.png',
+    'comercial/hardware': 'assets/comercial/hardware.png',
+    'comercial/competitor': 'assets/comercial/competitor.png',
+
+    // Legado comercial
     'lojas/supermarket': 'assets/lojas/supermarket.png',
     'lojas/kombini': 'assets/lojas/kombini.png',
     'lojas/apparel': 'assets/lojas/apparel.png',
@@ -23,7 +45,16 @@ class SpriteManager {
     'lojas/hardware': 'assets/lojas/hardware.png',
     'lojas/competitor': 'assets/lojas/competitor.png',
 
-    // 2. EMPRESAS & INDÚSTRIAS
+    // 2. INDUSTRIAL / EMPRESAS & FÁBRICAS
+    'industrial/steel_mill': 'assets/industrial/steel_mill.png',
+    'industrial/refinery': 'assets/industrial/refinery.png',
+    'industrial/electronics_factory': 'assets/industrial/electronics_factory.png',
+    'industrial/auto_plant': 'assets/industrial/auto_plant.png',
+    'industrial/textile_mill': 'assets/industrial/textile_mill.png',
+    'industrial/food_processing': 'assets/industrial/food_processing.png',
+    'industrial/factory_default': 'assets/industrial/factory_default.png',
+
+    // Legado industrial
     'empresas/steel_mill': 'assets/empresas/steel_mill.png',
     'empresas/refinery': 'assets/empresas/refinery.png',
     'empresas/electronics_factory': 'assets/empresas/electronics_factory.png',
@@ -32,21 +63,44 @@ class SpriteManager {
     'empresas/food_processing': 'assets/empresas/food_processing.png',
     'empresas/factory_default': 'assets/empresas/factory_default.png',
 
-    // 3. CASAS & ESTRUTURAS URBANAS
+    // 3. RESIDENCIAL / CASAS & ESTRUTURAS URBANAS
+    'residencial/house_suburban': 'assets/residencial/house_suburban.png',
+    'residencial/apartment_building': 'assets/residencial/apartment_building.png',
+    'residencial/mansion': 'assets/residencial/mansion.png',
+    'residencial/commercial_tower': 'assets/residencial/commercial_tower.png',
+    'residencial/office_building': 'assets/residencial/office_building.png',
+
+    // Legado residencial
     'casas/house_suburban': 'assets/casas/house_suburban.png',
     'casas/apartment_building': 'assets/casas/apartment_building.png',
     'casas/mansion': 'assets/casas/mansion.png',
     'casas/commercial_tower': 'assets/casas/commercial_tower.png',
     'casas/office_building': 'assets/casas/office_building.png',
 
-    // 4. ESTRADAS & VIAS
+    // 4. VIAS / ESTRADAS & PONTES
+    'vias/road_straight_x': 'assets/vias/road_straight_x.png',
+    'vias/road_straight_y': 'assets/vias/road_straight_y.png',
+    'vias/road_intersection': 'assets/vias/road_intersection.png',
+    'vias/road_curve': 'assets/vias/road_curve.png',
+    'vias/bridge': 'assets/vias/bridge.png',
+
+    // Legado vias
     'estradas/road_straight_x': 'assets/estradas/road_straight_x.png',
     'estradas/road_straight_y': 'assets/estradas/road_straight_y.png',
     'estradas/road_intersection': 'assets/estradas/road_intersection.png',
     'estradas/road_curve': 'assets/estradas/road_curve.png',
     'estradas/bridge': 'assets/estradas/bridge.png',
 
-    // 5. AGROPECUÁRIA
+    // 5. AGRICULTURA & AGROPECUÁRIA
+    'agricultura/farm_wheat': 'assets/agricultura/farm_wheat.png',
+    'agricultura/farm_corn': 'assets/agricultura/farm_corn.png',
+    'agricultura/farm_cotton': 'assets/agricultura/farm_cotton.png',
+    'agricultura/farm_plantation': 'assets/agricultura/farm_plantation.png',
+    'agricultura/farm_cattle': 'assets/agricultura/farm_cattle.png',
+    'agricultura/farm_dairy': 'assets/agricultura/farm_dairy.png',
+    'agricultura/farm_default': 'assets/agricultura/farm_default.png',
+
+    // Legado agro
     'agro/farm_wheat': 'assets/agro/farm_wheat.png',
     'agro/farm_corn': 'assets/agro/farm_corn.png',
     'agro/farm_cotton': 'assets/agro/farm_cotton.png',
@@ -55,19 +109,24 @@ class SpriteManager {
     'agro/farm_dairy': 'assets/agro/farm_dairy.png',
     'agro/farm_default': 'assets/agro/farm_default.png',
 
-    // 6. MINAS & EXTRAÇÃO
+    // 6. PORTUÁRIO & LOGÍSTICA
+    'portuario/seaport': 'assets/portuario/seaport.png',
+    'logistica_midia/seaport': 'assets/logistica_midia/seaport.png',
+
+    // 7. UTILIDADE PÚBLICA & MÍDIA
+    'utilidade_publica/media_tv': 'assets/utilidade_publica/media_tv.png',
+    'utilidade_publica/media_radio': 'assets/utilidade_publica/media_radio.png',
+    'logistica_midia/media_tv': 'assets/logistica_midia/media_tv.png',
+    'logistica_midia/media_radio': 'assets/logistica_midia/media_radio.png',
+
+    // 8. MINAS & EXTRAÇÃO
     'minas/mine_iron': 'assets/minas/mine_iron.png',
     'minas/mine_oil': 'assets/minas/mine_oil.png',
     'minas/mine_bauxite': 'assets/minas/mine_bauxite.png',
     'minas/mine_gold': 'assets/minas/mine_gold.png',
     'minas/mine_timber': 'assets/minas/mine_timber.png',
 
-    // 7. LOGÍSTICA & MÍDIA
-    'logistica_midia/seaport': 'assets/logistica_midia/seaport.png',
-    'logistica_midia/media_tv': 'assets/logistica_midia/media_tv.png',
-    'logistica_midia/media_radio': 'assets/logistica_midia/media_radio.png',
-
-    // 8. TERRENOS BASE
+    // 9. TERRENOS BASE
     'terrenos/grass': 'assets/terrenos/grass.png',
     'terrenos/fertile_soil': 'assets/terrenos/fertile_soil.png',
     'terrenos/sand': 'assets/terrenos/sand.png',
@@ -99,7 +158,7 @@ class SpriteManager {
         }
       };
       img.onerror = () => {
-        console.warn(`[SpriteManager] Falha ao carregar sprite: ${src}`);
+        // Tenta fallback sem poluir o console excessivamente
         this.loadedCount++;
       };
       img.src = src;
@@ -120,23 +179,15 @@ class SpriteManager {
 
   /**
    * Renderiza um sprite isométrico 2.5D com ancoragem na base do diamante.
-   * @param {CanvasRenderingContext2D} ctx Contexto 2D
-   * @param {string} spriteKey Chave no catálogo
-   * @param {number} sx Vértice superior do diamante (centro X)
-   * @param {number} sy Vértice superior do diamante (topo Y)
-   * @param {number} w Largura do diamante base (TILE_W * zoom)
-   * @param {number} h Altura do diamante base (TILE_H * zoom)
-   * @param {Function} fallbackFn Função fallback caso o sprite não esteja disponível
    */
   static draw(ctx, spriteKey, sx, sy, w, h, fallbackFn = null) {
     const img = this.get(spriteKey);
     if (img) {
-      // Escala proporcional ao tile base (64px de largura nominal)
       const scale = w / 64;
       const destW = img.naturalWidth * scale;
       const destH = img.naturalHeight * scale;
       const destX = sx - destW / 2;
-      const destY = (sy + h) - destH; // Alinha o fundo da imagem ao fundo do losango base
+      const destY = (sy + h) - destH;
 
       ctx.drawImage(img, destX, destY, destW, destH);
       return true;
@@ -149,36 +200,37 @@ class SpriteManager {
   }
 
   // ===========================================================================
-  // MAPEADORES DE SPRITE POR ELEMENTO DE SIMULAÇÃO
+  // MAPEADORES DE SPRITE POR ELEMENTO DE SIMULAÇÃO (Com suporte a ambas nomenclaturas)
   // ===========================================================================
 
   static getStoreSprite(storeTypeId) {
-    if (storeTypeId && this.ASSET_CATALOG[`lojas/${storeTypeId}`]) {
-      return `lojas/${storeTypeId}`;
+    if (storeTypeId) {
+      if (this.get(`comercial/${storeTypeId}`)) return `comercial/${storeTypeId}`;
+      if (this.get(`lojas/${storeTypeId}`)) return `lojas/${storeTypeId}`;
     }
-    return 'lojas/supermarket';
+    return this.get('comercial/supermarket') ? 'comercial/supermarket' : 'lojas/supermarket';
   }
 
   static getFactorySprite(activeRecipeId) {
-    if (!activeRecipeId) return 'empresas/factory_default';
-    if (activeRecipeId.includes('steel') || activeRecipeId.includes('metal')) return 'empresas/steel_mill';
-    if (activeRecipeId.includes('plastic') || activeRecipeId.includes('chemical') || activeRecipeId.includes('fuel')) return 'empresas/refinery';
-    if (activeRecipeId.includes('chip') || activeRecipeId.includes('phone') || activeRecipeId.includes('computer')) return 'empresas/electronics_factory';
-    if (activeRecipeId.includes('car') || activeRecipeId.includes('auto') || activeRecipeId.includes('truck')) return 'empresas/auto_plant';
-    if (activeRecipeId.includes('cloth') || activeRecipeId.includes('jean') || activeRecipeId.includes('apparel')) return 'empresas/textile_mill';
-    if (activeRecipeId.includes('bread') || activeRecipeId.includes('food') || activeRecipeId.includes('flour') || activeRecipeId.includes('beer')) return 'empresas/food_processing';
-    return 'empresas/factory_default';
+    if (!activeRecipeId) return 'industrial/factory_default';
+    if (activeRecipeId.includes('steel') || activeRecipeId.includes('metal')) return 'industrial/steel_mill';
+    if (activeRecipeId.includes('plastic') || activeRecipeId.includes('chemical') || activeRecipeId.includes('fuel')) return 'industrial/refinery';
+    if (activeRecipeId.includes('chip') || activeRecipeId.includes('phone') || activeRecipeId.includes('computer')) return 'industrial/electronics_factory';
+    if (activeRecipeId.includes('car') || activeRecipeId.includes('auto') || activeRecipeId.includes('truck')) return 'industrial/auto_plant';
+    if (activeRecipeId.includes('cloth') || activeRecipeId.includes('jean') || activeRecipeId.includes('apparel')) return 'industrial/textile_mill';
+    if (activeRecipeId.includes('bread') || activeRecipeId.includes('food') || activeRecipeId.includes('flour') || activeRecipeId.includes('beer')) return 'industrial/food_processing';
+    return 'industrial/factory_default';
   }
 
   static getFarmSprite(farmTypeId) {
-    if (!farmTypeId) return 'agro/farm_default';
-    if (farmTypeId.includes('wheat')) return 'agro/farm_wheat';
-    if (farmTypeId.includes('corn')) return 'agro/farm_corn';
-    if (farmTypeId.includes('cotton')) return 'agro/farm_cotton';
-    if (farmTypeId.includes('coffee') || farmTypeId.includes('cocoa') || farmTypeId.includes('sugar') || farmTypeId.includes('grapes') || farmTypeId.includes('tobacco') || farmTypeId.includes('rubber')) return 'agro/farm_plantation';
-    if (farmTypeId.includes('cattle') || farmTypeId.includes('pigs') || farmTypeId.includes('sheep') || farmTypeId.includes('poultry')) return 'agro/farm_cattle';
-    if (farmTypeId.includes('dairy')) return 'agro/farm_dairy';
-    return 'agro/farm_default';
+    if (!farmTypeId) return 'agricultura/farm_default';
+    if (farmTypeId.includes('wheat')) return 'agricultura/farm_wheat';
+    if (farmTypeId.includes('corn')) return 'agricultura/farm_corn';
+    if (farmTypeId.includes('cotton')) return 'agricultura/farm_cotton';
+    if (farmTypeId.includes('coffee') || farmTypeId.includes('cocoa') || farmTypeId.includes('sugar') || farmTypeId.includes('grapes') || farmTypeId.includes('tobacco') || farmTypeId.includes('rubber')) return 'agricultura/farm_plantation';
+    if (farmTypeId.includes('cattle') || farmTypeId.includes('pigs') || farmTypeId.includes('sheep') || farmTypeId.includes('poultry')) return 'agricultura/farm_cattle';
+    if (farmTypeId.includes('dairy')) return 'agricultura/farm_dairy';
+    return 'agricultura/farm_default';
   }
 
   static getMineSprite(mineTypeId) {
@@ -192,8 +244,8 @@ class SpriteManager {
   }
 
   static getRoadSprite(x, y, grid, isWater) {
-    if (isWater) return 'estradas/bridge';
-    if (!grid) return 'estradas/road_intersection';
+    if (isWater) return 'vias/bridge';
+    if (!grid) return 'vias/road_intersection';
 
     const left = grid[x - 1] && grid[x - 1][y] && grid[x - 1][y].isRoad;
     const right = grid[x + 1] && grid[x + 1][y] && grid[x + 1][y].isRoad;
@@ -202,26 +254,25 @@ class SpriteManager {
 
     const connections = (left ? 1 : 0) + (right ? 1 : 0) + (up ? 1 : 0) + (down ? 1 : 0);
 
-    if (connections >= 3) return 'estradas/road_intersection';
-    if ((left || right) && !(up || down)) return 'estradas/road_straight_x';
-    if ((up || down) && !(left || right)) return 'estradas/road_straight_y';
-    if ((left || right) && (up || down)) return 'estradas/road_curve';
+    if (connections >= 3) return 'vias/road_intersection';
+    if ((left || right) && !(up || down)) return 'vias/road_straight_x';
+    if ((up || down) && !(left || right)) return 'vias/road_straight_y';
+    if ((left || right) && (up || down)) return 'vias/road_curve';
 
-    // Padrão contínuo baseado em paridade
-    return (x + y) % 2 === 0 ? 'estradas/road_straight_x' : 'estradas/road_straight_y';
+    return (x + y) % 2 === 0 ? 'vias/road_straight_x' : 'vias/road_straight_y';
   }
 
   static getUrbanSprite(districtId, x, y) {
     if (districtId === 'downtown') {
-      return (x + y) % 2 === 0 ? 'casas/commercial_tower' : 'casas/office_building';
+      return (x + y) % 2 === 0 ? 'residencial/commercial_tower' : 'residencial/office_building';
     }
     if (districtId === 'northside') {
-      return (x + y) % 2 === 0 ? 'casas/apartment_building' : 'casas/mansion';
+      return (x + y) % 2 === 0 ? 'residencial/apartment_building' : 'residencial/mansion';
     }
     if (districtId === 'west_suburbs') {
-      return 'casas/house_suburban';
+      return 'residencial/house_suburban';
     }
-    return 'casas/house_suburban';
+    return 'residencial/house_suburban';
   }
 
   static getTerrainSprite(tile) {
