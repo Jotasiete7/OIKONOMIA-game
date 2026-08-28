@@ -190,12 +190,17 @@ class SpriteManager {
       let destX = sx - destW / 2;
       let destY = (sy + h) - destH;
 
-      // 1. VIAS & ESTRADAS: Imagens 64x64 têm o diamante centrado no meio (Y=16..48)
-      if (spriteKey.startsWith('vias/') || spriteKey.startsWith('estradas/')) {
+      // 1. VIAS, ESTRADAS, MONTANHAS & COLINAS: Imagens 64x64 cujo diamante base está em Y=16..48
+      if (spriteKey.startsWith('vias/') || spriteKey.startsWith('estradas/') || spriteKey === 'terrenos/mountain' || spriteKey === 'terrenos/hill') {
         destX = sx - destW / 2;
-        destY = (sy + h / 2) - (destH / 2);
+        destY = sy - (16 * scale);
       }
-      // 2. EDIFÍCIOS RESIDENCIAIS LARGOS (128x64): Centralizar o conteúdo no diamante 64px
+      // 2. TERRENOS PLANOS (64x32): O topo da imagem coincide com o topo do diamante (sy)
+      else if (spriteKey.startsWith('terrenos/')) {
+        destX = sx - destW / 2;
+        destY = sy;
+      }
+      // 3. EDIFÍCIOS RESIDENCIAIS LARGOS (128x64): Centralizar o conteúdo no diamante 64px
       else if (spriteKey.includes('apartment_building')) {
         destX = sx - (80 * scale);
         destY = (sy + h) - destH;
