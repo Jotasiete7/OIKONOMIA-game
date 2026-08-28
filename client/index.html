@@ -4814,7 +4814,7 @@
         `Instalações no Sparse Index: ${activeFacilitySet.size} tiles`,
         `Cidades Desbloqueadas: ${JSON.stringify(unlockedCities)}`,
         `Contratos de Marketing Ativos: ${activeMarketingContracts.size}`,
-        `Tempo de Jogo (Playtime): ${playtimeSeconds}s`,
+        `Tempo de Jogo (Playtime): ${Math.floor(playtimeSeconds / 3600)}h ${Math.floor((playtimeSeconds % 3600) / 60)}m ${playtimeSeconds % 60}s (${playtimeSeconds}s)`,
         "-------------------------------------------------------------------",
         "Últimos 10 Logs de Debug:",
         ...systemDebugLogs.slice(-10).map(l => `[${l.time}] [${l.category}] ${l.message}`),
@@ -6128,11 +6128,16 @@
     }
 
     function initAllDraggableWindows() {
-      // 1. Janela de Gestão de Instalação Flutuante
+      // 1. Janela de Gestão de Instalação Flutuante & Tutorial
       const facWin = document.getElementById('floating-facility-window');
       if (facWin) {
         const facHandle = facWin.querySelector('.drag-handle') || facWin.firstElementChild;
         if (facHandle) makeDraggable(facWin, facHandle, 'oiko_pos_facility_window');
+      }
+      const tutWin = document.getElementById('tutorial-guide-widget');
+      if (tutWin) {
+        const tutHandle = tutWin.querySelector('.drag-handle') || tutWin.firstElementChild;
+        if (tutHandle) makeDraggable(tutWin, tutHandle, 'oiko_pos_tutorial_guide');
       }
 
       // 2. Mapeamento de todos os modais do jogo
@@ -6182,6 +6187,13 @@
       updateUI();
       initAllDraggableWindows();
       startBootSequence();
+
+      // Ticker de tempo real jogado (Playtime persistente)
+      setInterval(() => {
+        if (currentAppScreen === 'PLAYING' && gameSpeed > 0) {
+          playtimeSeconds++;
+        }
+      }, 1000);
     }, 50);
   </script>
 </body>
