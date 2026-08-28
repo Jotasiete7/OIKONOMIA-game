@@ -3,7 +3,7 @@
 > **Documento Oficial de Rastreabilidade, Versionamento e EvoluÃ§Ã£o do Projeto**  
 > **RepositÃ³rio:** `Jotasiete7/OIKONOMIA-game`  
 > **Ãšltima AtualizaÃ§Ã£o:** 28 de Agosto de 2026  
-> **VersÃ£o Oficial Corrente:** `v0.8.0 (bld.20260828.01)`  
+> **VersÃ£o Oficial Corrente:** `v0.8.0 (bld.20260828.02)`  
 > **Save Schema:** `v0.8.0` (Compatibilidade Retroativa Total)
 
 ---
@@ -23,9 +23,9 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 ## ðŸ§­ Agenda de Desenvolvimento (PrÃ³ximos Passos Priorizados)
 
+- [ ] **QG Corporativo & Diretoria Executiva (v0.9.0)**: Sede global Ãºnica com contrataÃ§Ã£o de CEO, COO, CMO, CTO e CFO com bÃ´nus setoriais.
 - [ ] **IA Concorrente com P&D DinÃ¢mico**: Concorrentes evoluindo tecnologia mensalmente e disputando patentes de ponta.
 - [ ] **MÃ³dulo de LogÃ­stica Visual**: Adicionar caminhÃµes/frotas navegando pelas avenidas entre metrÃ³poles e fÃ¡bricas.
-- [ ] **QG Corporativo & Diretoria Executiva**: ContrataÃ§Ã£o de CEO, COO e CFO com bÃ´nus setoriais.
 - [ ] **Bolsa de Valores & EmprÃ©stimos BancÃ¡rios**: Sistema financeiro para emissÃ£o de aÃ§Ãµes e debÃªntures.
 - [ ] **Polimento GrÃ¡fico & Efeitos IsomÃ©tricos**: Sombras dinÃ¢micas nos edifÃ­cios e ciclo dia/noite.
 
@@ -35,10 +35,18 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 ---
 
-### ðŸ“… SessÃ£o 06: MÃ³dulo EstratÃ©gico de P&D (Pesquisa & Desenvolvimento), Mercado de Patentes & Zoom Ancorado no Cursor
-- **Data:** 28/08/2026 â€” 07:30
-- **VersÃ£o Oficial:** `v0.8.0 (bld.20260828.01)` | **Save Schema:** `v0.8.0`
+### ðŸ“… SessÃ£o 06: MÃ³dulo EstratÃ©gico de P&D (Pesquisa & Desenvolvimento), ConstruÃ§Ã£o FÃ­sica no Mapa, Mercado de Patentes & Zoom no Cursor
+- **Data:** 28/08/2026 â€” 07:45
+- **VersÃ£o Oficial:** `v0.8.0 (bld.20260828.02)` | **Save Schema:** `v0.8.0`
 - **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### ðŸŽ¯ Objetivos:
+- Implementar a **construÃ§Ã£o fÃ­sica do Centro de P&D (LaboratÃ³rio) no mapa**, acessÃ­vel pelo menu de terrenos livres e barra de ferramentas rÃ¡pida.
+- Integrar o sistema de **Pesquisa & Desenvolvimento (P&D)** modelado fielmente apÃ³s o **Capitalism II / Capitalism Lab**.
+- Introduzir a mecÃ¢nica de corrida tecnolÃ³gica de qualidade (Quality Rating - QR) de 0 a 100 com curvas de custo exponencial e rendimentos decrescentes (money sink estratÃ©gico).
+- Criar o **Mercado de Patentes & AquisiÃ§Ã£o Direta de Tecnologia** para compra/licenciamento instantÃ¢neo de tecnologias de concorrentes lÃ­deres.
+- Conectar a propagaÃ§Ã£o diÃ¡ria de QR para as gÃ´ndolas de varejo (`propagateQualityToShelf`) e atualizaÃ§Ã£o automÃ¡tica das linhas de manufatura.
+- Permitir venda e demoliÃ§Ã£o fÃ­sica do Centro de P&D com recuperaÃ§Ã£o de 70% e 40% respectivamente.
 
 #### ðŸŽ¯ Objetivos:
 - Implementar o sistema completo de **Pesquisa & Desenvolvimento (P&D)** modelado fielmente apÃ³s o **Capitalism II / Capitalism Lab**.
