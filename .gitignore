@@ -19,3 +19,9 @@ Thumbs.db
 _archive_rascunhos/
 archive_legacy/
 
+
+# Arquivos compactados e pacotes
+*.rar
+*.zip
+*.7z
+

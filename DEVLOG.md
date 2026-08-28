@@ -3,7 +3,7 @@
 > **Documento Oficial de Rastreabilidade, Versionamento e EvoluÃ§Ã£o do Projeto**  
 > **RepositÃ³rio:** `Jotasiete7/OIKONOMIA-game`  
 > **Ãšltima AtualizaÃ§Ã£o:** 27 de Agosto de 2026  
-> **VersÃ£o Oficial Corrente:** `v0.7.4 (bld.20260827.07)`  
+> **VersÃ£o Oficial Corrente:** `v0.7.4 (bld.20260827.06)`  
 > **Save Schema:** `v0.7.2` (Compatibilidade Retroativa Total)
 
 ---
@@ -35,17 +35,16 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 ---
 
-### ðŸ“… SessÃ£o 05: Sistema Universal de Janelas ArrastÃ¡veis, HUD Multi-ResoluÃ§Ã£o & GestÃ£o ImobiliÃ¡ria
-- **Data:** 27/08/2026 â€” 19:20
-- **VersÃ£o Oficial:** `v0.7.4 (bld.20260827.07)` | **Save Schema:** `v0.7.2`
+### ðŸ“… SessÃ£o 05: Sistema Universal de Janelas ArrastÃ¡veis, HUD Multi-ResoluÃ§Ã£o Adaptativo & SemVer Oficial
+- **Data:** 27/08/2026 â€” 18:55
+- **VersÃ£o Oficial:** `v0.7.4 (bld.20260827.06)` | **Save Schema:** `v0.7.2`
 - **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant) *(InovaÃ§Ã£o de janelas mÃ³veis originada por Kaligola)*
 
 #### ðŸŽ¯ Objetivos:
 - Assimilar a funcionalidade de janelas arrastÃ¡veis trazida pelo Kaligola, modernizando-a e integrando-a com foco dinÃ¢mico.
-- Integrar a interface de **Venda e DemoliÃ§Ã£o de InstalaÃ§Ãµes** no rodapÃ© dos painÃ©is de gestÃ£o e telemetria rÃ¡pida.
 - Eliminar o erro vermelho do console (`Uncaught ReferenceError: pill is not defined`).
-- Corrigir o problema de layout onde o topo colidia em laptops (1366x768 / 1280x720 / 125% DPI).
-- Restabelecer o menu de construÃ§Ã£o interativo ao clicar em terrenos livres e atalhos rÃ¡pidos na telemetria.
+- Corrigir o problema de tela/resoluÃ§Ãµes onde o topo colidia ou ficava cortado em laptops (1366x768 / 1280x720 / 125% DPI).
+- Restabelecer o menu de construÃ§Ã£o interativo ao clicar em terrenos vazios e atalhos rÃ¡pidos na telemetria.
 - Eliminar a duplicidade de minimapas sobrepostos.
 - Estabelecer a regra oficial de versionamento `GAME_VERSION_INFO` SemVer 2.0 + Build Stamp.
 
@@ -55,11 +54,15 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
    - Bounding box estrito garantindo que janelas nunca fiquem presas fora dos limites visÃ­veis do monitor.
    - DetecÃ§Ã£o inteligente ignorando cliques em botÃµes de fechar, inputs ou menus.
    - Sistema de foco com elevaÃ§Ã£o dinÃ¢mica de `z-index` ao clicar na janela ativa (`bringWindowToFront`).
-2. **GestÃ£o ImobiliÃ¡ria & Desinvestimento (Vender / Demolir)**:
-   - RodapÃ© fixo em todas as janelas de instalaÃ§Ãµes (`#facility-action-row`) com botÃµes `ðŸ’° Vender` (recupera 70% da obra + valor do estoque) e `ðŸ—‘ï¸ Demolir` (recupera 40% em sucata e encerra aluguel).
-   - Atalhos rÃ¡pidos na barra de telemetria inferior (`#telemetry-actions`).
-3. **PersistÃªncia de Coordenadas no `localStorage`**:
+2. **PersistÃªncia de Coordenadas no `localStorage`**:
    - Cada modal memoriza individualmente sua posiÃ§Ã£o (`left`, `top`) onde o jogador a deixou.
+3. **Mapeamento Universal de Todos os Modais do Jogo**:
+   - GestÃ£o de InstalaÃ§Ã£o Flutuante (`#floating-facility-window`).
+   - DRE Consolidada (`#dre-modal`).
+   - DiÃ¡rio de Bordo (`#diary-modal`).
+   - Central de Publicidade (`#marketing-central-modal`).
+   - Abertura de Lojas, FÃ¡bricas, Minas, Fazendas e Portos.
+   - Painel de Desenvolvimento (`#dev-dashboard-modal` - F3).
 4. **Layout Multi-ResoluÃ§Ã£o Adaptativo (Anti-Overflow & Anti-Text-Wrap)**:
    - Trava universal de `whitespace-nowrap` em tempo, finanÃ§as e badges.
    - Sistema progressivo de breakpoints: em laptops e telas menores que 1536px, botÃµes colapsam para Ã­cones com tooltips e a barra de lentes flutua em linha independente sem nunca empurrar o menu para fora da tela.
@@ -76,6 +79,17 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 - **Data:** 27/08/2026 â€” 15:30
 - **VersÃ£o:** `v0.7.2` | **Commit:** `2a11f3f`
 - **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### ðŸ› ï¸ O Que Foi Implementado:
+1. **Barra de Telemetria de RodapÃ© (`#bottom-telemetry-bar`)**:
+   - Inspetor de lote contÃ­nuo `ðŸ“ Lote (X, Y) Â· Distrito`.
+   - Contagem de prÃ©dios ativos no Sparse Index (`ðŸ¢ 18 PrÃ©dios`).
+   - PopulaÃ§Ã£o mundial e status do Ãºltimo salvamento.
+   - Monitor de taxa de quadros em tempo real (`âš¡ 60 FPS`).
+2. **Painel de Desenvolvimento & DiagnÃ³stico (`F3` / `#dev-dashboard-modal`)**:
+   - **Aba DiagnÃ³stico:** EspecificaÃ§Ãµes completas do motor, schema de saves e botÃ£o **"Copiar RelatÃ³rio de DiagnÃ³stico"** em 1 clique.
+   - **Aba Logs de Debug:** HistÃ³rico de eventos internos com timestamp e buffer de 300 mensagens (`logDebug`).
+   - **Aba Sandbox:** Ferramentas para acelerar testes (`+$100k`, `Pular 1 MÃªs`, `Desbloquear Cidades`, `Dump JSON`).
 
 ---
 
