@@ -1854,12 +1854,10 @@
     });
 
     // ===== rAF RENDER LOOP — Dirty flag elimina redesenhos desnecessários =====
-    let _needsRender = true;
     let _lastFpsTime = performance.now();
     let _framesCount = 0;
     let _currentFps = 60;
 
-    function scheduleRender() { _needsRender = true; }
     function _rafLoop(now = performance.now()) {
       _framesCount++;
       if (now - _lastFpsTime >= 500) {
