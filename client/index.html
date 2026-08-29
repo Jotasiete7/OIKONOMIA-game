@@ -961,6 +961,34 @@
   </div>
 
   <!-- ======================================================================= -->
+  <!-- OVERLAY 6B: MODAL DE CONFIRMAÇÃO DE VENDA & DEMOLIÇÃO (INTERFACE JOGO)  -->
+  <!-- ======================================================================= -->
+  <div id="confirm-facility-modal" class="fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col p-6 space-y-4 font-mono text-xs">
+      <div class="text-center space-y-2">
+        <div id="fac-confirm-icon-box" class="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-2xl flex items-center justify-center mx-auto">
+          🗑️
+        </div>
+        <h3 id="fac-confirm-title" class="text-base font-bold text-slate-100 font-sans">DEMOLIR EDIFÍCIO</h3>
+        <p id="fac-confirm-subtitle" class="text-xs text-slate-400">Instalação: <strong id="fac-confirm-name" class="text-slate-200">Centro de P&D</strong></p>
+      </div>
+
+      <div id="fac-confirm-details" class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 space-y-2 text-left text-slate-300 leading-relaxed text-[11px]">
+        <!-- Conteúdo inserido dinamicamente via JS -->
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-2">
+        <button id="fac-confirm-btn-cancel" onclick="closeFacilityConfirmModal()" class="py-3 rounded-xl bg-slate-800 hover:bg-slate-700 font-bold text-slate-300 transition text-center cursor-pointer">
+          Cancelar
+        </button>
+        <button id="fac-confirm-btn-execute" class="py-3 rounded-xl bg-rose-600 hover:bg-rose-500 font-bold text-white transition text-center shadow-lg cursor-pointer">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
   <!-- OVERLAY 7: MODAL DE CONFIGURAÇÕES (ÁUDIO, AUTOSAVE, INTERFACE)          -->
   <!-- ======================================================================= -->
   <div id="settings-modal" class="fixed inset-0 z-[96] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
@@ -2430,6 +2458,42 @@
       `;
     }
 
+    let pendingFacilityAction = null;
+
+    function openFacilityConfirmModal({ icon, title, subtitle, name, detailsHtml, confirmText, confirmClass, onConfirm }) {
+      const modal = document.getElementById('confirm-facility-modal');
+      const iconBox = document.getElementById('fac-confirm-icon-box');
+      const titleEl = document.getElementById('fac-confirm-title');
+      const subEl = document.getElementById('fac-confirm-subtitle');
+      const nameEl = document.getElementById('fac-confirm-name');
+      const detailsEl = document.getElementById('fac-confirm-details');
+      const btnExec = document.getElementById('fac-confirm-btn-execute');
+
+      if (iconBox) iconBox.innerHTML = icon || '🗑️';
+      if (titleEl) titleEl.textContent = title;
+      if (subEl && subtitle) subEl.innerHTML = subtitle;
+      if (nameEl) nameEl.textContent = name;
+      if (detailsEl) detailsEl.innerHTML = detailsHtml;
+
+      if (btnExec) {
+        btnExec.textContent = confirmText || 'Confirmar';
+        btnExec.className = `py-3 rounded-xl font-bold text-white transition text-center shadow-lg cursor-pointer ${confirmClass || 'bg-rose-600 hover:bg-rose-500'}`;
+        btnExec.onclick = () => {
+          closeFacilityConfirmModal();
+          if (typeof onConfirm === 'function') onConfirm();
+        };
+      }
+
+      pendingFacilityAction = onConfirm;
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeFacilityConfirmModal() {
+      const modal = document.getElementById('confirm-facility-modal');
+      if (modal) modal.classList.add('hidden');
+      pendingFacilityAction = null;
+    }
+
     function sellFacility(x, y) {
       const tile = worldGrid[x] && worldGrid[x][y];
       if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter)) return;
@@ -2440,58 +2504,96 @@
       const cityName = tile.city?.cityName || 'Metrópole';
       const competitorName = traffic > 60 ? 'OmniCorp Retail' : (traffic > 40 ? 'Titan Megastores' : 'Fundo Imobiliário Apex');
 
-      let msg = '';
       if (isStore && traffic >= 35) {
-        msg = `PROPOSTA DE COMPRA DE CONCORRENTE\n\n` +
-          `A rede rival "${competitorName}" tem interesse estratégico neste ponto comercial em ${cityName}!\n\n` +
-          `• Oferta pelo Imóvel (80% da Obra): $${Math.round(val.baseCost * 0.80).toLocaleString()}\n` +
-          `• Liquidação Integral de Estoque: $${Math.round(val.stockValue).toLocaleString()}\n` +
-          `--------------------------------------------------\n` +
-          `TOTAL A RECEBER EM CAIXA: +$${Math.round(val.baseCost * 0.80 + val.stockValue).toLocaleString()}\n\n` +
-          `Se aceitar, a ${competitorName} assumirá a loja e passará a operar como concorrente no lote.\n` +
-          `Confirmar venda da loja para a rede concorrente?`;
+        const finalCash = Math.round(val.baseCost * 0.80 + val.stockValue);
+        openFacilityConfirmModal({
+          icon: '🤝',
+          title: 'PROPOSTA DE COMPRA DE CONCORRENTE',
+          subtitle: `A rede rival <strong class="text-purple-400 font-bold">${competitorName}</strong> tem interesse estratégico neste ponto comercial em ${cityName}!`,
+          name: val.facilityName,
+          detailsHtml: `
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-slate-300">
+                <span>• Oferta pelo Imóvel (80% da Obra):</span>
+                <span class="font-bold text-slate-100">$${Math.round(val.baseCost * 0.80).toLocaleString()}</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>• Liquidação Integral de Estoque:</span>
+                <span class="font-bold text-slate-100">$${Math.round(val.stockValue).toLocaleString()}</span>
+              </div>
+              <div class="border-t border-slate-700 pt-1.5 flex justify-between text-emerald-400 font-bold text-xs">
+                <span>TOTAL A RECEBER EM CAIXA:</span>
+                <span>+$${finalCash.toLocaleString()}</span>
+              </div>
+              <p class="text-[10px] text-slate-400 pt-1 leading-snug">Se aceitar, a ${competitorName} assumirá a loja e passará a operar como concorrente no lote.</p>
+            </div>
+          `,
+          confirmText: 'Aceitar Proposta (+$$)',
+          confirmClass: 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-950/40',
+          onConfirm: () => {
+            cash += finalCash;
+            addGameLog(`🤝 ${competitorName} adquiriu ${val.facilityName} por +$${finalCash.toLocaleString()} e assumiu o ponto comercial!`, 'text-purple-400 font-bold');
+            tile.competitor = {
+              name: `${competitorName} ${cityName}`,
+              shelves: { ...tile.store.shelves },
+              lastShare: 0.5
+            };
+            tile.store = null;
+            tile.buildingHeight = 18;
+            playSuccessChime();
+            _indexTile(tile);
+            activeManagedTile = null;
+            renderIdlePanel();
+            renderTileInspector(tile);
+            scheduleRender();
+            updateUI();
+          }
+        });
       } else {
-        msg = `VENDER IMÓVEL NO MERCADO COMERCIAL\n\n` +
-          `Instalação: ${val.facilityName}\n` +
-          `• Obra Recuperada (70%): $${Math.round(val.baseCost * 0.70).toLocaleString()}\n` +
-          `• Liquidação de Estoque: $${Math.round(val.stockValue).toLocaleString()}\n` +
-          `--------------------------------------------------\n` +
-          `TOTAL A RECEBER EM CAIXA: +$${val.sellValue.toLocaleString()}\n\n` +
-          `Confirmar venda e desocupação do imóvel?`;
+        const finalCash = val.sellValue;
+        openFacilityConfirmModal({
+          icon: '🏷️',
+          title: 'VENDER IMÓVEL NO MERCADO',
+          subtitle: `Instalação: <strong class="text-emerald-300">${val.facilityName}</strong>`,
+          name: val.facilityName,
+          detailsHtml: `
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-slate-300">
+                <span>• Obra Recuperada (70%):</span>
+                <span class="font-bold text-slate-100">$${Math.round(val.baseCost * 0.70).toLocaleString()}</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>• Liquidação de Estoque Residual:</span>
+                <span class="font-bold text-slate-100">$${Math.round(val.stockValue).toLocaleString()}</span>
+              </div>
+              <div class="border-t border-slate-700 pt-1.5 flex justify-between text-emerald-400 font-bold text-xs">
+                <span>TOTAL A RECEBER EM CAIXA:</span>
+                <span>+$${finalCash.toLocaleString()}</span>
+              </div>
+              <p class="text-[10px] text-slate-400 pt-1 leading-snug">O imóvel será desocupado e o aluguel diário cancelado.</p>
+            </div>
+          `,
+          confirmText: 'Confirmar Venda (+$$)',
+          confirmClass: 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-950/40',
+          onConfirm: () => {
+            cash += finalCash;
+            addGameLog(`💰 ${val.facilityName} vendida no mercado! Caixa creditado em +$${finalCash.toLocaleString()}`, 'text-emerald-400 font-bold');
+            tile.store = null;
+            tile.mine = null;
+            tile.farm = null;
+            tile.factory = null;
+            tile.rdCenter = null;
+            tile.buildingHeight = 0;
+            playSuccessChime();
+            _indexTile(tile);
+            activeManagedTile = null;
+            renderIdlePanel();
+            renderTileInspector(tile);
+            scheduleRender();
+            updateUI();
+          }
+        });
       }
-
-      if (!confirm(msg)) return;
-
-      const finalCash = isStore && traffic >= 35 ? Math.round(val.baseCost * 0.80 + val.stockValue) : val.sellValue;
-      cash += finalCash;
-
-      if (isStore && traffic >= 35) {
-        addGameLog(`🤝 ${competitorName} adquiriu ${val.facilityName} por +$${finalCash.toLocaleString()} e assumiu o ponto comercial!`, 'text-purple-400 font-bold');
-        tile.competitor = {
-          name: `${competitorName} ${cityName}`,
-          shelves: { ...tile.store.shelves },
-          lastShare: 0.5
-        };
-        tile.store = null;
-        tile.buildingHeight = 18;
-      } else {
-        addGameLog(`💰 ${val.facilityName} vendida no mercado! Caixa creditado em +$${finalCash.toLocaleString()}`, 'text-emerald-400 font-bold');
-        tile.store = null;
-        tile.mine = null;
-        tile.farm = null;
-        tile.factory = null;
-        tile.rdCenter = null;
-        tile.buildingHeight = 0;
-      }
-
-      playSuccessChime();
-      _indexTile(tile);
-
-      activeManagedTile = null;
-      renderIdlePanel();
-      renderTileInspector(tile);
-      scheduleRender();
-      updateUI();
     }
 
     function demolishFacility(x, y) {
@@ -2499,31 +2601,45 @@
       if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter)) return;
 
       const val = calculateFacilityValue(tile);
-      const msg = 'DEMOLIR EDIFÍCIO\n\n' +
-        'Instalação: ' + val.facilityName + '\n' +
-        '• Recuperação de Sucata (40%): +$' + val.salvageValue.toLocaleString() + '\n' +
-        '• Estoque residual no local será descartado.\n' +
-        '• Cobrança de aluguel diário será cancelada.\n\n' +
-        'Confirmar demolição completa?';
-
-      if (!confirm(msg)) return;
-
-      cash += val.salvageValue;
-      addGameLog('🗑️ ' + val.facilityName + ' demolida. Recuperado +$' + val.salvageValue.toLocaleString() + ' em sucata.');
-
-      tile.store = null;
-      tile.mine = null;
-      tile.farm = null;
-      tile.factory = null;
-      tile.rdCenter = null;
-      tile.buildingHeight = 0;
-      _indexTile(tile);
-
-      activeManagedTile = null;
-      renderIdlePanel();
-      renderTileInspector(tile);
-      scheduleRender();
-      updateUI();
+      openFacilityConfirmModal({
+        icon: '🗑️',
+        title: 'DEMOLIR EDIFÍCIO',
+        subtitle: `Instalação: <strong class="text-rose-300">${val.facilityName}</strong>`,
+        name: val.facilityName,
+        detailsHtml: `
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-slate-300">
+              <span>• Recuperação de Sucata (40%):</span>
+              <span class="font-bold text-emerald-400">+$${val.salvageValue.toLocaleString()}</span>
+            </div>
+            <div class="text-rose-400/90 text-[10px]">
+              • Todo o estoque residual no local será descartado.
+            </div>
+            <div class="text-slate-400 text-[10px]">
+              • A cobrança de aluguel diário do lote será cancelada.
+            </div>
+            <p class="text-[10px] text-amber-400/90 pt-1 leading-snug">A estrutura será completamente removida e o lote ficará livre para novas construções.</p>
+          </div>
+        `,
+        confirmText: 'Confirmar Demolição',
+        confirmClass: 'bg-rose-600 hover:bg-rose-500 shadow-rose-950/40',
+        onConfirm: () => {
+          cash += val.salvageValue;
+          addGameLog('🗑️ ' + val.facilityName + ' demolida. Recuperado +$' + val.salvageValue.toLocaleString() + ' em sucata.', 'text-rose-400 font-bold');
+          tile.store = null;
+          tile.mine = null;
+          tile.farm = null;
+          tile.factory = null;
+          tile.rdCenter = null;
+          tile.buildingHeight = 0;
+          _indexTile(tile);
+          activeManagedTile = null;
+          renderIdlePanel();
+          renderTileInspector(tile);
+          scheduleRender();
+          updateUI();
+        }
+      });
     }
 
     
@@ -5819,6 +5935,13 @@
     }
 
     function handleGlobalEscapeKey() {
+      // Prioridade 0: Modal de Confirmação de Venda / Demolição
+      const facConfirm = document.getElementById('confirm-facility-modal');
+      if (facConfirm && !facConfirm.classList.contains('hidden')) {
+        closeFacilityConfirmModal();
+        return;
+      }
+
       // Prioridade 1: Modal de Confirmação de Saída
       const confirmModal = document.getElementById('confirm-exit-modal');
       if (confirmModal && !confirmModal.classList.contains('hidden')) {
@@ -5851,7 +5974,8 @@
       const openInGameModals = [
         'floating-facility-window', 'store-modal', 'mine-modal', 'farm-modal',
         'factory-modal', 'factory-recipe-modal', 'port-modal', 'supplier-modal',
-        'add-product-modal', 'marketing-modal', 'dre-modal', 'diary-modal'
+        'add-product-modal', 'marketing-modal', 'dre-modal', 'diary-modal',
+        'confirm-facility-modal'
       ];
       let closedAny = false;
       for (const id of openInGameModals) {
