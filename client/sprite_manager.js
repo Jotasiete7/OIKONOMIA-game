@@ -126,14 +126,16 @@ class SpriteManager {
     'minas/mine_gold': 'assets/minas/mine_gold.png',
     'minas/mine_timber': 'assets/minas/mine_timber.png',
 
-    // 9. TERRENOS BASE
+    // 9. TERRENOS BASE & FLORESTAS
     'terrenos/grass': 'assets/terrenos/grass.png',
+    'terrenos/forest': 'assets/terrenos/forest.png',
     'terrenos/fertile_soil': 'assets/terrenos/fertile_soil.png',
     'terrenos/sand': 'assets/terrenos/sand.png',
     'terrenos/water_shallow': 'assets/terrenos/water_shallow.png',
     'terrenos/water_deep': 'assets/terrenos/water_deep.png',
     'terrenos/hill': 'assets/terrenos/hill.png',
     'terrenos/mountain': 'assets/terrenos/mountain.png',
+    'decoracao/forest': 'assets/decoracao/forest.png',
   };
 
   /**
@@ -311,6 +313,7 @@ class SpriteManager {
     if (tile.isWater) {
       return tile.gidWater === 1 ? 'terrenos/water_deep' : 'terrenos/water_shallow';
     }
+    if (tile.gidTerrain === 8 || tile.hasTimberDeposit || tile.gidRes === 8) return 'terrenos/forest';
     if (tile.gidTerrain === 3) return 'terrenos/sand';
     if (tile.gidTerrain === 5) return 'terrenos/fertile_soil';
     if (tile.gidTerrain === 6) return 'terrenos/hill';

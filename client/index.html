@@ -1580,6 +1580,10 @@
           dType = 'Rodovia Principal';
           dName = 'Eixo Rodoviário Logístico';
           traffic = 75; pop = 0; rent = 0;
+        } else if (gidTerrain === 8 || gidRes === 8) {
+          dType = 'Floresta / Bosque';
+          dName = 'Reserva Florestal (Madeira)';
+          traffic = 6; pop = 300; rent = 5.50;
         } else if (gidTerrain === 7) {
           dType = 'Montanhas';
           dName = 'Cadeia de Montanhas (Mineração)';
@@ -1634,7 +1638,7 @@
           mediaData,
           hasIronDeposit: gidRes === 9,
           hasOilDeposit: gidRes === 10,
-          hasTimberDeposit: gidRes === 8,
+          hasTimberDeposit: gidRes === 8 || gidTerrain === 8,
           isFertile: gidTerrain === 5 || gidBuild === 17,
           buildingHeight: isWater || isRoad ? 0 : (portData ? 16 : (isCommercialCenter ? 22 : (isResidential ? 14 : 0))),
           store: null,
