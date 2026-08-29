@@ -35,6 +35,31 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 ---
 
+### 📅 Sessão 08: Refinamento da Malha Viária, Nova Arte de Florestas, Modal In-Game & Auditoria de Camadas
+- **Data:** 28/08/2026 — 23:30 (Fechamento de Expediente)
+- **Versão Oficial:** `v0.8.1 (bld.20260828.03)` | **Save Schema:** `v0.8.1`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Limpeza & Polimento da Malha Viária:**
+   - Remoção de todos os cortes transversais e dentes de serra pelo maciço central de montanhas.
+   - Eliminação de todas as vias que avançavam sobre o mar aberto (zero asfalto na água).
+   - Consolidação do Anel Rodoviário Periférico com faixas amarelas contínuas nos eixos X e Y.
+2. **Nova Arte de Cruzamentos de Vias (`road_intersection.png`):**
+   - Criação de sprite com faixas contínuas conectadas no centro do cruzamento em $64 \times 64$ px.
+3. **Modal Customizado In-Game de Venda & Demolição:**
+   - Substituição do `window.confirm()` nativo do navegador pelo `#confirm-facility-modal` em tema escuro Tailwind com discriminação financeira de estoques, sucata e propostas de IA concorrente.
+4. **Arte Oficial de Florestas (3 Árvores Isométricas):**
+   - Criação de sprite pixel art com 3 árvores isométricas em camadas e sombras projetadas (`terrenos/forest.png`).
+   - Alinhamento de ancoragem geométrica precisa (`Y=32..64`), eliminando o desnível em relação a solos vizinhos.
+5. **Auditoria & Organização das 5 Camadas do Mapa:**
+   - Transferência automática de 47 blocos de vias, 22 de areia e 16 de água para suas camadas canônicas.
+   - Sincronização 100% fiel e bidirecional entre `data/maps/oikonomia_map.tmx` e `client/map_data.js`.
+6. **Alinhamento de Costa Urbana:**
+   - Expansão de terra firme e orla de praia sob todos os 4 quarteirões de Nova Atenas e Porto Real, eliminando sobreposições de água sob as cidades.
+
+---
+
 ### 📅 Sessão 07: Pacote Completo de Usabilidade, Sprites Isométricos, Tutorial do Magnata, Multilinhas de Fábrica & IA Comercial
 - **Data:** 28/08/2026 — 13:00
 - **Versão Oficial:** `v0.8.1 (bld.20260828.03)` | **Save Schema:** `v0.8.1`
