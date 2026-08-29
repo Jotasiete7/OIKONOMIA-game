@@ -1312,6 +1312,11 @@
     const rdLabs = GameState.rdLabs;
     const unlockedCities = GameState.unlockedCities;
 
+    // Render loop global dirty flag & function (disponíveis imediatamente no boot)
+    let _needsRender = true;
+    function scheduleRender() { _needsRender = true; }
+    window.scheduleRender = scheduleRender;
+
     // Catálogo dos 24 Avatares Oficiais (6 Executivos, 6 Especialistas Industriais, 6 Animais de Mercado, 6 Robôs & IA)
     const AVATAR_CATALOG = [
       // 1. Executivos & Magnatas
@@ -1488,19 +1493,30 @@
 
     // Identificador de Cidade por Proximidade
     function getCityForTile(x, y) {
-      if (typeof CITY_PROFILES_DATA === 'undefined') {
+      const defaultProfile = {
+        id: 'nova_atenas',
+        name: 'Nova Atenas',
+        economy: { wealthIndex: 85, priceElasticity: -0.9, trafficBaseIndex: 40, landRentMultiplier: 1.0 },
+        growth: { initialPopulation: 18000 }
+      };
+
+      if (typeof CITY_PROFILES_DATA === 'undefined' || !CITY_PROFILES_DATA.cities) {
         return {
           cityId: 'nova_atenas',
           cityName: 'Nova Atenas',
           wealthIndex: 85,
-          get isLocked() { return !unlockedCities['nova_atenas']; }
+          priceElasticity: -0.9,
+          distToCenter: 0,
+          get isLocked() { return !unlockedCities['nova_atenas']; },
+          profile: defaultProfile
         };
       }
       
       const cities = CITY_PROFILES_DATA.cities;
-      let closest = cities[0];
+      let closest = cities[0] || defaultProfile;
       let minD = 999999;
       for (const c of cities) {
+        if (!c || !c.mapTileCenter) continue;
         const d = Math.sqrt(Math.pow(x - c.mapTileCenter.x, 2) + Math.pow(y - c.mapTileCenter.y, 2));
         if (d < minD) {
           minD = d;
@@ -1510,8 +1526,8 @@
       return {
         cityId: closest.id,
         cityName: closest.name,
-        wealthIndex: closest.economy.wealthIndex,
-        priceElasticity: closest.economy.priceElasticity,
+        wealthIndex: closest.economy?.wealthIndex || 85,
+        priceElasticity: closest.economy?.priceElasticity || -0.9,
         distToCenter: minD,
         get isLocked() {
           return !unlockedCities[closest.id];
