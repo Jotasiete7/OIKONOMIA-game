@@ -197,18 +197,23 @@ class SpriteManager {
         destX = sx - destW / 2;
         destY = sy - (16 * scale);
       }
-      // 2. TERRENOS PLANOS (64x32): O topo da imagem coincide com o topo do diamante (sy)
-      else if (spriteKey.startsWith('terrenos/')) {
-        destX = sx - destW / 2;
-        destY = sy;
-      }
-      // 3. EDIFÍCIOS RESIDENCIAIS LARGOS (128x64): Centralizar o conteúdo no diamante 64px
+      // 2. EDIFÍCIOS RESIDENCIAIS LARGOS (128x64): Centralizar o conteúdo no diamante 64px
       else if (spriteKey.includes('apartment_building')) {
         destX = sx - (80 * scale);
         destY = (sy + h) - destH;
       } else if (spriteKey.includes('commercial_tower')) {
         destX = sx - (74 * scale);
         destY = (sy + h) - destH;
+      }
+      // 3. FLORESTAS & ESTRUTURAS 2.5D (64x64, base do diamante em Y=32..64 ancorada no chão)
+      else if (spriteKey === 'terrenos/forest' || spriteKey.startsWith('decoracao/') || spriteKey.startsWith('minas/') || spriteKey.startsWith('agricultura/') || spriteKey.startsWith('industrial/') || spriteKey.startsWith('comercial/') || spriteKey.startsWith('residencial/')) {
+        destX = sx - destW / 2;
+        destY = (sy + h) - destH;
+      }
+      // 4. TERRENOS PLANOS 64x32 (Grama, Areia, Terra Fértil, Água)
+      else if (spriteKey.startsWith('terrenos/')) {
+        destX = sx - destW / 2;
+        destY = sy;
       }
 
       ctx.drawImage(img, destX, destY, destW, destH);
