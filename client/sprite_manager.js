@@ -265,18 +265,30 @@ class SpriteManager {
 
   static getRoadSprite(x, y, grid, isWater) {
     if (isWater) return 'vias/bridge';
-    if (!grid) return 'vias/road_intersection';
+    if (!grid) return 'vias/road_straight_x';
 
-    const left = grid[x - 1] && grid[x - 1][y] && grid[x - 1][y].isRoad;
-    const right = grid[x + 1] && grid[x + 1][y] && grid[x + 1][y].isRoad;
-    const up = grid[x] && grid[x][y - 1] && grid[x][y - 1].isRoad;
-    const down = grid[x] && grid[x][y + 1] && grid[x][y + 1].isRoad;
+    const left = !!(grid[x - 1] && grid[x - 1][y] && grid[x - 1][y].isRoad);
+    const right = !!(grid[x + 1] && grid[x + 1][y] && grid[x + 1][y].isRoad);
+    const up = !!(grid[x] && grid[x][y - 1] && grid[x][y - 1].isRoad);
+    const down = !!(grid[x] && grid[x][y + 1] && grid[x][y + 1].isRoad);
 
-    const connections = (left ? 1 : 0) + (right ? 1 : 0) + (up ? 1 : 0) + (down ? 1 : 0);
+    const hasContinuousX = left && right;
+    const hasContinuousY = up && down;
 
-    if (connections >= 3) return 'vias/road_intersection';
+    // 1. Rodovia contínua ao longo do Eixo X (mantém faixa amarela contínua mesmo com pista paralela)
+    if (hasContinuousX && !hasContinuousY) return 'vias/road_straight_x';
+
+    // 2. Rodovia contínua ao longo do Eixo Y (mantém faixa amarela contínua mesmo com pista paralela)
+    if (hasContinuousY && !hasContinuousX) return 'vias/road_straight_y';
+
+    // 3. Segmentos lineares puros
     if ((left || right) && !(up || down)) return 'vias/road_straight_x';
     if ((up || down) && !(left || right)) return 'vias/road_straight_y';
+
+    // 4. Cruzamentos completos de 4 direções
+    if (hasContinuousX && hasContinuousY) return 'vias/road_intersection';
+
+    // 5. Curvas em ângulo
     if ((left || right) && (up || down)) return 'vias/road_curve';
 
     return (x + y) % 2 === 0 ? 'vias/road_straight_x' : 'vias/road_straight_y';
