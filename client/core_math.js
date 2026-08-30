@@ -314,34 +314,47 @@ const CoreMath = {
   // ═══════════════════════════════════════════════════════════════════
 
   /**
-   * Custo por ponto de QR com explosão assintótica perto de 100.
+   * Custo por ponto de QR com explosão assintótica contínua rumo a 100.
    */
   calculateQRUpgradeCost(currentQR, baseCost = 40, exponent = 1.8) {
-    const qrClamped = Math.min(99.5, Math.max(1, currentQR || 20));
-    const distanceToMax = Math.max(100 - qrClamped, 0.5);
+    const qrClamped = Math.max(0, currentQR || 0);
+    const distanceToMax = Math.max(100 - qrClamped, 0.0001); // epsilon apenas para evitar divisão por zero exata
     const cost = baseCost * Math.pow(qrClamped / distanceToMax, exponent);
     return Number(cost.toFixed(2));
   },
 
   /**
    * Teto de ganho mensal de QR perto do limite máximo (Rate Cap).
+   * Sem piso mínimo artificial: se o ganho for 0.0001, retorna 0.0001.
    */
   calculateMaxMonthlyQRGain(currentQR, maxMonthlyGain = 3.0, decayExponent = 2.2) {
-    const proximityToMax = Math.min(0.995, Math.max(0, (currentQR || 0) / 100));
+    const proximityToMax = Math.min(1, Math.max(0, (currentQR || 0) / 100));
     const maxGain = maxMonthlyGain * (1 - Math.pow(proximityToMax, decayExponent));
-    return Number(Math.max(0.01, maxGain).toFixed(3));
+    return Number(maxGain.toFixed(5));
   },
 
   /**
    * Aplicação unificada e simétrica de evolução assintótica de QR no fechamento do mês.
+   * Totalmente contínua, sem bandas discretas e sem pisos mínimos.
    */
   applyQRAsymptoticGrowth(currentQR, monthlyBudget) {
     if (!monthlyBudget || monthlyBudget <= 0) return 0;
     const costPerPoint = this.calculateQRUpgradeCost(currentQR);
+    if (costPerPoint <= 0) return 0;
     const maxGain = this.calculateMaxMonthlyQRGain(currentQR);
     const affordableGain = monthlyBudget / costPerPoint;
     const actualGain = Math.min(maxGain, affordableGain);
-    return Number(actualGain.toFixed(3));
+  /**
+   * Camada puramente visual e informativa de Tech Levels (Níveis 1 a 5).
+   * Não interfere nas fórmulas matemáticas subjacentes.
+   */
+  getTechLevelLabel(qr) {
+    const q = Number(qr) || 0;
+    if (q >= 95) return { level: 5, label: 'Estado da Arte Global', icon: '👑', color: 'text-amber-300 border-amber-500 bg-amber-950/60' };
+    if (q >= 85) return { level: 4, label: 'Vanguarda Tecnológica', icon: '💎', color: 'text-purple-300 border-purple-500 bg-purple-950/60' };
+    if (q >= 75) return { level: 3, label: 'Grau Superior', icon: '🥇', color: 'text-cyan-300 border-cyan-500 bg-cyan-950/60' };
+    if (q >= 65) return { level: 2, label: 'Qualidade Comercial', icon: '🥈', color: 'text-emerald-300 border-emerald-500 bg-emerald-950/60' };
+    return { level: 1, label: 'Padrão Genérico', icon: '🥉', color: 'text-slate-300 border-slate-600 bg-slate-900/60' };
   }
 };
 

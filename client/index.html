@@ -3280,20 +3280,57 @@
       } else {
         for (const [recipeId, line] of lines) {
           const rdProj = rdLabs['rd_' + line.outputProductId];
+          const techLvl = (typeof CoreMath !== 'undefined' && CoreMath.getTechLevelLabel) ? CoreMath.getTechLevelLabel(line.outputQuality || 60) : { level: 1, label: 'Padrão', icon: '🥉', color: 'text-slate-300 border-slate-700 bg-slate-900' };
           const rdBadge = rdProj
             ? `<button onclick="openRDCenterModal()" class="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-800 font-mono ml-1 hover:bg-purple-900 cursor-pointer" title="P&D: ${rdProj.status === 'completed' ? 'Concluído' : 'Pesquisando'} QR ${rdProj.targetQR} (Atual: ${rdProj.currentQR.toFixed(1)})">🔬 P&D: ${rdProj.currentQR.toFixed(0)}</button>`
             : '';
+
+          const rec = FACTORY_RECIPES.find(r => r.id === line.recipeId);
+          line.inputsConfig = line.inputsConfig || {};
+
+          let inputsHtml = '';
+          if (rec && rec.inputs && Object.keys(rec.inputs).length > 0) {
+            const items = Object.entries(rec.inputs).map(([inpId, qty]) => {
+              if (!line.inputsConfig[inpId]) {
+                line.inputsConfig[inpId] = getDefaultSupplierForInput(inpId, tile);
+              }
+              const cfg = line.inputsConfig[inpId];
+              const inpProd = PRODUCT_CATALOG[inpId] || { name: inpId };
+              const isInternal = cfg.supplierId?.startsWith('farm_') || cfg.supplierId?.startsWith('mine_') || cfg.supplierId?.startsWith('factory_');
+
+              return `
+                <div class="bg-slate-900 p-1.5 rounded-lg border ${isInternal ? 'border-amber-700/60 bg-amber-950/20' : 'border-slate-800'} flex items-center justify-between gap-1.5 text-[10px]">
+                  <div class="truncate max-w-[170px]">
+                    <span class="${isInternal ? 'text-amber-400 font-bold' : 'text-slate-300 font-bold'}">${qty}x ${inpProd.name}</span>
+                    <span class="text-[9px] text-slate-400 block truncate">Fonte: <strong class="${isInternal ? 'text-amber-300' : 'text-cyan-300'}">${cfg.supplierName ? cfg.supplierName.split('(')[0].trim() : 'Porto'}</strong> (QR ${cfg.quality || 50})</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 shrink-0">
+                    <span class="text-[9px] text-emerald-400 font-bold">$${cfg.landedCost ? cfg.landedCost.toFixed(2) : '0.00'}</span>
+                    <button onclick="openFactoryInputSupplierModal(${tile.x}, ${tile.y}, '${recipeId}', '${inpId}')" class="bg-slate-800 hover:bg-slate-700 text-teal-300 px-1.5 py-0.5 rounded text-[9px] font-bold border border-slate-700 cursor-pointer">Trocar</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+
+            inputsHtml = `
+              <div class="pt-1.5 border-t border-slate-800 space-y-1">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Matérias-Primas & Fornecedores:</div>
+                ${items}
+              </div>
+            `;
+          }
 
           const card = document.createElement('div');
           card.className = 'bg-slate-950 p-3 rounded-xl border border-orange-800/80 space-y-2 font-mono text-xs';
           card.innerHTML = `
             <div class="flex items-center justify-between">
-              <div class="flex items-center flex-wrap">
+              <div class="flex items-center flex-wrap gap-1">
                 <span class="font-bold text-orange-300">${line.recipeName}</span>
-                <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded ml-1.5">${PRODUCT_CATALOG[line.outputProductId]?.category || 'Insumo'}</span>
+                <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">${PRODUCT_CATALOG[line.outputProductId]?.category || 'Insumo'}</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded border font-bold ${techLvl.color}">${techLvl.icon} Lvl ${techLvl.level}</span>
                 ${rdBadge}
               </div>
-              <button onclick="removeFactoryLine(${tile.x}, ${tile.y}, '${recipeId}')" class="text-slate-500 hover:text-rose-400">✕</button>
+              <button onclick="removeFactoryLine(${tile.x}, ${tile.y}, '${recipeId}')" class="text-slate-500 hover:text-rose-400 font-mono text-sm px-1 cursor-pointer">✕</button>
             </div>
             <div class="grid grid-cols-2 gap-2 text-[10px] text-slate-300">
               <div>Custo Unitário: <strong class="text-emerald-400">$${line.unitCost.toFixed(2)}/un</strong></div>
@@ -3301,6 +3338,7 @@
               <div>Capacidade: <strong class="text-slate-100">${line.dailyCapacity} un/dia</strong></div>
               <div>Estoque Fabril: <strong class="text-amber-400">${line.finishedStock} un</strong></div>
             </div>
+            ${inputsHtml}
           `;
           panel.appendChild(card);
         }
@@ -4191,21 +4229,34 @@
           const { prod, tier, roots, bonus, cost, unlocked, canUnlock, inputReqs } = item;
           const cat = RD_CATEGORIES[prod.category] || { icon: '📦' };
           const canAfford = cash >= cost;
+          const currentQR = getProductBestRDQuality(prod.id) || (unlocked ? 60 : 50);
+          const techLvl = (typeof CoreMath !== 'undefined' && CoreMath.getTechLevelLabel)
+            ? CoreMath.getTechLevelLabel(currentQR)
+            : { level: 1, label: 'Padrão', icon: '🥉', color: 'text-slate-300 border-slate-700 bg-slate-900' };
 
-          const reqPills = inputReqs.length > 0
-            ? inputReqs.map(r => `
-                <span class="text-[9px] px-1.5 py-0.5 rounded border ${r.isUnlocked ? 'bg-emerald-950/70 text-emerald-300 border-emerald-800/80' : 'bg-rose-950/70 text-rose-300 border-rose-800/80'}">
-                  ${r.isUnlocked ? '✓' : '✗'} ${r.name}
-                </span>
-              `).join('')
-            : '<span class="text-[9px] text-slate-500">Nenhum pré-requisito (Extrativismo)</span>';
+          // Função recursiva para renderizar a cadeia de insumos completa até a raiz (Tier 0)
+          const getFullChainHtml = (pId) => {
+            const rec = FACTORY_RECIPES.find(r => r.outputProdId === pId || r.id === pId);
+            if (!rec || !rec.inputs || Object.keys(rec.inputs).length === 0) {
+              const p = PRODUCT_CATALOG[pId] || { name: pId };
+              const isUnl = isProductUnlocked(pId);
+              return `<span class="px-1.5 py-0.5 rounded text-[9px] font-mono border ${isUnl ? 'bg-emerald-950/70 text-emerald-300 border-emerald-800/80' : 'bg-slate-900 text-slate-400 border-slate-700'}">${isUnl ? '✓' : '•'} ${p.name} (T0)</span>`;
+            }
+            const parts = Object.entries(rec.inputs).map(([inpId, qty]) => {
+              const inpProd = PRODUCT_CATALOG[inpId] || { name: inpId };
+              const isUnl = isProductUnlocked(inpId);
+              const parentTree = getFullChainHtml(inpId);
+              return `${parentTree} <span class="text-slate-500 font-bold">➔</span> <span class="px-1.5 py-0.5 rounded text-[9px] font-mono border ${isUnl ? 'bg-emerald-950/70 text-emerald-300 border-emerald-800/80' : 'bg-rose-950/70 text-rose-300 border-rose-800/80 font-bold'}">${isUnl ? '✓' : '✗'} ${inpProd.name}</span>`;
+            });
+            return parts.join(' <span class="text-slate-600 font-mono">+</span> ');
+          };
 
           const statusBtn = unlocked
             ? `<div class="bg-emerald-950/80 text-emerald-300 px-3 py-1 rounded-lg border border-emerald-700/80 text-[10px] font-bold flex items-center gap-1 shrink-0">✅ Desbloqueado</div>`
             : (canUnlock
               ? `<button onclick="researchProductTech('${prod.id}')"
                   class="px-3 py-1.5 rounded-xl font-bold text-xs ${canAfford ? 'bg-teal-600 hover:bg-teal-500 text-white shadow-lg cursor-pointer' : 'bg-slate-800 text-slate-400 border border-slate-700 cursor-not-allowed'} transition shrink-0">
-                  🔬 Pesquisar ($${cost.toLocaleString('en-US')})
+                  🔬 Desbloquear ($${cost.toLocaleString('en-US')})
                 </button>`
               : `<div class="bg-slate-900 text-slate-500 px-2.5 py-1 rounded-lg border border-slate-800 text-[10px] font-bold flex items-center gap-1 shrink-0" title="Desbloqueie os insumos pré-requisitos primeiro">🔒 Requisitos Pendentes</div>`
             );
@@ -4221,17 +4272,23 @@
                     <div class="font-bold text-slate-100 text-xs flex items-center gap-1.5 flex-wrap">
                       <span>${prod.name}</span>
                       <span class="text-[8px] px-1.5 py-0.5 rounded border font-mono ${tierBadgeColors[tier] || 'bg-slate-800 text-slate-400 border-slate-700'}">Tier ${tier}</span>
+                      <span class="text-[8px] px-1.5 py-0.5 rounded border font-bold font-mono ${techLvl.color}">${techLvl.icon} Tech Lvl ${techLvl.level} · QR ${currentQR.toFixed(0)}</span>
                     </div>
-                    <div class="text-[10px] text-slate-400 mt-0.5">${prod.category} · Custo P&D: <strong class="text-teal-300">$${cost.toLocaleString('en-US')}</strong> ${bonus > 0 ? `<span class="text-[9px] text-purple-400" title="Bônus de Convergência de ${roots.length} Ramos (+ $${bonus})">(+${roots.length} ramos)</span>` : ''}</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">${prod.category} · Custo Desbloqueio: <strong class="text-teal-300">$${cost.toLocaleString('en-US')}</strong> ${bonus > 0 ? `<span class="text-[9px] text-purple-400" title="Bônus de Convergência de ${roots.length} Ramos (+ $${bonus})">(+${roots.length} ramos)</span>` : ''}</div>
                   </div>
                 </div>
                 ${statusBtn}
               </div>
 
-              <!-- Insumos & Dependências -->
-              <div class="pt-1.5 border-t border-slate-900 flex items-center gap-1 flex-wrap">
-                <span class="text-[9px] text-slate-500 font-bold mr-1">Insumos:</span>
-                ${reqPills}
+              <!-- Cadeia Produtiva Completa (da raiz ao produto) -->
+              <div class="pt-1.5 border-t border-slate-900 space-y-1">
+                <div class="text-[9px] text-slate-500 font-bold flex items-center justify-between">
+                  <span>Cadeia de Insumos:</span>
+                  <span class="text-[9px] text-slate-400 font-mono">${tier > 0 ? `Profundidade: ${tier} etapas` : 'Matéria-prima livre'}</span>
+                </div>
+                <div class="flex items-center gap-1 flex-wrap text-[9px]">
+                  ${getFullChainHtml(prod.id)}
+                </div>
               </div>
             </div>
           `;
@@ -4506,10 +4563,12 @@
         heroTarStatus.textContent = targetQR >= 90 ? 'Liderança Global' : (targetQR >= 80 ? 'Grau Superior' : 'Aprimorado');
       }
 
-      // Ganho mensal acelerado pelo número de bancadas
-      const gainSingle = CoreMath.calculateRDQualityGain(currentQR, targetQR, budget / labsCount, minCostSingle);
+      // Ganho mensal assintótico fiel ao cálculo de processRDProgress acelerado pelo número de bancadas
+      const gainSingle = (typeof CoreMath !== 'undefined' && CoreMath.applyQRAsymptoticGrowth)
+        ? CoreMath.applyQRAsymptoticGrowth(currentQR, budget / labsCount)
+        : CoreMath.calculateRDQualityGain(currentQR, targetQR, budget / labsCount, minCostSingle);
       const gainTotal = gainSingle * labsCount;
-      const monthsNeeded = gainTotal > 0 ? Math.ceil((targetQR - currentQR) / gainTotal) : Infinity;
+      const monthsNeeded = gainTotal > 0.0001 ? Math.ceil((targetQR - currentQR) / gainTotal) : Infinity;
       const totalCost = monthsNeeded < Infinity ? Math.round(monthsNeeded * budget) : null;
 
       badge.textContent = `${cat.icon || '🔬'} ${prod.category} · Custo Mínimo: $${minCostTotal.toLocaleString('en-US')}/mês`;
@@ -5179,6 +5238,120 @@
     function closeSupplierModal() {
       document.getElementById('supplier-modal').classList.add('hidden');
       supplierTargetShelf = null;
+      factorySupplierTarget = null;
+    }
+
+    let factorySupplierTarget = null;
+
+    function openFactoryInputSupplierModal(x, y, lineKey, inputId) {
+      const tile = worldGrid[x][y];
+      if (!tile?.factory?.lines[lineKey]) return;
+      factorySupplierTarget = { tile, lineKey, inputId };
+
+      const prod = PRODUCT_CATALOG[inputId] || { name: inputId };
+      const offers = getSupplierOffersForProduct(inputId, tile);
+
+      document.getElementById('supplier-modal-title').textContent = `🔗 Fornecedores de Insumo: ${prod.name}`;
+      document.getElementById('supplier-modal-subtitle').textContent = `Fábrica: ${tile.factory.name} · Linha: ${tile.factory.lines[lineKey].recipeName}`;
+
+      const currentSupplierId = tile.factory.lines[lineKey].inputsConfig?.[inputId]?.supplierId;
+
+      const list = document.getElementById('supplier-options-list');
+      list.innerHTML = offers.map(offer => {
+        const isCurrent = currentSupplierId === offer.supplierId;
+        const isInternal = offer.type === 'internal_farm' || offer.type === 'internal_mine' || offer.type === 'internal_factory';
+
+        return `
+          <div class="bg-slate-950 p-3 rounded-xl border ${isCurrent ? 'border-emerald-500 bg-emerald-950/20' : (isInternal ? 'border-amber-800 bg-amber-950/20' : 'border-slate-800')} flex items-center justify-between text-xs font-mono">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold ${isInternal ? 'text-amber-300' : 'text-cyan-300'}">${offer.supplierName}</span>
+                <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${offer.quality}</span>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-1">Distância: ${offer.distance} tiles · Custo Base: $${offer.wholesalePrice.toFixed(2)} + Frete: $${offer.freight.toFixed(2)}</div>
+              <div class="text-[11px] text-slate-300 mt-0.5">Custo de Entrega na Fábrica: <strong class="text-emerald-400 font-bold">$${offer.landedCost.toFixed(2)}</strong></div>
+            </div>
+            <div>
+              ${isCurrent ? `
+                <span class="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-1 rounded border border-emerald-800 font-bold">Conectado</span>
+              ` : `
+                <button onclick="applyFactoryInputSupplierChange('${offer.supplierId}')" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold font-mono cursor-pointer">Conectar</button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('supplier-modal').classList.remove('hidden');
+    }
+
+    function applyFactoryInputSupplierChange(supplierId) {
+      if (!factorySupplierTarget) return;
+      const { tile, lineKey, inputId } = factorySupplierTarget;
+      const line = tile.factory?.lines[lineKey];
+      if (!line) return;
+
+      const offers = getSupplierOffersForProduct(inputId, tile);
+      const chosen = offers.find(o => o.supplierId === supplierId);
+      if (chosen) {
+        line.inputsConfig = line.inputsConfig || {};
+        line.inputsConfig[inputId] = {
+          inputId,
+          supplierId: chosen.supplierId,
+          supplierName: chosen.supplierName,
+          wholesalePrice: chosen.wholesalePrice,
+          freight: chosen.freight,
+          landedCost: chosen.landedCost,
+          quality: chosen.quality
+        };
+
+        recalculateFactoryLineEconomics(line, tile);
+
+        addLog(`🔗 Linha "${line.recipeName}" agora é abastecida por ${chosen.supplierName}!`, 'text-cyan-400 font-bold');
+        closeSupplierModal();
+        renderFacilityPanel(tile);
+        updateUI();
+      }
+    }
+
+    function recalculateFactoryLineEconomics(line, tile) {
+      const rec = FACTORY_RECIPES.find(r => r.id === line.recipeId);
+      if (!rec) return;
+
+      let totalInputsCost = 0;
+      let totalWeightedQuality = 0;
+      let totalInputRatio = 0;
+
+      if (rec.inputs) {
+        for (const [inpId, ratio] of Object.entries(rec.inputs)) {
+          const cfg = line.inputsConfig?.[inpId] || getDefaultSupplierForInput(inpId, tile);
+          totalInputsCost += (cfg.landedCost || 0.5) * ratio;
+          totalWeightedQuality += (cfg.quality || 60) * ratio;
+          totalInputRatio += ratio;
+        }
+      }
+
+      const avgInputQuality = totalInputRatio > 0 ? (totalWeightedQuality / totalInputRatio) : 60;
+      const researchedQR = getProductBestRDQuality(line.outputProductId);
+
+      line.unitCost = Number((totalInputsCost + (rec.processingCost || (rec.unitCost * 0.4))).toFixed(2));
+      line.outputQuality = Math.min(100, Math.round(avgInputQuality * 0.65 + (researchedQR > 0 ? researchedQR : rec.quality) * 0.35));
+    }
+
+    function getDefaultSupplierForInput(inputId, factoryTile) {
+      const offers = getSupplierOffersForProduct(inputId, factoryTile);
+      if (offers.length > 0) {
+        const internal = offers.find(o => o.type.startsWith('internal_'));
+        return internal || offers[0];
+      }
+      return {
+        supplierId: `port_default_${inputId}`,
+        supplierName: 'Porto de Alimentos & Insumos',
+        wholesalePrice: 0.50,
+        freight: 0.05,
+        landedCost: 0.55,
+        quality: 60
+      };
     }
 
     function buyInstantStock(x, y, prodId, qty) {
@@ -5422,10 +5595,63 @@
           tile.farm.stock = Math.min(tile.farm.maxCapacity, tile.farm.stock + tile.farm.dailyYield);
         }
 
-        // Produção de Fábricas
+        // Produção de Fábricas & Consumo Físico de Matérias-Primas
         if (tile.factory) {
           for (const line of Object.values(tile.factory.lines)) {
-            line.finishedStock = Math.min(line.maxStock, line.finishedStock + line.dailyCapacity);
+            const rec = FACTORY_RECIPES.find(r => r.id === line.recipeId);
+            let productionRatio = 1.0;
+
+            if (rec && rec.inputs) {
+              line.inputsConfig = line.inputsConfig || {};
+              for (const [inpId, qtyRatio] of Object.entries(rec.inputs)) {
+                if (!line.inputsConfig[inpId]) {
+                  line.inputsConfig[inpId] = getDefaultSupplierForInput(inpId, tile);
+                }
+                const cfg = line.inputsConfig[inpId];
+                const neededUnits = line.dailyCapacity * qtyRatio;
+
+                if (cfg && cfg.supplierId) {
+                  if (cfg.supplierId.startsWith('farm_')) {
+                    const parts = cfg.supplierId.split('_');
+                    const fx = Number(parts[1]), fy = Number(parts[2]);
+                    const farmTile = worldGrid[fx]?.[fy];
+                    if (farmTile?.farm) {
+                      if (farmTile.farm.stock < neededUnits) {
+                        productionRatio = Math.min(productionRatio, farmTile.farm.stock / Math.max(1, neededUnits));
+                      }
+                      const consumed = Math.min(farmTile.farm.stock, Math.floor(neededUnits * productionRatio));
+                      farmTile.farm.stock = Math.max(0, farmTile.farm.stock - consumed);
+                    }
+                  } else if (cfg.supplierId.startsWith('mine_')) {
+                    const parts = cfg.supplierId.split('_');
+                    const mx = Number(parts[1]), my = Number(parts[2]);
+                    const mineTile = worldGrid[mx]?.[my];
+                    if (mineTile?.mine) {
+                      if (mineTile.mine.stock < neededUnits) {
+                        productionRatio = Math.min(productionRatio, mineTile.mine.stock / Math.max(1, neededUnits));
+                      }
+                      const consumed = Math.min(mineTile.mine.stock, Math.floor(neededUnits * productionRatio));
+                      mineTile.mine.stock = Math.max(0, mineTile.mine.stock - consumed);
+                    }
+                  } else if (cfg.supplierId.startsWith('factory_')) {
+                    const parts = cfg.supplierId.split('_');
+                    const fx = Number(parts[1]), fy = Number(parts[2]), rId = parts.slice(3).join('_');
+                    const facTile = worldGrid[fx]?.[fy];
+                    const sourceLine = facTile?.factory?.lines[rId];
+                    if (sourceLine) {
+                      if (sourceLine.finishedStock < neededUnits) {
+                        productionRatio = Math.min(productionRatio, sourceLine.finishedStock / Math.max(1, neededUnits));
+                      }
+                      const consumed = Math.min(sourceLine.finishedStock, Math.floor(neededUnits * productionRatio));
+                      sourceLine.finishedStock = Math.max(0, sourceLine.finishedStock - consumed);
+                    }
+                  }
+                }
+              }
+            }
+
+            const actualOutput = Math.floor(line.dailyCapacity * productionRatio);
+            line.finishedStock = Math.min(line.maxStock, line.finishedStock + actualOutput);
           }
         }
 
