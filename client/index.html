@@ -1265,7 +1265,7 @@
         }
       }
 
-      // 2. Fábricas Próprias (via Sparse Index activeFacilitySet)
+      // 2. Fábricas, Fazendas e Minas Próprias (via Sparse Index activeFacilitySet)
       for (const tile of activeFacilitySet.values()) {
         if (tile.factory) {
           for (const [recipeId, line] of Object.entries(tile.factory.lines)) {
@@ -1288,26 +1288,40 @@
             }
           }
         }
-      }
-
-      // Fallback caso não tenha estoque local: Fornecedor Portuário Global padrão
-      if (offers.length === 0 && PRODUCT_CATALOG[prodId]) {
-        const prod = PRODUCT_CATALOG[prodId];
-        const dist = CoreMath.calculateManhattanDistance({ x: 85, y: 34 }, storeTile);
-        const wholesale = Number((prod.baseCost * 1.6).toFixed(2));
-        const freight = CoreMath.calculateUnitFreight(dist, 0.015, 0.02);
-        offers.push({
-          type: 'port',
-          supplierId: 'port_alpha',
-          supplierName: 'Porto Alfa (Importação Marítima)',
-          wholesalePrice: wholesale,
-          quality: 55,
-          quota: 1000,
-          origin: 'Importação Internacional',
-          distance: dist,
-          freight,
-          landedCost: CoreMath.calculateLandedCost(wholesale, freight)
-        });
+        if (tile.farm && tile.farm.cropId === prodId) {
+          const dist = CoreMath.calculateManhattanDistance(tile, storeTile);
+          const freight = CoreMath.calculateUnitFreight(dist, 0.008, 0.01);
+          const landed = CoreMath.calculateLandedCost(tile.farm.dailyOperatingCost, freight);
+          offers.push({
+            type: 'internal_farm',
+            supplierId: `farm_${tile.x}_${tile.y}`,
+            supplierName: `🌾 ${tile.farm.name}`,
+            wholesalePrice: tile.farm.dailyOperatingCost,
+            quality: tile.farm.quality,
+            quota: tile.farm.dailyYield,
+            origin: `Produção Agrícola (${tile.x}, ${tile.y})`,
+            distance: dist,
+            freight,
+            landedCost: landed
+          });
+        }
+        if (tile.mine && tile.mine.resourceId === prodId) {
+          const dist = CoreMath.calculateManhattanDistance(tile, storeTile);
+          const freight = CoreMath.calculateUnitFreight(dist, 0.012, 0.01);
+          const landed = CoreMath.calculateLandedCost(tile.mine.unitCost, freight);
+          offers.push({
+            type: 'internal_mine',
+            supplierId: `mine_${tile.x}_${tile.y}`,
+            supplierName: `⛏️ ${tile.mine.name}`,
+            wholesalePrice: tile.mine.unitCost,
+            quality: tile.mine.quality,
+            quota: tile.mine.dailyYield,
+            origin: `Extração Mineral (${tile.x}, ${tile.y})`,
+            distance: dist,
+            freight,
+            landedCost: landed
+          });
+        }
       }
 
       return offers.sort((a, b) => a.landedCost - b.landedCost);

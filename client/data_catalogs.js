@@ -12,14 +12,14 @@
 
     const STORE_TYPES = [
       { id:"kombini", name:"Kombini de Bairro", emoji:"🛒", category:"all", cost:8000, maxShelves:4, rentMultiplier:1.0, desc:"Varejo de conveniência ultrarrápido com poucas gôndolas e baixo risco." },
-      { id:"supermarket", name:"Supermercado & Alimentos", emoji:"🏬", category:"Alimentos", cost:45000, maxShelves:24, rentMultiplier:1.8, desc:"Grande porte para vendas em massa de alimentos, carnes, bebidas e laticínios." },
-      { id:"apparel", name:"Boutique de Vestuário & Moda", emoji:"👗", category:"Vestuário", cost:35000, maxShelves:12, rentMultiplier:1.5, desc:"Loja sofisticada para jeans, ternos, sapatos de couro, tênis e vestidos de luxo." },
-      { id:"electronics", name:"MegaStore de Eletrônicos", emoji:"💻", category:"Eletrônicos", cost:60000, maxShelves:12, rentMultiplier:2.0, desc:"Varejo especializado em smartphones, notebooks, TVs 4K e eletrodomésticos." },
-      { id:"automotive", name:"Concessionária de Automóveis", emoji:"🚗", category:"Automotivo", cost:85000, maxShelves:6, rentMultiplier:2.2, desc:"Showroom automotivo para venda de carros de passeio, SUVs, motos e caminhões." },
-      { id:"pharmacy", name:"Drogaria & Cosméticos", emoji:"💊", category:"Farmácia", cost:28000, maxShelves:10, rentMultiplier:1.3, desc:"Farmácia para remédios controlados, analgésicos, xampus e perfumes finos." },
-      { id:"furniture", name:"Loja de Móveis & Decoração", emoji:"🛋️", category:"Móveis", cost:40000, maxShelves:8, rentMultiplier:1.6, desc:"Ambiente amplo para camas king size, sofás, mesas de jantar e armários." },
-      { id:"jewelry", name:"Joalheria de Alta Nobreza", emoji:"💍", category:"Joias", cost:75000, maxShelves:5, rentMultiplier:2.4, desc:"Boutique de altíssimo padrão para anéis de ouro, relógios e colares nobres." },
-      { id:"hardware", name:"Home Center & Ferramentas", emoji:"🔨", category:"Construção", cost:38000, maxShelves:8, rentMultiplier:1.4, desc:"Loja de materiais de reforma, tintas acrílicas e ferramentas industriais." }
+      { id:"supermarket", name:"Supermercado & Alimentos", emoji:"🏬", category:"Alimentos", cost:45000, maxShelves:10, rentMultiplier:1.8, desc:"Grande porte para vendas em massa de alimentos, carnes, bebidas e laticínios (10 gôndolas)." },
+      { id:"apparel", name:"Boutique de Vestuário & Moda", emoji:"👗", category:"Vestuário", cost:35000, maxShelves:6, rentMultiplier:1.5, desc:"Loja sofisticada para jeans, ternos, calçados e vestidos de luxo (6 gôndolas)." },
+      { id:"electronics", name:"MegaStore de Eletrônicos", emoji:"💻", category:"Eletrônicos", cost:60000, maxShelves:6, rentMultiplier:2.0, desc:"Varejo especializado em smartphones, notebooks, TVs 4K e eletrodomésticos (6 gôndolas)." },
+      { id:"automotive", name:"Concessionária de Automóveis", emoji:"🚗", category:"Automotivo", cost:85000, maxShelves:4, rentMultiplier:2.2, desc:"Showroom automotivo para venda de carros, SUVs, motos e caminhões (4 vagas de showroom)." },
+      { id:"pharmacy", name:"Drogaria & Cosméticos", emoji:"💊", category:"Farmácia", cost:28000, maxShelves:6, rentMultiplier:1.3, desc:"Farmácia para remédios, analgésicos, xampus e perfumes (6 gôndolas)." },
+      { id:"furniture", name:"Loja de Móveis & Decoração", emoji:"🛋️", category:"Móveis", cost:40000, maxShelves:5, rentMultiplier:1.6, desc:"Ambiente amplo para camas king size, sofás, mesas e armários (5 seções)." },
+      { id:"jewelry", name:"Joalheria de Alta Nobreza", emoji:"💍", category:"Joias", cost:75000, maxShelves:3, rentMultiplier:2.4, desc:"Boutique de altíssimo padrão para anéis de ouro, relógios e colares nobres (3 vitrines)." },
+      { id:"hardware", name:"Home Center & Ferramentas", emoji:"🔨", category:"Construção", cost:38000, maxShelves:5, rentMultiplier:1.4, desc:"Loja de materiais de reforma, tintas acrílicas e ferramentas industriais (5 gôndolas)." }
     ];
 
     const NATURAL_MINES = [
@@ -1703,14 +1703,40 @@
         name: 'Porto Alfa (Terminal Geral de Alimentos & Matérias-Primas)',
         tile: { x: 6, y: 6 },
         freightRatePerTile: 0.012,
-        supplies: {}
+        supplies: {
+          'wheat': { wholesalePrice: 1.20, quality: 50, quota: 400, origin: 'Importação Internacional (Grãos)' },
+          'corn': { wholesalePrice: 1.10, quality: 50, quota: 400, origin: 'Importação Internacional (Grãos)' },
+          'sugar_cane': { wholesalePrice: 0.90, quality: 50, quota: 450, origin: 'Importação Internacional (Açúcar)' },
+          'coffee_beans': { wholesalePrice: 2.50, quality: 55, quota: 250, origin: 'Importação Internacional (Café)' },
+          'iron_ore': { wholesalePrice: 28.00, quality: 52, quota: 350, origin: 'Importação Internacional (Minérios)' },
+          'bauxite': { wholesalePrice: 32.00, quality: 52, quota: 300, origin: 'Importação Internacional (Minérios)' },
+          'bread': { wholesalePrice: 2.50, quality: 55, quota: 300, origin: 'Importação Internacional (Panificação)' },
+          'milk': { wholesalePrice: 2.10, quality: 55, quota: 300, origin: 'Importação Internacional (Laticínios)' },
+          'cola': { wholesalePrice: 2.20, quality: 52, quota: 350, origin: 'Importação Internacional (Bebidas)' },
+          'canned_soup': { wholesalePrice: 2.80, quality: 54, quota: 250, origin: 'Importação Internacional (Conservas)' },
+          'mineral_water': { wholesalePrice: 1.20, quality: 55, quota: 400, origin: 'Importação Internacional (Bebidas)' },
+          'eggs': { wholesalePrice: 1.80, quality: 52, quota: 300, origin: 'Importação Internacional (Granja)' }
+        }
       },
       {
         id: 'port_beta',
-        name: 'Porto Beta (Terminal Especializado, Eletrônicos & Automotivo)',
+        name: 'Porto Beta (Terminal Especializado, Eletrônicos & Químicos)',
         tile: { x: 7, y: 5 },
         freightRatePerTile: 0.018,
-        supplies: {}
+        supplies: {
+          'silica': { wholesalePrice: 16.00, quality: 50, quota: 400, origin: 'Importação Internacional (Químicos)' },
+          'chemical_minerals': { wholesalePrice: 26.00, quality: 52, quota: 350, origin: 'Importação Internacional (Químicos)' },
+          'crude_oil': { wholesalePrice: 42.00, quality: 55, quota: 400, origin: 'Importação Internacional (Petróleo)' },
+          'rubber': { wholesalePrice: 22.00, quality: 52, quota: 300, origin: 'Importação Internacional (Borracha)' },
+          'timber': { wholesalePrice: 20.00, quality: 50, quota: 350, origin: 'Importação Internacional (Madeira)' },
+          'chips': { wholesalePrice: 95.00, quality: 58, quota: 180, origin: 'Importação Internacional (Semicondutores)' },
+          'tires': { wholesalePrice: 42.00, quality: 54, quota: 220, origin: 'Importação Internacional (Autopeças)' },
+          'mobile_phone': { wholesalePrice: 240.00, quality: 56, quota: 120, origin: 'Importação Internacional (Eletrônicos)' },
+          'cold_pills': { wholesalePrice: 4.80, quality: 55, quota: 250, origin: 'Importação Internacional (Farmácia)' },
+          'soap': { wholesalePrice: 1.90, quality: 52, quota: 350, origin: 'Importação Internacional (Higiene)' },
+          'tool_set': { wholesalePrice: 32.00, quality: 54, quota: 200, origin: 'Importação Internacional (Ferramentas)' },
+          'acrylic_paint': { wholesalePrice: 18.00, quality: 52, quota: 220, origin: 'Importação Internacional (Tintas)' }
+        }
       }
     ];
 
