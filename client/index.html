@@ -3177,7 +3177,8 @@
     function renderMinePanel(tile) {
       const m = tile.mine;
       const iconEl = document.getElementById('facility-icon');
-      if (iconEl) iconEl.innerHTML = `<img src="assets/minas/${m.mineTypeId || 'mine_iron'}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='⛏️'">`;
+      const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getMineSpriteKey) ? SpriteManager.getMineSpriteKey(m.mineTypeId) : 'minas/mine_iron';
+      if (iconEl) iconEl.innerHTML = `<img src="assets/${spriteKey}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='⛏️'">`;
       document.getElementById('facility-title').textContent = m.name;
       document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Instalação Extrativista de Recursos`;
       const badge = document.getElementById('facility-rent-badge');
@@ -3206,7 +3207,8 @@
     function renderFarmPanel(tile) {
       const farm = tile.farm;
       const iconEl = document.getElementById('facility-icon');
-      if (iconEl) iconEl.innerHTML = `<img src="assets/agro/${farm.farmTypeId || 'farm_wheat'}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🌾'">`;
+      const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getFarmSpriteKey) ? SpriteManager.getFarmSpriteKey(farm.farmTypeId) : 'agro/farm_wheat';
+      if (iconEl) iconEl.innerHTML = `<img src="assets/${spriteKey}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🌾'">`;
       document.getElementById('facility-title').textContent = farm.name;
       document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Propriedade Agropecuária`;
       const badge = document.getElementById('facility-rent-badge');
@@ -3406,11 +3408,12 @@
       const list = document.getElementById('mine-types-list');
       list.innerHTML = NATURAL_MINES.map(m => {
         const canAfford = cash >= m.cost;
+        const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getMineSpriteKey) ? SpriteManager.getMineSpriteKey(m.id) : `minas/${m.id}`;
         return `
           <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-700/80 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
-                <img src="assets/minas/${m.id}.png" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
+                <img src="assets/${spriteKey}.png" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
                 <span class="text-xl hidden">${m.emoji}</span>
               </div>
               <div>
@@ -3469,11 +3472,12 @@
       const list = document.getElementById('farm-types-list');
       list.innerHTML = FARM_TYPES.map(ft => {
         const canAfford = cash >= ft.cost;
+        const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getFarmSpriteKey) ? SpriteManager.getFarmSpriteKey(ft.id) : `agro/${ft.id}`;
         return `
           <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-700/80 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
-                <img src="assets/agro/${ft.id}.png" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
+                <img src="assets/${spriteKey}.png" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
                 <span class="text-xl hidden">${ft.emoji}</span>
               </div>
               <div>
