@@ -647,6 +647,38 @@
   </div>
 
   <!-- ======================================================================= -->
+  <!-- MODAL: CONFIRMAÇÃO ESTILIZADA DE EMPREENDIMENTO & AÇÕES                   -->
+  <!-- ======================================================================= -->
+  <div id="custom-confirm-modal" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden flex flex-col font-mono animate-in fade-in zoom-in-95 duration-150">
+      <div class="bg-gradient-to-r from-slate-800 to-slate-900 border-b border-slate-700/80 px-5 py-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div id="confirm-modal-icon-badge" class="w-9 h-9 rounded-xl bg-purple-950/80 border border-purple-600/60 flex items-center justify-center text-lg shadow-inner">
+            <span id="confirm-modal-icon">🔬</span>
+          </div>
+          <div>
+            <h3 id="confirm-modal-title" class="text-sm font-bold text-slate-100">Confirmação de Empreendimento</h3>
+            <span id="confirm-modal-subtitle" class="text-[10px] text-slate-400 block">Lote Urbano</span>
+          </div>
+        </div>
+        <button onclick="closeCustomConfirmModal(true)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white text-xs font-bold flex items-center justify-center cursor-pointer transition">✕</button>
+      </div>
+      <div class="p-5 space-y-4">
+        <div id="confirm-modal-description" class="text-xs text-slate-300 leading-relaxed"></div>
+        <div id="confirm-modal-details-grid" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2 text-[11px]"></div>
+      </div>
+      <div class="p-4 bg-slate-950/80 border-t border-slate-800 flex items-center justify-end gap-2.5">
+        <button id="confirm-modal-cancel-btn" onclick="closeCustomConfirmModal(true)" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 cursor-pointer transition">
+          Cancelar
+        </button>
+        <button id="confirm-modal-action-btn" onclick="executeCustomConfirmModal()" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold border border-purple-400/40 shadow-lg shadow-purple-900/30 cursor-pointer transition flex items-center gap-1.5">
+          <span>Confirmar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
   <!-- MODAL 8: CENTRAL DE MÍDIA & MARKETING                                   -->
   <!-- ======================================================================= -->
   <div id="marketing-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
@@ -2963,43 +2995,157 @@
       renderFacilityFooterActions(tile);
     }
 
+    // ===========================================================================
+    // MODAL DE CONFIRMAÇÃO VISUAL ESTILIZADO (SISTEMA UNIVERSAL)
+    // ===========================================================================
+    let pendingConfirmCallback = null;
+
+    function showCustomConfirmModal({
+      icon = '🏗️',
+      title = 'Confirmação',
+      subtitle = 'Operação Imobiliária',
+      description = '',
+      details = [],
+      confirmText = 'Confirmar',
+      confirmTheme = 'purple',
+      onConfirm = null
+    }) {
+      pendingConfirmCallback = onConfirm;
+      const iconEl = document.getElementById('confirm-modal-icon');
+      if (iconEl) iconEl.textContent = icon;
+      
+      const titleEl = document.getElementById('confirm-modal-title');
+      if (titleEl) titleEl.textContent = title;
+
+      const subEl = document.getElementById('confirm-modal-subtitle');
+      if (subEl) subEl.textContent = subtitle;
+
+      const descEl = document.getElementById('confirm-modal-description');
+      if (descEl) descEl.innerHTML = description;
+
+      const detailsEl = document.getElementById('confirm-modal-details-grid');
+      if (detailsEl) {
+        if (details.length > 0) {
+          detailsEl.innerHTML = details.map(d => `
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400">${d.label}:</span>
+              <strong class="${d.color || 'text-slate-200'}">${d.value}</strong>
+            </div>
+          `).join('');
+          detailsEl.classList.remove('hidden');
+        } else {
+          detailsEl.classList.add('hidden');
+        }
+      }
+
+      const btn = document.getElementById('confirm-modal-action-btn');
+      if (btn) {
+        btn.innerHTML = `<span>${confirmText}</span>`;
+        const themeClasses = {
+          purple: 'bg-purple-600 hover:bg-purple-500 text-white border-purple-400/40 shadow-purple-900/40',
+          emerald: 'bg-emerald-600 hover:bg-emerald-500 text-white border-emerald-400/40 shadow-emerald-900/40',
+          rose: 'bg-rose-600 hover:bg-rose-500 text-white border-rose-400/40 shadow-rose-900/40',
+          sky: 'bg-sky-600 hover:bg-sky-500 text-white border-sky-400/40 shadow-sky-900/40',
+          amber: 'bg-amber-600 hover:bg-amber-500 text-white border-amber-400/40 shadow-amber-900/40'
+        };
+        btn.className = `px-4 py-2 rounded-xl text-xs font-bold border shadow-lg cursor-pointer transition flex items-center gap-1.5 ${themeClasses[confirmTheme] || themeClasses.purple}`;
+      }
+
+      const iconBadge = document.getElementById('confirm-modal-icon-badge');
+      if (iconBadge) {
+        const badgeClasses = {
+          purple: 'bg-purple-950/80 border-purple-600/60',
+          emerald: 'bg-emerald-950/80 border-emerald-600/60',
+          rose: 'bg-rose-950/80 border-rose-600/60',
+          sky: 'bg-sky-950/80 border-sky-600/60',
+          amber: 'bg-amber-950/80 border-amber-600/60'
+        };
+        iconBadge.className = `w-9 h-9 rounded-xl border flex items-center justify-center text-lg shadow-inner ${badgeClasses[confirmTheme] || badgeClasses.purple}`;
+      }
+
+      const modal = document.getElementById('custom-confirm-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeCustomConfirmModal(cancelled = true) {
+      const modal = document.getElementById('custom-confirm-modal');
+      if (modal) modal.classList.add('hidden');
+      if (cancelled) pendingConfirmCallback = null;
+    }
+
+    function executeCustomConfirmModal() {
+      const cb = pendingConfirmCallback;
+      closeCustomConfirmModal(false);
+      if (typeof cb === 'function') {
+        cb();
+      }
+    }
+
     function confirmBuildRDCenter(x, y) {
       const tile = worldGrid[x] && worldGrid[x][y];
       if (!tile || tile.isWater || tile.isRoad || tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter) return;
 
       const cost = 80000;
       if (cash < cost) {
-        alert(`Saldo insuficiente! Construir um Centro de P&D requer $${cost.toLocaleString('en-US')}.`);
+        showCustomConfirmModal({
+          icon: '❌',
+          title: 'Saldo Insuficiente',
+          subtitle: 'Centro de P&D (Laboratório)',
+          description: `Seu saldo em caixa é insuficiente para bancar a obra civil deste empreendimento. Você precisa de <strong>$${cost.toLocaleString('en-US')}</strong>.`,
+          details: [
+            { label: 'Custo de Obra', value: `-$${cost.toLocaleString('en-US')}`, color: 'text-rose-400 font-bold' },
+            { label: 'Seu Caixa Atual', value: `$${cash.toLocaleString('en-US')}`, color: 'text-amber-400 font-bold' },
+            { label: 'Déficit', value: `-$${(cost - cash).toLocaleString('en-US')}`, color: 'text-rose-500 font-bold' }
+          ],
+          confirmText: 'Entendido',
+          confirmTheme: 'rose',
+          onConfirm: null
+        });
         return;
       }
 
       const d = tile.district;
-      const cityName = tile.city ? (tile.city.cityName || tile.city.name || 'Metrópole') : 'Central';
+      const cityName = tile.city ? (tile.city.cityName || tile.city.name || 'Nova Atenas') : 'Nova Atenas';
+      const dailyRent = Math.round(d.landRentDaily * 1.2);
+      const remainingCash = cash - cost;
 
-      if (!confirm(`Construir Centro de Pesquisa & Desenvolvimento em (${x}, ${y})?\n\n• Custo de Obra: $${cost.toLocaleString('en-US')}\n• Aluguel Diário: -$${Math.round(d.landRentDaily * 1.2)}/dia`)) return;
+      showCustomConfirmModal({
+        icon: '🔬',
+        title: 'Inaugurar Centro de P&D',
+        subtitle: `Local: ${d.name} (${x}, ${y}) · ${cityName}`,
+        description: `Deseja autorizar o investimento para construção de um <strong>Laboratório Central de Pesquisa & Desenvolvimento</strong> neste lote?`,
+        details: [
+          { label: 'Custo de Obra (Capex)', value: `-$${cost.toLocaleString('en-US')}`, color: 'text-rose-400 font-bold' },
+          { label: 'Aluguel do Solo', value: `-$${dailyRent}/dia`, color: 'text-amber-400' },
+          { label: 'Saldo de Caixa Após', value: `$${remainingCash.toLocaleString('en-US')}`, color: 'text-emerald-400 font-bold' }
+        ],
+        confirmText: `✅ Autorizar Obra (-$${cost.toLocaleString('en-US')})`,
+        confirmTheme: 'purple',
+        onConfirm: () => {
+          cash -= cost;
+          tile.rdCenter = {
+            name: `Centro de P&D ${cityName}`,
+            level: 1,
+            dailyRent: dailyRent,
+            constructionCost: cost,
+            builtAt: { day, month, year }
+          };
+          tile.buildingHeight = 24;
+          _indexTile(tile);
 
-      cash -= cost;
-      tile.rdCenter = {
-        name: `Centro de P&D ${cityName}`,
-        level: 1,
-        dailyRent: Math.round(d.landRentDaily * 1.2),
-        constructionCost: cost,
-        builtAt: { day, month, year }
-      };
-      tile.buildingHeight = 24;
-      _indexTile(tile);
+          playSuccessChime();
+          addGameLog(`🔬 Centro de P&D inaugurado em ${cityName}! (-$${cost.toLocaleString('en-US')})`, 'text-purple-400 font-bold');
 
-      playSuccessChime();
-      addGameLog(`🔬 Centro de P&D inaugurado em ${cityName}! (-$${cost.toLocaleString('en-US')})`, 'text-purple-400 font-bold');
+          activeManagedTile = tile;
+          renderFacilityPanel(tile);
+          const win = document.getElementById('floating-facility-window');
+          if (win) win.classList.remove('hidden');
 
-      activeManagedTile = tile;
-      renderFacilityPanel(tile);
-      const win = document.getElementById('floating-facility-window');
-      if (win) win.classList.remove('hidden');
-
-      renderTileInspector(tile);
-      scheduleRender();
-      updateUI();
+          renderTileInspector(tile);
+          scheduleRender();
+          updateUI();
+        }
+      });
     }
 
     function renderMinePanel(tile) {
@@ -4189,10 +4335,26 @@
     }
 
     function cancelRDProject(id) {
-      if (!rdLabs[id]) return;
-      if (!confirm(`Cancelar pesquisa de "${rdLabs[id].productName}"? Todo o progresso será perdido.`)) return;
-      delete rdLabs[id];
-      renderRDProjectsList();
+      const proj = rdLabs[id];
+      if (!proj) return;
+      showCustomConfirmModal({
+        icon: '🗑️',
+        title: 'Cancelar Projeto de P&D',
+        subtitle: `${proj.productName} (QR ${proj.currentQR.toFixed(1)} → ${proj.targetQR})`,
+        description: `Tem certeza que deseja encerrar a pesquisa de <strong>${proj.productName}</strong>? Todo o investimento acumulado de <strong>$${proj.totalSpent.toLocaleString('en-US')}</strong> será perdido.`,
+        details: [
+          { label: 'Meses Investidos', value: `${proj.monthsInvested} meses`, color: 'text-slate-300' },
+          { label: 'Total Investido', value: `-$${proj.totalSpent.toLocaleString('en-US')}`, color: 'text-rose-400 font-bold' }
+        ],
+        confirmText: 'Encerrar Pesquisa',
+        confirmTheme: 'rose',
+        onConfirm: () => {
+          delete rdLabs[id];
+          renderRDProjectsList();
+          updateRDChip();
+          addGameLog(`🗑️ Projeto de P&D "${proj.productName}" foi cancelado.`, 'text-slate-400');
+        }
+      });
     }
 
     function adjustRDBudget(id) {
