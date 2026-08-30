@@ -1015,6 +1015,7 @@
     "unitCost": 0.75,
     "quality": 65,
     "dailyCap": 500,
+    "inputs": { "flour": 1 },
     "desc": "Farinha refinada transformada em pães crocantes."
   },
   {
@@ -1025,6 +1026,7 @@
     "unitCost": 0.6,
     "quality": 68,
     "dailyCap": 450,
+    "inputs": { "raw_milk": 1 },
     "desc": "Pasteurização de leite cru e embalagem cartonada."
   },
   {
@@ -1035,6 +1037,7 @@
     "unitCost": 3.5,
     "quality": 70,
     "dailyCap": 300,
+    "inputs": { "cattle": 1 },
     "desc": "Cortes nobres bovinos resfriados e embalados a vácuo."
   },
   {
@@ -1045,6 +1048,7 @@
     "unitCost": 2,
     "quality": 65,
     "dailyCap": 450,
+    "inputs": { "poultry": 1 },
     "desc": "Processamento de cortes de frango resfriados."
   },
   {
@@ -1055,6 +1059,7 @@
     "unitCost": 2.6,
     "quality": 65,
     "dailyCap": 380,
+    "inputs": { "pigs": 1 },
     "desc": "Cortes suínos selecionados para varejo."
   },
   {
@@ -1065,6 +1070,7 @@
     "unitCost": 1.2,
     "quality": 65,
     "dailyCap": 400,
+    "inputs": { "flour": 1, "refined_sugar": 0.5 },
     "desc": "Biscoitos crocantes com recheio de chocolate e baunilha."
   },
   {
@@ -1075,6 +1081,7 @@
     "unitCost": 0.85,
     "quality": 70,
     "dailyCap": 450,
+    "inputs": { "cocoa": 1, "refined_sugar": 0.5, "raw_milk": 0.5 },
     "desc": "Cacau nobre com leite e açúcar cristalizado."
   },
   {
@@ -1085,6 +1092,7 @@
     "unitCost": 1.6,
     "quality": 72,
     "dailyCap": 350,
+    "inputs": { "coffee_beans": 1 },
     "desc": "Moagem e embalagem a vácuo de grãos selecionados."
   },
   {
@@ -1095,6 +1103,7 @@
     "unitCost": 0.95,
     "quality": 75,
     "dailyCap": 400,
+    "inputs": { "wheat": 1, "glass": 0.5 },
     "desc": "Fermentação artesanal com lúpulo e malte de trigo."
   },
   {
@@ -1105,6 +1114,7 @@
     "unitCost": 4.5,
     "quality": 78,
     "dailyCap": 250,
+    "inputs": { "grapes": 1, "glass": 0.5 },
     "desc": "Envelhecimento em barris de carvalho e engarrafamento."
   },
   {
@@ -1115,6 +1125,7 @@
     "unitCost": 0.65,
     "quality": 60,
     "dailyCap": 700,
+    "inputs": { "refined_sugar": 0.5, "aluminum": 0.5 },
     "desc": "Xarope gaseificado em latas de alumínio reciclável."
   },
   {
@@ -1125,6 +1136,7 @@
     "unitCost": 0.35,
     "quality": 65,
     "dailyCap": 800,
+    "inputs": { "plastic": 0.5 },
     "desc": "Água mineral de nascente purificada em garrafas pet."
   },
   {
@@ -1135,6 +1147,7 @@
     "unitCost": 1.1,
     "quality": 70,
     "dailyCap": 400,
+    "inputs": { "refined_sugar": 0.5, "paper": 0.5 },
     "desc": "Polpa de fruta pasteurizada sem conservantes artificiais."
   },
   {
@@ -1145,6 +1158,7 @@
     "unitCost": 1.8,
     "quality": 60,
     "dailyCap": 500,
+    "inputs": { "tobacco": 1, "paper": 0.5 },
     "desc": "Tabaco curado embalado com filtro em maços selados."
   },
   {
@@ -1155,6 +1169,7 @@
     "unitCost": 1.1,
     "quality": 65,
     "dailyCap": 420,
+    "inputs": { "corn": 1, "refined_sugar": 0.2 },
     "desc": "Flocos de milho tostados enriquecidos com vitaminas."
   },
   {
@@ -1165,6 +1180,7 @@
     "unitCost": 0.95,
     "quality": 62,
     "dailyCap": 450,
+    "inputs": { "poultry": 0.5, "aluminum": 0.5 },
     "desc": "Alimentos em conserva herméticos de longa durabilidade."
   },
   {
@@ -1175,6 +1191,7 @@
     "unitCost": 1.05,
     "quality": 60,
     "dailyCap": 480,
+    "inputs": { "corn": 1, "plastic": 0.5 },
     "desc": "Prensagem e refino de milho em óleo culinário límpido."
   },
   {
@@ -1185,6 +1202,7 @@
     "unitCost": 0.65,
     "quality": 68,
     "dailyCap": 500,
+    "inputs": { "raw_milk": 1, "plastic": 0.5 },
     "desc": "Leite fermentado com probióticos naturais e frutas."
   },
   {
@@ -1195,6 +1213,7 @@
     "unitCost": 1.8,
     "quality": 75,
     "dailyCap": 320,
+    "inputs": { "raw_milk": 1.5 },
     "desc": "Massa coalhada prensada e maturada por 90 dias."
   },
   {
@@ -1205,6 +1224,7 @@
     "unitCost": 9,
     "quality": 68,
     "dailyCap": 350,
+    "inputs": { "cotton_cloth": 1 },
     "desc": "Tecido de algodão denim com costuras duplas reforçadas."
   },
   {
@@ -1215,6 +1235,7 @@
     "unitCost": 4.8,
     "quality": 65,
     "dailyCap": 500,
+    "inputs": { "cotton_cloth": 0.5 },
     "desc": "Algodão macio penteado com corte moderno unissex."
   },
   {
@@ -1225,6 +1246,7 @@
     "unitCost": 45,
     "quality": 80,
     "dailyCap": 150,
+    "inputs": { "wool_cloth": 1.5 },
     "desc": "Ternos de lã pura estruturados com forro acetinado."
   },
   {
@@ -1235,6 +1257,7 @@
     "unitCost": 14,
     "quality": 72,
     "dailyCap": 280,
+    "inputs": { "wool_cloth": 1 },
     "desc": "Malharia de lã pesada com acabamento térmico confortável."
   },
   {
@@ -1245,6 +1268,7 @@
     "unitCost": 38,
     "quality": 82,
     "dailyCap": 180,
+    "inputs": { "leather": 1.5 },
     "desc": "Jaqueta de couro legítimo bovino com zíperes metálicos."
   },
   {
@@ -1255,6 +1279,7 @@
     "unitCost": 19,
     "quality": 75,
     "dailyCap": 260,
+    "inputs": { "leather": 1, "rubber": 0.5 },
     "desc": "Calçados sociais de couro com sola de borracha vulcanizada."
   },
   {
@@ -1265,6 +1290,7 @@
     "unitCost": 16,
     "quality": 72,
     "dailyCap": 320,
+    "inputs": { "cotton_cloth": 0.5, "rubber": 1, "plastic": 0.5 },
     "desc": "Amortecimento ergonômico com cabedal respirável em tecido."
   },
   {
@@ -1275,6 +1301,7 @@
     "unitCost": 26,
     "quality": 78,
     "dailyCap": 200,
+    "inputs": { "leather": 1 },
     "desc": "Bolsas estruturadas de couro legítimo com ferragens nobres."
   },
   {
@@ -1285,6 +1312,7 @@
     "unitCost": 21,
     "quality": 75,
     "dailyCap": 220,
+    "inputs": { "cotton_cloth": 1, "wool_cloth": 0.5 },
     "desc": "Tecidos acetinados para eventos sociais e alta moda."
   },
   {
@@ -1295,6 +1323,7 @@
     "unitCost": 3.2,
     "quality": 65,
     "dailyCap": 600,
+    "inputs": { "cotton_cloth": 0.5 },
     "desc": "Moda íntima em algodão elástico antialérgico."
   },
   {
@@ -1305,6 +1334,7 @@
     "unitCost": 95,
     "quality": 75,
     "dailyCap": 200,
+    "inputs": { "chips": 1, "glass": 0.5, "plastic": 0.5 },
     "desc": "Placas de silício com tela de vidro temperado e câmera 4K."
   },
   {
@@ -1315,6 +1345,7 @@
     "unitCost": 180,
     "quality": 78,
     "dailyCap": 140,
+    "inputs": { "chips": 2, "aluminum": 1, "glass": 0.5 },
     "desc": "Chassi de alumínio anodizado e processadores de alta performance."
   },
   {
@@ -1325,6 +1356,7 @@
     "unitCost": 150,
     "quality": 75,
     "dailyCap": 160,
+    "inputs": { "chips": 2, "steel": 1, "plastic": 1 },
     "desc": "Gabinetes de aço ventilados para trabalho e games pesados."
   },
   {
@@ -1335,6 +1367,7 @@
     "unitCost": 130,
     "quality": 76,
     "dailyCap": 180,
+    "inputs": { "chips": 1, "glass": 1, "plastic": 1 },
     "desc": "Telas de vidro plano com tecnologia OLED e som surround."
   },
   {
@@ -1345,6 +1378,7 @@
     "unitCost": 78,
     "quality": 78,
     "dailyCap": 160,
+    "inputs": { "chips": 1, "glass": 0.5, "aluminum": 0.5 },
     "desc": "Sensores de alta definição acoplados a lentes de precisão."
   },
   {
@@ -1355,6 +1389,7 @@
     "unitCost": 90,
     "quality": 74,
     "dailyCap": 190,
+    "inputs": { "chips": 2, "plastic": 1 },
     "desc": "Chips gráficos dedicados para jogos de última geração."
   },
   {
@@ -1365,6 +1400,7 @@
     "unitCost": 38,
     "quality": 68,
     "dailyCap": 250,
+    "inputs": { "steel": 1, "chips": 0.5 },
     "desc": "Estrutura em aço inox e circuito de aquecimento rápido."
   },
   {
@@ -1375,6 +1411,7 @@
     "unitCost": 165,
     "quality": 75,
     "dailyCap": 130,
+    "inputs": { "steel": 2, "chips": 0.5, "plastic": 1 },
     "desc": "Compressor silencioso de baixo consumo e gabinete de aço."
   },
   {
@@ -1385,6 +1422,7 @@
     "unitCost": 125,
     "quality": 72,
     "dailyCap": 160,
+    "inputs": { "aluminum": 1.5, "chips": 0.5 },
     "desc": "Condensadores de alumínio eficientes para climatização."
   },
   {
@@ -1395,6 +1433,7 @@
     "unitCost": 140,
     "quality": 74,
     "dailyCap": 140,
+    "inputs": { "steel": 2, "chips": 0.5, "plastic": 0.5 },
     "desc": "Tambores de aço inox com motorização de acionamento direto."
   },
   {
@@ -1405,6 +1444,7 @@
     "unitCost": 3200,
     "quality": 70,
     "dailyCap": 40,
+    "inputs": { "engine": 1, "steel": 2, "tires": 1, "glass": 1 },
     "desc": "Carroceria de aço com motor econômico e pneus duráveis."
   },
   {
@@ -1415,6 +1455,7 @@
     "unitCost": 5100,
     "quality": 76,
     "dailyCap": 30,
+    "inputs": { "engine": 1, "steel": 2.5, "tires": 1, "leather": 1 },
     "desc": "Sedan luxuoso com acabamento em couro e suspensão macia."
   },
   {
@@ -1425,6 +1466,7 @@
     "unitCost": 7400,
     "quality": 78,
     "dailyCap": 25,
+    "inputs": { "engine": 1.5, "steel": 3, "tires": 1.5, "glass": 1 },
     "desc": "Tração 4x4 com amplo espaço interno e blindagem leve."
   },
   {
@@ -1435,6 +1477,7 @@
     "unitCost": 1450,
     "quality": 70,
     "dailyCap": 60,
+    "inputs": { "engine": 0.5, "steel": 1, "tires": 0.5 },
     "desc": "Quadro tubular leve e motor ágil para tráfego urbano."
   },
   {
@@ -1445,6 +1488,7 @@
     "unitCost": 15500,
     "quality": 82,
     "dailyCap": 15,
+    "inputs": { "engine": 2, "steel": 5, "tires": 2 },
     "desc": "Cavalo mecânico de grande torque para logística pesada."
   },
   {
@@ -1455,6 +1499,7 @@
     "unitCost": 1.8,
     "quality": 80,
     "dailyCap": 500,
+    "inputs": { "chemical_minerals": 1 },
     "desc": "Comprimidos revestidos para alívio rápido de sintomas."
   },
   {
@@ -1465,6 +1510,7 @@
     "unitCost": 1.5,
     "quality": 80,
     "dailyCap": 550,
+    "inputs": { "chemical_minerals": 1 },
     "desc": "Analgésico e antitérmico de alta pureza química."
   },
   {
@@ -1475,6 +1521,7 @@
     "unitCost": 2.2,
     "quality": 78,
     "dailyCap": 400,
+    "inputs": { "chemical_minerals": 0.5, "refined_sugar": 0.5, "glass": 0.5 },
     "desc": "Frascos de vidro com xarope expectorante aromatizado."
   },
   {
@@ -1485,6 +1532,7 @@
     "unitCost": 1.2,
     "quality": 70,
     "dailyCap": 500,
+    "inputs": { "chemical_minerals": 0.5, "plastic": 0.5 },
     "desc": "Fórmula com extratos botânicos e agentes condicionantes."
   },
   {
@@ -1495,6 +1543,7 @@
     "unitCost": 0.7,
     "quality": 68,
     "dailyCap": 600,
+    "inputs": { "chemical_minerals": 0.5 },
     "desc": "Barras de sabonete cremosas com óleos hidratantes."
   },
   {
@@ -1505,6 +1554,7 @@
     "unitCost": 0.85,
     "quality": 72,
     "dailyCap": 550,
+    "inputs": { "chemical_minerals": 0.5, "plastic": 0.5 },
     "desc": "Gel dental com flúor e ação branqueadora prolongada."
   },
   {
@@ -1515,6 +1565,7 @@
     "unitCost": 14,
     "quality": 85,
     "dailyCap": 180,
+    "inputs": { "chemical_minerals": 1, "glass": 0.5 },
     "desc": "Frascos de cristal com essências nobres concentradas."
   },
   {
@@ -1525,6 +1576,7 @@
     "unitCost": 3.1,
     "quality": 76,
     "dailyCap": 320,
+    "inputs": { "chemical_minerals": 1, "plastic": 0.5 },
     "desc": "Loção de amplo espectro UVA/UVB resistente à água."
   },
   {
@@ -1535,6 +1587,7 @@
     "unitCost": 95,
     "quality": 75,
     "dailyCap": 120,
+    "inputs": { "lumber": 2, "cotton_cloth": 1 },
     "desc": "Estrutura em madeira nobre com estofamento ortopédico."
   },
   {
@@ -1545,6 +1598,7 @@
     "unitCost": 120,
     "quality": 76,
     "dailyCap": 110,
+    "inputs": { "lumber": 1.5, "leather": 1, "wool_cloth": 1 },
     "desc": "Molas ensacadas revestidas em couro ou tecido aveludado."
   },
   {
@@ -1555,6 +1609,7 @@
     "unitCost": 68,
     "quality": 72,
     "dailyCap": 140,
+    "inputs": { "lumber": 2, "glass": 1 },
     "desc": "Tampo de vidro temperado e base em madeira maciça."
   },
   {
@@ -1565,6 +1620,7 @@
     "unitCost": 105,
     "quality": 74,
     "dailyCap": 100,
+    "inputs": { "lumber": 2.5, "glass": 0.5 },
     "desc": "Portas de correr com espelhos e divisórias internas amplas."
   },
   {
@@ -1575,6 +1631,7 @@
     "unitCost": 32,
     "quality": 72,
     "dailyCap": 220,
+    "inputs": { "lumber": 1, "steel": 0.5, "leather": 0.5 },
     "desc": "Ajuste pneumático de altura e suporte lombar ergonômico."
   },
   {
@@ -1585,6 +1642,7 @@
     "unitCost": 260,
     "quality": 88,
     "dailyCap": 60,
+    "inputs": { "gold_ore": 1, "glass": 0.5 },
     "desc": "Mecanismo automático suíço em caixa de ouro maciço 18k."
   },
   {
@@ -1595,6 +1653,7 @@
     "unitCost": 140,
     "quality": 85,
     "dailyCap": 100,
+    "inputs": { "gold_ore": 0.5 },
     "desc": "Anéis de ouro polido com acabamento lapidado exclusivo."
   },
   {
@@ -1605,6 +1664,7 @@
     "unitCost": 250,
     "quality": 86,
     "dailyCap": 75,
+    "inputs": { "gold_ore": 1 },
     "desc": "Corrente de elos finos em ouro puro com fecho de segurança."
   },
   {
@@ -1615,6 +1675,7 @@
     "unitCost": 7.5,
     "quality": 68,
     "dailyCap": 380,
+    "inputs": { "chemical_minerals": 1, "plastic": 0.5 },
     "desc": "Tinta acrílica lavável de alta cobertura para alvenaria."
   },
   {
@@ -1625,6 +1686,7 @@
     "unitCost": 13.5,
     "quality": 74,
     "dailyCap": 260,
+    "inputs": { "steel": 1.5, "plastic": 0.5 },
     "desc": "Chaves e alicates de aço cromo-vanádio forjado."
   }
 ];
@@ -1679,3 +1741,31 @@
         }
       }
     })();
+
+    // Grafo de Receitas Indexado por ID de Saída para busca O(1)
+    const RECIPE_GRAPH = {};
+    for (const rec of FACTORY_RECIPES) {
+      if (rec.outputProdId) {
+        RECIPE_GRAPH[rec.outputProdId] = rec;
+      }
+      RECIPE_GRAPH[rec.id] = rec;
+    }
+
+    // Exportação universal (Node.js & Navegador)
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = {
+        CITY_DISTRICTS,
+        STORE_TYPES,
+        NATURAL_MINES,
+        FARM_TYPES,
+        PRODUCT_CATALOG,
+        FACTORY_RECIPES,
+        RECIPE_GRAPH,
+        MEDIA_OUTLETS,
+        SEAPORTS,
+        RD_CATEGORIES
+      };
+    }
+    if (typeof window !== 'undefined') {
+      window.RECIPE_GRAPH = RECIPE_GRAPH;
+    }

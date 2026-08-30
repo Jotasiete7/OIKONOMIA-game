@@ -194,6 +194,154 @@ const CoreMath = {
     const turnoverRate = Math.min(1, (soldToday || 0) / shelfCapacity);
     const newQR = shelfQR + (factoryQR - shelfQR) * turnoverRate;
     return Number(Math.min(100, Math.max(0, newQR)).toFixed(2));
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // PROGRESSÃO ESTRUTURAL DE P&D — GRAFO DE RECEITAS & TECH TREE
+  // ═══════════════════════════════════════════════════════════════════
+
+  /**
+   * Calcula recursivamente a profundidade de produção (Tier 0 a 5) de um produto.
+   * Tier 0 = Matéria-prima pura (sem receita/inputs).
+   * Tier N = 1 + max(Tier dos seus ingredientes diretos).
+   */
+  calculateProductionTier(productId, recipes, cache = {}) {
+    if (cache[productId] !== undefined) return cache[productId];
+    
+    // Suporta array de receitas ou dicionário indexado por outputProdId/id
+    let recipe = null;
+    if (Array.isArray(recipes)) {
+      recipe = recipes.find(r => r.outputProdId === productId || r.id === productId);
+    } else if (recipes && typeof recipes === 'object') {
+      recipe = recipes[productId] || Object.values(recipes).find(r => r.outputProdId === productId || r.id === productId);
+    }
+
+    if (!recipe || !recipe.inputs || Object.keys(recipe.inputs).length === 0) {
+      cache[productId] = 0; // Matéria-prima de extração (Tier 0)
+      return 0;
+    }
+
+    const ingredientIds = Object.keys(recipe.inputs);
+    if (ingredientIds.length === 0) {
+      cache[productId] = 0;
+      return 0;
+    }
+
+    let maxIngredientTier = 0;
+    for (const ingId of ingredientIds) {
+      const ingTier = this.calculateProductionTier(ingId, recipes, cache);
+      if (ingTier > maxIngredientTier) {
+        maxIngredientTier = ingTier;
+      }
+    }
+
+    cache[productId] = maxIngredientTier + 1;
+    return cache[productId];
+  },
+
+  /**
+   * Coleta recursivamente todas as matérias-primas raiz (Tier 0) de um produto.
+   */
+  getRootBranches(productId, recipes, visited = new Set()) {
+    if (visited.has(productId)) return new Set();
+    visited.add(productId);
+
+    let recipe = null;
+    if (Array.isArray(recipes)) {
+      recipe = recipes.find(r => r.outputProdId === productId || r.id === productId);
+    } else if (recipes && typeof recipes === 'object') {
+      recipe = recipes[productId] || Object.values(recipes).find(r => r.outputProdId === productId || r.id === productId);
+    }
+
+    if (!recipe || !recipe.inputs || Object.keys(recipe.inputs).length === 0) {
+      return new Set([productId]);
+    }
+
+    const roots = new Set();
+    for (const ingId of Object.keys(recipe.inputs)) {
+      const subRoots = this.getRootBranches(ingId, recipes, visited);
+      for (const r of subRoots) roots.add(r);
+    }
+    return roots;
+  },
+
+  /**
+   * Bônus de convergência para produtos complexos que integram múltiplos ramos de insumos.
+   */
+  calculateConvergenceBonus(productId, recipes, baseCost = 60) {
+    const roots = this.getRootBranches(productId, recipes);
+    if (roots.size <= 1) return 0;
+    return Math.round((roots.size - 1) * baseCost * 1.5);
+  },
+
+  /**
+   * Calcula o custo total de pontos de pesquisa para desbloquear um produto.
+   * Fórmula exponencial por tier: C = round(60 * 2.4^(tier - 1)) + bônus de convergência.
+   */
+  calculateResearchCost(tier, convergenceBonus = 0, baseCost = 60, multiplier = 2.4) {
+    if (tier <= 0) return 0;
+    const tierCost = Math.round(baseCost * Math.pow(multiplier, tier - 1));
+    return tierCost + (convergenceBonus || 0);
+  },
+
+  /**
+   * Valida se todos os ingredientes de tier N-1 estão desbloqueados antes de permitir a pesquisa.
+   */
+  canResearch(productId, unlockedSet, recipes) {
+    if (!unlockedSet) return true;
+    
+    let recipe = null;
+    if (Array.isArray(recipes)) {
+      recipe = recipes.find(r => r.outputProdId === productId || r.id === productId);
+    } else if (recipes && typeof recipes === 'object') {
+      recipe = recipes[productId] || Object.values(recipes).find(r => r.outputProdId === productId || r.id === productId);
+    }
+
+    if (!recipe || !recipe.inputs || Object.keys(recipe.inputs).length === 0) {
+      return true; // Matéria-prima sempre disponível
+    }
+
+    // Todos os ingredientes devem estar desbloqueados ou ser Tier 0
+    return Object.keys(recipe.inputs).every(ingId => {
+      if (unlockedSet.has(ingId)) return true;
+      const tier = this.calculateProductionTier(ingId, recipes);
+      return tier === 0;
+    });
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // CURVA ASSINTÓTICA DE QUALIDADE (QR) SIMÉTRICA (PLAYER & IA)
+  // ═══════════════════════════════════════════════════════════════════
+
+  /**
+   * Custo por ponto de QR com explosão assintótica perto de 100.
+   */
+  calculateQRUpgradeCost(currentQR, baseCost = 40, exponent = 1.8) {
+    const qrClamped = Math.min(99.5, Math.max(1, currentQR || 20));
+    const distanceToMax = Math.max(100 - qrClamped, 0.5);
+    const cost = baseCost * Math.pow(qrClamped / distanceToMax, exponent);
+    return Number(cost.toFixed(2));
+  },
+
+  /**
+   * Teto de ganho mensal de QR perto do limite máximo (Rate Cap).
+   */
+  calculateMaxMonthlyQRGain(currentQR, maxMonthlyGain = 3.0, decayExponent = 2.2) {
+    const proximityToMax = Math.min(0.995, Math.max(0, (currentQR || 0) / 100));
+    const maxGain = maxMonthlyGain * (1 - Math.pow(proximityToMax, decayExponent));
+    return Number(Math.max(0.01, maxGain).toFixed(3));
+  },
+
+  /**
+   * Aplicação unificada e simétrica de evolução assintótica de QR no fechamento do mês.
+   */
+  applyQRAsymptoticGrowth(currentQR, monthlyBudget) {
+    if (!monthlyBudget || monthlyBudget <= 0) return 0;
+    const costPerPoint = this.calculateQRUpgradeCost(currentQR);
+    const maxGain = this.calculateMaxMonthlyQRGain(currentQR);
+    const affordableGain = monthlyBudget / costPerPoint;
+    const actualGain = Math.min(maxGain, affordableGain);
+    return Number(actualGain.toFixed(3));
   }
 };
 
