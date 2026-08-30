@@ -22,6 +22,18 @@
       { id:"hardware", name:"Home Center & Ferramentas", emoji:"🔨", category:"Construção", cost:38000, maxShelves:5, rentMultiplier:1.4, desc:"Loja de materiais de reforma, tintas acrílicas e ferramentas industriais (5 gôndolas)." }
     ];
 
+    const STORE_CATEGORY_WHITELIST = {
+      kombini: ['Alimentos', 'Bebidas', 'Conveniência', 'Higiene'],
+      supermarket: ['Alimentos', 'Bebidas', 'Higiene'],
+      apparel: ['Vestuário'],
+      electronics: ['Eletrônicos'],
+      automotive: ['Automotivo'],
+      pharmacy: ['Farmácia', 'Higiene', 'Cosméticos'],
+      furniture: ['Móveis'],
+      jewelry: ['Joias'],
+      hardware: ['Construção']
+    };
+
     const NATURAL_MINES = [
       { id:"mine_iron", name:"Mina de Minério de Ferro", emoji:"⛏️", resourceId:"iron_ore", resourceName:"Minério de Ferro", cost:40000, unitCost:15.00, quality:60, dailyYield:600, desc:"Extração de ferro essencial para siderurgia e ligas de aço." },
       { id:"mine_bauxite", name:"Mina de Bauxita", emoji:"🪨", resourceId:"bauxite", resourceName:"Bauxita (Alumínio)", cost:42000, unitCost:18.00, quality:60, dailyYield:500, desc:"Minério de bauxita refinado em alumínio estrutural leve." },
@@ -1782,6 +1794,7 @@
       module.exports = {
         CITY_DISTRICTS,
         STORE_TYPES,
+        STORE_CATEGORY_WHITELIST,
         NATURAL_MINES,
         FARM_TYPES,
         PRODUCT_CATALOG,
@@ -1794,4 +1807,5 @@
     }
     if (typeof window !== 'undefined') {
       window.RECIPE_GRAPH = RECIPE_GRAPH;
+      window.STORE_CATEGORY_WHITELIST = STORE_CATEGORY_WHITELIST;
     }

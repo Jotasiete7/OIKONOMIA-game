@@ -4461,9 +4461,12 @@
       updateStepIndicator(2);
       document.getElementById('wizard-step1').classList.add('hidden');
       document.getElementById('wizard-step2').classList.remove('hidden');
-      if (pendingStoreType.category !== 'all') {
-        activeCategoryTab = pendingStoreType.category;
-      }
+
+      const allowedCats = (typeof STORE_CATEGORY_WHITELIST !== 'undefined' && STORE_CATEGORY_WHITELIST[pendingStoreType.id])
+        ? STORE_CATEGORY_WHITELIST[pendingStoreType.id]
+        : (pendingStoreType.category !== 'all' ? [pendingStoreType.category] : ['Alimentos']);
+
+      activeCategoryTab = allowedCats[0] || 'Alimentos';
       renderProductSelector();
     }
 
@@ -4479,8 +4482,15 @@
     }
 
     function renderProductSelector() {
-      const categories = [...new Set(Object.values(PRODUCT_CATALOG).map(p => p.category))];
-      document.getElementById('category-tabs').innerHTML = categories.map(cat => `
+      const allowedCats = (typeof STORE_CATEGORY_WHITELIST !== 'undefined' && STORE_CATEGORY_WHITELIST[pendingStoreType?.id])
+        ? STORE_CATEGORY_WHITELIST[pendingStoreType.id]
+        : [...new Set(Object.values(PRODUCT_CATALOG).map(p => p.category))];
+
+      if (!allowedCats.includes(activeCategoryTab)) {
+        activeCategoryTab = allowedCats[0] || 'Alimentos';
+      }
+
+      document.getElementById('category-tabs').innerHTML = allowedCats.map(cat => `
         <button onclick="setCategoryTab('${cat}')"
           class="px-2.5 py-1 rounded-lg text-[10px] font-mono transition
             ${activeCategoryTab === cat ? 'bg-slate-700 text-slate-100 font-bold' : 'text-slate-400 hover:text-slate-200'}">
@@ -4488,7 +4498,7 @@
         </button>
       `).join('');
 
-      let products = Object.values(PRODUCT_CATALOG);
+      let products = Object.values(PRODUCT_CATALOG).filter(p => allowedCats.includes(p.category));
       if (activeSearchQuery) {
         products = products.filter(p => p.name.toLowerCase().includes(activeSearchQuery) || p.category.toLowerCase().includes(activeSearchQuery));
       } else {
