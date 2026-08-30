@@ -1709,46 +1709,67 @@
       { id:'media_news', name:'Jornal da Metrópole', type:'Jornal', emoji:'📰', tile:{x:23,y:14}, district:'northside', monthlyCost:350.00, institutionalMonthlyCost:450.00, brandBoostMonthly:4, brandCap:60, reachPct:45, reachDescription:'Distrito Residencial Norte e Subúrbios' }
     ];
 
+    const PORT_SUPPLIES_FOOD_CONSUMER = {
+      'bread': { wholesalePrice: 1.75, quality: 52, quota: 400, origin: 'Importação Panificação' },
+      'milk': { wholesalePrice: 1.40, quality: 52, quota: 400, origin: 'Importação Laticínios' },
+      'eggs': { wholesalePrice: 1.20, quality: 50, quota: 450, origin: 'Importação Granja' },
+      'cola': { wholesalePrice: 1.50, quality: 50, quota: 450, origin: 'Importação Bebidas' },
+      'mineral_water': { wholesalePrice: 0.80, quality: 55, quota: 500, origin: 'Importação Bebidas' },
+      'canned_soup': { wholesalePrice: 2.10, quality: 52, quota: 350, origin: 'Importação Conservas' },
+      'soap': { wholesalePrice: 1.40, quality: 50, quota: 400, origin: 'Importação Higiene' },
+      'shampoo': { wholesalePrice: 2.40, quality: 52, quota: 300, origin: 'Importação Higiene' },
+      'cold_pills': { wholesalePrice: 3.50, quality: 52, quota: 300, origin: 'Importação Farmácia' },
+      'tshirt': { wholesalePrice: 14.00, quality: 50, quota: 250, origin: 'Importação Vestuário' },
+      'jeans': { wholesalePrice: 24.00, quality: 50, quota: 200, origin: 'Importação Vestuário' },
+      'sneakers': { wholesalePrice: 35.00, quality: 52, quota: 180, origin: 'Importação Calçados' },
+      'beef': { wholesalePrice: 5.50, quality: 52, quota: 300, origin: 'Importação Carnes' },
+      'poultry_meat': { wholesalePrice: 3.20, quality: 50, quota: 350, origin: 'Importação Carnes' },
+      'pork_meat': { wholesalePrice: 4.20, quality: 50, quota: 300, origin: 'Importação Carnes' },
+      'chocolate': { wholesalePrice: 2.50, quality: 52, quota: 300, origin: 'Importação Doces' },
+      'coffee': { wholesalePrice: 3.00, quality: 55, quota: 300, origin: 'Importação Cafeteria' }
+    };
+
+    const PORT_SUPPLIES_COMMODITIES = {
+      'wheat': { wholesalePrice: 1.10, quality: 50, quota: 500, origin: 'Importação Grãos' },
+      'corn': { wholesalePrice: 1.00, quality: 50, quota: 500, origin: 'Importação Grãos' },
+      'sugar_cane': { wholesalePrice: 0.80, quality: 50, quota: 600, origin: 'Importação Açúcar' },
+      'coffee_beans': { wholesalePrice: 2.20, quality: 55, quota: 350, origin: 'Importação Café' },
+      'iron_ore': { wholesalePrice: 24.00, quality: 52, quota: 400, origin: 'Importação Minérios' },
+      'bauxite': { wholesalePrice: 28.00, quality: 52, quota: 350, origin: 'Importação Minérios' },
+      'silica': { wholesalePrice: 14.00, quality: 50, quota: 450, origin: 'Importação Minérios' },
+      'timber': { wholesalePrice: 18.00, quality: 50, quota: 400, origin: 'Importação Madeira' },
+      'crude_oil': { wholesalePrice: 38.00, quality: 55, quota: 450, origin: 'Importação Petróleo' },
+      'chemical_minerals': { wholesalePrice: 22.00, quality: 52, quota: 400, origin: 'Importação Químicos' },
+      'rubber': { wholesalePrice: 20.00, quality: 50, quota: 350, origin: 'Importação Borracha' },
+      'cotton': { wholesalePrice: 2.40, quality: 50, quota: 400, origin: 'Importação Têxtil' }
+    };
+
+    const PORT_SUPPLIES_TECH_PARTS = {
+      'chips': { wholesalePrice: 85.00, quality: 56, quota: 200, origin: 'Importação Semicondutores' },
+      'plastic': { wholesalePrice: 7.50, quality: 52, quota: 400, origin: 'Importação Insumos' },
+      'glass': { wholesalePrice: 6.80, quality: 52, quota: 400, origin: 'Importação Insumos' },
+      'steel': { wholesalePrice: 32.00, quality: 54, quota: 300, origin: 'Importação Siderurgia' },
+      'aluminum': { wholesalePrice: 36.00, quality: 54, quota: 300, origin: 'Importação Metalurgia' },
+      'tires': { wholesalePrice: 38.00, quality: 52, quota: 250, origin: 'Importação Autopeças' },
+      'tool_set': { wholesalePrice: 28.00, quality: 54, quota: 220, origin: 'Importação Ferramentas' },
+      'mobile_phone': { wholesalePrice: 220.00, quality: 55, quota: 150, origin: 'Importação Eletrônicos' },
+      'acrylic_paint': { wholesalePrice: 16.00, quality: 52, quota: 250, origin: 'Importação Tintas' }
+    };
+
     const SEAPORTS = [
       {
         id: 'port_alpha',
-        name: 'Porto Alfa (Terminal Geral de Alimentos & Matérias-Primas)',
+        name: 'Porto Alfa (Terminal de Alimentos & Consumo)',
         tile: { x: 6, y: 6 },
         freightRatePerTile: 0.012,
-        supplies: {
-          'wheat': { wholesalePrice: 1.20, quality: 50, quota: 400, origin: 'Importação Internacional (Grãos)' },
-          'corn': { wholesalePrice: 1.10, quality: 50, quota: 400, origin: 'Importação Internacional (Grãos)' },
-          'sugar_cane': { wholesalePrice: 0.90, quality: 50, quota: 450, origin: 'Importação Internacional (Açúcar)' },
-          'coffee_beans': { wholesalePrice: 2.50, quality: 55, quota: 250, origin: 'Importação Internacional (Café)' },
-          'iron_ore': { wholesalePrice: 28.00, quality: 52, quota: 350, origin: 'Importação Internacional (Minérios)' },
-          'bauxite': { wholesalePrice: 32.00, quality: 52, quota: 300, origin: 'Importação Internacional (Minérios)' },
-          'bread': { wholesalePrice: 2.50, quality: 55, quota: 300, origin: 'Importação Internacional (Panificação)' },
-          'milk': { wholesalePrice: 2.10, quality: 55, quota: 300, origin: 'Importação Internacional (Laticínios)' },
-          'cola': { wholesalePrice: 2.20, quality: 52, quota: 350, origin: 'Importação Internacional (Bebidas)' },
-          'canned_soup': { wholesalePrice: 2.80, quality: 54, quota: 250, origin: 'Importação Internacional (Conservas)' },
-          'mineral_water': { wholesalePrice: 1.20, quality: 55, quota: 400, origin: 'Importação Internacional (Bebidas)' },
-          'eggs': { wholesalePrice: 1.80, quality: 52, quota: 300, origin: 'Importação Internacional (Granja)' }
-        }
+        supplies: PORT_SUPPLIES_FOOD_CONSUMER
       },
       {
         id: 'port_beta',
-        name: 'Porto Beta (Terminal Especializado, Eletrônicos & Químicos)',
+        name: 'Porto Beta (Terminal de Commodities & Indústria)',
         tile: { x: 7, y: 5 },
         freightRatePerTile: 0.018,
-        supplies: {
-          'silica': { wholesalePrice: 16.00, quality: 50, quota: 400, origin: 'Importação Internacional (Químicos)' },
-          'chemical_minerals': { wholesalePrice: 26.00, quality: 52, quota: 350, origin: 'Importação Internacional (Químicos)' },
-          'crude_oil': { wholesalePrice: 42.00, quality: 55, quota: 400, origin: 'Importação Internacional (Petróleo)' },
-          'rubber': { wholesalePrice: 22.00, quality: 52, quota: 300, origin: 'Importação Internacional (Borracha)' },
-          'timber': { wholesalePrice: 20.00, quality: 50, quota: 350, origin: 'Importação Internacional (Madeira)' },
-          'chips': { wholesalePrice: 95.00, quality: 58, quota: 180, origin: 'Importação Internacional (Semicondutores)' },
-          'tires': { wholesalePrice: 42.00, quality: 54, quota: 220, origin: 'Importação Internacional (Autopeças)' },
-          'mobile_phone': { wholesalePrice: 240.00, quality: 56, quota: 120, origin: 'Importação Internacional (Eletrônicos)' },
-          'cold_pills': { wholesalePrice: 4.80, quality: 55, quota: 250, origin: 'Importação Internacional (Farmácia)' },
-          'soap': { wholesalePrice: 1.90, quality: 52, quota: 350, origin: 'Importação Internacional (Higiene)' },
-          'tool_set': { wholesalePrice: 32.00, quality: 54, quota: 200, origin: 'Importação Internacional (Ferramentas)' },
-          'acrylic_paint': { wholesalePrice: 18.00, quality: 52, quota: 220, origin: 'Importação Internacional (Tintas)' }
-        }
+        supplies: PORT_SUPPLIES_COMMODITIES
       }
     ];
 
@@ -1802,10 +1823,16 @@
         RECIPE_GRAPH,
         MEDIA_OUTLETS,
         SEAPORTS,
+        PORT_SUPPLIES_FOOD_CONSUMER,
+        PORT_SUPPLIES_COMMODITIES,
+        PORT_SUPPLIES_TECH_PARTS,
         RD_CATEGORIES
       };
     }
     if (typeof window !== 'undefined') {
       window.RECIPE_GRAPH = RECIPE_GRAPH;
       window.STORE_CATEGORY_WHITELIST = STORE_CATEGORY_WHITELIST;
+      window.PORT_SUPPLIES_FOOD_CONSUMER = PORT_SUPPLIES_FOOD_CONSUMER;
+      window.PORT_SUPPLIES_COMMODITIES = PORT_SUPPLIES_COMMODITIES;
+      window.PORT_SUPPLIES_TECH_PARTS = PORT_SUPPLIES_TECH_PARTS;
     }

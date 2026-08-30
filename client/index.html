@@ -1543,28 +1543,35 @@
       if (lockVarz) lockVarz.textContent = unlockedCities.varzea ? '🔓' : '🔒';
     }
 
-    // Configuração dos Portos no Mapa 128x128
+    // Configuração dos Portos no Mapa 128x128 com Especialização Temática
     const SEAPORTS_128 = [
       {
+        id: 'port_atenas_bay',
+        name: 'Porto Nova Atenas (Doca da Baía Central - Alimentos & Varejo)',
+        tile: { x: 26, y: 38 },
+        freightRatePerTile: 0.010,
+        supplies: (typeof PORT_SUPPLIES_FOOD_CONSUMER !== 'undefined') ? PORT_SUPPLIES_FOOD_CONSUMER : {}
+      },
+      {
+        id: 'port_atenas_south',
+        name: 'Porto Nova Atenas (Cais Sul - Alimentos & Varejo)',
+        tile: { x: 34, y: 46 },
+        freightRatePerTile: 0.012,
+        supplies: (typeof PORT_SUPPLIES_FOOD_CONSUMER !== 'undefined') ? PORT_SUPPLIES_FOOD_CONSUMER : {}
+      },
+      {
         id: 'port_real_main',
-        name: 'Porto Real (Terminal Internacional de Cargas & Grãos)',
+        name: 'Porto Real (Terminal Internacional de Commodities & Grãos)',
         tile: { x: 85, y: 34 },
         freightRatePerTile: 0.008,
-        supplies: {}
+        supplies: (typeof PORT_SUPPLIES_COMMODITIES !== 'undefined') ? PORT_SUPPLIES_COMMODITIES : {}
       },
       {
         id: 'port_real_south',
-        name: 'Porto Real (Doca Sul & Manufaturas)',
+        name: 'Porto Real (Doca Sul de Tecnologia & Manufaturas)',
         tile: { x: 89, y: 44 },
         freightRatePerTile: 0.010,
-        supplies: {}
-      },
-      {
-        id: 'port_atenas_bay',
-        name: 'Porto Nova Atenas (Doca da Baía Central)',
-        tile: { x: 34, y: 46 },
-        freightRatePerTile: 0.012,
-        supplies: {}
+        supplies: (typeof PORT_SUPPLIES_TECH_PARTS !== 'undefined') ? PORT_SUPPLIES_TECH_PARTS : {}
       }
     ];
 
@@ -1703,13 +1710,26 @@
         // Dados de Porto
         let portData = null;
         if (isPort) {
-          portData = SEAPORTS_128.find(p => p.tile.x === x && p.tile.y === y) || {
-            id: `port_${x}_${y}`,
-            name: `Porto Marítimo (${cityInfo.cityName})`,
-            tile: { x, y },
-            freightRatePerTile: 0.010,
-            supplies: {}
-          };
+          portData = SEAPORTS_128.find(p => p.tile.x === x && p.tile.y === y);
+          if (!portData) {
+            const isNovaAtenas = cityInfo.cityId === 'nova_atenas' || x < 60;
+            const supplies = isNovaAtenas
+              ? ((typeof PORT_SUPPLIES_FOOD_CONSUMER !== 'undefined') ? PORT_SUPPLIES_FOOD_CONSUMER : {})
+              : (y > 40
+                  ? ((typeof PORT_SUPPLIES_TECH_PARTS !== 'undefined') ? PORT_SUPPLIES_TECH_PARTS : {})
+                  : ((typeof PORT_SUPPLIES_COMMODITIES !== 'undefined') ? PORT_SUPPLIES_COMMODITIES : {}));
+            const portName = isNovaAtenas 
+              ? `Porto Marítimo de Nova Atenas (Alimentos & Varejo)` 
+              : (y > 40 ? `Porto Real (Terminal de Tecnologia)` : `Porto Real (Terminal de Commodities)`);
+            portData = {
+              id: `port_${x}_${y}`,
+              name: portName,
+              tile: { x, y },
+              freightRatePerTile: 0.010,
+              supplies
+            };
+            SEAPORTS_128.push(portData);
+          }
         }
 
         // Dados de Mídia
@@ -4846,22 +4866,31 @@
     }
 
     function openPortModal(port) {
+      if (!port) return;
       document.getElementById('port-modal-title').textContent = `⚓ ${port.name}`;
-      document.getElementById('port-modal-subtitle').textContent = `Local: Cais de Arquipélago de Neo Capital (${port.tile.x}, ${port.tile.y})`;
+      document.getElementById('port-modal-subtitle').textContent = `Local: Cais Costeiro (${port.tile.x}, ${port.tile.y}) · Frete Base: $${(port.freightRatePerTile || 0.010).toFixed(3)}/km`;
       const list = document.getElementById('port-cargo-list');
-      list.innerHTML = Object.entries(PRODUCT_CATALOG).slice(0, 15).map(([prodId, prod]) => {
-        return `
-          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
-            <div>
-              <span class="font-bold text-slate-200">${prod.name}</span>
-              <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.2 rounded ml-1.5">${prod.category}</span>
+      const entries = Object.entries(port.supplies || {});
+      if (entries.length === 0) {
+        list.innerHTML = `<div class="text-center py-6 text-slate-500 font-mono text-xs">Nenhuma carga internacional atracada neste cais.</div>`;
+      } else {
+        list.innerHTML = entries.map(([prodId, sup]) => {
+          const prod = PRODUCT_CATALOG[prodId] || { name: prodId, category: 'Geral' };
+          return `
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
+              <div>
+                <span class="font-bold text-slate-200">${prod.name}</span>
+                <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.2 rounded ml-1.5">${prod.category}</span>
+                <div class="text-[9px] text-cyan-400 mt-0.5">QR: ${sup.quality} · Cota: ${sup.quota} un/dia · ${sup.origin}</div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-bold text-emerald-400">$${sup.wholesalePrice.toFixed(2)}/un</span>
+                <div class="text-[9px] text-slate-500">Atacado</div>
+              </div>
             </div>
-            <div class="text-right">
-              <span class="text-xs font-bold text-emerald-400">$${(prod.baseCost * 1.5).toFixed(2)}/un</span>
-            </div>
-          </div>
-        `;
-      }).join('');
+          `;
+        }).join('');
+      }
       document.getElementById('port-modal').classList.remove('hidden');
     }
 
