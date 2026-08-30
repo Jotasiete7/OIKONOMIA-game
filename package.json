@@ -1,0 +1,18 @@
+﻿{
+  "name": "oikonomia-game",
+  "version": "0.8.1",
+  "description": "OIKONOMIA — Economic Simulation & Business Tycoon Game",
+  "main": "client/index.html",
+  "scripts": {
+    "audit-graph": "node tools/audit_production_graph.js",
+    "generate-wiki": "node tools/generate_production_wiki.js"
+  },
+  "keywords": [
+    "economic-simulation",
+    "tycoon",
+    "capitalism-simulation",
+    "canvas-game"
+  ],
+  "author": "Oikonomia Team",
+  "license": "MIT"
+}
