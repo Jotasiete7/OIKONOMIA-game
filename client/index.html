@@ -5854,13 +5854,16 @@
             const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
 
             let compRating = 0;
-            const nb = worldGrid[tile.x+1]?.[tile.y]?.competitor || worldGrid[tile.x]?.[tile.y+1]?.competitor || worldGrid[tile.x]?.[tile.y]?.competitor;
-            if (nb?.shelves[prodId]) {
+            const nb = worldGrid[tile.x+1]?.[tile.y]?.competitor || worldGrid[tile.x]?.[tile.y+1]?.competitor || worldGrid[tile.x-1]?.[tile.y]?.competitor || worldGrid[tile.x]?.[tile.y-1]?.competitor || worldGrid[tile.x]?.[tile.y]?.competitor;
+            if (nb?.shelves?.[prodId]) {
               const cs = nb.shelves[prodId];
-              compRating = calcProductRating(prod, cs.price, cs.quality, cs.brand);
+              compRating = calcProductRating(prod, cs.price, cs.quality, cs.brand || 30);
             }
 
-            const { playerShare: share } = CoreMath.calculateQuadraticMarketShare(rating, compRating, 25);
+            const { playerShare: share, compShare } = CoreMath.calculateQuadraticMarketShare(rating, compRating, 25);
+            if (nb) {
+              nb.lastShare = compShare;
+            }
             const potDemand = Math.floor(baseDem * elast * share);
             const sold = Math.min(shelf.stock, potDemand);
 
@@ -5884,8 +5887,18 @@
           for (const [pId, cs] of Object.entries(tile.competitor.shelves)) {
             const prod = PRODUCT_CATALOG[pId];
             if (!prod) continue;
-            const cR = calcProductRating(prod, cs.price, cs.quality, cs.brand);
-            const { compShare } = CoreMath.calculateQuadraticMarketShare(0, cR, 25);
+            
+            // Busca loja vizinha do jogador para avaliar market share real
+            const playerNb = worldGrid[tile.x+1]?.[tile.y]?.store || worldGrid[tile.x]?.[tile.y+1]?.store || worldGrid[tile.x-1]?.[tile.y]?.store || worldGrid[tile.x]?.[tile.y-1]?.store;
+            let playerRating = 0;
+            if (playerNb?.shelves?.[pId]) {
+              const ps = playerNb.shelves[pId];
+              const brand = playerBrandRating[pId] || 20;
+              playerRating = calcProductRating(prod, ps.price, ps.quality, brand);
+            }
+
+            const cR = calcProductRating(prod, cs.price, cs.quality, cs.brand || 30);
+            const { compShare } = CoreMath.calculateQuadraticMarketShare(playerRating, cR, 25);
             tile.competitor.lastShare = compShare;
           }
         }

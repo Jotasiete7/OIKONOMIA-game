@@ -1,4 +1,4 @@
-﻿/**
+/**
  * tools/audit_6_deep_systems.js
  * Auditoria Profunda E2E no Navegador Real (Microsoft Edge Chromium via DevTools WebSocket)
  */
@@ -450,13 +450,13 @@ async function runDeepAudits() {
 
         const priceBefore = compTile.competitor.shelves.bread.price;
         
-        // Roda 15 dias de simulação para a IA do concorrente reagir
+        // Roda 35 dias de simulação para a IA do concorrente fechar o ciclo mensal e reagir
         const priceHistory = [priceBefore];
-        for (let i = 0; i < 15; i++) {
-          // Força lastShare < 0.38 antes de simular para inspecionar gatilho
-          compTile.competitor.lastShare = 0.25;
+        const shareHistory = [];
+        for (let i = 0; i < 35; i++) {
           simulateDay();
           priceHistory.push(compTile.competitor.shelves.bread.price);
+          shareHistory.push(compTile.competitor.lastShare);
         }
 
         const priceAfter = compTile.competitor.shelves.bread.price;
@@ -465,7 +465,9 @@ async function runDeepAudits() {
           priceBefore,
           priceAfter,
           priceDropped: priceAfter < priceBefore,
-          priceHistory
+          priceHistory,
+          shareHistory,
+          finalShare: compTile.competitor.lastShare
         };
       })()
     `);
