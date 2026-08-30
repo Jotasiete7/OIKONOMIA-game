@@ -444,8 +444,59 @@ async function runBrowserAudit() {
     console.log(`[T5.4] 2ª Filial: Isenção da Licença (Apenas Obra $60k): ${test5.electronicsNowHomologada && test5.onlyBuildingChargedOnBranch2 ? `✅ PASSOU (Cobrado apenas: $${test5.diff2.toLocaleString()})` : '❌ FALHOU'}`);
     await cdp.captureScreenshot('screenshot_05_store_niche_licensing.png');
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // TESTE 6: Enciclopédia Interativa (Busca, Ficha Técnica, Links e Calculadora)
+    // ─────────────────────────────────────────────────────────────────────────
+    console.log('\n--- EXECUTANDO TESTE 6: Enciclopédia Interativa & Wiki In-Game ---');
+    const test6 = await cdp.eval(`
+      (() => {
+        // 1. Abre a enciclopédia
+        openEncyclopediaModal('products');
+        const modal = document.getElementById('encyclopedia-modal');
+        const modalVisible = modal && !modal.classList.contains('hidden');
+
+        // 2. Busca por "farinha"
+        onEncyclopediaSearch('farinha');
+        const searchOk = encyclopediaState.searchQuery === 'farinha';
+
+        // 3. Abre a Ficha Técnica de "flour"
+        navigateEncyclopedia('products', 'flour');
+        const flourDetailOk = encyclopediaState.selectedItemId === 'flour';
+
+        // 4. Navega pelo hiperlink para o insumo "wheat"
+        navigateEncyclopedia('products', 'wheat');
+        const wheatNavOk = encyclopediaState.selectedItemId === 'wheat';
+
+        // 5. Testa o botão Histórico Voltar para retornar à "flour"
+        encyclopediaHistoryBack();
+        const historyBackOk = encyclopediaState.selectedItemId === 'flour';
+
+        // 6. Testa a Calculadora de Cadeia Produtiva
+        switchEncyclopediaTab('calculator');
+        updateEncyclopediaCalcProduct('bread');
+        updateEncyclopediaCalcAmount(1000);
+        const calcOk = encyclopediaState.calcProductId === 'bread' && encyclopediaState.calcTargetAmount === 1000;
+
+        return {
+          modalVisible,
+          searchOk,
+          flourDetailOk,
+          wheatNavOk,
+          historyBackOk,
+          calcOk
+        };
+      })()
+    `);
+
+    console.log(`[T6.1] Enciclopédia Aberta no DOM: ${test6.modalVisible ? '✅ Sim' : '❌ Não'}`);
+    console.log(`[T6.2] Motor de Busca em Tempo Real: ${test6.searchOk ? '✅ PASSOU' : '❌ FALHOU'}`);
+    console.log(`[T6.3] Ficha Técnica Completa de Produto: ${test6.flourDetailOk ? '✅ PASSOU' : '❌ FALHOU'}`);
+    console.log(`[T6.4] Hiperlinks Bidirecionais Insumo ➔ Produto: ${test6.wheatNavOk && test6.historyBackOk ? '✅ PASSOU' : '❌ FALHOU'}`);
+    console.log(`[T6.5] Calculadora de Cadeia Produtiva: ${test6.calcOk ? '✅ PASSOU' : '❌ FALHOU'}`);
+    await cdp.captureScreenshot('screenshot_06_encyclopedia_modal.png');
+
     console.log('\n================================================================');
-    console.log('  TODOS OS 5 TESTES E2E NO NAVEGADOR PASSARAM COM SUCESSO!       ');
+    console.log('  TODOS OS 6 TESTES E2E NO NAVEGADOR PASSARAM COM SUCESSO!       ');
     console.log('================================================================');
   } catch (err) {
     console.error('ERRO DURANTE AUDITORIA E2E:', err);

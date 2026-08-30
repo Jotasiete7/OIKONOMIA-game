@@ -205,6 +205,10 @@ const CoreMath = {
    * Tier 0 = Matéria-prima pura (sem receita/inputs).
    * Tier N = 1 + max(Tier dos seus ingredientes diretos).
    */
+  determineProductTier(productId, recipes, cache = {}) {
+    return this.calculateProductionTier(productId, recipes, cache);
+  },
+
   calculateProductionTier(productId, recipes, cache = {}) {
     if (cache[productId] !== undefined) return cache[productId];
     
