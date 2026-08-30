@@ -6,7 +6,8 @@
   "scripts": {
     "audit-graph": "node tools/audit_production_graph.js",
     "generate-wiki": "node tools/generate_production_wiki.js",
-    "validate-balance": "node tools/validate_market_balance.js"
+    "validate-balance": "node tools/validate_market_balance.js",
+    "audit-browser": "node tools/audit_real_browser_ui.js"
   },
   "keywords": [
     "economic-simulation",

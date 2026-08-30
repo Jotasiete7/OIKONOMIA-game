@@ -2,44 +2,82 @@
        OIKONOMIA — VALIDAÇÃO DE EQUILÍBRIO & PAYBACK DE VAREJO   
 ================================================================
 
---- RESULTADO DE PAYBACK POR TIPO DE LOJA (Cesta Cheia em Distrito Médio) ---
+--- CENÁRIO A: CAPEX ATUAL (Apenas Obra Civil + Estoque Inicial) ---
 • [kombini] Kombini de Bairro (4 slots)
-   Capex Total: $8.794 | Lucro Líquido/Mês: $9.324
-   Payback Estimado: 0.9 meses [⚠️ MUITO RÁPIDO]
+   Obra: $8.000 | Estoque: $794 | Capex Total: $8.794
+   Lucro Líquido/Mês: $9.324 ➔ Payback: 0.9 meses [⚠️ MUITO RÁPIDO]
 
 • [supermarket] Supermercado & Alimentos (10 slots)
-   Capex Total: $47.054 | Lucro Líquido/Mês: $14.997
-   Payback Estimado: 3.1 meses [⚠️ MUITO RÁPIDO]
+   Obra: $45.000 | Estoque: $2.054 | Capex Total: $47.054
+   Lucro Líquido/Mês: $14.997 ➔ Payback: 3.1 meses [⚠️ MUITO RÁPIDO]
 
 • [apparel] Boutique de Vestuário & Moda (6 slots)
-   Capex Total: $49.599 | Lucro Líquido/Mês: $9.225
-   Payback Estimado: 5.4 meses [✅ EQUILIBRADO]
+   Obra: $35.000 | Estoque: $14.599 | Capex Total: $49.599
+   Lucro Líquido/Mês: $9.225 ➔ Payback: 5.4 meses [✅ EQUILIBRADO]
 
 • [electronics] MegaStore de Eletrônicos (6 slots)
-   Capex Total: $116.615 | Lucro Líquido/Mês: $42.256
-   Payback Estimado: 2.8 meses [⚠️ MUITO RÁPIDO]
+   Obra: $60.000 | Estoque: $56.615 | Capex Total: $116.615
+   Lucro Líquido/Mês: $42.256 ➔ Payback: 2.8 meses [⚠️ MUITO RÁPIDO]
 
 • [automotive] Concessionária de Automóveis (4 slots)
-   Capex Total: $336.810 | Lucro Líquido/Mês: $141.508
-   Payback Estimado: 2.4 meses [⚠️ MUITO RÁPIDO]
+   Obra: $85.000 | Estoque: $251.810 | Capex Total: $336.810
+   Lucro Líquido/Mês: $141.508 ➔ Payback: 2.4 meses [⚠️ MUITO RÁPIDO]
 
 • [pharmacy] Drogaria & Cosméticos (6 slots)
-   Capex Total: $29.426 | Lucro Líquido/Mês: $3.480
-   Payback Estimado: 8.5 meses [✅ EQUILIBRADO]
+   Obra: $28.000 | Estoque: $1.426 | Capex Total: $29.426
+   Lucro Líquido/Mês: $3.480 ➔ Payback: 8.5 meses [✅ EQUILIBRADO]
 
 • [furniture] Loja de Móveis & Decoração (5 slots)
-   Capex Total: $59.773 | Lucro Líquido/Mês: $16.215
-   Payback Estimado: 3.7 meses [⚠️ MUITO RÁPIDO]
+   Obra: $40.000 | Estoque: $19.773 | Capex Total: $59.773
+   Lucro Líquido/Mês: $16.215 ➔ Payback: 3.7 meses [⚠️ MUITO RÁPIDO]
 
 • [jewelry] Joalheria de Alta Nobreza (3 slots)
-   Capex Total: $94.942 | Lucro Líquido/Mês: $12.569
-   Payback Estimado: 7.6 meses [✅ EQUILIBRADO]
+   Obra: $75.000 | Estoque: $19.942 | Capex Total: $94.942
+   Lucro Líquido/Mês: $12.569 ➔ Payback: 7.6 meses [✅ EQUILIBRADO]
 
 • [hardware] Home Center & Ferramentas (5 slots)
-   Capex Total: $41.380 | Lucro Líquido/Mês: $-2.107
-   Payback Estimado: Infinity meses [⚠️ LENTO / PREJUÍZO]
+   Obra: $38.000 | Estoque: $3.380 | Capex Total: $41.380
+   Lucro Líquido/Mês: $-2.107 ➔ Payback: Infinity meses [⚠️ LENTO / PREJUÍZO]
 
-⚠️ PRODUTOS COM MARGEM UNITÁRIA NEGATIVA (PREJUÍZO POR UNIDADE):
+
+--- CENÁRIO B: CAPEX COM LICENCIAMENTO DE NICHO (Obra + Licença de Nicho + Estoque) ---
+• [kombini] Kombini de Bairro (4 slots)
+   Obra: $8.000 | Licença: $5.000 | Estoque: $794 | Capex: $13.794
+   Lucro Líquido/Mês: $9.324 ➔ Payback: 1.5 meses [⚠️ MUITO RÁPIDO]
+
+• [supermarket] Supermercado & Alimentos (10 slots)
+   Obra: $45.000 | Licença: $50.000 | Estoque: $2.054 | Capex: $97.054
+   Lucro Líquido/Mês: $14.997 ➔ Payback: 6.5 meses [✅ EQUILIBRADO]
+
+• [apparel] Boutique de Vestuário & Moda (6 slots)
+   Obra: $35.000 | Licença: $40.000 | Estoque: $14.599 | Capex: $89.599
+   Lucro Líquido/Mês: $9.225 ➔ Payback: 9.7 meses [✅ EQUILIBRADO]
+
+• [electronics] MegaStore de Eletrônicos (6 slots)
+   Obra: $60.000 | Licença: $180.000 | Estoque: $56.615 | Capex: $296.615
+   Lucro Líquido/Mês: $42.256 ➔ Payback: 7 meses [✅ EQUILIBRADO]
+
+• [automotive] Concessionária de Automóveis (4 slots)
+   Obra: $85.000 | Licença: $250.000 | Estoque: $251.810 | Capex: $586.810
+   Lucro Líquido/Mês: $141.508 ➔ Payback: 4.1 meses [✅ EQUILIBRADO]
+
+• [pharmacy] Drogaria & Cosméticos (6 slots)
+   Obra: $28.000 | Licença: $25.000 | Estoque: $1.426 | Capex: $54.426
+   Lucro Líquido/Mês: $3.480 ➔ Payback: 15.6 meses [✅ EQUILIBRADO]
+
+• [furniture] Loja de Móveis & Decoração (5 slots)
+   Obra: $40.000 | Licença: $50.000 | Estoque: $19.773 | Capex: $109.773
+   Lucro Líquido/Mês: $16.215 ➔ Payback: 6.8 meses [✅ EQUILIBRADO]
+
+• [jewelry] Joalheria de Alta Nobreza (3 slots)
+   Obra: $75.000 | Licença: $150.000 | Estoque: $19.942 | Capex: $244.942
+   Lucro Líquido/Mês: $12.569 ➔ Payback: 19.5 meses [⚠️ LENTO / PREJUÍZO]
+
+• [hardware] Home Center & Ferramentas (5 slots)
+   Obra: $38.000 | Licença: $35.000 | Estoque: $3.380 | Capex: $76.380
+   Lucro Líquido/Mês: $-2.107 ➔ Payback: Infinity meses [⚠️ LENTO / PREJUÍZO]
+
+⚠️ PRODUTOS COM MARGEM UNITÁRIA NEGATIVA (COMMODITIES CRUAS NO VAREJO):
    • Trigo & Cereais (wheat) [Agronegócio]: Preço=$0.8 vs CustoLanded=$0.81 (Margem: $-0.01/un)
    • Milho Agrícola (corn) [Agronegócio]: Preço=$0.7 vs CustoLanded=$0.72 (Margem: $-0.02/un)
    • Algodão Cru (cotton) [Agronegócio]: Preço=$2 vs CustoLanded=$2.15 (Margem: $-0.15/un)
@@ -56,6 +94,6 @@
    • Minerais Químicos (chemical_minerals) [Recursos Naturais]: Preço=$24 vs CustoLanded=$25.12 (Margem: $-1.12/un)
 
 ================================================================
-TOTAL DE LOJAS AVALIADAS: 9
-LOJAS DENTRO DA FAIXA ALVO (4-18 MESES): 5/9
+CENÁRIO A (Sem Licença): 3/9 Lojas Equilibradas (4-18 meses)
+CENÁRIO B (Com Licença): 6/9 Lojas Equilibradas (4-18 meses)
 ================================================================

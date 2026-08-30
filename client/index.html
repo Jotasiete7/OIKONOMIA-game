@@ -1410,14 +1410,15 @@
         if (tile.farm && tile.farm.cropId === prodId) {
           const dist = CoreMath.calculateManhattanDistance(tile, storeTile);
           const freight = CoreMath.calculateUnitFreight(dist, 0.008, 0.01);
-          const landed = CoreMath.calculateLandedCost(tile.farm.dailyOperatingCost, freight);
+          const farmCost = typeof tile.farm.unitCost === 'number' ? tile.farm.unitCost : (tile.farm.dailyOperatingCost || 0.45);
+          const landed = CoreMath.calculateLandedCost(farmCost, freight);
           offers.push({
             type: 'internal_farm',
             supplierId: `farm_${tile.x}_${tile.y}`,
             supplierName: `🌾 ${tile.farm.name}`,
-            wholesalePrice: tile.farm.dailyOperatingCost,
-            quality: tile.farm.quality,
-            quota: tile.farm.dailyYield,
+            wholesalePrice: farmCost,
+            quality: tile.farm.quality || 60,
+            quota: tile.farm.dailyYield || 500,
             origin: `Produção Agrícola (${tile.x}, ${tile.y})`,
             distance: dist,
             freight,
@@ -3689,7 +3690,7 @@
         return;
       }
       cash -= cost;
-      unlockedTechSet.add(productId);
+      unlockedProducts.add(productId);
       const prodName = PRODUCT_CATALOG[productId]?.name || productId;
       addLog(`🧬 Tecnologia "${prodName}" desbloqueada com sucesso por $${cost.toLocaleString('en-US')}!`, 'text-teal-300 font-bold');
       updateUI();
@@ -5507,6 +5508,8 @@
       const tile = worldGrid[x][y];
       if (!tile?.store) return;
       addProductTargetTile = tile;
+      const allowedCats = STORE_CATEGORY_WHITELIST[tile.store.storeTypeId] || ['Alimentos'];
+      activeAddProductCategoryTab = allowedCats[0];
       renderAddProductModalList();
       document.getElementById('add-product-modal').classList.remove('hidden');
     }
@@ -5521,21 +5524,29 @@
       const tile = addProductTargetTile;
       const store = tile.store;
 
-      const categories = [...new Set(Object.values(PRODUCT_CATALOG).map(p => p.category))];
+      const allowedCats = STORE_CATEGORY_WHITELIST[store.storeTypeId];
+      const categories = allowedCats && allowedCats.length > 0 
+        ? allowedCats 
+        : [...new Set(Object.values(PRODUCT_CATALOG).map(p => p.category))];
+
+      if (!categories.includes(activeAddProductCategoryTab)) {
+        activeAddProductCategoryTab = categories[0];
+      }
+
       document.getElementById('add-prod-category-tabs').innerHTML = categories.map(cat => `
         <button onclick="setAddProductCategoryTab('${cat}')"
-          class="px-2.5 py-1 rounded-lg text-[10px] font-mono transition
-            ${activeAddProductCategoryTab === cat ? 'bg-slate-700 text-slate-100 font-bold' : 'text-slate-400 hover:text-slate-200'}">
+          class="px-2.5 py-1 rounded-lg text-[10px] font-mono transition cursor-pointer
+            ${activeAddProductCategoryTab === cat ? 'bg-emerald-700 text-slate-100 font-bold shadow' : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200'}">
           ${cat}
         </button>
       `).join('');
 
       const list = document.getElementById('add-prod-available-list');
       const availableProds = Object.values(PRODUCT_CATALOG)
-        .filter(p => p.category === activeAddProductCategoryTab && !store.shelves[p.id]);
+        .filter(p => p.category === activeAddProductCategoryTab && !p.isIntermediate && !store.shelves[p.id]);
 
       if (availableProds.length === 0) {
-        list.innerHTML = `<p class="text-xs text-slate-500 font-mono text-center py-6">Todos os produtos desta categoria já estão em suas gôndolas.</p>`;
+        list.innerHTML = `<p class="text-xs text-slate-500 font-mono text-center py-6">Todos os produtos desta categoria já estão em suas gôndolas ou não há itens disponíveis.</p>`;
         return;
       }
 
@@ -5544,7 +5555,7 @@
         const bestOffer = offers[0] || null;
         if (!bestOffer) return '';
 
-        const initCost = Math.round(100 * bestOffer.landedCost);
+        const initCost = Math.round(50 * bestOffer.landedCost);
         const canAfford = cash >= initCost;
 
         return `
@@ -5557,9 +5568,9 @@
               <div class="text-[10px] text-slate-400 mt-1">Fornecedor: ${bestOffer.supplierName.split('(')[0].trim()} · Custo: $${bestOffer.landedCost.toFixed(2)}/un</div>
             </div>
             <div class="text-right">
-              <div class="text-[10px] text-slate-400 mb-1">1º Estoque: <strong class="text-rose-400 font-bold">$${initCost.toLocaleString()}</strong></div>
+              <div class="text-[10px] text-slate-400 mb-1">1º Estoque (50 un): <strong class="text-rose-400 font-bold">$${initCost.toLocaleString()}</strong></div>
               <button onclick="confirmAddNewProductToStore('${prod.id}')" ${!canAfford ? 'disabled' : ''}
-                class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white px-3 py-1 rounded-xl text-xs font-bold">
+                class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold cursor-pointer shadow transition">
                 ➕ Adicionar
               </button>
             </div>
