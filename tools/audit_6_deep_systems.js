@@ -113,16 +113,33 @@ async function runDeepAudits() {
 
     console.log(`3. Carregando jogo: ${HTML_FILE_URL}`);
     await cdp.send('Page.navigate', { url: HTML_FILE_URL });
-    await sleep(3000);
+    await sleep(1500);
 
-    // Fecha modais e prepara ambiente limpo
+    // Dispensa a tela de loading de 6.5s, menu principal e tutorial para entrar diretamente no modo PLAYING
     await cdp.eval(`
-      cash = 1000000;
-      const welcomeModal = document.getElementById('welcome-tutorial-modal');
-      if (welcomeModal) welcomeModal.classList.add('hidden');
-      if (typeof closeWelcomeModal === 'function') closeWelcomeModal();
+      (() => {
+        const ls = document.getElementById('loading-screen');
+        if (ls) {
+          ls.classList.add('hidden', 'opacity-0');
+          ls.style.display = 'none';
+        }
+        const mm = document.getElementById('main-menu-screen');
+        if (mm) {
+          mm.classList.add('hidden');
+          mm.style.display = 'none';
+        }
+        const wm = document.getElementById('welcome-tutorial-modal');
+        if (wm) {
+          wm.classList.add('hidden');
+          wm.style.display = 'none';
+        }
+        currentAppScreen = 'PLAYING';
+        cash = 1000000;
+        updateUI();
+        if (typeof renderGameLoop === 'function') renderGameLoop();
+      })()
     `);
-    await sleep(500);
+    await sleep(600);
 
     // ─────────────────────────────────────────────────────────────────────────
     // SISTEMA 1: Ciclo de Vida Temporal & Stress Test Financeiro (365 Ticks a 5x)
@@ -214,15 +231,23 @@ async function runDeepAudits() {
 
         // Executa 365 ticks de simulação
         for (let i = 0; i < 365; i++) {
+          const preMonthRev = monthRevenue;
+          const preMonthCogs = monthCogs;
+          const preDay = day;
+          const preMonth = month;
+          const preYear = year;
+
           simulateDay();
-          if (i % 30 === 0 || i === 364) {
+
+          if ((i + 1) % 30 === 0 || i === 364) {
             if (isNaN(cash) || isNaN(monthRevenue) || isNaN(monthCogs)) anyNaN = true;
             if (!isFinite(cash)) anyInfinity = true;
             history.push({
-              day, month, year,
+              simulatedDays: i + 1,
+              date: preDay + '/' + preMonth + '/' + preYear,
               cash: Math.round(cash),
-              monthRevenue: Math.round(monthRevenue),
-              monthCogs: Math.round(monthCogs),
+              monthRevenueAccumulated: Math.round(preMonthRev),
+              monthCogsAccumulated: Math.round(preMonthCogs),
               farmStock: Math.round(farmTile.farm.stock),
               breadStock: Math.round(factoryTile.factory.lines.rec_bread.finishedStock),
               storeShelfStock: Math.round(storeTile.store.shelves.bread.stock)
@@ -256,6 +281,7 @@ async function runDeepAudits() {
     console.log(`[S1.3] Evolução de Caixa: Início $500.000 ➔ Final $${r1.finalCash.toLocaleString('en-US')}`);
     console.log(`[S1.4] DRE Aberta e Renderizada: ${r1.dreVisible ? '✅ Sim' : '❌ Não'}`);
     await cdp.captureScreenshot('screenshot_audit_01_lifecycle_365d.png');
+    await cdp.eval(`toggleDREModal();`);
 
     // ─────────────────────────────────────────────────────────────────────────
     // SISTEMA 2: Expansão Geográfica & Transição de Cidades
@@ -363,6 +389,7 @@ async function runDeepAudits() {
     console.log(`[S3.3] Progressão de Brand Rating: ${r3.initialBrand} ➔ ${r3.finalBrand.toFixed(1)} (${r3.brandGrew ? '✅ Cresceu com a campanha' : '⚠️ Estático'})`);
     console.log(`[S3.4] Débito de Despesas de Marketing na DRE: ${r3.marketingExpensesDeducted ? `✅ Sim ($${r3.monthMarketingExpenses})` : '❌ Não'}`);
     await cdp.captureScreenshot('screenshot_audit_03_marketing_brand.png');
+    await cdp.eval(`closeMarketingModal();`);
 
     // ─────────────────────────────────────────────────────────────────────────
     // SISTEMA 4: Sistema Financeiro / DRE Consolidada & Caixa
@@ -400,6 +427,7 @@ async function runDeepAudits() {
     console.log(`[S4.1] DRE Conciliada: Receita=$${r4.rawMath.monthRevenue.toLocaleString()} | CPV=$${r4.rawMath.monthCogs.toLocaleString()} | Fixos=$${r4.rawMath.monthFixedExpenses.toLocaleString()} | Mkt=$${r4.rawMath.monthMarketingExpenses.toLocaleString()}`);
     console.log(`[S4.2] Lucro Líquido Calculado: $${r4.rawMath.calculatedNet.toLocaleString('en-US')}`);
     await cdp.captureScreenshot('screenshot_audit_04_dre_reconciliation.png');
+    await cdp.eval(`toggleDREModal();`);
 
     // ─────────────────────────────────────────────────────────────────────────
     // SISTEMA 5: Inteligência Artificial dos Concorrentes

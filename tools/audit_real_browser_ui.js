@@ -116,19 +116,36 @@ async function runBrowserAudit() {
 
     console.log(`3. Navegando para o jogo: ${HTML_FILE_URL}`);
     await cdp.send('Page.navigate', { url: HTML_FILE_URL });
-    await sleep(3000);
+    await sleep(1500);
 
     const title = await cdp.eval('document.title');
     console.log(`   Página carregada com sucesso! Título: "${title}"`);
 
-    // Fecha tutorial inicial
+    // Dispensa a tela de loading de 6.5s, menu principal e tutorial para entrar diretamente no modo PLAYING
     await cdp.eval(`
-      cash = 1000000;
-      const welcomeModal = document.getElementById('welcome-tutorial-modal');
-      if (welcomeModal) welcomeModal.classList.add('hidden');
-      if (typeof closeWelcomeModal === 'function') closeWelcomeModal();
+      (() => {
+        const ls = document.getElementById('loading-screen');
+        if (ls) {
+          ls.classList.add('hidden', 'opacity-0');
+          ls.style.display = 'none';
+        }
+        const mm = document.getElementById('main-menu-screen');
+        if (mm) {
+          mm.classList.add('hidden');
+          mm.style.display = 'none';
+        }
+        const wm = document.getElementById('welcome-tutorial-modal');
+        if (wm) {
+          wm.classList.add('hidden');
+          wm.style.display = 'none';
+        }
+        currentAppScreen = 'PLAYING';
+        cash = 1000000;
+        updateUI();
+        if (typeof renderGameLoop === 'function') renderGameLoop();
+      })()
     `);
-    await sleep(500);
+    await sleep(600);
 
     // ─────────────────────────────────────────────────────────────────────────
     // TESTE REAL 1: Modal de Adicionar Produto na Loja (add-product-modal)
@@ -194,6 +211,7 @@ async function runBrowserAudit() {
     console.log(`[T1.2] Whitelist de Farmácia Filtrada: ${test1.hasPharmacyItems && !test1.hasCar && !test1.hasJeans ? '✅ PASSOU (Apenas itens de Farmácia/Higiene)' : '❌ FALHOU'}`);
     console.log(`[T1.3] Clique Real e Inserção na Gôndola: ${test1.shelfCreated && test1.shelfDomPopulated ? '✅ PASSOU (Produto inserido na gôndola e refletido no painel)' : '❌ FALHOU'}`);
     await cdp.captureScreenshot('screenshot_01_store_add_product.png');
+    await cdp.eval('closeAddProductModal();');
 
     // ─────────────────────────────────────────────────────────────────────────
     // TESTE REAL 2: Modal de Fornecedores de Insumo na Fábrica (supplier-modal)
@@ -259,9 +277,8 @@ async function runBrowserAudit() {
           connected = !!lineConfig;
         }
 
-        // Renderiza o painel da fábrica para conferir o DOM
-        renderFacilityPanel(factoryTile);
-        const factoryPanelDom = document.getElementById('factory-panel');
+        // Fecha o modal após a validação
+        closeSupplierModal();
 
         return {
           modalVisible,
@@ -269,16 +286,19 @@ async function runBrowserAudit() {
           hasFarmOffer,
           hasPortOffer,
           connected,
-          newUnitCost: factoryTile.factory.lines.rec_milk.unitCost,
-          panelVisible: factoryPanelDom && !factoryPanelDom.classList.contains('hidden')
+          newUnitCost: factoryTile.factory.lines.rec_milk.unitCost
         };
       })()
     `);
 
+    // Reabre o modal de fornecedores para a foto
+    await cdp.eval(`openFactoryInputSupplierModal(14, 12, 'rec_milk', 'raw_milk');`);
+    await sleep(200);
     console.log(`[T2.1] Modal de Fornecedores de Insumo Aberto no DOM: ${test2.modalVisible ? '✅ Sim' : '❌ Não'}`);
     console.log(`[T2.2] Fazenda Própria e Portos Lado a Lado: ${test2.hasFarmOffer && test2.hasPortOffer ? '✅ PASSOU (Exibidos juntos no modal real)' : '❌ FALHOU'}`);
     console.log(`[T2.3] Conexão Real de Fornecedor: ${test2.connected ? `✅ PASSOU (Custo unitário recalculado para $${test2.newUnitCost})` : '❌ FALHOU'}`);
     await cdp.captureScreenshot('screenshot_02_factory_supplier_modal.png');
+    await cdp.eval(`closeSupplierModal();`);
 
     // ─────────────────────────────────────────────────────────────────────────
     // TESTE REAL 3: Wizard de P&D ↔ Fábrica (Desbloqueio In-Place & Ativação)
@@ -325,11 +345,15 @@ async function runBrowserAudit() {
       })()
     `);
 
+    // Reabre modal de receitas para a foto
+    await cdp.eval(`openFactoryRecipeModal(14, 12);`);
+    await sleep(200);
     console.log(`[T3.1] Modal de Receitas da Fábrica Aberto: ${test3.modalVisible ? '✅ Sim' : '❌ Não'}`);
     console.log(`[T3.2] Botão de Desbloqueio Exibido Corretamente: ${test3.hasUnlockBtnBefore ? '✅ Sim' : '❌ Não'}`);
     console.log(`[T3.3] Desbloqueio In-Place Atualizou o DOM: ${test3.isUnlockedInSet && test3.hasActivateBtnAfter ? '✅ PASSOU (Botão virou "➕ Ativar Linha" no DOM)' : '❌ FALHOU'}`);
     console.log(`[T3.4] Ativação Real da Linha de Produção: ${test3.lineCreated ? '✅ PASSOU (Linha Alfaiataria Executiva ativa na fábrica)' : '❌ FALHOU'}`);
     await cdp.captureScreenshot('screenshot_03_rd_project_unlock.png');
+    await cdp.eval(`closeFactoryRecipeModal();`);
 
     // ─────────────────────────────────────────────────────────────────────────
     // TESTE REAL 4: Árvore Tecnológica (tech-tree-modal)
@@ -361,6 +385,7 @@ async function runBrowserAudit() {
     console.log(`[T4.3] Cadeia do Pão Renderizada: ${test4.hasBreadChain ? '✅ PASSOU' : '❌ FALHOU'}`);
     console.log(`[T4.4] Cadeia do Terno (Lã em 2 Estágios) Renderizada: ${test4.hasSuitChain ? '✅ PASSOU' : '❌ FALHOU'}`);
     await cdp.captureScreenshot('screenshot_04_tech_tree_modal.png');
+    await cdp.eval(`closeTechTreeModal();`);
 
     // ─────────────────────────────────────────────────────────────────────────
     // TESTE REAL 5: Sistema de Licenciamento de Nicho Comercial
@@ -438,11 +463,22 @@ async function runBrowserAudit() {
       })()
     `);
 
+    // Abre o wizard de loja em um novo lote para a foto do modal de licenças
+    await cdp.eval(`
+      (() => {
+        const emptyTile3 = worldGrid[19][16];
+        emptyTile3.district = CITY_DISTRICTS.downtown;
+        openStoreWizard(emptyTile3);
+      })()
+    `);
+    await sleep(200);
+
     console.log(`[T5.1] Modal de Construção com Licenças Ativo: ${test5.modalVisible ? '✅ Sim' : '❌ Não'}`);
     console.log(`[T5.2] Kombini Grátis (Homologada) & Eletrônicos Requer Licença: ${test5.kombiniHomologada && test5.electronicsRequerLicenca ? '✅ PASSOU' : '❌ FALHOU'}`);
     console.log(`[T5.3] 1ª Loja: Licença ($180k) + Obra ($60k) Cobrados e Homologados: ${test5.storeCreated && test5.licenseAcquired ? `✅ PASSOU (Cobrado: $${test5.diff1.toLocaleString()})` : '❌ FALHOU'}`);
     console.log(`[T5.4] 2ª Filial: Isenção da Licença (Apenas Obra $60k): ${test5.electronicsNowHomologada && test5.onlyBuildingChargedOnBranch2 ? `✅ PASSOU (Cobrado apenas: $${test5.diff2.toLocaleString()})` : '❌ FALHOU'}`);
     await cdp.captureScreenshot('screenshot_05_store_niche_licensing.png');
+    await cdp.eval('closeModal();');
 
     // ─────────────────────────────────────────────────────────────────────────
     // TESTE 6: Enciclopédia Interativa (Busca, Ficha Técnica, Links e Calculadora)
