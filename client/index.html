@@ -4196,17 +4196,14 @@
         const prod = PRODUCT_CATALOG[proj.productId];
         if (!prod) continue;
 
-        const minCost = CoreMath.calculateRDMonthlyCost(proj.currentQR, prod.rdBaseCost || 3000);
-        proj.baseMonthlyRequired = minCost;
-
         // Cobra a verba mensal do caixa
         const spent = Math.min(proj.monthlyBudget, cash);
         cash -= spent;
         proj.totalSpent += spent;
         proj.monthsInvested++;
 
-        // Calcula ganho de QR proporcional à verba efetivamente paga
-        const gain = CoreMath.calculateRDQualityGain(proj.currentQR, proj.targetQR, spent, minCost);
+        // Calcula ganho de QR assintótico fiel ao Capitalism Lab
+        const gain = CoreMath.applyQRAsymptoticGrowth(proj.currentQR, spent);
         proj.currentQR = Math.min(proj.targetQR, proj.currentQR + gain);
 
         // Propaga o novo QR para todas as linhas de fábrica que produzem este produto
@@ -4219,9 +4216,9 @@
           proj.status = 'completed';
           proj.completedAt = { day, month, year };
           anyCompleted = true;
-          addGameLog(`🎉 P&D CONCLUÍDO! "${proj.productName}" atingiu QR ${proj.targetQR.toFixed(1)}! Custo total: $${proj.totalSpent.toLocaleString('en-US')}`, 'text-emerald-400');
+          addLog(`🎉 P&D CONCLUÍDO! "${proj.productName}" atingiu QR ${proj.targetQR.toFixed(1)}! Custo total: $${proj.totalSpent.toLocaleString('en-US')}`, 'text-emerald-400 font-bold');
         } else if (gain > 0) {
-          logDebug(`P&D "${proj.productName}": +${gain.toFixed(2)} QR/mês → QR atual: ${proj.currentQR.toFixed(1)} / ${proj.targetQR}`, 'RD');
+          addLog(`🔬 P&D "${proj.productName}": +${gain.toFixed(2)} QR/mês → QR atual: ${proj.currentQR.toFixed(1)} / ${proj.targetQR}`, 'text-sky-300');
         }
       }
       updateRDChip();
@@ -5075,12 +5072,14 @@
         }
       }
 
-      // Atualiza preços dos concorrentes apenas para tiles com concorrente (Sparse Index)
+      // Atualiza preços e qualidade (P&D) dos concorrentes apenas para tiles com concorrente (Sparse Index)
       for (const tile of activeFacilitySet.values()) {
         if (!tile.competitor?.shelves) continue;
         for (const [pId, cs] of Object.entries(tile.competitor.shelves)) {
           const prod = PRODUCT_CATALOG[pId];
           if (!prod) continue;
+
+          // Ajuste de Preço Competitivo
           if ((tile.competitor.lastShare || 0.5) < 0.38) {
             const newPrice = Number(Math.max(prod.baseCost * 1.08, cs.price * (0.94 + Math.random() * 0.03)).toFixed(2));
             const pctDrop  = Math.round((1 - newPrice / cs.price) * 100);
@@ -5088,6 +5087,14 @@
             if (pctDrop > 1) addLog(`🤖 ${tile.competitor.name} reduziu ${prod.name} para $${newPrice} (-${pctDrop}%)!`, 'text-purple-400');
           } else {
             cs.price = Number(Math.min(prod.standardPrice * 1.25, cs.price * (1.005 + Math.random() * 0.01)).toFixed(2));
+          }
+
+          // Evolução Assintótica de P&D da IA (Competidor investe entre $2.500 e $6.500/mês)
+          const compBudget = 2500 + Math.random() * 4000;
+          const currentCompQR = cs.quality || 55;
+          const aiGain = CoreMath.applyQRAsymptoticGrowth(currentCompQR, compBudget);
+          if (aiGain > 0 && currentCompQR < 92) {
+            cs.quality = Math.min(92, Number((currentCompQR + aiGain).toFixed(1)));
           }
         }
       }
