@@ -1487,7 +1487,8 @@
         porto_real: true,
         montargis: false,
         varzea: false
-      }
+      },
+      acquiredLicenses: new Set(['kombini'])
     };
 
     // Aliases globais de interoperabilidade direta
@@ -1508,6 +1509,19 @@
     const rdLabs = GameState.rdLabs;
     const unlockedProducts = GameState.unlockedProducts;
     const unlockedCities = GameState.unlockedCities;
+    const acquiredLicenses = GameState.acquiredLicenses;
+
+    function hasNicheLicense(typeId) {
+      if (typeId === 'kombini') return true;
+      return acquiredLicenses.has(typeId);
+    }
+
+    function getNicheLicenseCost(typeId) {
+      if (hasNicheLicense(typeId)) return 0;
+      return (typeof STORE_NICHE_LICENSES !== 'undefined' && STORE_NICHE_LICENSES[typeId])
+        ? STORE_NICHE_LICENSES[typeId].cost
+        : 0;
+    }
 
     // Render loop global dirty flag & function (disponíveis imediatamente no boot)
     let _needsRender = true;
@@ -5078,21 +5092,39 @@
       container.innerHTML = STORE_TYPES.map(st => {
         const actualRent = (d.landRentDaily * st.rentMultiplier).toFixed(0);
         const isSelected = pendingStoreType?.id === st.id;
+        const lic = (typeof STORE_NICHE_LICENSES !== 'undefined' && STORE_NICHE_LICENSES[st.id]) ? STORE_NICHE_LICENSES[st.id] : null;
+        const hasLicense = hasNicheLicense(st.id);
+        const licCost = hasLicense ? 0 : (lic?.cost || 0);
+
         return `
           <div onclick="selectStoreType('${st.id}')"
-            class="store-type-card cursor-pointer rounded-xl border p-3 flex flex-col gap-1.5
+            class="store-type-card cursor-pointer rounded-xl border p-3 flex flex-col gap-1.5 transition
               ${isSelected ? 'border-emerald-500 bg-emerald-950/40 ring-1 ring-emerald-500' : 'border-slate-700 bg-slate-800/60 hover:border-slate-600'}">
             <div class="flex items-center gap-2.5">
               <div class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-700/80 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
                 <img src="assets/lojas/${st.id}.png" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
                 <span class="text-lg hidden">${st.emoji}</span>
               </div>
-              <div class="min-w-0">
-                <div class="text-xs font-bold text-slate-100 truncate">${st.name}</div>
-                <div class="text-[10px] font-bold text-emerald-400 font-mono">$${st.cost.toLocaleString()}</div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between">
+                  <div class="text-xs font-bold text-slate-100 truncate">${st.name}</div>
+                  ${hasLicense ? `
+                    <span class="text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-700/80 px-1.5 py-0.2 rounded-full font-mono font-bold">✓ Homologado</span>
+                  ` : `
+                    <span class="text-[9px] bg-amber-950 text-amber-300 border border-amber-700/80 px-1.5 py-0.2 rounded-full font-mono font-bold">📜 Requer Licença</span>
+                  `}
+                </div>
+                <div class="text-[10px] font-bold text-emerald-400 font-mono mt-0.5">
+                  Obra: $${st.cost.toLocaleString('en-US')} ${!hasLicense && licCost > 0 ? `<span class="text-amber-400 font-bold">+ Licença: $${licCost.toLocaleString('en-US')}</span>` : ''}
+                </div>
               </div>
             </div>
             <div class="text-[10px] font-mono text-slate-400">📦 ${st.maxShelves} gôndolas · Aluguel: <strong class="text-rose-400">$${actualRent}/dia</strong></div>
+            ${!hasLicense && lic && lic.cost > 0 ? `
+              <div class="text-[9px] text-amber-300/90 bg-amber-950/40 border border-amber-800/60 rounded p-1.5 font-mono leading-tight">
+                ${lic.icon} <strong>${lic.name}</strong>: ${lic.desc} (Taxa única corporativa: <strong class="text-amber-300">$${lic.cost.toLocaleString('en-US')}</strong>)
+              </div>
+            ` : ''}
             <div class="text-[9px] text-slate-500 border-t border-slate-700 pt-1 leading-tight">${st.desc}</div>
           </div>
         `;
@@ -5217,11 +5249,12 @@
 
     function updateCostSummary() {
       const buildCost = pendingStoreType.cost;
+      const licenseCost = getNicheLicenseCost(pendingStoreType.id);
       let stockCost = 0;
       for (const [prodId, offer] of selectedProductsMap.entries()) {
         stockCost += Math.round(100 * offer.landedCost);
       }
-      const totalCost  = buildCost + stockCost;
+      const totalCost  = buildCost + licenseCost + stockCost;
       const remaining  = cash - totalCost;
       const usedSlots  = selectedProductsMap.size;
       const maxSlots   = pendingStoreType.maxShelves;
@@ -5229,32 +5262,46 @@
 
       document.getElementById('cost-summary-bar').innerHTML = `
         <div class="flex flex-wrap gap-4 text-[11px] font-mono w-full">
-          <span>🏗 Obra: <strong class="text-rose-400">-$${buildCost.toLocaleString()}</strong></span>
-          <span>📦 Estoque: <strong class="text-rose-400">-$${stockCost.toLocaleString()}</strong></span>
-          <span class="font-bold">Total: <strong class="text-rose-300">-$${totalCost.toLocaleString()}</strong></span>
+          <span>🏗 Obra: <strong class="text-rose-400">-$${buildCost.toLocaleString('en-US')}</strong></span>
+          ${licenseCost > 0 ? `<span>📜 Licença de Nicho: <strong class="text-amber-400">-$${licenseCost.toLocaleString('en-US')}</strong></span>` : ''}
+          <span>📦 Estoque: <strong class="text-rose-400">-$${stockCost.toLocaleString('en-US')}</strong></span>
+          <span class="font-bold">Total: <strong class="text-rose-300">-$${totalCost.toLocaleString('en-US')}</strong></span>
           <span class="ml-auto">Gôndolas: <strong class="${usedSlots >= maxSlots ? 'text-amber-400' : 'text-slate-200'}">${usedSlots}/${maxSlots}</strong></span>
-          <span>Saldo após: <strong class="${remaining < 0 ? 'text-red-400' : 'text-emerald-400'}">$${remaining.toLocaleString()}</strong></span>
+          <span>Saldo após: <strong class="${remaining < 0 ? 'text-red-400' : 'text-emerald-400'}">$${remaining.toLocaleString('en-US')}</strong></span>
         </div>
       `;
 
       const btnConfirm = document.getElementById('btn-confirm-store');
       btnConfirm.disabled = !canConfirm;
       btnConfirm.textContent = canConfirm
-        ? `✅ Confirmar e Abrir ${pendingStoreType.name} (-$${totalCost.toLocaleString()})`
+        ? (licenseCost > 0
+            ? `📜 Homologar Licença & Abrir ${pendingStoreType.name} (-$${totalCost.toLocaleString('en-US')})`
+            : `✅ Confirmar e Abrir ${pendingStoreType.name} (-$${totalCost.toLocaleString('en-US')})`)
         : (remaining < 0 ? '❌ Caixa insuficiente' : 'Selecione ao menos 1 produto');
     }
 
     function confirmOpenStore() {
       if (selectedProductsMap.size === 0 || !pendingStoreType || !pendingTile) return;
       const buildCost = pendingStoreType.cost;
+      const licenseCost = getNicheLicenseCost(pendingStoreType.id);
       let stockCost = 0;
       for (const [prodId, offer] of selectedProductsMap.entries()) {
         stockCost += Math.round(100 * offer.landedCost);
       }
-      const totalCost = buildCost + stockCost;
-      if (cash < totalCost) return;
+      const totalCost = buildCost + licenseCost + stockCost;
+      if (cash < totalCost) {
+        alert(`Fundos insuficientes! São necessários $${totalCost.toLocaleString('en-US')} para esta inauguração.`);
+        return;
+      }
 
       cash -= totalCost;
+
+      // Se a corporação ainda não possuía a licença do nicho, registra e emite log
+      if (licenseCost > 0) {
+        acquiredLicenses.add(pendingStoreType.id);
+        const lic = (typeof STORE_NICHE_LICENSES !== 'undefined' && STORE_NICHE_LICENSES[pendingStoreType.id]) ? STORE_NICHE_LICENSES[pendingStoreType.id] : null;
+        addLog(`📜 [LICENCIAMENTO] Corporação homologada com a "${lic ? lic.name : pendingStoreType.name}" por $${licenseCost.toLocaleString('en-US')}! Próximas filiais pagarão apenas a obra civil.`, 'text-amber-300 font-bold');
+      }
 
       const shelves = {};
       for (const [prodId, offer] of selectedProductsMap.entries()) {
@@ -6499,6 +6546,7 @@
         activeMarketingContracts: Array.from(activeMarketingContracts),
         rdLabs: { ...rdLabs },
         unlockedProducts: Array.from(unlockedProducts),
+        acquiredLicenses: Array.from(acquiredLicenses),
         tutorialState: { ...tutorialState },
         builtTiles: extractBuiltTiles(),
         playtimeSeconds
@@ -6598,6 +6646,17 @@
             if (t.lines) Object.values(t.lines).forEach(l => { if (l.outputProductId) unlockedProducts.add(l.outputProductId); });
           });
         }
+      }
+
+      acquiredLicenses.clear();
+      acquiredLicenses.add('kombini');
+      if (saveData.acquiredLicenses && Array.isArray(saveData.acquiredLicenses)) {
+        saveData.acquiredLicenses.forEach(l => acquiredLicenses.add(l));
+      } else if (saveData.builtTiles) {
+        // Concessão retroativa: lojas já existentes em saves antigos recebem a licença automaticamente
+        saveData.builtTiles.forEach(t => {
+          if (t.store && t.store.storeTypeId) acquiredLicenses.add(t.store.storeTypeId);
+        });
       }
 
       if (saveData.tutorialState && typeof saveData.tutorialState === 'object') {

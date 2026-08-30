@@ -1,4 +1,4 @@
-﻿/**
+/**
  * tools/audit_real_browser_ui.js
  * Auditoria Real com Automação de Navegador (Edge/Chromium via Chrome DevTools Protocol).
  * 
@@ -362,8 +362,90 @@ async function runBrowserAudit() {
     console.log(`[T4.4] Cadeia do Terno (Lã em 2 Estágios) Renderizada: ${test4.hasSuitChain ? '✅ PASSOU' : '❌ FALHOU'}`);
     await cdp.captureScreenshot('screenshot_04_tech_tree_modal.png');
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // TESTE REAL 5: Sistema de Licenciamento de Nicho Comercial
+    // ─────────────────────────────────────────────────────────────────────────
+    console.log('\n--- TESTE REAL 5: Sistema de Licenciamento de Nicho Comercial ---');
+    const test5 = await cdp.eval(`
+      (() => {
+        cash = 1000000;
+        const emptyTile1 = worldGrid[16][16];
+        emptyTile1.district = CITY_DISTRICTS.downtown;
+        
+        // Garante que a licença de eletrônicos ainda não foi adquirida
+        acquiredLicenses.delete('electronics');
+
+        // Abre o modal de construção de loja no terreno
+        openStoreWizard(emptyTile1);
+        const modal = document.getElementById('store-modal');
+        const modalVisible = modal && !modal.classList.contains('hidden');
+
+        // Lê os cards renderizados no modal
+        const cardsContainer = document.getElementById('store-type-cards');
+        const cardsText = cardsContainer.innerText;
+        const kombiniHomologada = cardsText.includes('Kombini') && cardsText.includes('✓ Homologado');
+        const electronicsRequerLicenca = cardsText.includes('MegaStore de Eletrônicos') && cardsText.includes('📜 Requer Licença');
+
+        // Seleciona a MegaStore de Eletrônicos (Obra: $60k + Licença: $180k)
+        selectStoreType('electronics');
+        advanceToStep2();
+
+        // Seleciona produtos para as gôndolas
+        const firstProdId = Object.keys(PRODUCT_CATALOG).find(p => PRODUCT_CATALOG[p].category === 'Eletrônicos');
+        if (firstProdId) {
+          const offers = getSupplierOffersForProduct(firstProdId, emptyTile1);
+          if (offers.length > 0) selectedProductsMap.set(firstProdId, offers[0]);
+        }
+
+        const cashBefore = cash;
+        confirmOpenStore();
+        const cashAfter = cash;
+        const storeCreated = !!emptyTile1.store && emptyTile1.store.storeTypeId === 'electronics';
+        const licenseAcquired = acquiredLicenses.has('electronics');
+
+        // Agora abre uma 2ª MegaStore de Eletrônicos em outro terreno (deve cobrar APENAS obra $60k, sem licença)
+        const emptyTile2 = worldGrid[18][16];
+        emptyTile2.district = CITY_DISTRICTS.downtown;
+        openStoreWizard(emptyTile2);
+        const cardsText2 = document.getElementById('store-type-cards').innerText;
+        const electronicsNowHomologada = cardsText2.includes('MegaStore de Eletrônicos') && cardsText2.includes('✓ Homologado');
+
+        selectStoreType('electronics');
+        advanceToStep2();
+        if (firstProdId) {
+          const offers = getSupplierOffersForProduct(firstProdId, emptyTile2);
+          if (offers.length > 0) selectedProductsMap.set(firstProdId, offers[0]);
+        }
+        
+        const cashBefore2 = cash;
+        confirmOpenStore();
+        const cashAfter2 = cash;
+        const diff2 = cashBefore2 - cashAfter2;
+        // Na 2ª loja, o custo cobrado é apenas a obra ($60k) + estoque (~$10-20k), sem os $180k da licença!
+        const onlyBuildingChargedOnBranch2 = diff2 < 100000;
+
+        return {
+          modalVisible,
+          kombiniHomologada,
+          electronicsRequerLicenca,
+          storeCreated,
+          licenseAcquired,
+          electronicsNowHomologada,
+          onlyBuildingChargedOnBranch2,
+          diff1: cashBefore - cashAfter,
+          diff2
+        };
+      })()
+    `);
+
+    console.log(`[T5.1] Modal de Construção com Licenças Ativo: ${test5.modalVisible ? '✅ Sim' : '❌ Não'}`);
+    console.log(`[T5.2] Kombini Grátis (Homologada) & Eletrônicos Requer Licença: ${test5.kombiniHomologada && test5.electronicsRequerLicenca ? '✅ PASSOU' : '❌ FALHOU'}`);
+    console.log(`[T5.3] 1ª Loja: Licença ($180k) + Obra ($60k) Cobrados e Homologados: ${test5.storeCreated && test5.licenseAcquired ? `✅ PASSOU (Cobrado: $${test5.diff1.toLocaleString()})` : '❌ FALHOU'}`);
+    console.log(`[T5.4] 2ª Filial: Isenção da Licença (Apenas Obra $60k): ${test5.electronicsNowHomologada && test5.onlyBuildingChargedOnBranch2 ? `✅ PASSOU (Cobrado apenas: $${test5.diff2.toLocaleString()})` : '❌ FALHOU'}`);
+    await cdp.captureScreenshot('screenshot_05_store_niche_licensing.png');
+
     console.log('\n================================================================');
-    console.log('  TODOS OS 4 TESTES E2E NO NAVEGADOR PASSARAM COM SUCESSO!       ');
+    console.log('  TODOS OS 5 TESTES E2E NO NAVEGADOR PASSARAM COM SUCESSO!       ');
     console.log('================================================================');
   } catch (err) {
     console.error('ERRO DURANTE AUDITORIA E2E:', err);

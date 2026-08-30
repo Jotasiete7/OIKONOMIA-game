@@ -22,6 +22,81 @@
       { id:"hardware", name:"Home Center & Ferramentas", emoji:"🔨", category:"Construção", cost:38000, maxShelves:5, rentMultiplier:1.4, desc:"Loja de materiais de reforma, tintas acrílicas e ferramentas industriais (5 gôndolas)." }
     ];
 
+    const STORE_NICHE_LICENSES = {
+      kombini: {
+        id: 'lic_kombini',
+        storeTypeId: 'kombini',
+        name: 'Alvará de Conveniência de Bairro',
+        cost: 0,
+        icon: '🛒',
+        desc: 'Autorização municipal simplificada para comércio de conveniência (Isento no Early Game).'
+      },
+      supermarket: {
+        id: 'lic_supermarket',
+        storeTypeId: 'supermarket',
+        name: 'Concessão de Hipermercados & Logística de Massa',
+        cost: 50000,
+        icon: '🏬',
+        desc: 'Alvará sanitário e autorização de logística de grande porte para redes de alimentos e bebidas.'
+      },
+      apparel: {
+        id: 'lic_apparel',
+        storeTypeId: 'apparel',
+        name: 'Licença de Moda & Representação de Grifes',
+        cost: 40000,
+        icon: '👗',
+        desc: 'Homologação comercial para boutiques de vestuário, calçados e alta costura.'
+      },
+      electronics: {
+        id: 'lic_electronics',
+        storeTypeId: 'electronics',
+        name: 'Concessão de Distribuição Tech & Homologação Digital',
+        cost: 180000,
+        icon: '💻',
+        desc: 'Certificação regulatória para venda de semicondutores, smartphones, TVs e computadores.'
+      },
+      automotive: {
+        id: 'lic_automotive',
+        storeTypeId: 'automotive',
+        name: 'Concessão Automotiva & Showroom Oficial',
+        cost: 250000,
+        icon: '🚗',
+        desc: 'Franquia homologada por montadoras para showrooms de automóveis, motos e veículos pesados.'
+      },
+      pharmacy: {
+        id: 'lic_pharmacy',
+        storeTypeId: 'pharmacy',
+        name: 'Alvará Sanitário de Medicamentos & CRF',
+        cost: 25000,
+        icon: '💊',
+        desc: 'Registro perante vigilância sanitária e conselho de farmácia para medicamentos e cosméticos.'
+      },
+      furniture: {
+        id: 'lic_furniture',
+        storeTypeId: 'furniture',
+        name: 'Licença de Grandes Showrooms & Decoração',
+        cost: 50000,
+        icon: '🛋️',
+        desc: 'Alvará de ampla metragem para exposição e venda de móveis, estofados e marcenaria.'
+      },
+      jewelry: {
+        id: 'lic_jewelry',
+        storeTypeId: 'jewelry',
+        name: 'Licença de Custódia & Comércio de Metais Nobres',
+        cost: 150000,
+        icon: '💍',
+        desc: 'Autorização do banco central e segurança armada para comercialização de ouro e joias nobres.'
+      },
+      hardware: {
+        id: 'lic_hardware',
+        storeTypeId: 'hardware',
+        name: 'Alvará de Materiais de Construção & Químicos',
+        cost: 35000,
+        icon: '🔨',
+        desc: 'Licenciamento para manuseio e varejo de tintas, ferramentas e materiais pesados.'
+      }
+    };
+
     const STORE_CATEGORY_WHITELIST = {
       kombini: ['Alimentos', 'Bebidas', 'Conveniência', 'Higiene'],
       supermarket: ['Alimentos', 'Bebidas', 'Higiene'],
@@ -2305,6 +2380,7 @@
       module.exports = {
         CITY_DISTRICTS,
         STORE_TYPES,
+        STORE_NICHE_LICENSES,
         STORE_CATEGORY_WHITELIST,
         NATURAL_MINES,
         FARM_TYPES,
@@ -2321,6 +2397,7 @@
     }
     if (typeof window !== 'undefined') {
       window.RECIPE_GRAPH = RECIPE_GRAPH;
+      window.STORE_NICHE_LICENSES = STORE_NICHE_LICENSES;
       window.STORE_CATEGORY_WHITELIST = STORE_CATEGORY_WHITELIST;
       window.PORT_SUPPLIES_FOOD_CONSUMER = PORT_SUPPLIES_FOOD_CONSUMER;
       window.PORT_SUPPLIES_COMMODITIES = PORT_SUPPLIES_COMMODITIES;
