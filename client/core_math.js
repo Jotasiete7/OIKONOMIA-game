@@ -344,6 +344,9 @@ const CoreMath = {
     const maxGain = this.calculateMaxMonthlyQRGain(currentQR);
     const affordableGain = monthlyBudget / costPerPoint;
     const actualGain = Math.min(maxGain, affordableGain);
+    return Number(actualGain.toFixed(5));
+  },
+
   /**
    * Camada puramente visual e informativa de Tech Levels (Níveis 1 a 5).
    * Não interfere nas fórmulas matemáticas subjacentes.
