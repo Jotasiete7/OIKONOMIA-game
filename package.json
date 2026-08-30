@@ -7,7 +7,8 @@
     "audit-graph": "node tools/audit_production_graph.js",
     "generate-wiki": "node tools/generate_production_wiki.js",
     "validate-balance": "node tools/validate_market_balance.js",
-    "audit-browser": "node tools/audit_real_browser_ui.js"
+    "audit-browser": "node tools/audit_real_browser_ui.js",
+    "audit-deep": "node tools/audit_6_deep_systems.js"
   },
   "keywords": [
     "economic-simulation",

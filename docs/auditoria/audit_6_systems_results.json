@@ -1,0 +1,281 @@
+{
+  "system1": {
+    "history": [
+      {
+        "day": 2,
+        "month": 1,
+        "year": 2026,
+        "cash": 500593,
+        "monthRevenue": 900,
+        "monthCogs": 375,
+        "farmStock": 2500,
+        "breadStock": 1400,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 2,
+        "year": 2026,
+        "cash": 504868,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 3,
+        "year": 2026,
+        "cash": 509143,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 4,
+        "year": 2026,
+        "cash": 513418,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 5,
+        "year": 2026,
+        "cash": 517693,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 6,
+        "year": 2026,
+        "cash": 521968,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 7,
+        "year": 2026,
+        "cash": 526243,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 8,
+        "year": 2026,
+        "cash": 530518,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 9,
+        "year": 2026,
+        "cash": 534793,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 10,
+        "year": 2026,
+        "cash": 539068,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 11,
+        "year": 2026,
+        "cash": 543343,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 12,
+        "year": 2026,
+        "cash": 547618,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 2,
+        "month": 1,
+        "year": 2027,
+        "cash": 551893,
+        "monthRevenue": 450,
+        "monthCogs": 188,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      },
+      {
+        "day": 6,
+        "month": 1,
+        "year": 2027,
+        "cash": 552463,
+        "monthRevenue": 2250,
+        "monthCogs": 938,
+        "farmStock": 5000,
+        "breadStock": 3000,
+        "storeShelfStock": 250
+      }
+    ],
+    "anyNaN": false,
+    "anyInfinity": false,
+    "finalDay": 6,
+    "finalMonth": 1,
+    "finalYear": 2027,
+    "finalCash": 552462.5,
+    "dreVisible": true,
+    "dreTextSample": "⋮⋮\n📊 Demonstrativo de Resultados (DRE Consolidada)\n✕\n(+) Receita Bruta (Varejo):\n+$2.250,00\n(-) Custo das Mercadorias (CPV + Frete):\n-$937,50\n(-) Alu"
+  },
+  "system2": {
+    "testMontargisLockBefore": true,
+    "testVarzeaLockBefore": true,
+    "transitions": [
+      {
+        "city": "nova_atenas",
+        "camX": 0,
+        "camY": 0
+      },
+      {
+        "city": "porto_real",
+        "camX": 0,
+        "camY": 0
+      },
+      {
+        "city": "montargis",
+        "camX": 0,
+        "camY": 0
+      },
+      {
+        "city": "varzea",
+        "camX": 0,
+        "camY": 0
+      }
+    ],
+    "distToPortoReal": 88,
+    "distToMontargis": 72,
+    "freightPorto": 1.37,
+    "freightMontargis": 1.13
+  },
+  "system3": {
+    "modalVisible": true,
+    "outletName": "Rede Capital TV",
+    "contractKey": "media_tv::bread",
+    "initialBrand": 10,
+    "finalBrand": 26,
+    "brandGrew": true,
+    "brandHistory": [
+      {
+        "day": 1,
+        "brand": 10,
+        "monthMarketingExpenses": 83.33333333333333
+      },
+      {
+        "day": 11,
+        "brand": 10,
+        "monthMarketingExpenses": 916.6666666666667
+      },
+      {
+        "day": 21,
+        "brand": 10,
+        "monthMarketingExpenses": 1749.9999999999995
+      },
+      {
+        "day": 30,
+        "brand": 26,
+        "monthMarketingExpenses": 416.66666666666663
+      }
+    ],
+    "marketingExpensesDeducted": true,
+    "monthMarketingExpenses": 416.66666666666663
+  },
+  "system4": {
+    "grossSalesText": "+$2.250,00",
+    "cogsText": "-$937,50",
+    "rentText": "-$600,00",
+    "mktText": "-$416,67",
+    "netProfitText": "+$295,83",
+    "rawMath": {
+      "monthRevenue": 2250,
+      "monthCogs": 937.5,
+      "monthFixedExpenses": 600,
+      "monthMarketingExpenses": 416.66666666666663,
+      "calculatedNet": 295.83333333333337
+    }
+  },
+  "system5": {
+    "priceBefore": 2.2,
+    "priceAfter": 2.2,
+    "priceDropped": false,
+    "priceHistory": [
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2,
+      2.2
+    ]
+  },
+  "system6": {
+    "saveSuccess": true,
+    "loadSuccess": true,
+    "restoredCash": 777888,
+    "restoredLicenses": [
+      "kombini",
+      "electronics",
+      "automotive"
+    ],
+    "hasElectronicsLicense": true,
+    "hasAutomotiveLicense": true,
+    "hasSmartphone": true,
+    "restoredFacilityCount": 6
+  }
+}
