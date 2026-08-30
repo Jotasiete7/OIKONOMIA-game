@@ -378,6 +378,32 @@
           <span id="rd-product-category-badge" class="text-[10px] text-purple-400 mt-1 block hidden"></span>
         </div>
 
+        <!-- Card de Destaque Visual de Qualidade (QR Atual vs Alvo) -->
+        <div id="rd-quality-hero-card" class="bg-gradient-to-r from-purple-950/80 via-slate-900 to-indigo-950/80 p-3.5 rounded-xl border border-purple-600/50 shadow-inner flex items-center justify-between">
+          <div class="text-center flex-1">
+            <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">Qualidade Inicial</span>
+            <div class="flex items-baseline justify-center gap-1 mt-0.5">
+              <span id="rd-hero-current-qr" class="text-2xl font-extrabold text-amber-400 font-mono">50</span>
+              <span class="text-[10px] text-slate-500 font-mono">/ 100</span>
+            </div>
+            <span id="rd-hero-current-status" class="text-[9px] text-amber-300 font-medium">Padrão Inicial</span>
+          </div>
+
+          <div class="px-2 flex flex-col items-center justify-center shrink-0">
+            <div class="w-7 h-7 rounded-full bg-purple-900/80 border border-purple-500/60 flex items-center justify-center text-purple-300 font-bold text-xs shadow">➔</div>
+            <span id="rd-hero-qr-gain-badge" class="text-[9px] text-emerald-400 font-bold font-mono mt-0.5">+30 pts</span>
+          </div>
+
+          <div class="text-center flex-1">
+            <span class="text-[9px] text-purple-300 font-bold uppercase tracking-wider block">Qualidade Alvo</span>
+            <div class="flex items-baseline justify-center gap-1 mt-0.5">
+              <span id="rd-hero-target-qr" class="text-2xl font-extrabold text-purple-300 font-mono">80</span>
+              <span class="text-[10px] text-purple-500 font-mono">/ 100</span>
+            </div>
+            <span id="rd-hero-target-status" class="text-[9px] text-purple-300 font-medium">Grau Superior</span>
+          </div>
+        </div>
+
         <!-- Alocação de Bancadas de Laboratório -->
         <div>
           <label class="text-slate-400 block mb-1">2. Bancadas Laboratoriais Dedicadas:</label>
@@ -2609,7 +2635,7 @@
       return { baseCost, stockValue, sellValue, salvageValue, facilityName };
     }
 
-    function renderFacilityFooterActions(tile) {
+    function renderFacilityFooterActions(tile, extraBtn = '') {
       const actionRow = document.getElementById('facility-action-row');
       if (!actionRow) return;
       if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter)) {
@@ -2620,6 +2646,7 @@
       const val = calculateFacilityValue(tile);
       actionRow.classList.remove('hidden');
       actionRow.innerHTML = `
+        ${extraBtn ? `<div class="mb-1">${extraBtn}</div>` : ''}
         <div class="grid grid-cols-2 gap-2 font-mono text-[11px] pt-1">
           <button onclick="sellFacility(${tile.x}, ${tile.y})" class="py-2 px-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-emerald-700/60 text-emerald-300 font-bold flex items-center justify-center gap-1 transition shadow cursor-pointer text-center" title="Ofertar ao mercado / concorrentes (+70% a 80% do valor)">
             🏷️ Vender (+$${val.sellValue.toLocaleString()})
@@ -3581,8 +3608,20 @@
         const bonus = CoreMath.calculateConvergenceBonus(rec.outputProdId || rec.id, FACTORY_RECIPES);
         const cost = CoreMath.calculateResearchCost(tier, bonus);
 
+        const researchedQR = getProductBestRDQuality(rec.outputProdId || rec.id);
+        const effectiveQR = researchedQR > 0 ? Math.max(rec.quality, researchedQR) : rec.quality;
+        const qrBadge = researchedQR > rec.quality 
+          ? `<span class="text-purple-300 font-bold" title="Qualidade aprimorada em P&D (${researchedQR.toFixed(1)})">★ QR ${effectiveQR.toFixed(0)} (P&D)</span>` 
+          : `<span class="text-cyan-300">QR ${effectiveQR}</span>`;
+
+        const inputPills = rec.inputs ? Object.entries(rec.inputs).map(([inpId, qty]) => {
+          const inpProd = PRODUCT_CATALOG[inpId] || { name: inpId };
+          const isUnlocked = isProductUnlocked(inpId);
+          return `<span class="px-1.5 py-0.5 rounded text-[9px] border font-mono ${isUnlocked ? 'bg-slate-900 text-slate-300 border-slate-700' : 'bg-rose-950/60 text-rose-300 border-rose-800'}">${qty}x ${inpProd.name} ${!isUnlocked ? '🔒' : ''}</span>`;
+        }).join(' ') : '<span class="text-[9px] text-slate-500">Nenhum</span>';
+
         return `
-          <div class="bg-slate-950 p-3 rounded-xl border ${unlocked ? 'border-slate-800' : 'border-slate-800/80 bg-slate-950/60 opacity-80'} flex items-center justify-between text-xs font-mono gap-3">
+          <div class="bg-slate-950 p-3.5 rounded-xl border ${unlocked ? 'border-slate-800' : 'border-slate-800/80 bg-slate-950/60 opacity-85'} flex items-center justify-between text-xs font-mono gap-3">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-700/80 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
                 <img src="assets/${spriteKey}.png" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
@@ -3595,15 +3634,18 @@
                   <span class="text-[9px] bg-slate-900 text-teal-400 border border-slate-700 px-1.5 py-0.5 rounded font-bold">Tier ${tier}</span>
                   ${countOfRecipe > 0 ? `<span class="text-[9px] bg-orange-950 text-orange-300 px-1.5 py-0.5 rounded border border-orange-800 font-bold">${countOfRecipe} linha${countOfRecipe > 1 ? 's' : ''} ativa${countOfRecipe > 1 ? 's' : ''}</span>` : ''}
                 </div>
-                <div class="text-[11px] text-slate-400 mt-1">Custo Fabril: <strong class="text-emerald-400">$${rec.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${rec.quality}</strong> · Capacidade: ${rec.dailyCap} un/dia por linha</div>
-                <div class="text-[10px] text-slate-500 mt-0.5">${rec.desc}</div>
-                ${!unlocked ? `<div class="text-[10px] text-amber-400 mt-1 font-bold flex items-center gap-1">🔒 Bloqueado: Exige P&D prévio da tecnologia (${rec.outputName})</div>` : ''}
+                <div class="text-[11px] text-slate-400 mt-1">Custo Fabril: <strong class="text-emerald-400">$${rec.unitCost.toFixed(2)}/un</strong> · Qualidade: ${qrBadge} · Capacidade: <strong class="text-slate-200">${rec.dailyCap} un/dia</strong></div>
+                <div class="text-[10px] text-slate-400 mt-1 flex items-center gap-1 flex-wrap">
+                  <span class="text-slate-500 font-bold">Insumos Necessários:</span>
+                  ${inputPills}
+                </div>
+                ${!unlocked ? `<div class="text-[10px] text-amber-400 mt-1 font-bold flex items-center gap-1">🔒 Bloqueado: Desbloqueie a tecnologia na Árvore de P&D para produzir</div>` : ''}
               </div>
             </div>
             <div class="shrink-0">
               ${!unlocked ? `
-                <button onclick="openTechTreeModal('all', '${tier}')" class="bg-teal-950 hover:bg-teal-900 border border-teal-700 text-teal-300 font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer shadow transition whitespace-nowrap">
-                  🧬 Pesquisar ($${cost.toLocaleString('en-US')})
+                <button onclick="closeFactoryRecipeModal(); openTechTreeModal('all', '${tier}')" class="bg-teal-950 hover:bg-teal-900 border border-teal-700 text-teal-300 font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer shadow transition whitespace-nowrap">
+                  🧬 Desbloquear ($${cost.toLocaleString('en-US')})
                 </button>
               ` : (isFull ? `
                 <span class="text-[10px] text-slate-500 bg-slate-900 px-2 py-1 rounded border border-slate-800 font-bold">Fábrica Lotada (4/4)</span>
@@ -3636,8 +3678,8 @@
         return;
       }
 
-      const researchedQR = rdLabs['rd_' + rec.outputProdId]?.currentQR;
-      const initialQuality = researchedQR ? Math.max(rec.quality, researchedQR) : rec.quality;
+      const researchedQR = getProductBestRDQuality(rec.outputProdId || rec.id);
+      const initialQuality = researchedQR > 0 ? Math.max(rec.quality, researchedQR) : rec.quality;
 
       const lineKey = `line_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
 
@@ -4424,6 +4466,12 @@
         if (teamCostEl) teamCostEl.textContent = '$0/mês';
         if (extraBudgetEl) extraBudgetEl.textContent = '+$0/mês';
         if (warningMsg) warningMsg.classList.add('hidden');
+        const heroCurrent = document.getElementById('rd-hero-current-qr');
+        const heroTarget = document.getElementById('rd-hero-target-qr');
+        const heroGain = document.getElementById('rd-hero-qr-gain-badge');
+        if (heroCurrent) heroCurrent.textContent = '--';
+        if (heroTarget) heroTarget.textContent = '--';
+        if (heroGain) heroGain.textContent = '+0 pts';
         return;
       }
 
@@ -4438,6 +4486,25 @@
       if (teamCostEl) teamCostEl.textContent = `$${minCostTotal.toLocaleString('en-US')}/mês (${labsCount} lab${labsCount > 1 ? 's' : ''})`;
       if (extraBudgetEl) extraBudgetEl.textContent = extraBudget > 0 ? `+$${extraBudget.toLocaleString('en-US')}/mês` : '+$0/mês';
       if (warningMsg) warningMsg.classList.toggle('hidden', !belowMin);
+
+      // Atualiza Card de Destaque Visual de Qualidade
+      const heroCurrent = document.getElementById('rd-hero-current-qr');
+      const heroTarget = document.getElementById('rd-hero-target-qr');
+      const heroGain = document.getElementById('rd-hero-qr-gain-badge');
+      const heroCurStatus = document.getElementById('rd-hero-current-status');
+      const heroTarStatus = document.getElementById('rd-hero-target-status');
+
+      if (heroCurrent) heroCurrent.textContent = currentQR.toFixed(1);
+      if (heroTarget) heroTarget.textContent = targetQR;
+      const ptsGain = Math.max(0, targetQR - currentQR);
+      if (heroGain) heroGain.textContent = `+${ptsGain.toFixed(1)} pts`;
+
+      if (heroCurStatus) {
+        heroCurStatus.textContent = currentQR >= 80 ? 'Excelente' : (currentQR >= 65 ? 'Intermediário' : 'Padrão Inicial');
+      }
+      if (heroTarStatus) {
+        heroTarStatus.textContent = targetQR >= 90 ? 'Liderança Global' : (targetQR >= 80 ? 'Grau Superior' : 'Aprimorado');
+      }
 
       // Ganho mensal acelerado pelo número de bancadas
       const gainSingle = CoreMath.calculateRDQualityGain(currentQR, targetQR, budget / labsCount, minCostSingle);
@@ -6555,10 +6622,32 @@
       currentAppScreen = 'PLAYING';
       setSpeed(1);
       jumpToCity('nova_atenas');
-      tutorialState = { completedSteps: {}, rewardClaimed: false };
+      tutorialState = { completedSteps: {}, rewardClaimed: false, active: true };
       renderTutorialGuide();
       playSuccessChime();
       addLog(`🎉 NOVA EMPRESA FUNDADA: Bem-vindo ao comando de ${playerProfile.companyName}!`, 'text-emerald-400 font-bold');
+
+      // Modal de Boas-Vindas & Escolha do Tutorial
+      showCustomConfirmModal({
+        icon: '🎓',
+        title: 'Guia do Magnata (Tutorial)',
+        subtitle: `Corporação: ${playerProfile.companyName}`,
+        description: 'Deseja iniciar o <strong>Guia do Magnata Interativo</strong> (passo a passo com <strong>+$15.000</strong> de incentivo) ou prefere jogar no <strong>Modo Livre (Sandbox)</strong>?',
+        details: [
+          { label: 'Recompensa do Tutorial', value: '+$15,000 em Caixa', color: 'text-amber-400 font-bold' },
+          { label: 'Estrutura', value: '7 Missões de Progressão Real', color: 'text-purple-300' },
+          { label: 'Modo Livre', value: 'Acesso total com autonomia imediata', color: 'text-slate-400' }
+        ],
+        confirmText: '🎓 Iniciar Guia do Magnata',
+        confirmTheme: 'amber',
+        onConfirm: () => {
+          tutorialState.active = true;
+          const tutWidget = document.getElementById('tutorial-guide-widget');
+          if (tutWidget) tutWidget.classList.remove('hidden');
+          renderTutorialGuide();
+          addLog('🎓 GUIA DO MAGNATA ATIVADO: Acompanhe as missões no painel flutuante!', 'text-amber-400 font-bold');
+        }
+      });
     }
 
     // ===========================================================================
@@ -6568,13 +6657,13 @@
       {
         id: 'inspect_tile',
         title: '1. Reconhecimento de Terreno',
-        desc: 'Navegue pelo mapa isométrico e clique em qualquer lote com tráfego urbano.',
+        desc: 'Navegue pelo mapa isométrico de Nova Atenas e clique em qualquer lote com tráfego urbano.',
         check: () => selectedTileX >= 0 && selectedTileY >= 0
       },
       {
         id: 'open_store',
-        title: '2. Primeira Operação de Varejo',
-        desc: 'Inaugure seu primeiro estabelecimento comercial (Kombini, Mercadinho ou Loja).',
+        title: '2. Primeira Loja de Varejo',
+        desc: 'Inaugure seu primeiro estabelecimento comercial (Kombini ou Supermercado) em Nova Atenas.',
         check: () => {
           for (const t of activeFacilitySet.values()) {
             if (t.store) return true;
@@ -6584,8 +6673,8 @@
       },
       {
         id: 'stock_goods',
-        title: '3. Logística de Suprimentos',
-        desc: 'Abasteça ao menos 1 prateleira da sua loja com produtos do Porto ou Fornecedor.',
+        title: '3. Suprimento do Porto',
+        desc: 'Abasteça ao menos 1 prateleira da sua loja com alimentos importados do Cais de Nova Atenas.',
         check: () => {
           for (const t of activeFacilitySet.values()) {
             if (t.store?.shelves && Object.values(t.store.shelves).some(sh => sh.stock > 0)) return true;
@@ -6594,27 +6683,49 @@
         }
       },
       {
-        id: 'monthly_profit',
-        title: '4. Lucro Operacional Positivo',
-        desc: 'Atraia clientes e feche um mês completo com Lucro Líquido Positivo.',
-        check: () => !!GameState.hasRecordedPositiveMonth
-      },
-      {
-        id: 'expand_chain',
-        title: '5. Domínio da Cadeia de Valor',
-        desc: 'Construa sua primeira Fábrica, Fazenda ou Centro de P&D para dominar o mercado.',
+        id: 'build_farm',
+        title: '4. Insumos da Terra (Fazenda)',
+        desc: 'Construa uma Fazenda Agropecuária (ex: Trigo, Milho ou Algodão) para produzir matérias-primas.',
         check: () => {
           for (const t of activeFacilitySet.values()) {
-            if (t.factory || t.farm || t.rdCenter) return true;
+            if (t.farm) return true;
           }
           return false;
         }
+      },
+      {
+        id: 'research_rd',
+        title: '5. Inovação Científica (P&D)',
+        desc: 'Inaugure um Centro de P&D (Laboratório) e inicie uma pesquisa de qualidade ou desbloqueio de patente.',
+        check: () => {
+          const hasLab = Array.from(activeFacilitySet.values()).some(t => t.rdCenter);
+          const hasProject = Object.values(rdLabs).some(p => p.status === 'active' || p.status === 'completed');
+          return hasLab && (hasProject || unlockedProducts.size > 24);
+        }
+      },
+      {
+        id: 'build_factory',
+        title: '6. Complexo Fabril Integrado',
+        desc: 'Construa uma Fábrica e instale sua primeira linha de produção para transformar insumos em produtos.',
+        check: () => {
+          for (const t of activeFacilitySet.values()) {
+            if (t.factory && Object.keys(t.factory.lines || {}).length > 0) return true;
+          }
+          return false;
+        }
+      },
+      {
+        id: 'monthly_profit',
+        title: '7. Lucro Operacional Positivo',
+        desc: 'Feche um mês completo com balanço financeiro no azul para resgatar a bonificação.',
+        check: () => !!GameState.hasRecordedPositiveMonth
       }
     ];
 
     let tutorialState = {
       completedSteps: {},
-      rewardClaimed: false
+      rewardClaimed: false,
+      active: true
     };
 
     function toggleTutorialWidget() {
