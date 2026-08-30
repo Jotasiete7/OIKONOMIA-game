@@ -1,8 +1,8 @@
-﻿# Relatório de Auditoria do Grafo de Produção & Janelas do Jogo — OIKONOMIA
+﻿# Relatório de Auditoria e Reauditoria do Grafo de Produção & Vínculos de Interface — OIKONOMIA
 
 **Data da Auditoria:** 30 de Agosto de 2026  
 **Ambiente:** Engine OIKONOMIA v0.8.1 (Build 20260828.03)  
-**Metodologia:** Auditoria Automatizada via script Node (`tools/audit_production_graph.js`) + Auditoria Estática e Funcional de Interfaces (`client/index.html`).
+**Metodologia:** Auditoria Automatizada (`tools/audit_production_graph.js`), Validador de Payback sem Piso (`tools/validate_market_balance.js`), Teste Funcional Determinístico de Vínculos (`tools/test_real_facility_links.js`) e Geração de Wiki Viva (`tools/generate_production_wiki.js`).
 
 ---
 
@@ -10,90 +10,101 @@
 
 | Métrica do Sistema | Quantidade Catalogada | Status de Integridade |
 |---|---|---|
-| **Produtos no Catálogo Global** | 98 produtos | 92 válidos / 6 com inconsistência de ID |
-| **Receitas Fabris de Manufatura** | 76 receitas | 71 100% integradas / 5 afetadas por ID |
-| **Minas Naturais Extrativas** | 7 minas | 100% integradas e extraíveis |
-| **Fazendas & Pecuárias** | 14 fazendas | 100% integradas e cultiváveis |
-| **Tipos de Lojas & Varejo** | 9 formatos comerciais | 100% mapeados com whitelists |
+| **Produtos no Catálogo Global** | 99 produtos | ✅ 100% integrados (Cadeia da Lã corrigida) |
+| **Receitas Fabris de Manufatura** | 77 receitas | ✅ 100% integradas (Fiação + Tecelagem ativas) |
+| **Minas Naturais Extrativas** | 7 minas | ✅ 100% integradas e extraíveis |
+| **Fazendas & Pecuárias** | 14 fazendas | ✅ 100% integradas e cultiváveis |
+| **Tipos de Lojas & Varejo** | 9 formatos comerciais | ✅ 100% mapeados com whitelists |
 | **Ciclos / Dependências Circulares** | 0 ciclos | ✅ Grafo Direcionado Acíclico (DAG) Válido |
-| **Janelas & Modais Auditados** | 14 interfaces | 100% operacionais com handlers conectados |
+| **Violações no Grafo de Produção** | **0 violações** | ✅ **ALL PASS (`npm run audit-graph`)** |
+| **Vínculos Comércio ↔ Fábrica ↔ P&D** | 4 sistemas testados | ✅ **100% Operacionais e Verificados** |
 
 ---
 
-## PARTE A — Auditoria Automatizada do Grafo de Produção
+## PARTE 1 — Resolução Estrutural da Cadeia da Lã
 
-A auditoria automática foi executada pelo script `tools/audit_production_graph.js` avaliando as 7 regras estruturais mandatórias:
+A cadeia têxtil foi ajustada para operar em 2 estágios industriais autênticos:
+$$\text{Lã de Ovelha (wool, Tier 0)} \xrightarrow{\text{Fiação (rec\_wool\_yarn)}} \text{Fio de Lã (wool\_yarn, Tier 1)} \xrightarrow{\text{Tecelagem (rec\_wool\_cloth)}} \text{Tecido de Lã (wool\_cloth, Tier 2)} \xrightarrow{\text{Confecção}} \text{Terno/Suéter/Vestido/Sofá (Tier 3)}$$
 
-### Tabela de Problemas e Inconsistências Encontradas
+### Ações Executadas:
+1. Inserido `wool_cloth` (Tecido de Lã) no `PRODUCT_CATALOG` (`isIntermediate: true`, `standardPrice: $16.00`, `baseCost: $8.50`).
+2. Criada a receita fabril `rec_wool_yarn` (Fiação de Lã Natural, consumindo `wool` e gerando `wool_yarn`).
+3. Conectada a receita `rec_wool_cloth` (Tecelagem de Lã Nobre) para consumir `wool_yarn` e produzir `wool_cloth`.
+4. Mantidas as receitas `rec_suit`, `rec_sweater`, `rec_dress` e `rec_sofa` consumindo `wool_cloth` de forma nativa.
+5. Inserido `wool_cloth` na tabela de importações do porto (`PORT_SUPPLIES_TECH_PARTS`).
 
-| # | Item / ID Afetado | Severidade | Regra Violada | Detalhamento Técnico |
-|---|---|---|---|---|
-| 1 | `rec_wool_cloth` (Tecelagem de Lã Nobre) | **ALTA** | Regra 1: Output inexistente no catálogo | A receita `rec_wool_cloth` define `outputProdId: "wool_cloth"`, mas no `PRODUCT_CATALOG` o insumo foi registrado como `wool_yarn`. |
-| 2 | `rec_suit` (Alfaiataria Executiva) | **CRÍTICA** | Regra 1: Insumo inexistente no catálogo | A receita consome `wool_cloth: 1.5`, que não existe no catálogo porque o produto foi cadastrado como `wool_yarn`. |
-| 3 | `rec_sweater` (Tear de Malhas & Lã) | **CRÍTICA** | Regra 1: Insumo inexistente no catálogo | A receita consome `wool_cloth: 1.0`, travando a checagem de desbloqueio e cálculo de insumos. |
-| 4 | `rec_dress` (Alta Costura & Vestidos) | **CRÍTICA** | Regra 1: Insumo inexistente no catálogo | A receita consome `wool_cloth: 0.5`, travando a checagem de desbloqueio e cálculo de insumos. |
-| 5 | `rec_sofa` (Estofados: Sofás Confort) | **CRÍTICA** | Regra 1: Insumo inexistente no catálogo | A receita consome `wool_cloth: 1.0`, travando a checagem de desbloqueio e cálculo de insumos. |
-| 6 | `wool_yarn` (Fio de Lã Natural) | **MÉDIA** | Regra 4: Insumo Intermediário Beco Sem Saída | Produto existe no catálogo, mas como as 4 receitas consumidoras buscam `wool_cloth`, o `wool_yarn` fica sem demanda industrial ativa. |
-
-### Análise das 7 Regras Auditadas:
-
-1. **Receita referenciando produto inexistente**:  
-   - Encontrado 1 caso raiz (`wool_cloth` vs `wool_yarn`), que impacta 4 receitas downstream (`rec_suit`, `rec_sweater`, `rec_dress`, `rec_sofa`). Todas as outras 72 receitas referenciam produtos 100% existentes.
-2. **Produto órfão (impossível de obter)**:  
-   - **0 produtos órfãos**. Todos os 98 produtos possuem fonte clara: ou são extraídos em Minas/Fazendas (Tier 0), ou produzidos em Fábricas (Tiers 1 a 5), ou importados via Portos Marítimos.
-3. **Matéria-prima sem local de extração**:  
-   - **0 falhas**. Todos os 7 minérios possuem minas dedicadas (`iron_ore`, `bauxite`, `crude_oil`, `silica`, `timber`, `gold_ore`, `chemical_minerals`) e todas as 14 safras/rebanhos possuem fazendas dedicadas (`wheat`, `corn`, `cotton`, `sugar_cane`, `cocoa`, `coffee_beans`, `grapes`, `tobacco`, `rubber`, `cattle`, `raw_milk`, `poultry`, `pigs`, `wool`).
-4. **Produto sem saída (beco sem saída)**:  
-   - Apenas `wool_yarn` está sem saída ativa devido à discrepância com `wool_cloth`. Todos os outros bens ou são insumos de receitas subsequentes ou são bens finais aceitos nas gôndolas de varejo.
-5. **Dependência circular no grafo**:  
-   - **0 ciclos detectados**. O grafo é estritamente acíclico (DAG), permitindo cálculo determinístico de Tier (0 a 5), Árvore Genealógica e bônus de convergência.
-6. **Receitas ou produtos com campos incompletos**:  
-   - **0 campos nulos/NaN**. Todos os 98 produtos possuem `id`, `name`, `category`, `standardPrice`, `baseCost`, `necessityIndex`, `qualityWeight` e `brandWeight`. Todas as 76 receitas possuem `unitCost`, `quality`, `dailyCap`, `inputs` e `outputName`.
-7. **Produto sem categoria de loja correspondente**:  
-   - **0 falhas**. Todos os produtos comerciais finais pertencem a categorias presentes nas whitelists (`Alimentos`, `Bebidas`, `Vestuário`, `Eletrônicos`, `Automotivo`, `Farmácia`, `Higiene`, `Cosméticos`, `Móveis`, `Joias`, `Construção`).
+**Resultado (`npm run audit-graph`):** **0 violações encontradas.**
 
 ---
 
-## PARTE B — Auditoria das Janelas e Menus do Jogo
+## PARTE 2 — Validação de Payback e Equilíbrio sem Piso Artificial
 
-Auditamos todas as 14 janelas, modais e painéis contextuais do ecossistema:
+Removido o piso forçado `Math.max(0.35, ...)` em `tools/validate_market_balance.js`. Todos os caminhos foram padronizados com `path.resolve(__dirname, ...)` e o comando `npm run validate-balance` foi integrado ao `package.json`.
 
-| Janela / Menu | Abre corretamente? | Dropdowns / Seletores Populados? | Botões com Ação Real? | Observações & Diagnóstico |
-|---|---|---|---|---|
-| **Painel da Fábrica** (`renderFactoryPanel`) | ✅ Sim | ✅ Sim | ✅ Sim (`✕ Remover`, `[Trocar]`, `Ativar Linha`, `Vender`, `Demolir`) | Exibe insumos, custo unitário, qualidade QR, Tech Level e estoque fabril. Botão de trocar fornecedor por insumo 100% responsivo. |
-| **Modal de Receitas da Fábrica** (`factory-recipe-modal`) | ✅ Sim | ✅ Sim (Categorias e Busca) | ✅ Sim (`[➕ Ativar Linha]`, `[🧬 Desbloquear]`) | Possui busca em tempo real e abas de categoria. Desbloqueio in-place funciona com 1 clique sem fechar a fábrica. |
-| **Modal de Fornecedores de Insumos** (`supplier-modal`) | ✅ Sim | ✅ Sim (Lista ofertas de Portos e Fazendas/Moinhos) | ✅ Sim (`[Conectar / Contratar]`) | Calcula distância Manhattan, frete dinâmico, custo landed e qualidade QR. Portos e fazendas próprias aparecem lado a lado. |
-| **Painel da Loja de Varejo** (`renderStorePanel`) | ✅ Sim | ✅ Sim | ✅ Sim (`Preço`, `Restock`, `Fornecedor`, `➕ Adicionar`) | Exibe gôndolas, market share quadrático, elasticidade-preço, brand rating e estoque. |
-| **Modal de Adicionar Produto na Loja** (`add-product-modal`) | ✅ Sim | ✅ Sim (Filtra por whitelist da loja) | ✅ Sim (`[Adicionar à Gôndola]`) | Whitelist impede colocar produtos incompatíveis (ex: carro em drogaria). Abas de categoria funcionam. |
-| **Painel de Fazenda** (`renderFarmPanel`) | ✅ Sim | ✅ Sim | ✅ Sim (`Vender`, `Demolir`) | Mostra rendimento diário, custo operacional e estoque colhido no silo. |
-| **Painel de Mina** (`renderMinePanel`) | ✅ Sim | ✅ Sim | ✅ Sim (`Vender`, `Demolir`) | Mostra rendimento mineral, qualidade nativa e capacidade máxima de armazenamento. |
-| **Centro de P&D (Painel Geral)** (`rd-center-modal`) | ✅ Sim | ✅ Sim | ✅ Sim (`[➕ Nova Bancada]`, `[Ver Projetos]`, `[Árvore Tec]`) | Lista slots de bancada ativos, QR atual e alvo, e consumo orçamentário mensal. |
-| **Wizard de Novo Projeto P&D** (`rd-new-project-modal`) | ✅ Sim | ✅ Sim (Categorias e todos os 98 produtos) | ✅ Sim (`[Iniciar Pesquisa]`) | Hero Card de Qualidade exibe QR inicial, alvo, delta dinâmico, custo mínimo da equipe e projeção de meses (ETA assintótico). |
-| **Árvore Tecnológica** (`tech-tree-modal`) | ✅ Sim | ✅ Sim (Filtros por Tier 0-5 e busca) | ✅ Sim (`[🔬 Desbloquear]`) | Exibe badges de Tech Level 1 a 5 e árvore genealógica de insumos até a raiz (Tier 0). |
-| **Central de Mídia & Marketing** (`media-modal`) | ✅ Sim | ✅ Sim (TV, Rádio, Outdoor, Internet, Jornal) | ✅ Sim (`[Contratar Campanha]`, `[Cancelar]`) | Permite marketing de produto específico ou institucional corporativo. |
-| **Terminais Portuários** (`port-modal`) | ✅ Sim | ✅ Sim (Catálogo internacional de importação) | ✅ Sim | Exibe produtos oferecidos, cota diária e taxa de frete por tile. |
-| **Painel Financeiro / DRE** (`financial-modal`) | ✅ Sim | ✅ Sim | ✅ Sim (`Fechar`) | Demonstra Receita Bruta, CPV, Aluguéis, P&D, Marketing, Salários e Lucro Líquido diário/mensal. |
-| **Tutorial & Boas-Vindas** (`welcome-tutorial-modal`) | ✅ Sim | ✅ Sim | ✅ Sim (`[Guia do Magnata]`, `[Modo Livre]`) | Modal inicial oferece tutorial com bônus financeiro ou modo livre para veteranos. |
+### 1. Payback por Formato de Loja (Cesta Cheia em Distrito Médio)
 
----
+| Formato de Loja | Slots | Capex Inicial | Lucro Líquido / Mês | Payback Estimado | Status de Equilíbrio |
+|---|---|---|---|---|---|
+| **Kombini de Bairro** | 4 | $8.794 | +$9.324 | **0.9 meses** | ⚠️ Muito Rápido (Conveniência Inicial) |
+| **Supermercado & Alimentos** | 10 | $47.054 | +$14.997 | **3.1 meses** | ⚠️ Rápido |
+| **Boutique de Vestuário & Moda** | 6 | $49.599 | +$9.225 | **5.4 meses** | ✅ **EQUILIBRADO** |
+| **MegaStore de Eletrônicos** | 6 | $116.615 | +$42.256 | **2.8 meses** | ⚠️ Rápido |
+| **Concessionária de Automóveis** | 4 | $336.810 | +$141.508 | **2.4 meses** | ⚠️ Rápido |
+| **Drogaria & Cosméticos** | 6 | $29.426 | +$3.480 | **8.5 meses** | ✅ **EQUILIBRADO** |
+| **Loja de Móveis & Decoração** | 5 | $59.773 | +$16.215 | **3.7 meses** | ⚠️ Rápido |
+| **Joalheria de Alta Nobreza** | 3 | $94.942 | +$12.569 | **7.6 meses** | ✅ **EQUILIBRADO** |
+| **Home Center & Ferramentas** | 5 | $41.380 | -$2.107 | **$\infty$ (Prejuízo)** | ⚠️ Lento / Prejuízo |
 
-## PARTE C — Ferramentas Desenvolvidas & Wiki Gerada
+### 2. Achado Legítimo: Commodities / Matérias-Primas com Margem Unitária Negativa no Varejo
 
-1. **Script de Auditoria Automatizada**:
-   * Arquivo: `tools/audit_production_graph.js`
-   * Execução: `npm run audit-graph` ou `$env:ELECTRON_RUN_AS_NODE="1"; Start-Process Antigravity.exe -ArgumentList "tools/audit_production_graph.js"`
-2. **Script de Geração da Wiki Viva**:
-   * Arquivo: `tools/generate_production_wiki.js`
-   * Execução: `npm run generate-wiki` ou `$env:ELECTRON_RUN_AS_NODE="1"; Start-Process Antigravity.exe -ArgumentList "tools/generate_production_wiki.js"`
-3. **Wiki Interna do Grafo de Produção**:
-   * Arquivo: `docs/wiki/producao.md`
-   * Conteúdo: Documentação de todos os 98 produtos organizados por Tier (0 a 5), com ID, categoria, local de produção, insumos necessários, custo de P&D, lojas de venda e receitas consumidoras.
+A remoção do piso revelou que se um jogador colocar **matérias-primas brutas** diretamente na gôndola do varejo com o markup padrão de atacado, elas geram margem negativa (pois o preço padrão de catálogo é de atacado/commodities, não de varejo fracionado):
+* `wheat` (Trigo): Preço $0.80 vs Landed $0.81 (Margem: -$0.01/un)
+* `corn` (Milho): Preço $0.70 vs Landed $0.72 (Margem: -$0.02/un)
+* `cotton` (Algodão): Preço $2.00 vs Landed $2.15 (Margem: -$0.15/un)
+* `iron_ore` (Minério de Ferro): Preço $25.00 vs Landed $26.91 (Margem: -$1.91/un)
+* `crude_oil` (Petróleo): Preço $36.00 vs Landed $39.47 (Margem: -$3.47/un)
+* `gold_ore` (Minério de Ouro): Preço $190.00 vs Landed $215.28 (Margem: -$25.28/un)
+
+*(Recomendação para a próxima sessão: Manter matérias-primas estritamente como insumos industriais ou ajustar os preços de gôndola no varejo).*
 
 ---
 
-## RECOMENDAÇÕES PARA A PRÓXIMA SESSÃO (Correções Priorizadas)
+## PARTE 3 — Reauditoria Real dos Vínculos Comércio ↔ Indústria ↔ P&D
 
-* **Prioridade 1 (Correção do ID da Lã / Tecelagem)**:
-  * Unificar `wool_yarn` para `wool_cloth` (ou atualizar as 4 receitas de vestuário e sofás para consumirem `wool_yarn`), eliminando as 5 violações de integridade do catálogo têxtil.
-* **Prioridade 2 (Padronização de Nomenclaturas Secundárias)**:
-  * Garantir que aliases de doces e cafés (`chocolate` / `chocolate_bar`, `coffee` / `coffee_ground`) tenham consistência 100% espelhada entre receitas e gôndolas de varejo.
+Executada via `tools/test_real_facility_links.js` com verificação de transições de estado reais no ecossistema:
+
+### Teste 1: Modal de Adicionar Produto na Loja (`add-product-modal`)
+* **Passo a passo**: Criada uma Drogaria em `(15, 15)`. Aberta a lista de candidatos.
+* **Resultado Real**:
+  * Whitelist de farmácia filtra com precisão estrita: `Farmácia`, `Higiene` e `Cosméticos`.
+  * Itens de outras categorias (`economy_car`, `jeans`) são bloqueados com sucesso.
+  * Inserção do remédio `cold_pills` gerou a gôndola ativa com Preço=$9.50, Fornecedor=Porto Alfa e Custo Landed=$3.74.
+
+### Teste 2: Modal de Fornecedores de Insumos (`supplier-modal`) na Fábrica
+* **Passo a passo**: Criada Pecuária Leiteira em `(20, 20)` e Usina de Laticínios em `(24, 20)`. Aberto o modal de fornecedor de `raw_milk`.
+* **Resultado Real**:
+  * Modal lista 3 ofertas reais (Fazenda Própria + 2 Portos Internacionais).
+  * Conexão da Fazenda Própria recalculou o frete Manhattan ($4 \text{ tiles} = \$0.04$) e o custo unitário da fábrica para $\$0.63$/un.
+  * No ciclo diário, o silo da fazenda reduziu de $2.000 \rightarrow 1.550$ un e o estoque de leite na fábrica subiu de $0 \rightarrow 450$ un de forma consistente.
+
+### Teste 3: Wizard de P&D (`rd-new-project-modal`) ↔ Fábrica
+* **Passo a passo**: Avaliado o produto `business_suit` (Terno Executivo, Tier 3).
+* **Resultado Real**:
+  * Tiers calculados com precisão: `wool` (Tier 0), `wool_yarn` (Tier 1), `wool_cloth` (Tier 2), `business_suit` (Tier 3).
+  * Pesquisa de `business_suit` adiciona o ID a `unlockedTechSet`.
+  * Na fábrica, a receita `rec_suit` é imediatamente liberada para ativação sem necessidade de recarregar a tela.
+
+### Teste 4: Árvore Tecnológica (`tech-tree-modal`) ↔ Catálogo
+* **Passo a passo**: Reconstrução genealógica das cadeias completas.
+* **Resultado Real**:
+  * Pão: `wheat (Tier 0) ➔ flour (Tier 1) ➔ bread (Tier 2)`.
+  * Terno: `wool (Tier 0) ➔ wool_yarn (Tier 1) ➔ wool_cloth (Tier 2) ➔ business_suit (Tier 3)`.
+  * Automóvel: Cadeia multi-ramos com cálculo exato de bônus de convergência.
+
+---
+
+## COMANDOS E RECURSOS DISPONÍVEIS
+
+* `npm run audit-graph`: Executa a auditoria das 7 regras do grafo (`tools/audit_production_graph.js`).
+* `npm run validate-balance`: Executa a validação de paybacks e margens unitárias (`tools/validate_market_balance.js`).
+* `npm run generate-wiki`: Regenera a wiki viva em `docs/wiki/producao.md` (`tools/generate_production_wiki.js`).

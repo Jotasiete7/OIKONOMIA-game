@@ -1,0 +1,61 @@
+================================================================
+       OIKONOMIA — VALIDAÇÃO DE EQUILÍBRIO & PAYBACK DE VAREJO   
+================================================================
+
+--- RESULTADO DE PAYBACK POR TIPO DE LOJA (Cesta Cheia em Distrito Médio) ---
+• [kombini] Kombini de Bairro (4 slots)
+   Capex Total: $8.794 | Lucro Líquido/Mês: $9.324
+   Payback Estimado: 0.9 meses [⚠️ MUITO RÁPIDO]
+
+• [supermarket] Supermercado & Alimentos (10 slots)
+   Capex Total: $47.054 | Lucro Líquido/Mês: $14.997
+   Payback Estimado: 3.1 meses [⚠️ MUITO RÁPIDO]
+
+• [apparel] Boutique de Vestuário & Moda (6 slots)
+   Capex Total: $49.599 | Lucro Líquido/Mês: $9.225
+   Payback Estimado: 5.4 meses [✅ EQUILIBRADO]
+
+• [electronics] MegaStore de Eletrônicos (6 slots)
+   Capex Total: $116.615 | Lucro Líquido/Mês: $42.256
+   Payback Estimado: 2.8 meses [⚠️ MUITO RÁPIDO]
+
+• [automotive] Concessionária de Automóveis (4 slots)
+   Capex Total: $336.810 | Lucro Líquido/Mês: $141.508
+   Payback Estimado: 2.4 meses [⚠️ MUITO RÁPIDO]
+
+• [pharmacy] Drogaria & Cosméticos (6 slots)
+   Capex Total: $29.426 | Lucro Líquido/Mês: $3.480
+   Payback Estimado: 8.5 meses [✅ EQUILIBRADO]
+
+• [furniture] Loja de Móveis & Decoração (5 slots)
+   Capex Total: $59.773 | Lucro Líquido/Mês: $16.215
+   Payback Estimado: 3.7 meses [⚠️ MUITO RÁPIDO]
+
+• [jewelry] Joalheria de Alta Nobreza (3 slots)
+   Capex Total: $94.942 | Lucro Líquido/Mês: $12.569
+   Payback Estimado: 7.6 meses [✅ EQUILIBRADO]
+
+• [hardware] Home Center & Ferramentas (5 slots)
+   Capex Total: $41.380 | Lucro Líquido/Mês: $-2.107
+   Payback Estimado: Infinity meses [⚠️ LENTO / PREJUÍZO]
+
+⚠️ PRODUTOS COM MARGEM UNITÁRIA NEGATIVA (PREJUÍZO POR UNIDADE):
+   • Trigo & Cereais (wheat) [Agronegócio]: Preço=$0.8 vs CustoLanded=$0.81 (Margem: $-0.01/un)
+   • Milho Agrícola (corn) [Agronegócio]: Preço=$0.7 vs CustoLanded=$0.72 (Margem: $-0.02/un)
+   • Algodão Cru (cotton) [Agronegócio]: Preço=$2 vs CustoLanded=$2.15 (Margem: $-0.15/un)
+   • Folhas de Tabaco (tobacco) [Agronegócio]: Preço=$1.9 vs CustoLanded=$1.97 (Margem: $-0.07/un)
+   • Látex / Borracha (rubber) [Agronegócio]: Preço=$2.2 vs CustoLanded=$2.33 (Margem: $-0.13/un)
+   • Gado Bovino (cattle) [Agronegócio]: Preço=$3.2 vs CustoLanded=$3.23 (Margem: $-0.03/un)
+   • Suínos (pigs) [Agronegócio]: Preço=$2.4 vs CustoLanded=$2.51 (Margem: $-0.11/un)
+   • Minério de Ferro (iron_ore) [Recursos Naturais]: Preço=$25 vs CustoLanded=$26.91 (Margem: $-1.91/un)
+   • Bauxita (Alumínio) (bauxite) [Recursos Naturais]: Preço=$30 vs CustoLanded=$32.29 (Margem: $-2.29/un)
+   • Petróleo Bruto (crude_oil) [Recursos Naturais]: Preço=$36 vs CustoLanded=$39.47 (Margem: $-3.47/un)
+   • Areia de Sílica (silica) [Recursos Naturais]: Preço=$14 vs CustoLanded=$14.35 (Margem: $-0.35/un)
+   • Madeira / Toras (timber) [Recursos Naturais]: Preço=$20 vs CustoLanded=$21.53 (Margem: $-1.53/un)
+   • Minério de Ouro (gold_ore) [Recursos Naturais]: Preço=$190 vs CustoLanded=$215.28 (Margem: $-25.28/un)
+   • Minerais Químicos (chemical_minerals) [Recursos Naturais]: Preço=$24 vs CustoLanded=$25.12 (Margem: $-1.12/un)
+
+================================================================
+TOTAL DE LOJAS AVALIADAS: 9
+LOJAS DENTRO DA FAIXA ALVO (4-18 MESES): 5/9
+================================================================

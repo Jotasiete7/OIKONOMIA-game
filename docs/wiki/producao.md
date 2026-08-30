@@ -1,12 +1,12 @@
 # 📖 Wiki Interna do Grafo de Produção — OIKONOMIA
 
 > **Documentação Viva**: Este arquivo foi gerado automaticamente a partir de `client/data_catalogs.js`.
-> **Total de Produtos**: 98 itens catalogados | **Receitas Industriais**: 76 | **Minas**: 7 | **Fazendas**: 14
+> **Total de Produtos**: 99 itens catalogados | **Receitas Industriais**: 77 | **Minas**: 7 | **Fazendas**: 14
 > **Data de Geração**: 2026-08-30
 
 ---
 
-## Tier 0 — Matérias-Primas & Recursos Naturais (Extrativismo / Agronegócio) (23 produtos)
+## Tier 0 — Matérias-Primas & Recursos Naturais (Extrativismo / Agronegócio) (22 produtos)
 
 ### 🚜 Algodão Cru (Tier 0)
 - **ID do Produto:** `cotton`
@@ -71,15 +71,6 @@
 - **Vendido em:** Kombini de Bairro
 - **Usado como insumo em:** Refinaria de Açúcar (Açúcar Refinado) [1 un]
 
-### ⚙️ Fio de Lã Natural (Tier 0)
-- **ID do Produto:** `wool_yarn`
-- **Categoria:** Insumos Industriais *(Insumo Industrial)*
-- **Onde é obtido:** ⚓ Importação Portuária Direta
-- **Insumos necessários:** (nenhum — recurso primário)
-- **Desbloqueio:** Livre desde o início (Extrativismo / Commodities)
-- **Vendido em:** (nenhuma — produto de uso estritamente industrial)
-- **Usado como insumo em:** (nenhum — produto final de consumo)
-
 ### 🚜 Folhas de Tabaco (Tier 0)
 - **ID do Produto:** `tobacco`
 - **Categoria:** Agronegócio *(Bem Comercial)*
@@ -105,7 +96,7 @@
 - **Insumos necessários:** (nenhum — recurso primário)
 - **Desbloqueio:** Livre desde o início (Extrativismo / Commodities)
 - **Vendido em:** Kombini de Bairro
-- **Usado como insumo em:** Tecelagem de Lã Nobre (Tecido de Lã) [1 un]
+- **Usado como insumo em:** Fiação de Lã Natural (Fio de Lã) [1 un]
 
 ### 🚜 Látex / Borracha (Tier 0)
 - **ID do Produto:** `rubber`
@@ -217,7 +208,7 @@
 
 ---
 
-## Tier 1 — Insumos Básicos & Refino Primário (23 produtos)
+## Tier 1 — Insumos Básicos & Refino Primário (24 produtos)
 
 ### ⚙️ Aço Laminado (Tier 1)
 - **ID do Produto:** `steel`
@@ -345,6 +336,15 @@
 - **Vendido em:** (nenhuma — produto de uso estritamente industrial)
 - **Usado como insumo em:** Panificação Artesanal (Pão Artesanal) [1 un]; Confeitaria & Biscoitos (Biscoito Recheado) [1 un]
 
+### ⚙️ Fio de Lã Natural (Tier 1)
+- **ID do Produto:** `wool_yarn`
+- **Categoria:** Insumos Industriais *(Insumo Industrial)*
+- **Onde é obtido:** 🏭 Linha Fabril — Fiação de Lã Natural (Capacidade: 500 un/dia · Custo: $3.00/un)
+- **Insumos necessários:** Lã de Ovelha (Tier 0) × 1
+- **Desbloqueio:** Pesquisa de P&D — Tier 1 (Custo base: $60)
+- **Vendido em:** (nenhuma — produto de uso estritamente industrial)
+- **Usado como insumo em:** Tecelagem de Lã Nobre (Tecido de Lã) [1 un]
+
 ### 🌾 Leite Integral (Tier 1)
 - **ID do Produto:** `milk`
 - **Categoria:** Alimentos *(Bem Comercial)*
@@ -428,7 +428,7 @@
 
 ---
 
-## Tier 2 — Bens de Consumo Intermediários & Manufatura (47 produtos)
+## Tier 2 — Bens de Consumo Intermediários & Manufatura (44 produtos)
 
 ### 🍺 Água Mineral (Tier 2)
 - **ID do Produto:** `mineral_water`
@@ -763,15 +763,6 @@
 - **Vendido em:** Kombini de Bairro, MegaStore de Eletrônicos
 - **Usado como insumo em:** (nenhum — produto final de consumo)
 
-### 🛋️ Sofá Conforto (Tier 2)
-- **ID do Produto:** `sofa`
-- **Categoria:** Móveis *(Bem Comercial)*
-- **Onde é obtido:** 🏭 Linha Fabril — Estofados: Sofás Confort (Capacidade: 110 un/dia · Custo: $120.00/un)
-- **Insumos necessários:** Chapas de Madeira (Tier 1) × 1.5, Couro Curtido (Tier 1) × 1, wool_cloth (Tier 1) × 1
-- **Desbloqueio:** Pesquisa de P&D — Tier 2 (Custo base: $324, Bônus convergência: +$180)
-- **Vendido em:** Kombini de Bairro, Loja de Móveis & Decoração
-- **Usado como insumo em:** (nenhum — produto final de consumo)
-
 ### 🌾 Sopa Enlatada (Tier 2)
 - **ID do Produto:** `canned_soup`
 - **Categoria:** Alimentos *(Bem Comercial)*
@@ -790,14 +781,14 @@
 - **Vendido em:** Kombini de Bairro, Supermercado & Alimentos
 - **Usado como insumo em:** (nenhum — produto final de consumo)
 
-### 👗 Suéter de Lã (Tier 2)
-- **ID do Produto:** `wool_sweater`
-- **Categoria:** Vestuário *(Bem Comercial)*
-- **Onde é obtido:** 🏭 Linha Fabril — Tear de Malhas & Lã (Capacidade: 280 un/dia · Custo: $14.00/un)
-- **Insumos necessários:** wool_cloth (Tier 1) × 1
+### ⚙️ Tecido de Lã (Tier 2)
+- **ID do Produto:** `wool_cloth`
+- **Categoria:** Insumos Industriais *(Insumo Industrial)*
+- **Onde é obtido:** 🏭 Linha Fabril — Tecelagem de Lã Nobre (Capacidade: 400 un/dia · Custo: $5.50/un)
+- **Insumos necessários:** Fio de Lã Natural (Tier 1) × 1
 - **Desbloqueio:** Pesquisa de P&D — Tier 2 (Custo base: $144)
-- **Vendido em:** Kombini de Bairro, Boutique de Vestuário & Moda
-- **Usado como insumo em:** (nenhum — produto final de consumo)
+- **Vendido em:** (nenhuma — produto de uso estritamente industrial)
+- **Usado como insumo em:** Alfaiataria Executiva (Terno Executivo) [1.5 un]; Tear de Malhas & Lã (Suéter de Lã) [1 un]; Alta Costura & Vestidos (Vestido de Gala) [0.5 un]; Estofados: Sofás Confort (Sofá Conforto) [1 un]
 
 ### 👗 Tênis Esportivo (Tier 2)
 - **ID do Produto:** `athletic_shoes`
@@ -805,24 +796,6 @@
 - **Onde é obtido:** 🏭 Linha Fabril — Fábrica de Calçados Esportivos (Capacidade: 320 un/dia · Custo: $16.00/un)
 - **Insumos necessários:** Tecido de Algodão (Tier 1) × 0.5, Látex / Borracha (Tier 0) × 1, Plástico Industrial (Tier 1) × 0.5
 - **Desbloqueio:** Pesquisa de P&D — Tier 2 (Custo base: $324, Bônus convergência: +$180)
-- **Vendido em:** Kombini de Bairro, Boutique de Vestuário & Moda
-- **Usado como insumo em:** (nenhum — produto final de consumo)
-
-### 👗 Terno Executivo (Tier 2)
-- **ID do Produto:** `business_suit`
-- **Categoria:** Vestuário *(Bem Comercial)*
-- **Onde é obtido:** 🏭 Linha Fabril — Alfaiataria Executiva (Capacidade: 150 un/dia · Custo: $45.00/un)
-- **Insumos necessários:** wool_cloth (Tier 1) × 1.5
-- **Desbloqueio:** Pesquisa de P&D — Tier 2 (Custo base: $144)
-- **Vendido em:** Kombini de Bairro, Boutique de Vestuário & Moda
-- **Usado como insumo em:** (nenhum — produto final de consumo)
-
-### 👗 Vestido de Gala (Tier 2)
-- **ID do Produto:** `gala_dress`
-- **Categoria:** Vestuário *(Bem Comercial)*
-- **Onde é obtido:** 🏭 Linha Fabril — Alta Costura & Vestidos (Capacidade: 220 un/dia · Custo: $21.00/un)
-- **Insumos necessários:** Tecido de Algodão (Tier 1) × 1, wool_cloth (Tier 1) × 0.5
-- **Desbloqueio:** Pesquisa de P&D — Tier 2 (Custo base: $234, Bônus convergência: +$90)
 - **Vendido em:** Kombini de Bairro, Boutique de Vestuário & Moda
 - **Usado como insumo em:** (nenhum — produto final de consumo)
 
@@ -855,7 +828,7 @@
 
 ---
 
-## Tier 3 — Montadoras & Produtos Compostos (5 produtos)
+## Tier 3 — Montadoras & Produtos Compostos (9 produtos)
 
 ### 🚗 Caminhão Pesado (Tier 3)
 - **ID do Produto:** `heavy_truck`
@@ -893,6 +866,33 @@
 - **Vendido em:** Kombini de Bairro, Concessionária de Automóveis
 - **Usado como insumo em:** (nenhum — produto final de consumo)
 
+### 🛋️ Sofá Conforto (Tier 3)
+- **ID do Produto:** `sofa`
+- **Categoria:** Móveis *(Bem Comercial)*
+- **Onde é obtido:** 🏭 Linha Fabril — Estofados: Sofás Confort (Capacidade: 110 un/dia · Custo: $120.00/un)
+- **Insumos necessários:** Chapas de Madeira (Tier 1) × 1.5, Couro Curtido (Tier 1) × 1, Tecido de Lã (Tier 2) × 1
+- **Desbloqueio:** Pesquisa de P&D — Tier 3 (Custo base: $526, Bônus convergência: +$180)
+- **Vendido em:** Kombini de Bairro, Loja de Móveis & Decoração
+- **Usado como insumo em:** (nenhum — produto final de consumo)
+
+### 👗 Suéter de Lã (Tier 3)
+- **ID do Produto:** `wool_sweater`
+- **Categoria:** Vestuário *(Bem Comercial)*
+- **Onde é obtido:** 🏭 Linha Fabril — Tear de Malhas & Lã (Capacidade: 280 un/dia · Custo: $14.00/un)
+- **Insumos necessários:** Tecido de Lã (Tier 2) × 1
+- **Desbloqueio:** Pesquisa de P&D — Tier 3 (Custo base: $346)
+- **Vendido em:** Kombini de Bairro, Boutique de Vestuário & Moda
+- **Usado como insumo em:** (nenhum — produto final de consumo)
+
+### 👗 Terno Executivo (Tier 3)
+- **ID do Produto:** `business_suit`
+- **Categoria:** Vestuário *(Bem Comercial)*
+- **Onde é obtido:** 🏭 Linha Fabril — Alfaiataria Executiva (Capacidade: 150 un/dia · Custo: $45.00/un)
+- **Insumos necessários:** Tecido de Lã (Tier 2) × 1.5
+- **Desbloqueio:** Pesquisa de P&D — Tier 3 (Custo base: $346)
+- **Vendido em:** Kombini de Bairro, Boutique de Vestuário & Moda
+- **Usado como insumo em:** (nenhum — produto final de consumo)
+
 ### 🚗 Veículo SUV (Tier 3)
 - **ID do Produto:** `suv_car`
 - **Categoria:** Automotivo *(Bem Comercial)*
@@ -900,6 +900,15 @@
 - **Insumos necessários:** Motor a Combustão (Tier 2) × 1.5, Aço Laminado (Tier 1) × 3, Pneus Automotivos (Tier 1) × 1.5, Vidro Plano (Tier 1) × 1
 - **Desbloqueio:** Pesquisa de P&D — Tier 3 (Custo base: $706, Bônus convergência: +$360)
 - **Vendido em:** Kombini de Bairro, Concessionária de Automóveis
+- **Usado como insumo em:** (nenhum — produto final de consumo)
+
+### 👗 Vestido de Gala (Tier 3)
+- **ID do Produto:** `gala_dress`
+- **Categoria:** Vestuário *(Bem Comercial)*
+- **Onde é obtido:** 🏭 Linha Fabril — Alta Costura & Vestidos (Capacidade: 220 un/dia · Custo: $21.00/un)
+- **Insumos necessários:** Tecido de Algodão (Tier 1) × 1, Tecido de Lã (Tier 2) × 0.5
+- **Desbloqueio:** Pesquisa de P&D — Tier 3 (Custo base: $436, Bônus convergência: +$90)
+- **Vendido em:** Kombini de Bairro, Boutique de Vestuário & Moda
 - **Usado como insumo em:** (nenhum — produto final de consumo)
 
 ---

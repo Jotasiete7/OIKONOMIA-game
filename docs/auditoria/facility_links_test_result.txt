@@ -1,0 +1,28 @@
+================================================================
+  REAUDITORIA REAL: VÍNCULOS COMÉRCIO ↔ INDÚSTRIA ↔ PESQUISA   
+================================================================
+
+--- TESTE 1: Modal de Adicionar Produto na Loja (add-product-modal) ---
+[T1.1] Filtro de Whitelist na Drogaria: ✅ PASSOU (Apenas Farmácia/Higiene/Cosméticos)
+[T1.2] Bloqueio de produtos ilegais (Carros/Jeans): ✅ PASSOU (Bloqueados da Drogaria)
+[T1.3] Criação de Gôndola Real: ✅ PASSOU (Preço=$9.5, Fornecedor=⚓ Porto Alfa (Terminal de Alimentos & Consumo), LandedCost=$3.736)
+
+--- TESTE 2: Modal de Fornecedores de Insumos na Fábrica ---
+[T2.1] Lista de Fornecedores de Insumo Populada: ✅ PASSOU (3 ofertas encontradas)
+[T2.2] Fazenda Própria e Portos Lado a Lado: ✅ PASSOU (Fazenda Própria + Porto Marítimo)
+[T2.3] Custo Landed e Qualidade Recalculados: ✅ PASSOU (Custo=$0.63/un, QR=64)
+[T2.4] Consumo Físico no Ciclo Diário: ✅ PASSOU (Silo Fazenda: 2000 ➔ 1550 un | Silo Fábrica: 0 ➔ 450 un)
+
+--- TESTE 3: Wizard de P&D (rd-new-project-modal) ↔ Fábrica ---
+[T3.1] Identificação de Tiers no Grafo: ✅ PASSOU (Tecido de Lã = Tier 2, Terno Executivo = Tier 3)
+[T3.2] Desbloqueio e Registro no Estado Compartilhado: ✅ PASSOU (unlockedTechSet atualizado)
+[T3.3] Reflexo Imediato na Linha da Fábrica: ✅ PASSOU (Receita "Alfaiataria Executiva" liberada para ativação imediata)
+
+--- TESTE 4: Árvore Tecnológica (tech-tree-modal) ↔ Catálogo ---
+[T4.1] Cadeia Completa do Pão: ✅ PASSOU (wheat ➔ flour ➔ bread)
+[T4.2] Cadeia Completa do Terno (Cadeia da Lã em 2 Estágios): ✅ PASSOU (wool ➔ wool_yarn ➔ wool_cloth ➔ business_suit)
+[T4.3] Custos de Desbloqueio na Árvore: ✅ PASSOU (Terno: Tier 3 · Custo P&D=$346)
+
+================================================================
+           TODOS OS 4 TESTES DE VÍNCULO PASSARAM COM SUCESSO!    
+================================================================

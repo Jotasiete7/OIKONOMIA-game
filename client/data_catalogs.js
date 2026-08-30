@@ -923,6 +923,19 @@
     "brandWeight": 10,
     "perCapitaDailyDemand": 0
   },
+  "wool_cloth": {
+    "id": "wool_cloth",
+    "name": "Tecido de Lã",
+    "category": "Insumos Industriais",
+    "isIntermediate": true,
+    "standardPrice": 16.0,
+    "baseCost": 8.5,
+    "rdBaseCost": 4200,
+    "necessityIndex": 65,
+    "qualityWeight": 68,
+    "brandWeight": 10,
+    "perCapitaDailyDemand": 0
+  },
   "leather": {
     "id": "leather",
     "name": "Couro Curtido",
@@ -1328,18 +1341,32 @@
     "desc": "Tecelagem de fios de algodão para confecção têxtil."
   },
   {
+    "id": "rec_wool_yarn",
+    "name": "Fiação de Lã Natural",
+    "outputProdId": "wool_yarn",
+    "outputName": "Fio de Lã",
+    "isIntermediate": true,
+    "unitCost": 3.0,
+    "quality": 65,
+    "dailyCap": 500,
+    "inputs": {
+      "wool": 1
+    },
+    "desc": "Cardagem e fiação de lã de ovelha crua em fios nobres."
+  },
+  {
     "id": "rec_wool_cloth",
     "name": "Tecelagem de Lã Nobre",
     "outputProdId": "wool_cloth",
     "outputName": "Tecido de Lã",
     "isIntermediate": true,
-    "unitCost": 4.2,
+    "unitCost": 5.5,
     "quality": 68,
     "dailyCap": 400,
     "inputs": {
-      "wool": 1
+      "wool_yarn": 1
     },
-    "desc": "Fios de lã natural para alfaiataria de luxo e suéteres."
+    "desc": "Tear industrial para tecer fios de lã em tecidos nobres de alfaiataria."
   },
   {
     "id": "rec_leather",
@@ -2207,6 +2234,7 @@
       'engine': { wholesalePrice: 260.00, quality: 54, quota: 150, origin: 'Importação Motores' },
       'cotton_cloth': { wholesalePrice: 5.50, quality: 50, quota: 400, origin: 'Importação Têxtil' },
       'wool_yarn': { wholesalePrice: 7.00, quality: 52, quota: 300, origin: 'Importação Fiação' },
+      'wool_cloth': { wholesalePrice: 12.00, quality: 52, quota: 300, origin: 'Importação Tecelagem' },
       'leather': { wholesalePrice: 14.00, quality: 52, quota: 300, origin: 'Importação Curtume' },
       'paper': { wholesalePrice: 12.00, quality: 50, quota: 450, origin: 'Importação Celulose' },
       'lumber': { wholesalePrice: 26.00, quality: 50, quota: 350, origin: 'Importação Madeira' },
