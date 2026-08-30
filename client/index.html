@@ -361,30 +361,47 @@
     <div class="bg-slate-900 border border-purple-700/60 rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
       <!-- Header -->
       <div class="bg-slate-800 border-b border-slate-700 px-5 py-3 flex items-center justify-between">
-        <h3 class="text-sm font-bold text-purple-300 flex items-center gap-2">⚗️ Iniciar Novo Projeto de Pesquisa</h3>
+        <div>
+          <h3 class="text-sm font-bold text-purple-300 flex items-center gap-2">⚗️ Iniciar Projeto de Pesquisa</h3>
+          <span id="rd-wizard-slots-info" class="text-[10px] text-slate-400 block mt-0.5">Bancadas Livres: 4/4</span>
+        </div>
         <button onclick="closeRDNewProjectModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
       </div>
-      <div class="p-5 space-y-4 font-mono text-xs">
+      <div class="p-5 space-y-3.5 font-mono text-xs">
         <!-- Seleção de Produto -->
         <div>
-          <label class="text-slate-400 block mb-1.5">1. Produto a Pesquisar:</label>
-          <select id="rd-product-select" onchange="updateRDWizardPreview()"
+          <label class="text-slate-400 block mb-1">1. Produto a Pesquisar:</label>
+          <select id="rd-product-select" onchange="onRDProductSelectChange()"
             class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs focus:outline-none focus:border-purple-600">
             <option value="">-- Selecione um produto --</option>
           </select>
           <span id="rd-product-category-badge" class="text-[10px] text-purple-400 mt-1 block hidden"></span>
         </div>
+
+        <!-- Alocação de Bancadas de Laboratório -->
+        <div>
+          <label class="text-slate-400 block mb-1">2. Bancadas Laboratoriais Dedicadas:</label>
+          <div class="flex items-center gap-1.5" id="rd-labs-count-selector">
+            <button type="button" onclick="setRDLabsCount(1)" id="rd-lab-btn-1" class="flex-1 py-1.5 rounded-lg bg-purple-900 text-purple-100 font-bold border border-purple-500 text-[11px] cursor-pointer">1 Lab</button>
+            <button type="button" onclick="setRDLabsCount(2)" id="rd-lab-btn-2" class="flex-1 py-1.5 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 text-[11px] cursor-pointer hover:text-slate-200">2 Labs</button>
+            <button type="button" onclick="setRDLabsCount(3)" id="rd-lab-btn-3" class="flex-1 py-1.5 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 text-[11px] cursor-pointer hover:text-slate-200">3 Labs</button>
+            <button type="button" onclick="setRDLabsCount(4)" id="rd-lab-btn-4" class="flex-1 py-1.5 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 text-[11px] cursor-pointer hover:text-slate-200">4 Labs</button>
+          </div>
+          <p class="text-[9px] text-slate-500 mt-1">Alocar mais bancadas no mesmo produto acelera proporcionalmente a taxa de avanço mensal.</p>
+        </div>
+
         <!-- QR Alvo -->
         <div>
-          <label class="text-slate-400 block mb-1.5">2. QR Alvo: <span id="rd-target-qr-display" class="text-purple-300 font-bold">80</span></label>
+          <label class="text-slate-400 block mb-1">3. QR Alvo: <span id="rd-target-qr-display" class="text-purple-300 font-bold">80</span></label>
           <input type="range" id="rd-target-qr-slider" min="60" max="100" step="1" value="80"
             oninput="updateRDWizardPreview()"
             class="w-full accent-purple-500">
           <div class="flex justify-between text-[9px] text-slate-600 mt-0.5"><span>QR 60</span><span>QR 80</span><span>QR 100</span></div>
         </div>
+
         <!-- Verba Mensal -->
         <div>
-          <label class="text-slate-400 block mb-1.5">3. Verba Mensal: <span id="rd-budget-warning" class="text-amber-400 hidden">⚠ Abaixo do mínimo!</span></label>
+          <label class="text-slate-400 block mb-1">4. Verba Mensal de Pesquisa:</label>
           <div class="flex items-center gap-2">
             <span class="text-slate-500">$</span>
             <input type="number" id="rd-budget-input" min="0" step="500" value="5000"
@@ -392,16 +409,25 @@
               class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-emerald-400 font-bold text-xs focus:outline-none focus:border-purple-600">
             <span class="text-slate-500 text-[10px]">/mês</span>
           </div>
-          <p id="rd-min-required-hint" class="text-[10px] text-slate-500 mt-1">Mínimo para progressão: --</p>
+
+          <!-- Caixa Explicativa do Custo da Equipe Científica -->
+          <div id="rd-budget-status-box" class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-[10px] space-y-1 mt-2">
+            <div class="flex justify-between text-slate-400"><span>Custo de Manutenção da Equipe:</span><strong id="rd-team-cost-display" class="text-slate-200">$0/mês</strong></div>
+            <div class="flex justify-between text-slate-400"><span>Verba Extra de Aceleração:</span><strong id="rd-extra-budget-display" class="text-emerald-400">+$0/mês</strong></div>
+            <div id="rd-budget-warning-msg" class="text-amber-400 text-[9px] pt-1 border-t border-slate-900 hidden">
+              ℹ️ A verba mensal está abaixo do custo mínimo da equipe. Cientistas precisam de verba suficiente para operar instrumentos e gerar avanço mensal.
+            </div>
+          </div>
         </div>
+
         <!-- Preview / ETA -->
         <div id="rd-wizard-preview" class="bg-purple-950/40 border border-purple-800/50 rounded-xl p-3 space-y-1 text-[11px] hidden">
           <div class="flex justify-between"><span class="text-slate-400">Progresso atual do produto:</span><span id="rd-prev-current-qr" class="text-amber-300 font-bold">--</span></div>
-          <div class="flex justify-between"><span class="text-slate-400">Custo mínimo / mês:</span><span id="rd-prev-min-cost" class="text-rose-400 font-bold">--</span></div>
           <div class="flex justify-between"><span class="text-slate-400">Ganho estimado / mês:</span><span id="rd-prev-gain" class="text-emerald-400 font-bold">--</span></div>
           <div class="flex justify-between"><span class="text-slate-400">Tempo Estimado (ETA):</span><span id="rd-prev-eta" class="text-purple-300 font-bold">--</span></div>
           <div class="flex justify-between border-t border-purple-800/50 pt-1 mt-1"><span class="text-slate-400">Custo Total Estimado:</span><span id="rd-prev-total-cost" class="text-slate-100 font-bold">--</span></div>
         </div>
+
         <!-- Botões -->
         <div class="flex gap-2 pt-1">
           <button onclick="closeRDNewProjectModal()" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-slate-700 cursor-pointer">Cancelar</button>
@@ -3676,6 +3702,38 @@
       document.getElementById('rd-center-modal').classList.add('hidden');
     }
 
+    /** Retorna a contagem de Centros de P&D (prédios físicos) construídos */
+    function getBuiltRDCentersCount() {
+      let count = 0;
+      for (const tile of activeFacilitySet.values()) {
+        if (tile.rdCenter) count++;
+      }
+      return count;
+    }
+
+    /** Cada Centro de P&D construído dá 4 bancadas de laboratório */
+    function getRDTotalLabCapacity() {
+      return getBuiltRDCentersCount() * 4;
+    }
+
+    /** Contagem total de bancadas ocupadas em projetos ativos */
+    function getRDUsedLabSlots() {
+      return Object.values(rdLabs)
+        .filter(p => p.status === 'active')
+        .reduce((sum, p) => sum + (p.labsCount || 1), 0);
+    }
+
+    /** Retorna o melhor QR já pesquisado pelo jogador para um dado produto */
+    function getProductBestRDQuality(prodId) {
+      let best = 0;
+      for (const proj of Object.values(rdLabs)) {
+        if (proj.productId === prodId && proj.currentQR > best) {
+          best = proj.currentQR;
+        }
+      }
+      return best;
+    }
+
     /** Popula e renderiza todos os projetos de P&D ativos/pausados/concluídos */
     function renderRDProjectsList() {
       const list = document.getElementById('rd-projects-list');
@@ -3683,14 +3741,32 @@
       const budgetDisplay = document.getElementById('rd-total-budget-display');
       if (!list) return;
 
+      const totalCapacity = getRDTotalLabCapacity();
+      const usedSlots = getRDUsedLabSlots();
+      const centersCount = getBuiltRDCentersCount();
+
       const projects = Object.values(rdLabs);
       const active = projects.filter(p => p.status === 'active');
       const totalBudget = active.reduce((s, p) => s + (p.monthlyBudget || 0), 0);
       budgetDisplay.textContent = `$${totalBudget.toLocaleString('en-US')} / mês`;
-      subtitle.textContent = `${active.length} projeto${active.length !== 1 ? 's' : ''} ativo${active.length !== 1 ? 's' : ''} · Verba mensal total: $${totalBudget.toLocaleString('en-US')}`;
+      subtitle.textContent = `Centros de P&D: ${centersCount} · Bancadas: ${usedSlots}/${totalCapacity} ativas · Verba Total: $${totalBudget.toLocaleString('en-US')}/mês`;
+
+      if (centersCount === 0) {
+        list.innerHTML = `
+          <div class="text-center py-10 px-4 space-y-3 font-mono">
+            <div class="text-3xl">🔬</div>
+            <div class="text-xs font-bold text-purple-300">Nenhum Centro de P&D Inaugurado</div>
+            <p class="text-[11px] text-slate-400 max-w-sm mx-auto">
+              Para realizar pesquisas de produtos e contratar cientistas, construa um <strong>Centro de P&D</strong> no mapa da cidade.
+            </p>
+            <div class="text-[10px] text-slate-500">Custo: $80.000 · Aluguel: -$10/dia · Capacidade: +4 Bancadas</div>
+          </div>
+        `;
+        return;
+      }
 
       if (projects.length === 0) {
-        list.innerHTML = '<p class="text-xs text-slate-500 text-center py-8 font-mono">Nenhum projeto de pesquisa ativo.<br>Clique em "Novo Projeto" para iniciar.</p>';
+        list.innerHTML = '<p class="text-xs text-slate-500 text-center py-8 font-mono">Nenhum projeto de pesquisa em andamento.<br>Clique em "➕ Novo Projeto" para alocar bancadas.</p>';
         return;
       }
 
@@ -3698,7 +3774,9 @@
       for (const proj of projects.sort((a, b) => (b.status === 'active' ? 1 : 0) - (a.status === 'active' ? 1 : 0))) {
         const prod = PRODUCT_CATALOG[proj.productId];
         const cat = RD_CATEGORIES[proj.category] || {};
-        const minCost = CoreMath.calculateRDMonthlyCost(proj.currentQR, prod ? prod.rdBaseCost : 3000);
+        const labsCount = proj.labsCount || 1;
+        const minCostSingle = CoreMath.calculateRDMonthlyCost(proj.currentQR, prod ? prod.rdBaseCost : 3000);
+        const minCostTotal = minCostSingle * labsCount;
         const pct = Math.min(100, Math.round(((proj.currentQR - proj.startQR) / Math.max(1, proj.targetQR - proj.startQR)) * 100));
 
         const isActive = proj.status === 'active';
@@ -3709,8 +3787,9 @@
             ? '<span class="bg-purple-950 text-purple-300 px-2 py-0.5 rounded border border-purple-700 text-[9px] font-bold">🟢 ATIVO</span>'
             : '<span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-700 text-[9px] font-bold">⏸ PAUSADO</span>');
 
-        const gain = CoreMath.calculateRDQualityGain(proj.currentQR, proj.targetQR, proj.monthlyBudget, minCost);
-        const monthsLeft = gain > 0 ? Math.ceil((proj.targetQR - proj.currentQR) / gain) : '∞';
+        const gainSingle = CoreMath.calculateRDQualityGain(proj.currentQR, proj.targetQR, (proj.monthlyBudget || minCostTotal) / labsCount, minCostSingle);
+        const gainTotal = gainSingle * labsCount;
+        const monthsLeft = gainTotal > 0 ? Math.ceil((proj.targetQR - proj.currentQR) / gainTotal) : '∞';
         const barColor = isDone ? 'bg-emerald-500' : (isActive ? 'bg-purple-500' : 'bg-slate-600');
 
         const card = document.createElement('div');
@@ -3720,7 +3799,10 @@
             <div class="flex items-center gap-2">
               <span class="text-base">${cat.icon || '🔬'}</span>
               <div>
-                <div class="font-bold text-slate-100 text-[11px]">${prod ? prod.name : proj.productId}</div>
+                <div class="font-bold text-slate-100 text-[11px] flex items-center gap-1.5">
+                  <span>${prod ? prod.name : proj.productId}</span>
+                  <span class="text-[9px] px-1.5 py-0.2 rounded bg-purple-950 text-purple-300 border border-purple-800">${labsCount} Lab${labsCount > 1 ? 's' : ''}</span>
+                </div>
                 <div class="text-[9px] text-slate-400">${proj.category} · Meses investidos: ${proj.monthsInvested}</div>
               </div>
             </div>
@@ -3737,7 +3819,7 @@
           </div>
           <div class="grid grid-cols-3 gap-2 text-[10px] text-slate-400">
             <div>Verba: <strong class="text-emerald-400">$${(proj.monthlyBudget || 0).toLocaleString('en-US')}/mês</strong></div>
-            <div>Ganho: <strong class="text-purple-300">+${gain.toFixed(2)} QR/mês</strong></div>
+            <div>Ganho: <strong class="text-purple-300">+${gainTotal.toFixed(2)} QR/mês</strong></div>
             <div>ETA: <strong class="text-slate-200">${isDone ? '--' : (monthsLeft === '∞' ? '∞' : monthsLeft + ' meses')}</strong></div>
           </div>
           <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-slate-800">
@@ -4169,21 +4251,120 @@
       }
     }
 
+    let currentSelectedLabsCount = 1;
+
+    function setRDLabsCount(n) {
+      const totalCapacity = getRDTotalLabCapacity();
+      const usedSlots = getRDUsedLabSlots();
+      const freeSlots = Math.max(1, totalCapacity - usedSlots);
+      if (n > freeSlots) {
+        n = freeSlots;
+      }
+      currentSelectedLabsCount = Math.max(1, n);
+
+      for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById(`rd-lab-btn-${i}`);
+        if (!btn) continue;
+        if (i === currentSelectedLabsCount) {
+          btn.className = 'flex-1 py-1.5 rounded-lg bg-purple-900 text-purple-100 font-bold border border-purple-500 text-[11px] cursor-pointer shadow';
+        } else {
+          btn.className = 'flex-1 py-1.5 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 text-[11px] cursor-pointer hover:text-slate-200';
+        }
+      }
+
+      // Atualiza o orçamento recomendado multiplicando pelas bancadas
+      const prodId = document.getElementById('rd-product-select')?.value;
+      const prod = PRODUCT_CATALOG[prodId];
+      if (prod) {
+        const cat = RD_CATEGORIES[prod.category] || { baseCost: 3000 };
+        const currentQR = getRDCurrentQR(prodId);
+        const minCostSingle = CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || cat.baseCost);
+        const budgetInput = document.getElementById('rd-budget-input');
+        if (budgetInput) budgetInput.value = minCostSingle * currentSelectedLabsCount;
+      }
+
+      updateRDWizardPreview();
+    }
+
+    function onRDProductSelectChange() {
+      const prodId = document.getElementById('rd-product-select').value;
+      const prod = PRODUCT_CATALOG[prodId];
+      if (prod) {
+        const cat = RD_CATEGORIES[prod.category] || { baseCost: 3000 };
+        const currentQR = getRDCurrentQR(prodId);
+        const minCostSingle = CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || cat.baseCost);
+        document.getElementById('rd-budget-input').value = minCostSingle * currentSelectedLabsCount;
+      }
+      updateRDWizardPreview();
+    }
+
     function openRDNewProjectModal() {
+      const centersCount = getBuiltRDCentersCount();
+      const totalCapacity = getRDTotalLabCapacity();
+      const usedSlots = getRDUsedLabSlots();
+      const freeSlots = Math.max(0, totalCapacity - usedSlots);
+
+      if (centersCount === 0) {
+        showCustomConfirmModal({
+          icon: '🔬',
+          title: 'Centro de P&D Necessário',
+          subtitle: 'Instalação Científica Requerida',
+          description: 'Você precisa <strong>inaugurar um Centro de P&D (Laboratório)</strong> no mapa da cidade para contratar cientistas e pesquisar novas tecnologias.',
+          details: [
+            { label: 'Custo de Construção', value: '$80,000', color: 'text-purple-400 font-bold' },
+            { label: 'Aluguel do Solo', value: '-$10/dia', color: 'text-amber-400' },
+            { label: 'Capacidade', value: '+4 Bancadas de Laboratório', color: 'text-emerald-400 font-bold' }
+          ],
+          confirmText: 'Entendido',
+          confirmTheme: 'purple',
+          onConfirm: null
+        });
+        return;
+      }
+
+      if (freeSlots <= 0) {
+        showCustomConfirmModal({
+          icon: '⚠️',
+          title: 'Capacidade de P&D Esgotada',
+          subtitle: `Bancadas Ocupadas: ${usedSlots}/${totalCapacity}`,
+          description: `Todas as <strong>${totalCapacity} bancadas laboratoriais</strong> dos seus Centros de P&D estão ocupadas em pesquisas ativas. Construa outro Centro de P&D para obter mais 4 bancadas.`,
+          details: [
+            { label: 'Bancadas em Uso', value: `${usedSlots} de ${totalCapacity}`, color: 'text-rose-400 font-bold' },
+            { label: 'Expansão', value: 'Construa +1 Centro de P&D (+4 Bancadas)', color: 'text-purple-300' }
+          ],
+          confirmText: 'Entendido',
+          confirmTheme: 'purple',
+          onConfirm: null
+        });
+        return;
+      }
+
+      const slotsInfoEl = document.getElementById('rd-wizard-slots-info');
+      if (slotsInfoEl) {
+        slotsInfoEl.textContent = `Bancadas Livres: ${freeSlots}/${totalCapacity}`;
+      }
+
       const sel = document.getElementById('rd-product-select');
       sel.innerHTML = '<option value="">-- Selecione um produto --</option>';
 
-      // Identifica produtos que o jogador já fabrica ou vende para marcar com badge
+      // Identifica produtos que o jogador fabrica, vende ou já pesquisa
       const activeManufacturing = new Set();
       const activeSelling = new Set();
+      const activeResearchCounts = {};
+
       for (const tile of activeFacilitySet.values()) {
         if (tile.store) Object.keys(tile.store.shelves).forEach(id => activeSelling.add(id));
         if (tile.factory) Object.values(tile.factory.lines).forEach(l => activeManufacturing.add(l.outputProductId));
       }
 
+      for (const proj of Object.values(rdLabs)) {
+        if (proj.status === 'active') {
+          activeResearchCounts[proj.productId] = (activeResearchCounts[proj.productId] || 0) + (proj.labsCount || 1);
+        }
+      }
+
       const categoryGroups = {};
       for (const prod of Object.values(PRODUCT_CATALOG)) {
-        if (rdLabs['rd_' + prod.id] && rdLabs['rd_' + prod.id].status === 'active') continue; // já em pesquisa ativa
         if (!categoryGroups[prod.category]) categoryGroups[prod.category] = [];
         categoryGroups[prod.category].push(prod);
       }
@@ -4195,7 +4376,8 @@
           const opt = document.createElement('option');
           opt.value = prod.id;
           let tag = '';
-          if (activeManufacturing.has(prod.id)) tag = ' [🏭 Fabricando]';
+          if (activeResearchCounts[prod.id]) tag = ` [🔬 ${activeResearchCounts[prod.id]} Lab(s) Ativo(s)]`;
+          else if (activeManufacturing.has(prod.id)) tag = ' [🏭 Fabricando]';
           else if (activeSelling.has(prod.id)) tag = ' [🏪 Vendendo]';
           opt.textContent = `${prod.name}${tag}`;
           grp.appendChild(opt);
@@ -4203,8 +4385,8 @@
         sel.appendChild(grp);
       }
 
+      setRDLabsCount(1);
       document.getElementById('rd-target-qr-slider').value = 80;
-      document.getElementById('rd-budget-input').value = 5000;
       document.getElementById('rd-wizard-preview').classList.add('hidden');
       document.getElementById('rd-start-btn').disabled = true;
       document.getElementById('rd-new-project-modal').classList.remove('hidden');
@@ -4219,6 +4401,7 @@
       const prodId = document.getElementById('rd-product-select').value;
       const targetQR = parseInt(document.getElementById('rd-target-qr-slider').value);
       const budget = parseFloat(document.getElementById('rd-budget-input').value) || 0;
+      const labsCount = currentSelectedLabsCount || 1;
 
       document.getElementById('rd-target-qr-display').textContent = targetQR;
 
@@ -4226,47 +4409,56 @@
       const preview = document.getElementById('rd-wizard-preview');
       const startBtn = document.getElementById('rd-start-btn');
       const badge = document.getElementById('rd-product-category-badge');
-      const minHint = document.getElementById('rd-min-required-hint');
-      const warning = document.getElementById('rd-budget-warning');
+      const teamCostEl = document.getElementById('rd-team-cost-display');
+      const extraBudgetEl = document.getElementById('rd-extra-budget-display');
+      const warningMsg = document.getElementById('rd-budget-warning-msg');
 
       if (!prod) {
         preview.classList.add('hidden');
         startBtn.disabled = true;
         badge.classList.add('hidden');
+        if (teamCostEl) teamCostEl.textContent = '$0/mês';
+        if (extraBudgetEl) extraBudgetEl.textContent = '+$0/mês';
+        if (warningMsg) warningMsg.classList.add('hidden');
         return;
       }
 
       const cat = RD_CATEGORIES[prod.category] || { baseCost: 3000 };
       const currentQR = getRDCurrentQR(prodId);
-      const minCost = CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || cat.baseCost);
-      const gain = CoreMath.calculateRDQualityGain(currentQR, targetQR, budget, minCost);
-      const monthsNeeded = gain > 0 ? Math.ceil((targetQR - currentQR) / gain) : Infinity;
+      const minCostSingle = CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || cat.baseCost);
+      const minCostTotal = minCostSingle * labsCount;
+
+      const extraBudget = Math.max(0, budget - minCostTotal);
+      const belowMin = budget < minCostTotal;
+
+      if (teamCostEl) teamCostEl.textContent = `$${minCostTotal.toLocaleString('en-US')}/mês (${labsCount} lab${labsCount > 1 ? 's' : ''})`;
+      if (extraBudgetEl) extraBudgetEl.textContent = extraBudget > 0 ? `+$${extraBudget.toLocaleString('en-US')}/mês` : '+$0/mês';
+      if (warningMsg) warningMsg.classList.toggle('hidden', !belowMin);
+
+      // Ganho mensal acelerado pelo número de bancadas
+      const gainSingle = CoreMath.calculateRDQualityGain(currentQR, targetQR, budget / labsCount, minCostSingle);
+      const gainTotal = gainSingle * labsCount;
+      const monthsNeeded = gainTotal > 0 ? Math.ceil((targetQR - currentQR) / gainTotal) : Infinity;
       const totalCost = monthsNeeded < Infinity ? Math.round(monthsNeeded * budget) : null;
 
-      badge.textContent = `${cat.icon || '🔬'} ${prod.category} · Mín: $${minCost.toLocaleString('en-US')}/mês`;
+      badge.textContent = `${cat.icon || '🔬'} ${prod.category} · Custo Mínimo: $${minCostTotal.toLocaleString('en-US')}/mês`;
       badge.classList.remove('hidden');
-      minHint.textContent = `Mínimo para progressão: $${minCost.toLocaleString('en-US')}/mês`;
-
-      const belowMin = budget < minCost;
-      warning.classList.toggle('hidden', !belowMin);
-      document.getElementById('rd-budget-input').classList.toggle('border-amber-600', belowMin);
 
       document.getElementById('rd-prev-current-qr').textContent = `${currentQR.toFixed(1)} / 100`;
-      document.getElementById('rd-prev-min-cost').textContent = `$${minCost.toLocaleString('en-US')}`;
-      document.getElementById('rd-prev-gain').textContent = gain > 0 ? `+${gain.toFixed(2)} QR/mês` : 'Sem progresso';
+      document.getElementById('rd-prev-gain').textContent = gainTotal > 0 ? `+${gainTotal.toFixed(2)} QR/mês (${labsCount}x acelerado)` : 'Sem progresso (verba insuficiente)';
       document.getElementById('rd-prev-eta').textContent = monthsNeeded < Infinity ? `≈ ${monthsNeeded} meses` : 'Indeterminado';
       document.getElementById('rd-prev-total-cost').textContent = totalCost ? `≈ $${totalCost.toLocaleString('en-US')}` : '--';
       preview.classList.remove('hidden');
 
-      // Habilita apenas se produto selecionado e verba > 0
-      startBtn.disabled = !prodId || budget <= 0 || currentQR >= targetQR;
+      // Habilita apenas se produto selecionado, verba >= minCostTotal e currentQR < targetQR
+      startBtn.disabled = !prodId || budget < minCostTotal || currentQR >= targetQR;
     }
 
     /** Retorna o QR atual do produto para fins de pesquisa (melhor QR de linha existente ou padrão do catálogo) */
     function getRDCurrentQR(prodId) {
-      // Se já tem projeto ativo para este produto, usa o QR atual do projeto
-      const existing = rdLabs['rd_' + prodId];
-      if (existing) return existing.currentQR;
+      // Se já tem projeto ativo para este produto, usa o melhor QR atual dos projetos desse produto
+      const bestProjQR = getProductBestRDQuality(prodId);
+      if (bestProjQR > 0) return bestProjQR;
 
       // Caso contrário, pega o melhor outputQuality de qualquer linha de fábrica que produza este produto
       let bestQR = 0;
@@ -4292,6 +4484,7 @@
       const prodId = document.getElementById('rd-product-select').value;
       const targetQR = parseInt(document.getElementById('rd-target-qr-slider').value);
       const budget = parseFloat(document.getElementById('rd-budget-input').value) || 0;
+      const labsCount = currentSelectedLabsCount || 1;
 
       if (!prodId || budget <= 0 || targetQR <= 0) return;
 
@@ -4304,26 +4497,38 @@
         return;
       }
 
-      const key = 'rd_' + prodId;
+      const cat = RD_CATEGORIES[prod.category] || { baseCost: 3000 };
+      const minCostSingle = CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || cat.baseCost);
+      const minCostTotal = minCostSingle * labsCount;
+
+      if (budget < minCostTotal) {
+        alert(`Verba insuficiente! O custo operacional para ${labsCount} bancada(s) de ${prod.name} é de pelo menos $${minCostTotal.toLocaleString('en-US')}/mês.`);
+        return;
+      }
+
+      const key = 'proj_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
       rdLabs[key] = {
         id: key,
         productId: prodId,
         productName: prod.name,
         category: prod.category,
+        labsCount: labsCount,
         monthlyBudget: budget,
-        baseMonthlyRequired: CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || 3000),
+        baseMonthlyRequired: minCostTotal,
         startQR: currentQR,
         currentQR: currentQR,
         targetQR: targetQR,
         monthsInvested: 0,
         totalSpent: 0,
         status: 'active',
-        completedAt: null,
+        completedAt: null
       };
 
-      addGameLog(`🔬 Projeto de P&D iniciado: ${prod.name} → QR ${targetQR} com verba $${budget.toLocaleString('en-US')}/mês`, 'text-purple-400');
+      addGameLog(`🔬 P&D Iniciado: ${prod.name} com ${labsCount} Bancada(s) → QR ${targetQR} ($${budget.toLocaleString('en-US')}/mês)`, 'text-purple-400 font-bold');
+      playSuccessChime();
       closeRDNewProjectModal();
       renderRDProjectsList();
+      updateRDChip();
     }
 
     function pauseRDProject(id) {
@@ -4343,6 +4548,7 @@
         subtitle: `${proj.productName} (QR ${proj.currentQR.toFixed(1)} → ${proj.targetQR})`,
         description: `Tem certeza que deseja encerrar a pesquisa de <strong>${proj.productName}</strong>? Todo o investimento acumulado de <strong>$${proj.totalSpent.toLocaleString('en-US')}</strong> será perdido.`,
         details: [
+          { label: 'Bancadas Alocadas', value: `${proj.labsCount || 1} Lab(s)`, color: 'text-purple-300' },
           { label: 'Meses Investidos', value: `${proj.monthsInvested} meses`, color: 'text-slate-300' },
           { label: 'Total Investido', value: `-$${proj.totalSpent.toLocaleString('en-US')}`, color: 'text-rose-400 font-bold' }
         ],
@@ -4380,18 +4586,21 @@
         const prod = PRODUCT_CATALOG[proj.productId];
         if (!prod) continue;
 
+        const labsCount = proj.labsCount || 1;
+
         // Cobra a verba mensal do caixa
         const spent = Math.min(proj.monthlyBudget, cash);
         cash -= spent;
         proj.totalSpent += spent;
         proj.monthsInvested++;
 
-        // Calcula ganho de QR assintótico fiel ao Capitalism Lab
-        const gain = CoreMath.applyQRAsymptoticGrowth(proj.currentQR, spent);
-        proj.currentQR = Math.min(proj.targetQR, proj.currentQR + gain);
+        // Calcula ganho de QR assintótico fiel ao Capitalism Lab acelerado pelo número de bancadas
+        const gainSingle = CoreMath.applyQRAsymptoticGrowth(proj.currentQR, spent / labsCount);
+        const gainTotal = gainSingle * labsCount;
+        proj.currentQR = Math.min(proj.targetQR, proj.currentQR + gainTotal);
 
         // Propaga o novo QR para todas as linhas de fábrica que produzem este produto
-        if (gain > 0) {
+        if (gainTotal > 0) {
           updateAllFactoryLinesQR(proj.productId, proj.currentQR);
         }
 
@@ -4401,8 +4610,8 @@
           proj.completedAt = { day, month, year };
           anyCompleted = true;
           addLog(`🎉 P&D CONCLUÍDO! "${proj.productName}" atingiu QR ${proj.targetQR.toFixed(1)}! Custo total: $${proj.totalSpent.toLocaleString('en-US')}`, 'text-emerald-400 font-bold');
-        } else if (gain > 0) {
-          addLog(`🔬 P&D "${proj.productName}": +${gain.toFixed(2)} QR/mês → QR atual: ${proj.currentQR.toFixed(1)} / ${proj.targetQR}`, 'text-sky-300');
+        } else if (gainTotal > 0) {
+          addLog(`🔬 P&D "${proj.productName}" (${labsCount} Labs): +${gainTotal.toFixed(2)} QR/mês → QR atual: ${proj.currentQR.toFixed(1)} / ${proj.targetQR}`, 'text-sky-300');
         }
       }
       updateRDChip();
@@ -4431,14 +4640,13 @@
       for (const tile of activeFacilitySet.values()) {
         if (!tile.store || !tile.store.shelves) continue;
         for (const [prodId, shelf] of Object.entries(tile.store.shelves)) {
-          const rdKey = 'rd_' + prodId;
-          const proj = rdLabs[rdKey];
-          if (!proj || proj.currentQR <= (shelf.quality || 60)) continue;
+          const bestQR = getProductBestRDQuality(prodId);
+          if (bestQR <= (shelf.quality || 60)) continue;
 
           const soldToday = shelf.lastDailySales || 0;
           shelf.quality = CoreMath.propagateQualityToShelf(
             shelf.quality || 60,
-            proj.currentQR,
+            bestQR,
             soldToday,
             shelf.maxCapacity || 1000
           );
