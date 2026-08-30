@@ -773,15 +773,27 @@
   <!-- MODAL 9: ATIVAÇÃO DE LINHA DE MONTAGEM NA FÁBRICA                       -->
   <!-- ======================================================================= -->
   <div id="factory-recipe-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
-      <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden flex flex-col max-h-[85vh]">
+      <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between shrink-0">
         <div>
-          <h2 class="text-sm font-bold text-orange-400">⚙️ Ativar Linha de Montagem Industrial</h2>
+          <h2 class="text-sm font-bold text-orange-400 flex items-center gap-2">⚙️ Ativar Linha de Montagem Industrial</h2>
           <p class="text-xs text-slate-400 font-mono mt-0.5">Selecione o produto intermediário ou manufaturado final a ser produzido nesta fábrica:</p>
         </div>
-        <button onclick="closeFactoryRecipeModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
+        <button onclick="closeFactoryRecipeModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer">✕</button>
       </div>
-      <div class="p-6 space-y-3 max-h-96 overflow-y-auto custom-scrollbar pr-1" id="factory-available-recipes-list"></div>
+
+      <!-- Barra de Pesquisa e Filtros de Categoria -->
+      <div class="bg-slate-950/60 border-b border-slate-800 px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 shrink-0">
+        <div class="relative flex-1 min-w-[200px]">
+          <input id="factory-recipe-search-input" type="text" placeholder="🔍 Buscar receita, produto final ou insumo..." oninput="renderFactoryRecipesList()"
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-orange-500 placeholder-slate-500">
+        </div>
+        <div id="factory-recipe-category-tabs" class="flex items-center gap-1 overflow-x-auto text-[10px] font-mono">
+          <!-- Abas de categoria geradas dinamicamente -->
+        </div>
+      </div>
+
+      <div class="p-6 space-y-3 overflow-y-auto custom-scrollbar flex-1" id="factory-available-recipes-list"></div>
     </div>
   </div>
 
@@ -1328,25 +1340,48 @@
       const offers = [];
 
       // 1. Portos Marítimos
-      for (const port of (typeof SEAPORTS_128 !== 'undefined' ? SEAPORTS_128 : SEAPORTS)) {
-        if (port.supplies[prodId]) {
+      const seaportList = (typeof SEAPORTS_128 !== 'undefined' ? SEAPORTS_128 : SEAPORTS);
+      for (const port of seaportList) {
+        if (port.supplies && port.supplies[prodId]) {
           const sup = port.supplies[prodId];
           const dist = CoreMath.calculateManhattanDistance(port.tile, storeTile);
-          const freight = CoreMath.calculateUnitFreight(dist, port.freightRatePerTile, 0.02);
+          const freight = CoreMath.calculateUnitFreight(dist, port.freightRatePerTile || 0.010, 0.02);
           const landed = CoreMath.calculateLandedCost(sup.wholesalePrice, freight);
           offers.push({
             type: 'port',
             supplierId: port.id,
-            supplierName: port.name,
+            supplierName: `⚓ ${port.name}`,
             wholesalePrice: sup.wholesalePrice,
-            quality: sup.quality,
-            quota: sup.quota,
-            origin: sup.origin,
+            quality: sup.quality || 50,
+            quota: sup.quota || 500,
+            origin: sup.origin || 'Importação Internacional',
             distance: dist,
             freight,
             landedCost: landed
           });
         }
+      }
+
+      // Se nenhum porto tiver o produto explicitamente mapeado, gera oferta de importação marítima
+      if (offers.filter(o => o.type === 'port').length === 0 && seaportList.length > 0) {
+        const prod = PRODUCT_CATALOG[prodId] || { name: prodId, baseCost: 1.0, standardPrice: 2.0 };
+        const primaryPort = seaportList[0];
+        const dist = CoreMath.calculateManhattanDistance(primaryPort.tile, storeTile);
+        const wholesalePrice = prod.baseCost ? Number((prod.baseCost * 1.25).toFixed(2)) : 1.00;
+        const freight = CoreMath.calculateUnitFreight(dist, primaryPort.freightRatePerTile || 0.010, 0.02);
+        const landed = CoreMath.calculateLandedCost(wholesalePrice, freight);
+        offers.push({
+          type: 'port',
+          supplierId: primaryPort.id,
+          supplierName: `⚓ ${primaryPort.name}`,
+          wholesalePrice,
+          quality: 50,
+          quota: 500,
+          origin: 'Importação Internacional',
+          distance: dist,
+          freight,
+          landedCost: landed
+        });
       }
 
       // 2. Fábricas, Fazendas e Minas Próprias (via Sparse Index activeFacilitySet)
@@ -3628,26 +3663,118 @@
       pendingTile = null;
     }
 
+    let activeFactoryRecipeFilterCategory = 'all';
+
     function openFactoryRecipeModal(x, y) {
       const tile = worldGrid[x][y];
       if (!tile?.factory) return;
       activeFactoryTile = tile;
+      activeFactoryRecipeFilterCategory = 'all';
 
-      const totalLines = Object.keys(tile.factory.lines || {}).length;
-      const maxLines = tile.factory.maxLines || 4;
+      const searchInput = document.getElementById('factory-recipe-search-input');
+      if (searchInput) searchInput.value = '';
+
+      renderFactoryRecipesList();
+      document.getElementById('factory-recipe-modal').classList.remove('hidden');
+    }
+
+    function setFactoryRecipeCategoryFilter(cat) {
+      activeFactoryRecipeFilterCategory = cat;
+      renderFactoryRecipesList();
+    }
+
+    function unlockFactoryRecipeInPlace(recipeId, productId, cost) {
+      if (cash < cost) {
+        alert(`Fundos insuficientes! São necessários $${cost.toLocaleString('en-US')} para desbloquear esta tecnologia.`);
+        return;
+      }
+      cash -= cost;
+      unlockedTechSet.add(productId);
+      const prodName = PRODUCT_CATALOG[productId]?.name || productId;
+      addLog(`🧬 Tecnologia "${prodName}" desbloqueada com sucesso por $${cost.toLocaleString('en-US')}!`, 'text-teal-300 font-bold');
+      updateUI();
+      renderFactoryRecipesList();
+    }
+
+    function renderFactoryRecipesList() {
+      if (!activeFactoryTile?.factory) return;
+      const tile = activeFactoryTile;
+      const factory = tile.factory;
+      const totalLines = Object.keys(factory.lines || {}).length;
+      const maxLines = factory.maxLines || 4;
       const isFull = totalLines >= maxLines;
 
+      const searchInput = document.getElementById('factory-recipe-search-input');
+      const searchQuery = (searchInput?.value || '').trim().toLowerCase();
+
+      // Renderiza as abas de categoria
+      const tabsContainer = document.getElementById('factory-recipe-category-tabs');
+      if (tabsContainer) {
+        const categories = [
+          { id: 'all', label: 'Todos' },
+          { id: 'intermediate', label: '⚙️ Insumos' },
+          { id: 'Alimentos', label: '🌾 Alimentos' },
+          { id: 'Bebidas', label: '🍺 Bebidas' },
+          { id: 'Vestuário', label: '👗 Vestuário' },
+          { id: 'Eletrônicos', label: '💻 Tecnologia' },
+          { id: 'Automotivo', label: '🚗 Automotivo' },
+          { id: 'Móveis', label: '🛋️ Móveis' }
+        ];
+
+        tabsContainer.innerHTML = categories.map(cat => {
+          const isActive = activeFactoryRecipeFilterCategory === cat.id;
+          return `
+            <button onclick="setFactoryRecipeCategoryFilter('${cat.id}')"
+              class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer whitespace-nowrap ${isActive ? 'bg-orange-600 text-white shadow' : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200'}">
+              ${cat.label}
+            </button>
+          `;
+        }).join('');
+      }
+
+      // Filtra as receitas
+      let recipes = FACTORY_RECIPES.slice();
+      if (activeFactoryRecipeFilterCategory === 'intermediate') {
+        recipes = recipes.filter(r => r.isIntermediate);
+      } else if (activeFactoryRecipeFilterCategory !== 'all') {
+        recipes = recipes.filter(r => {
+          const cat = PRODUCT_CATALOG[r.outputProdId]?.category;
+          return cat === activeFactoryRecipeFilterCategory;
+        });
+      }
+
+      if (searchQuery) {
+        recipes = recipes.filter(r => {
+          const nameMatch = r.name.toLowerCase().includes(searchQuery) || (r.outputName && r.outputName.toLowerCase().includes(searchQuery));
+          const prodCat = (PRODUCT_CATALOG[r.outputProdId]?.category || '').toLowerCase();
+          const inputsMatch = r.inputs && Object.entries(r.inputs).some(([inpId]) => {
+            const inpName = (PRODUCT_CATALOG[inpId]?.name || inpId).toLowerCase();
+            return inpName.includes(searchQuery);
+          });
+          return nameMatch || prodCat.includes(searchQuery) || inputsMatch;
+        });
+      }
+
       const list = document.getElementById('factory-available-recipes-list');
-      list.innerHTML = FACTORY_RECIPES.map(rec => {
-        const countOfRecipe = Object.values(tile.factory.lines || {}).filter(l => l.recipeId === rec.id).length;
+      if (!list) return;
+
+      if (recipes.length === 0) {
+        list.innerHTML = `<div class="text-center py-10 text-slate-500 font-mono text-xs">Nenhuma linha de produção encontrada para os filtros selecionados.</div>`;
+        return;
+      }
+
+      list.innerHTML = recipes.map(rec => {
+        const countOfRecipe = Object.values(factory.lines || {}).filter(l => l.recipeId === rec.id).length;
         const spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getFactorySprite(rec.id) : 'empresas/factory_default';
         const unlocked = isProductUnlocked(rec.outputProdId || rec.id);
         const tier = CoreMath.calculateProductionTier(rec.outputProdId || rec.id, FACTORY_RECIPES);
         const bonus = CoreMath.calculateConvergenceBonus(rec.outputProdId || rec.id, FACTORY_RECIPES);
         const cost = CoreMath.calculateResearchCost(tier, bonus);
+        const canAffordUnlock = cash >= cost;
 
         const researchedQR = getProductBestRDQuality(rec.outputProdId || rec.id);
         const effectiveQR = researchedQR > 0 ? Math.max(rec.quality, researchedQR) : rec.quality;
+        const techLvl = (typeof CoreMath !== 'undefined' && CoreMath.getTechLevelLabel) ? CoreMath.getTechLevelLabel(effectiveQR) : { level: 1, label: 'Padrão', icon: '🥉', color: 'text-slate-300 border-slate-700 bg-slate-900' };
         const qrBadge = researchedQR > rec.quality 
           ? `<span class="text-purple-300 font-bold" title="Qualidade aprimorada em P&D (${researchedQR.toFixed(1)})">★ QR ${effectiveQR.toFixed(0)} (P&D)</span>` 
           : `<span class="text-cyan-300">QR ${effectiveQR}</span>`;
@@ -3655,11 +3782,11 @@
         const inputPills = rec.inputs ? Object.entries(rec.inputs).map(([inpId, qty]) => {
           const inpProd = PRODUCT_CATALOG[inpId] || { name: inpId };
           const isUnlocked = isProductUnlocked(inpId);
-          return `<span class="px-1.5 py-0.5 rounded text-[9px] border font-mono ${isUnlocked ? 'bg-slate-900 text-slate-300 border-slate-700' : 'bg-rose-950/60 text-rose-300 border-rose-800'}">${qty}x ${inpProd.name} ${!isUnlocked ? '🔒' : ''}</span>`;
+          return `<span class="px-1.5 py-0.5 rounded text-[9px] border font-mono ${isUnlocked ? 'bg-slate-900 text-slate-300 border-slate-700' : 'bg-rose-950/60 text-rose-300 border-rose-800 font-bold'}">${qty}x ${inpProd.name} ${!isUnlocked ? '🔒' : '✓'}</span>`;
         }).join(' ') : '<span class="text-[9px] text-slate-500">Nenhum</span>';
 
         return `
-          <div class="bg-slate-950 p-3.5 rounded-xl border ${unlocked ? 'border-slate-800' : 'border-slate-800/80 bg-slate-950/60 opacity-85'} flex items-center justify-between text-xs font-mono gap-3">
+          <div class="bg-slate-950 p-3.5 rounded-xl border ${unlocked ? 'border-slate-800' : 'border-slate-800/80 bg-slate-950/60 opacity-90'} flex items-center justify-between text-xs font-mono gap-3">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-700/80 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
                 <img src="assets/${spriteKey}.png" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
@@ -3670,6 +3797,7 @@
                   <span class="font-bold ${unlocked ? 'text-slate-100' : 'text-slate-400'}">${rec.name} (${rec.outputName})</span>
                   <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">${rec.isIntermediate ? 'Insumo Industrial' : 'Bem de Consumo'}</span>
                   <span class="text-[9px] bg-slate-900 text-teal-400 border border-slate-700 px-1.5 py-0.5 rounded font-bold">Tier ${tier}</span>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded border font-bold ${techLvl.color}">${techLvl.icon} Lvl ${techLvl.level}</span>
                   ${countOfRecipe > 0 ? `<span class="text-[9px] bg-orange-950 text-orange-300 px-1.5 py-0.5 rounded border border-orange-800 font-bold">${countOfRecipe} linha${countOfRecipe > 1 ? 's' : ''} ativa${countOfRecipe > 1 ? 's' : ''}</span>` : ''}
                 </div>
                 <div class="text-[11px] text-slate-400 mt-1">Custo Fabril: <strong class="text-emerald-400">$${rec.unitCost.toFixed(2)}/un</strong> · Qualidade: ${qrBadge} · Capacidade: <strong class="text-slate-200">${rec.dailyCap} un/dia</strong></div>
@@ -3677,19 +3805,20 @@
                   <span class="text-slate-500 font-bold">Insumos Necessários:</span>
                   ${inputPills}
                 </div>
-                ${!unlocked ? `<div class="text-[10px] text-amber-400 mt-1 font-bold flex items-center gap-1">🔒 Bloqueado: Desbloqueie a tecnologia na Árvore de P&D para produzir</div>` : ''}
+                ${!unlocked ? `<div class="text-[10px] text-amber-400 mt-1 font-bold flex items-center gap-1">🔒 Bloqueado: Desbloqueie com 1 clique abaixo para começar a produzir</div>` : ''}
               </div>
             </div>
             <div class="shrink-0">
               ${!unlocked ? `
-                <button onclick="closeFactoryRecipeModal(); openTechTreeModal('all', '${tier}')" class="bg-teal-950 hover:bg-teal-900 border border-teal-700 text-teal-300 font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer shadow transition whitespace-nowrap">
+                <button onclick="unlockFactoryRecipeInPlace('${rec.id}', '${rec.outputProdId || rec.id}', ${cost})"
+                  class="bg-teal-600 hover:bg-teal-500 text-white font-bold px-3 py-2 rounded-xl text-xs cursor-pointer shadow-lg transition whitespace-nowrap flex items-center gap-1 ${!canAffordUnlock ? 'opacity-50 cursor-not-allowed' : ''}">
                   🧬 Desbloquear ($${cost.toLocaleString('en-US')})
                 </button>
               ` : (isFull ? `
-                <span class="text-[10px] text-slate-500 bg-slate-900 px-2 py-1 rounded border border-slate-800 font-bold">Fábrica Lotada (4/4)</span>
+                <span class="text-[10px] text-slate-500 bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-800 font-bold">Fábrica Lotada (${maxLines}/${maxLines})</span>
               ` : `
-                <button onclick="confirmActivateFactoryRecipe('${rec.id}')" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer shadow transition">
-                  ${countOfRecipe > 0 ? '+ Adicionar Mais 1 Linha' : 'Ativar Linha'}
+                <button onclick="confirmActivateFactoryRecipe('${rec.id}')" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs cursor-pointer shadow-lg transition">
+                  ${countOfRecipe > 0 ? '+ Adicionar Mais 1 Linha' : '➕ Ativar Linha'}
                 </button>
               `)}
             </div>

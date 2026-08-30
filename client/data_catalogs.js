@@ -2149,6 +2149,11 @@
     const PORT_SUPPLIES_FOOD_CONSUMER = {
       'bread': { wholesalePrice: 1.75, quality: 52, quota: 400, origin: 'Importação Panificação' },
       'milk': { wholesalePrice: 1.40, quality: 52, quota: 400, origin: 'Importação Laticínios' },
+      'raw_milk': { wholesalePrice: 0.55, quality: 50, quota: 500, origin: 'Importação Agropecuária' },
+      'flour': { wholesalePrice: 0.90, quality: 52, quota: 500, origin: 'Importação Moinho' },
+      'refined_sugar': { wholesalePrice: 0.70, quality: 50, quota: 500, origin: 'Importação Açúcar' },
+      'wheat': { wholesalePrice: 0.70, quality: 50, quota: 500, origin: 'Importação Grãos' },
+      'cocoa': { wholesalePrice: 1.20, quality: 52, quota: 400, origin: 'Importação Cacau' },
       'eggs': { wholesalePrice: 1.20, quality: 50, quota: 450, origin: 'Importação Granja' },
       'cola': { wholesalePrice: 1.50, quality: 50, quota: 450, origin: 'Importação Bebidas' },
       'mineral_water': { wholesalePrice: 0.80, quality: 55, quota: 500, origin: 'Importação Bebidas' },
@@ -2160,17 +2165,27 @@
       'jeans': { wholesalePrice: 24.00, quality: 50, quota: 200, origin: 'Importação Vestuário' },
       'sneakers': { wholesalePrice: 35.00, quality: 52, quota: 180, origin: 'Importação Calçados' },
       'beef': { wholesalePrice: 5.50, quality: 52, quota: 300, origin: 'Importação Carnes' },
+      'frozen_beef': { wholesalePrice: 5.50, quality: 52, quota: 300, origin: 'Importação Carnes' },
       'poultry_meat': { wholesalePrice: 3.20, quality: 50, quota: 350, origin: 'Importação Carnes' },
       'pork_meat': { wholesalePrice: 4.20, quality: 50, quota: 300, origin: 'Importação Carnes' },
       'chocolate': { wholesalePrice: 2.50, quality: 52, quota: 300, origin: 'Importação Doces' },
+      'chocolate_bar': { wholesalePrice: 2.50, quality: 52, quota: 300, origin: 'Importação Doces' },
       'coffee': { wholesalePrice: 3.00, quality: 55, quota: 300, origin: 'Importação Cafeteria' }
     };
 
     const PORT_SUPPLIES_COMMODITIES = {
-      'wheat': { wholesalePrice: 1.10, quality: 50, quota: 500, origin: 'Importação Grãos' },
-      'corn': { wholesalePrice: 1.00, quality: 50, quota: 500, origin: 'Importação Grãos' },
-      'sugar_cane': { wholesalePrice: 0.80, quality: 50, quota: 600, origin: 'Importação Açúcar' },
-      'coffee_beans': { wholesalePrice: 2.20, quality: 55, quota: 350, origin: 'Importação Café' },
+      'wheat': { wholesalePrice: 0.70, quality: 50, quota: 500, origin: 'Importação Grãos' },
+      'corn': { wholesalePrice: 0.65, quality: 50, quota: 500, origin: 'Importação Grãos' },
+      'sugar_cane': { wholesalePrice: 0.50, quality: 50, quota: 600, origin: 'Importação Açúcar' },
+      'coffee_beans': { wholesalePrice: 1.50, quality: 55, quota: 350, origin: 'Importação Café' },
+      'cocoa': { wholesalePrice: 1.20, quality: 52, quota: 400, origin: 'Importação Cacau' },
+      'raw_milk': { wholesalePrice: 0.55, quality: 50, quota: 500, origin: 'Importação Agropecuária' },
+      'flour': { wholesalePrice: 0.90, quality: 52, quota: 500, origin: 'Importação Moinho' },
+      'refined_sugar': { wholesalePrice: 0.70, quality: 50, quota: 500, origin: 'Importação Açúcar' },
+      'cattle': { wholesalePrice: 2.80, quality: 50, quota: 400, origin: 'Importação Pecuária' },
+      'poultry': { wholesalePrice: 1.00, quality: 50, quota: 450, origin: 'Importação Avicultura' },
+      'pigs': { wholesalePrice: 2.00, quality: 50, quota: 400, origin: 'Importação Suinocultura' },
+      'wool': { wholesalePrice: 2.20, quality: 52, quota: 350, origin: 'Importação Ovinocultura' },
       'iron_ore': { wholesalePrice: 24.00, quality: 52, quota: 400, origin: 'Importação Minérios' },
       'bauxite': { wholesalePrice: 28.00, quality: 52, quota: 350, origin: 'Importação Minérios' },
       'silica': { wholesalePrice: 14.00, quality: 50, quota: 450, origin: 'Importação Minérios' },
@@ -2178,16 +2193,23 @@
       'crude_oil': { wholesalePrice: 38.00, quality: 55, quota: 450, origin: 'Importação Petróleo' },
       'chemical_minerals': { wholesalePrice: 22.00, quality: 52, quota: 400, origin: 'Importação Químicos' },
       'rubber': { wholesalePrice: 20.00, quality: 50, quota: 350, origin: 'Importação Borracha' },
-      'cotton': { wholesalePrice: 2.40, quality: 50, quota: 400, origin: 'Importação Têxtil' }
+      'cotton': { wholesalePrice: 2.00, quality: 50, quota: 400, origin: 'Importação Têxtil' },
+      'gold_ore': { wholesalePrice: 160.00, quality: 55, quota: 100, origin: 'Importação Minérios Nobres' }
     };
 
     const PORT_SUPPLIES_TECH_PARTS = {
       'chips': { wholesalePrice: 85.00, quality: 56, quota: 200, origin: 'Importação Semicondutores' },
-      'plastic': { wholesalePrice: 7.50, quality: 52, quota: 400, origin: 'Importação Insumos' },
-      'glass': { wholesalePrice: 6.80, quality: 52, quota: 400, origin: 'Importação Insumos' },
-      'steel': { wholesalePrice: 32.00, quality: 54, quota: 300, origin: 'Importação Siderurgia' },
-      'aluminum': { wholesalePrice: 36.00, quality: 54, quota: 300, origin: 'Importação Metalurgia' },
+      'plastic': { wholesalePrice: 24.00, quality: 52, quota: 400, origin: 'Importação Insumos' },
+      'glass': { wholesalePrice: 20.00, quality: 52, quota: 400, origin: 'Importação Insumos' },
+      'steel': { wholesalePrice: 40.00, quality: 54, quota: 300, origin: 'Importação Siderurgia' },
+      'aluminum': { wholesalePrice: 48.00, quality: 54, quota: 300, origin: 'Importação Metalurgia' },
       'tires': { wholesalePrice: 38.00, quality: 52, quota: 250, origin: 'Importação Autopeças' },
+      'engine': { wholesalePrice: 260.00, quality: 54, quota: 150, origin: 'Importação Motores' },
+      'cotton_cloth': { wholesalePrice: 5.50, quality: 50, quota: 400, origin: 'Importação Têxtil' },
+      'wool_yarn': { wholesalePrice: 7.00, quality: 52, quota: 300, origin: 'Importação Fiação' },
+      'leather': { wholesalePrice: 14.00, quality: 52, quota: 300, origin: 'Importação Curtume' },
+      'paper': { wholesalePrice: 12.00, quality: 50, quota: 450, origin: 'Importação Celulose' },
+      'lumber': { wholesalePrice: 26.00, quality: 50, quota: 350, origin: 'Importação Madeira' },
       'tool_set': { wholesalePrice: 28.00, quality: 54, quota: 220, origin: 'Importação Ferramentas' },
       'mobile_phone': { wholesalePrice: 220.00, quality: 55, quota: 150, origin: 'Importação Eletrônicos' },
       'acrylic_paint': { wholesalePrice: 16.00, quality: 52, quota: 250, origin: 'Importação Tintas' }
