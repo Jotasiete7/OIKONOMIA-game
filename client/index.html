@@ -689,17 +689,17 @@
   <!-- MODAL 6: SELETOR DE FORNECEDOR (PORTOS OU FÁBRICAS PRÓPRIAS)            -->
   <!-- ======================================================================= -->
   <div id="supplier-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
       <div class="bg-slate-800/80 border-b border-slate-700 px-5 py-3.5 flex items-center justify-between">
         <div>
-          <h2 id="supplier-modal-title" class="text-xs font-bold text-slate-100">🔗 Selecionar Fornecedor (Porto ou Fábrica Própria)</h2>
+          <h2 id="supplier-modal-title" class="text-xs font-bold text-slate-100">🔗 Selecionar Fornecedor</h2>
           <p id="supplier-modal-subtitle" class="text-[11px] text-slate-400 font-mono mt-0.5"></p>
         </div>
-        <button onclick="closeSupplierModal()" class="w-6 h-6 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-xs font-bold flex items-center justify-center">✕</button>
+        <button onclick="closeSupplierModal()" class="w-6 h-6 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-xs font-bold flex items-center justify-center cursor-pointer">✕</button>
       </div>
       <div class="p-5">
-        <p class="text-[11px] text-slate-400 mb-3 font-mono">Escolha o fornecedor. Fornecedores internos da sua corporação possuem custo de produção direto com zero margem de intermediários:</p>
-        <div id="supplier-options-list" class="space-y-2 max-h-64 overflow-y-auto custom-scrollbar pr-1"></div>
+        <p class="text-[11px] text-slate-400 mb-3 font-mono">Escolha a origem do insumo. Fornecedores próprios da sua holding operam com custo fabril direto e zero margem de terceiros:</p>
+        <div id="supplier-options-list" class="space-y-2.5 max-h-96 overflow-y-auto custom-scrollbar pr-1"></div>
       </div>
     </div>
   </div>
@@ -1608,6 +1608,10 @@
     // ===========================================================================
     function getSupplierOffersForProduct(prodId, storeTile) {
       const offers = [];
+      const pName = playerProfile?.companyName || 'OikoCorp Holding';
+      const pSeed = playerProfile?.logoRegenSeed || 0;
+      const playerLogo = generateCompanyLogo(pName, pSeed, false);
+      const portLogo = { shape: 'hexagon', color: '#38bdf8', iconDef: (typeof LOGO_ICONS !== 'undefined' ? LOGO_ICONS.anchor : null) };
 
       // 1. Portos Marítimos
       const seaportList = (typeof SEAPORTS_128 !== 'undefined' ? SEAPORTS_128 : SEAPORTS);
@@ -1621,6 +1625,12 @@
             type: 'port',
             supplierId: port.id,
             supplierName: `⚓ ${port.name}`,
+            facilityName: port.name,
+            ownerName: 'Autoridade Portuária & Alfândega',
+            ownerLogo: portLogo,
+            ownerTag: '🚢 Importação Marítima',
+            activitySummary: 'Terminal alfandegado de suprimentos globais a granel',
+            stockLabel: `Cota: ${sup.quota || 500} un/dia`,
             wholesalePrice: sup.wholesalePrice,
             quality: sup.quality || 50,
             quota: sup.quota || 500,
@@ -1644,6 +1654,12 @@
           type: 'port',
           supplierId: primaryPort.id,
           supplierName: `⚓ ${primaryPort.name}`,
+          facilityName: primaryPort.name,
+          ownerName: 'Autoridade Portuária & Alfândega',
+          ownerLogo: portLogo,
+          ownerTag: '🚢 Importação Marítima',
+          activitySummary: 'Terminal alfandegado de suprimentos globais a granel',
+          stockLabel: 'Cota: 500 un/dia',
           wholesalePrice,
           quality: 50,
           quota: 500,
@@ -1666,6 +1682,12 @@
                 type: 'internal_factory',
                 supplierId: `factory_${tile.x}_${tile.y}_${recipeId}`,
                 supplierName: `🏭 ${tile.factory.name} (${line.recipeName})`,
+                facilityName: `${tile.factory.name} — ${line.recipeName}`,
+                ownerName: pName,
+                ownerLogo: playerLogo,
+                ownerTag: '🏛️ Produção Própria',
+                activitySummary: `Linha de manufatura e refino industrial no lote (${tile.x}, ${tile.y})`,
+                stockLabel: `Armazém: ${line.finishedStock || 0} / ${line.maxStock || 500} un (${line.dailyCapacity || 100} un/dia)`,
                 wholesalePrice: line.unitCost,
                 quality: line.outputQuality,
                 quota: line.dailyCapacity,
@@ -1686,6 +1708,12 @@
             type: 'internal_farm',
             supplierId: `farm_${tile.x}_${tile.y}`,
             supplierName: `🌾 ${tile.farm.name}`,
+            facilityName: tile.farm.name,
+            ownerName: pName,
+            ownerLogo: playerLogo,
+            ownerTag: '🏛️ Produção Própria',
+            activitySummary: `Cultivo rural direto de ${tile.farm.cropName || 'grãos'} no lote (${tile.x}, ${tile.y})`,
+            stockLabel: `Silo: ${tile.farm.stock || 0} / ${tile.farm.maxCapacity || 500} un (${tile.farm.dailyYield || 80} un/dia)`,
             wholesalePrice: farmCost,
             quality: tile.farm.quality || 60,
             quota: tile.farm.dailyYield || 500,
@@ -1703,6 +1731,12 @@
             type: 'internal_mine',
             supplierId: `mine_${tile.x}_${tile.y}`,
             supplierName: `⛏️ ${tile.mine.name}`,
+            facilityName: tile.mine.name,
+            ownerName: pName,
+            ownerLogo: playerLogo,
+            ownerTag: '🏛️ Produção Própria',
+            activitySummary: `Extração e refino primário de ${tile.mine.resourceName || 'minério'} no lote (${tile.x}, ${tile.y})`,
+            stockLabel: `Pátio: ${tile.mine.stock || 0} / ${tile.mine.maxCapacity || 500} un (${tile.mine.dailyYield || 60} un/dia)`,
             wholesalePrice: tile.mine.unitCost,
             quality: tile.mine.quality,
             quota: tile.mine.dailyYield,
@@ -3813,7 +3847,7 @@
                 <div class="bg-slate-900 p-1.5 rounded-lg border ${isInternal ? 'border-amber-700/60 bg-amber-950/20' : 'border-slate-800'} flex items-center justify-between gap-1.5 text-[10px]">
                   <div class="truncate max-w-[170px]">
                     <span class="${isInternal ? 'text-amber-400 font-bold' : 'text-slate-300 font-bold'}">${qty}x ${inpProd.name}</span>
-                    <span class="text-[9px] text-slate-400 block truncate">Fonte: <strong class="${isInternal ? 'text-amber-300' : 'text-cyan-300'}">${cfg.supplierName ? cfg.supplierName.split('(')[0].trim() : 'Porto'}</strong> (QR ${cfg.quality || 50})</span>
+                    <span class="text-[9px] text-slate-400 block truncate">Origem: <strong class="${isInternal ? 'text-amber-300' : 'text-sky-300'}">${isInternal ? '🏛️ Própria' : '🚢 Porto'}: ${cfg.supplierName ? cfg.supplierName.split('(')[0].trim() : 'Porto'}</strong> (QR ${cfg.quality || 50})</span>
                   </div>
                   <div class="flex items-center gap-1.5 shrink-0">
                     <span class="text-[9px] text-emerald-400 font-bold">$${cfg.landedCost ? cfg.landedCost.toFixed(2) : '0.00'}</span>
@@ -3903,7 +3937,7 @@
         const isStockout = shelf.stock < 15;
 
         const costFill = Math.round((shelf.maxCapacity - shelf.stock) * shelf.landedCost);
-        const isInternal = shelf.supplierId?.startsWith('factory_');
+        const isInternal = !!(shelf.supplierId?.startsWith('factory_') || shelf.supplierId?.startsWith('farm_') || shelf.supplierId?.startsWith('mine_'));
 
         const card = document.createElement('div');
         card.className = `rounded-xl border ${isStockout ? 'border-rose-800 stockout-alert' : 'border-slate-800'} bg-slate-950 p-2.5 space-y-2`;
@@ -3919,13 +3953,13 @@
             <button onclick="removeProductFromStore(${tile.x}, ${tile.y}, '${prodId}')" class="text-[10px] text-slate-600 hover:text-rose-400 font-mono px-1">✕</button>
           </div>
 
-          <div class="bg-slate-900 p-1.5 rounded-lg text-[10px] font-mono flex items-center justify-between border ${isInternal ? 'border-orange-800 bg-orange-950/20' : 'border-slate-800'}">
+          <div class="bg-slate-900 p-1.5 rounded-lg text-[10px] font-mono flex items-center justify-between border ${isInternal ? 'border-amber-700/60 bg-amber-950/20' : 'border-slate-800'}">
             <div class="truncate max-w-[180px]">
-              <span class="${isInternal ? 'text-orange-400 font-bold' : 'text-amber-400'}">${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Porto'}</span>
+              <span class="${isInternal ? 'text-amber-400 font-bold' : 'text-sky-300'}">${isInternal ? '🏛️ Próprio' : '🚢 Porto'}: ${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Porto'}</span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="text-slate-400">Custo: <strong class="text-emerald-400 font-bold">$${shelf.landedCost.toFixed(2)}</strong></span>
-              <button onclick="openSupplierModal(${tile.x}, ${tile.y}, '${prodId}')" class="bg-slate-800 hover:bg-slate-700 text-teal-300 px-1.5 py-0.5 rounded text-[9px] font-bold">Trocar</button>
+              <button onclick="openSupplierModal(${tile.x}, ${tile.y}, '${prodId}')" class="bg-slate-800 hover:bg-slate-700 text-teal-300 px-1.5 py-0.5 rounded text-[9px] font-bold border border-slate-700 cursor-pointer">Trocar</button>
             </div>
           </div>
 
@@ -6712,6 +6746,58 @@
       selectedProductsMap.clear();
     }
 
+    function renderSupplierOptionCard(offer, isCurrent, isFactory) {
+      const isInternal = offer.type && offer.type.startsWith('internal_');
+      const logoSvg = getCompanyLogoSvg(offer.ownerLogo, 22);
+
+      return `
+        <div class="bg-slate-950 p-3.5 rounded-2xl border ${isCurrent ? 'border-emerald-500 bg-emerald-950/20 shadow-lg shadow-emerald-950/30' : (isInternal ? 'border-amber-700/60 bg-amber-950/20 hover:border-amber-500' : 'border-slate-800 hover:border-slate-700')} space-y-2 text-xs font-mono transition">
+          <!-- Header: Logo + Empresa + Tag de Origem + QR -->
+          <div class="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-1.5">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="shrink-0 flex items-center justify-center">${logoSvg}</div>
+              <div class="truncate">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="font-bold text-xs ${isInternal ? 'text-amber-300' : 'text-sky-300'} truncate">${offer.ownerName || 'Fornecedor'}</span>
+                  <span class="text-[9px] px-1.5 py-0.2 rounded border ${isInternal ? 'bg-amber-950/80 text-amber-300 border-amber-700/60' : 'bg-sky-950/80 text-sky-300 border-sky-700/60'} font-bold shrink-0">${offer.ownerTag || (isInternal ? '🏛️ Produção Própria' : '🚢 Importação')}</span>
+                </div>
+                <div class="text-[11px] text-slate-200 font-bold truncate mt-0.5">${offer.facilityName || offer.supplierName}</div>
+              </div>
+            </div>
+            <div class="shrink-0 text-right">
+              <span class="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded border border-cyan-800 font-bold">★ QR ${offer.quality}</span>
+            </div>
+          </div>
+
+          <!-- Resumo de Atividade Produtiva & Disponibilidade -->
+          <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800/60 text-[10px] text-slate-300 space-y-1">
+            <div class="flex items-center gap-1.5 text-slate-300 truncate">
+              <span>📦</span> <span class="italic text-[10px] truncate">${offer.activitySummary || 'Fornecimento contínuo de insumos'}</span>
+            </div>
+            <div class="flex items-center justify-between text-[10px] text-slate-400 pt-0.5 border-t border-slate-800/40">
+              <span>Disponibilidade: <strong class="text-slate-200">${offer.stockLabel || `${offer.quota || 500} un/dia`}</strong></span>
+              <span>Distância: <strong class="text-slate-200">${offer.distance} ${offer.distance === 1 ? 'tile' : 'tiles'}</strong></span>
+            </div>
+          </div>
+
+          <!-- Rodapé: Detalhamento de Custos & Botão de Ação -->
+          <div class="flex items-center justify-between gap-3 pt-0.5">
+            <div>
+              <div class="text-[10px] text-slate-400">Base $${offer.wholesalePrice.toFixed(2)} + Frete $${offer.freight.toFixed(2)}</div>
+              <div class="text-xs text-slate-200">Custo de Entrega: <strong class="text-emerald-400 font-black text-sm">$${offer.landedCost.toFixed(2)}</strong><span class="text-[10px] text-slate-400">/un</span></div>
+            </div>
+            <div>
+              ${isCurrent ? `
+                <span class="text-[10px] text-emerald-400 bg-emerald-950/90 px-3 py-1.5 rounded-xl border border-emerald-700/80 font-bold flex items-center gap-1">✓ Conectado</span>
+              ` : `
+                <button onclick="${isFactory ? `applyFactoryInputSupplierChange('${offer.supplierId}')` : `applySupplierChange('${offer.supplierId}')`}" class="bg-teal-600 hover:bg-teal-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono cursor-pointer transition shadow hover:shadow-teal-900/50">Conectar</button>
+              `}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     function openSupplierModal(x, y, prodId) {
       const tile = worldGrid[x][y];
       if (!tile?.store?.shelves[prodId]) return;
@@ -6726,27 +6812,7 @@
       const list = document.getElementById('supplier-options-list');
       list.innerHTML = offers.map(offer => {
         const isCurrent = tile.store.shelves[prodId].supplierId === offer.supplierId;
-        const isInternal = offer.type === 'internal_factory';
-
-        return `
-          <div class="bg-slate-950 p-3 rounded-xl border ${isCurrent ? 'border-emerald-500 bg-emerald-950/20' : (isInternal ? 'border-orange-800 bg-orange-950/20' : 'border-slate-800')} flex items-center justify-between text-xs font-mono">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="font-bold ${isInternal ? 'text-orange-400' : 'text-amber-300'}">${offer.supplierName}</span>
-                <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${offer.quality}</span>
-              </div>
-              <div class="text-[10px] text-slate-400 mt-1">Distância: ${offer.distance} tiles · Custo Base: $${offer.wholesalePrice.toFixed(2)} + Frete: $${offer.freight.toFixed(2)}</div>
-              <div class="text-[11px] text-slate-300 mt-0.5">Custo Final: <strong class="text-emerald-400 font-bold">$${offer.landedCost.toFixed(2)}</strong></div>
-            </div>
-            <div>
-              ${isCurrent ? `
-                <span class="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-1 rounded border border-emerald-800 font-bold">Ativo</span>
-              ` : `
-                <button onclick="applySupplierChange('${offer.supplierId}')" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold font-mono">Contratar</button>
-              `}
-            </div>
-          </div>
-        `;
+        return renderSupplierOptionCard(offer, isCurrent, false);
       }).join('');
 
       document.getElementById('supplier-modal').classList.remove('hidden');
@@ -6797,27 +6863,7 @@
       const list = document.getElementById('supplier-options-list');
       list.innerHTML = offers.map(offer => {
         const isCurrent = currentSupplierId === offer.supplierId;
-        const isInternal = offer.type === 'internal_farm' || offer.type === 'internal_mine' || offer.type === 'internal_factory';
-
-        return `
-          <div class="bg-slate-950 p-3 rounded-xl border ${isCurrent ? 'border-emerald-500 bg-emerald-950/20' : (isInternal ? 'border-amber-800 bg-amber-950/20' : 'border-slate-800')} flex items-center justify-between text-xs font-mono">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="font-bold ${isInternal ? 'text-amber-300' : 'text-cyan-300'}">${offer.supplierName}</span>
-                <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${offer.quality}</span>
-              </div>
-              <div class="text-[10px] text-slate-400 mt-1">Distância: ${offer.distance} tiles · Custo Base: $${offer.wholesalePrice.toFixed(2)} + Frete: $${offer.freight.toFixed(2)}</div>
-              <div class="text-[11px] text-slate-300 mt-0.5">Custo de Entrega na Fábrica: <strong class="text-emerald-400 font-bold">$${offer.landedCost.toFixed(2)}</strong></div>
-            </div>
-            <div>
-              ${isCurrent ? `
-                <span class="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-1 rounded border border-emerald-800 font-bold">Conectado</span>
-              ` : `
-                <button onclick="applyFactoryInputSupplierChange('${offer.supplierId}')" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold font-mono cursor-pointer">Conectar</button>
-              `}
-            </div>
-          </div>
-        `;
+        return renderSupplierOptionCard(offer, isCurrent, true);
       }).join('');
 
       document.getElementById('supplier-modal').classList.remove('hidden');
