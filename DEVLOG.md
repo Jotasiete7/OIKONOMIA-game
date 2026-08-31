@@ -2,8 +2,8 @@
 
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
-> **Última Atualização:** 28 de Agosto de 2026  
-> **Versão Oficial Corrente:** `v0.8.1 (bld.20260828.03)`  
+> **Última Atualização:** 31 de Agosto de 2026  
+> **Versão Oficial Corrente:** `v0.8.2 (bld.20260831.01)`  
 > **Save Schema:** `v0.8.1` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -15,23 +15,48 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 - **MAJOR (v1.0.0, v2.0.0)**: Marcos definitivos de lançamento comercial / saída de Beta.
 - **MINOR (v0.7.x -> v0.8.0 -> v0.9.0)**: Grandes módulos ou mecânicas novas (ex: P&D, QG Corporativo, frotas visuais).
-- **PATCH (v0.8.0 -> v0.8.1)**: Pacotes de usabilidade, balanceamento, sprites, tutorial, IA e refinamentos.
+- **PATCH (v0.8.1 -> v0.8.2)**: Pacotes de usabilidade, balanceamento, sprites, tutorial, IA e refinamentos de UI.
 - **BUILD STAMP (`bld.YYYYMMDD.XX`)**: Carimbo diário com a data e o número da entrega daquele dia.
 - **SAVE SCHEMA (`0.8.1`)**: Controla a compatibilidade dos saves `.oiko` e do `localStorage`.
 
 ---
 
-## 🧭 Agenda de Desenvolvimento (Próximos Passos Priorizados)
+## 🧭 Agenda de Desenvolvimento (Ideias & Backlog em Standby)
 
-- [ ] **QG Corporativo & Diretoria Executiva (v0.9.0)**: Sede global única com contratação de CEO, COO, CMO, CTO e CFO com bônus setoriais.
-- [ ] **IA Concorrente com P&D Dinâmico**: Concorrentes evoluindo tecnologia mensalmente e disputando patentes de ponta.
-- [ ] **Módulo de Logística Visual**: Adicionar caminhões/frotas navegando pelas avenidas entre metrópoles e fábricas.
-- [ ] **Bolsa de Valores & Empréstimos Bancários**: Sistema financeiro para emissão de ações e debêntures.
-- [ ] **Polimento Gráfico & Efeitos Isométricos**: Sombras dinâmicas nos edifícios e ciclo dia/noite.
+- [ ] **QG Corporativo & Diretoria Executiva (v0.9.0)**: Sede global única com contratação de executivos (CEO, COO, CMO, CTO, CFO) com bônus setoriais de margem e pesquisa.
+- [ ] **IA Concorrente com P&D Dinâmico**: Concorrentes evoluindo tecnologia mensalmente, solicitando patentes exclusivas e reagindo ao avanço do jogador.
+- [ ] **Módulo de Logística Visual**: Frotas de caminhões e navios com animação isométrica navegando pelas rodovias e rotas marítimas entre portos e cidades.
+- [ ] **Bolsa de Valores & Empréstimos Bancários**: Sistema financeiro para emissão de debêntures, IPO corporativo, empréstimos e recompra de ações.
+- [ ] **Polimento Gráfico & Efeitos Isométricos**: Sombras dinâmicas calculadas por altura de edifício e transições de iluminação.
 
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 09: Logo Procedural de Empresa, Consolidação da UI Superior & Persistência de Bancadas de P&D
+- **Data:** 31/08/2026 — 01:15 (Fechamento de Expediente)
+- **Versão Oficial:** `v0.8.2 (bld.20260831.01)` | **Save Schema:** `v0.8.1`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Sistema de Logo Procedural Determinístico (Identicons):**
+   - Implementação de `hashStringToSeed(companyName + regenSeed)` e `generateCompanyLogo()`.
+   - 10 ícones editoriais em SVG fino e 3 formas geométricas (`circle`, `shield`, `hexagon`).
+   - Paleta dourada travada para o jogador (`#d4b483`, `#c9a86a`, `#e0c28f`, `#b8935f`) e paleta avermelhada para IAs concorrentes (`#c0392b`, `#e74c3c`, `#d35400`, `#a93226`).
+   - Substituição de todos os rótulos de texto permanentes (`PORTO`, `FAZENDA`, `FÁBRICA`, `MÍDIA`) por badges de logo nos topos dos edifícios.
+   - Preview dinâmico no Wizard de Nova Empresa com botão `🔀 Gerar outro` (+1 seed) e persistência de `logoRegenSeed` em saves `.oiko`.
+2. **Consolidação & Limpeza da UI Superior:**
+   - Remoção da barra secundária flutuante de lentes (`#floating-lenses-bar`).
+   - Top Header unificado de linha única com dropdown compacto de Lentes (`🌐 Terreno ▾`) e menu agrupador `⋯ Mais` (Wiki, Tutorial, Diário, Tech Tree).
+   - Destaque dourado `#d4b483` com glow no tile selecionado e tooltip de hover dinâmico com badge SVG e resumo socioeconômico.
+3. **Persistência & Visualização Viva das Bancadas de P&D:**
+   - `renderRDCenterPanel` reformulado para exibir cards individuais com barra de progresso do QR, status em tempo real, verba mensal e botões de controle (`⏸ Pausar`, `💰 Verba`, `✕ Cancelar`).
+   - Auto-refresh instantâneo da janela do lote ao criar, pausar, retomar ou avançar pesquisas mensalmente.
+   - Sincronização direta dos badges de P&D nas linhas de produção e prateleiras comerciais.
+4. **Suíte de Testes Automatizados E2E:**
+   - 27 testes automatizados cobrindo determinismo algorítmico, SVG, persistência de saves, integridade de componentes de UI e renderização isométrica (100% de aprovação).
 
 ---
 

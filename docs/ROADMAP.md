@@ -1,6 +1,6 @@
 # 🗺️ Roadmap de Desenvolvimento — OIKONOMIA
 
-**Versão Atual**: `v0.8.1 (Build 20260830.04)`  
+**Versão Atual**: `v0.8.2 (Build 20260831.01)`  
 **Status da Infraestrutura**: 100% Validada em Navegador Real via Protocolo CDP (Edge Headless) com Evidências Visuais Capturadas.
 
 ---
@@ -37,3 +37,10 @@
 - `npm run audit-browser`: Executa o Microsoft Edge headless via DevTools Protocol testando os modais, a whitelist de produtos, a árvore de tecnologia, o licenciamento de nicho e a enciclopédia interativa.
 - `npm run audit-deep`: Executa 365 ticks de simulação contínua com verificação de DRE, tráfego intermunicipal, campanhas de mídia, IA de concorrência com guerra de preços e integridade de Save/Load.
 - `npm run audit-graph`: Valida matematicamente a árvore de 77 receitas industriais, garantindo ausência de nós órfãos ou loops recursivos.
+
+---
+
+## 🔬 Consultorias & Roadmaps Setoriais Arquivados
+- **[Diagnóstico de Causalidade & Ferramentas de Inteligência Econômica](consultoria/2026-08-31_ROADMAP_DIAGNOSTICO_E_CAUSALIDADE.md)**: Análise aprofundada das 14 ideias de diagnóstico (Analista Corporativo, Botão "Por quê?", DRE Interativa, Simulador "E se?", etc.) com matriz de viabilidade e arquitetura de séries temporais.
+- **[Consultoria de Arquitetura & Transição Modular v0.7](consultoria/2026-08-27_consultoria_arquitetura_v0.7.md)**: Diretrizes de modularização, separação de concerns e migração TypeScript.
+
