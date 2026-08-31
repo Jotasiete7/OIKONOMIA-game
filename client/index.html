@@ -7629,7 +7629,8 @@
         companyName: (typeof prof.companyName === 'string' && prof.companyName.trim()) ? prof.companyName.trim().slice(0, 35) : 'OikoCorp Holding',
         avatarId: validAvatar,
         themeColor: validColor,
-        difficulty: validDiff
+        difficulty: validDiff,
+        logoRegenSeed: Number.isInteger(prof.logoRegenSeed) ? prof.logoRegenSeed : 0
       };
 
       // 2. Sanitização Numérica de Finanças e Tempo
