@@ -3426,27 +3426,118 @@
       badge.textContent = `-$${rd.dailyRent || tile.district.landRentDaily}/dia`;
       badge.classList.remove('hidden');
 
-      const activeProjects = Object.values(rdLabs).filter(p => p.status === 'active');
-      const completedProjects = Object.values(rdLabs).filter(p => p.status === 'completed');
+      const allProjects = Object.values(rdLabs);
+      const activeProjects = allProjects.filter(p => p.status === 'active');
+      const completedProjects = allProjects.filter(p => p.status === 'completed');
       const totalBudget = activeProjects.reduce((s, p) => s + (p.monthlyBudget || 0), 0);
+      const totalCapacity = getRDTotalLabCapacity();
+      const usedSlots = getRDUsedLabSlots();
+      const freeSlots = Math.max(0, totalCapacity - usedSlots);
+
+      // Renderiza os cards das pesquisas ativas diretamente no painel da instalação
+      let projectsHtml = '';
+      if (allProjects.length === 0) {
+        projectsHtml = `
+          <div class="bg-slate-900/60 p-3 rounded-xl border border-dashed border-purple-800/60 text-center space-y-2 font-mono">
+            <p class="text-[11px] text-slate-400">Nenhuma pesquisa rodando no momento.</p>
+            <button onclick="openRDNewProjectModal()" class="w-full py-1.5 rounded-lg bg-purple-800 hover:bg-purple-700 text-purple-100 font-bold text-xs border border-purple-600/60 shadow cursor-pointer transition flex items-center justify-center gap-1.5">
+              ➕ Iniciar Projeto de Pesquisa
+            </button>
+          </div>
+        `;
+      } else {
+        projectsHtml = allProjects.map(proj => {
+          const prod = PRODUCT_CATALOG[proj.productId];
+          const cat = RD_CATEGORIES[proj.category] || {};
+          const labsCount = proj.labsCount || 1;
+          const minCostSingle = CoreMath.calculateRDMonthlyCost(proj.currentQR, prod ? prod.rdBaseCost : 3000);
+          const minCostTotal = minCostSingle * labsCount;
+          const pct = Math.min(100, Math.round(((proj.currentQR - proj.startQR) / Math.max(1, proj.targetQR - proj.startQR)) * 100));
+
+          const isActive = proj.status === 'active';
+          const isDone = proj.status === 'completed';
+          const statusBadge = isDone
+            ? '<span class="bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-700 text-[8px] font-bold">✅ CONCLUÍDO</span>'
+            : (isActive
+              ? '<span class="bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-700 text-[8px] font-bold animate-pulse">🟢 ATIVO</span>'
+              : '<span class="bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700 text-[8px] font-bold">⏸ PAUSADO</span>');
+
+          const gainSingle = CoreMath.calculateRDQualityGain(proj.currentQR, proj.targetQR, (proj.monthlyBudget || minCostTotal) / labsCount, minCostSingle);
+          const gainTotal = gainSingle * labsCount;
+          const monthsLeft = gainTotal > 0 ? Math.ceil((proj.targetQR - proj.currentQR) / gainTotal) : '∞';
+          const barColor = isDone ? 'bg-emerald-500' : (isActive ? 'bg-purple-500 shadow-sm shadow-purple-500/50' : 'bg-slate-600');
+
+          return `
+            <div class="bg-slate-900/90 border ${isDone ? 'border-emerald-800/70' : (isActive ? 'border-purple-700/80 shadow-md shadow-purple-950/40' : 'border-slate-800')} rounded-xl p-2.5 space-y-2 font-mono text-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-sm">${cat.icon || '🔬'}</span>
+                  <div>
+                    <strong class="text-slate-100 text-[11px] block leading-none">${prod ? prod.name : proj.productId}</strong>
+                    <span class="text-[9px] text-purple-300">${labsCount} Lab${labsCount > 1 ? 's' : ''} dedicado${labsCount > 1 ? 's' : ''}</span>
+                  </div>
+                </div>
+                ${statusBadge}
+              </div>
+
+              <!-- Barra de Progresso do QR -->
+              <div>
+                <div class="flex justify-between text-[9px] text-slate-400 mb-1">
+                  <span>QR: <strong class="text-amber-300">${proj.currentQR.toFixed(1)}</strong> → <strong class="text-purple-300">${proj.targetQR}</strong></span>
+                  <span class="font-bold text-slate-300">${pct}% (${isDone ? 'Pronto' : (monthsLeft === '∞' ? '∞' : `~${monthsLeft}m`)})</span>
+                </div>
+                <div class="h-1.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                  <div class="${barColor} h-full rounded-full transition-all duration-300" style="width:${pct}%"></div>
+                </div>
+              </div>
+
+              <!-- Resumo Financeiro & Ações Rápidas -->
+              <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[9px]">
+                <span class="text-emerald-400 font-bold">$${(proj.monthlyBudget || 0).toLocaleString('en-US')}/mês</span>
+                <div class="flex items-center gap-1">
+                  ${!isDone && isActive ? `<button onclick="pauseRDProject('${proj.id}')" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 font-bold cursor-pointer" title="Pausar pesquisa">⏸</button>` : ''}
+                  ${!isDone && !isActive ? `<button onclick="resumeRDProject('${proj.id}')" class="px-1.5 py-0.5 bg-purple-900 hover:bg-purple-800 text-purple-200 rounded border border-purple-700 font-bold cursor-pointer" title="Retomar pesquisa">▶</button>` : ''}
+                  ${!isDone ? `<button onclick="adjustRDBudget('${proj.id}')" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-teal-300 rounded border border-slate-700 font-bold cursor-pointer" title="Ajustar verba mensal">💰</button>` : ''}
+                  <button onclick="cancelRDProject('${proj.id}')" class="px-1.5 py-0.5 bg-rose-950/80 hover:bg-rose-900 text-rose-300 rounded border border-rose-800 font-bold cursor-pointer" title="Cancelar pesquisa">✕</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Se houver bancadas livres, adiciona botão de nova pesquisa
+        if (freeSlots > 0) {
+          projectsHtml += `
+            <button onclick="openRDNewProjectModal()" class="w-full py-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-purple-300 font-bold text-xs border border-dashed border-purple-800/60 cursor-pointer transition flex items-center justify-center gap-1.5">
+              ➕ Alocar Nova Pesquisa (${freeSlots} Bancada${freeSlots > 1 ? 's' : ''} Livre${freeSlots > 1 ? 's' : ''})
+            </button>
+          `;
+        }
+      }
 
       document.getElementById('facility-content-panel').innerHTML = `
-        <div class="bg-slate-950 p-4 rounded-xl border border-purple-800/80 space-y-3 font-mono text-xs">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-purple-300 text-sm">Laboratório Tecnológico</span>
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-purple-800/80 space-y-3 font-mono text-xs">
+          <div class="flex items-center justify-between border-b border-purple-950 pb-2">
+            <div>
+              <span class="font-bold text-purple-300 text-sm block">Laboratório Tecnológico</span>
+              <span class="text-[10px] text-slate-400">Capacidade: <strong>${usedSlots}/${totalCapacity} Bancadas</strong> ativas</span>
+            </div>
             <span class="text-[10px] bg-purple-950 text-purple-300 px-2 py-0.5 rounded border border-purple-800 font-bold">Nível ${rd.level || 1}</span>
           </div>
-          <div class="space-y-1 text-slate-300 text-[11px]">
-            <div class="flex justify-between"><span>Projetos em Andamento:</span> <strong class="text-purple-300">${activeProjects.length} ativo${activeProjects.length !== 1 ? 's' : ''}</strong></div>
-            <div class="flex justify-between"><span>Pesquisas Concluídas:</span> <strong class="text-emerald-400">${completedProjects.length} concluída${completedProjects.length !== 1 ? 's' : ''}</strong></div>
-            <div class="flex justify-between"><span>Orçamento Mensal P&D:</span> <strong class="text-emerald-400">$${totalBudget.toLocaleString('en-US')}/mês</strong></div>
+
+          <!-- Seção de Projetos e Bancadas -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold">
+              <span>🔬 PROJETOS DE PESQUISA ATIVOS</span>
+              <span class="text-emerald-400">$${totalBudget.toLocaleString('en-US')}/mês</span>
+            </div>
+            ${projectsHtml}
           </div>
-          <div class="pt-2 flex flex-col gap-2">
+
+          <!-- Botão para Painel Central Completo -->
+          <div class="pt-1 border-t border-purple-950">
             <button onclick="openRDCenterModal()" class="w-full py-2 rounded-xl bg-purple-800 hover:bg-purple-700 text-purple-100 font-bold text-xs border border-purple-600/60 shadow cursor-pointer transition flex items-center justify-center gap-1.5">
-              🔬 Abrir Painel Central de P&D
-            </button>
-            <button onclick="openRDNewProjectModal()" class="w-full py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-purple-300 font-bold text-xs border border-purple-800/60 cursor-pointer transition flex items-center justify-center gap-1.5">
-              ➕ Iniciar Novo Projeto de Pesquisa
+              🔬 Abrir Painel Central de P&D (Árvore & Patentes)
             </button>
           </div>
         </div>
@@ -3686,7 +3777,7 @@
         panel.innerHTML = `<p class="text-xs text-slate-500 font-mono text-center py-6">Nenhuma linha de produção ativa. Ative uma linha abaixo.</p>`;
       } else {
         for (const [recipeId, line] of lines) {
-          const rdProj = rdLabs['rd_' + line.outputProductId];
+          const rdProj = Object.values(rdLabs).find(p => p.productId === line.outputProductId);
           const techLvl = (typeof CoreMath !== 'undefined' && CoreMath.getTechLevelLabel) ? CoreMath.getTechLevelLabel(line.outputQuality || 60) : { level: 1, label: 'Padrão', icon: '🥉', color: 'text-slate-300 border-slate-700 bg-slate-900' };
           const rdBadge = rdProj
             ? `<button onclick="openRDCenterModal()" class="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-800 font-mono ml-1 hover:bg-purple-900 cursor-pointer" title="P&D: ${rdProj.status === 'completed' ? 'Concluído' : 'Pesquisando'} QR ${rdProj.targetQR} (Atual: ${rdProj.currentQR.toFixed(1)})">🔬 P&D: ${rdProj.currentQR.toFixed(0)}</button>`
@@ -3784,7 +3875,7 @@
         const prod = PRODUCT_CATALOG[prodId];
         if (!prod) continue;
 
-        const rdProj = rdLabs['rd_' + prodId];
+        const rdProj = Object.values(rdLabs).find(p => p.productId === prodId);
         const rdBadge = rdProj
           ? `<button onclick="openRDCenterModal()" class="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-800 font-mono hover:bg-purple-900 cursor-pointer" title="P&D: ${rdProj.status === 'completed' ? 'Concluído' : 'Pesquisando'} QR ${rdProj.targetQR} (Atual: ${rdProj.currentQR.toFixed(1)})">🔬 P&D: ${rdProj.currentQR.toFixed(0)}</button>`
           : '';
@@ -5162,14 +5253,25 @@
       closeRDNewProjectModal();
       renderRDProjectsList();
       updateRDChip();
+      if (activeManagedTile && activeManagedTile.rdCenter) {
+        renderFacilityPanel(activeManagedTile);
+      }
     }
 
     function pauseRDProject(id) {
-      if (rdLabs[id]) { rdLabs[id].status = 'paused'; renderRDProjectsList(); }
+      if (rdLabs[id]) {
+        rdLabs[id].status = 'paused';
+        renderRDProjectsList();
+        if (activeManagedTile && activeManagedTile.rdCenter) renderFacilityPanel(activeManagedTile);
+      }
     }
 
     function resumeRDProject(id) {
-      if (rdLabs[id]) { rdLabs[id].status = 'active'; renderRDProjectsList(); }
+      if (rdLabs[id]) {
+        rdLabs[id].status = 'active';
+        renderRDProjectsList();
+        if (activeManagedTile && activeManagedTile.rdCenter) renderFacilityPanel(activeManagedTile);
+      }
     }
 
     function cancelRDProject(id) {
@@ -5191,6 +5293,7 @@
           delete rdLabs[id];
           renderRDProjectsList();
           updateRDChip();
+          if (activeManagedTile && activeManagedTile.rdCenter) renderFacilityPanel(activeManagedTile);
           addGameLog(`🗑️ Projeto de P&D "${proj.productName}" foi cancelado.`, 'text-slate-400');
         }
       });
@@ -5204,6 +5307,7 @@
         proj.monthlyBudget = newBudget;
         addGameLog(`🔬 P&D — Verba ajustada: ${proj.productName} → $${newBudget.toLocaleString('en-US')}/mês`, 'text-purple-400');
         renderRDProjectsList();
+        if (activeManagedTile && activeManagedTile.rdCenter) renderFacilityPanel(activeManagedTile);
       }
     }
 
@@ -5248,8 +5352,11 @@
         }
       }
       updateRDChip();
-      if (anyCompleted && document.getElementById('rd-center-modal') && !document.getElementById('rd-center-modal').classList.contains('hidden')) {
+      if (document.getElementById('rd-center-modal') && !document.getElementById('rd-center-modal').classList.contains('hidden')) {
         renderRDProjectsList();
+      }
+      if (activeManagedTile && activeManagedTile.rdCenter) {
+        renderFacilityPanel(activeManagedTile);
       }
     }
 
