@@ -3859,11 +3859,17 @@
       const rd = tile.rdCenter;
       const iconEl = document.getElementById('facility-icon');
       if (iconEl) iconEl.innerHTML = '🔬';
-      document.getElementById('facility-title').textContent = rd.name;
-      const rdRent = rd.dailyRent || tile.district.landRentDaily;
+      const titleEl = document.getElementById('facility-title');
+      if (titleEl) titleEl.textContent = rd.name;
+      const subtitleEl = document.getElementById('facility-subtitle');
+      if (subtitleEl) subtitleEl.textContent = `${tile.district?.name || 'Metrópole'} · Complexo de P&D (Pesquisa & Inovação)`;
+      const badge = document.getElementById('facility-rent-badge');
+      const rdRent = rd.dailyRent || (tile.district ? tile.district.landRentDaily : 10);
       const totalRDDaily = rdRent + 150;
-      badge.textContent = `-$${totalRDDaily}/dia (Solo $${rdRent} + Infra $150)`;
-      badge.classList.remove('hidden');
+      if (badge) {
+        badge.textContent = `-$${totalRDDaily}/dia (Solo $${rdRent} + Infra $150)`;
+        badge.classList.remove('hidden');
+      }
 
       const allProjects = Object.values(rdLabs);
       const activeProjects = allProjects.filter(p => p.status === 'active');
@@ -3879,7 +3885,7 @@
         projectsHtml = `
           <div class="bg-slate-900/60 p-3 rounded-xl border border-dashed border-purple-800/60 text-center space-y-2 font-mono">
             <p class="text-[11px] text-slate-400">Nenhuma pesquisa rodando no momento.</p>
-            <button onclick="openRDNewProjectModal()" class="w-full py-1.5 rounded-lg bg-purple-800 hover:bg-purple-700 text-purple-100 font-bold text-xs border border-purple-600/60 shadow cursor-pointer transition flex items-center justify-center gap-1.5">
+            <button onclick="openRDNewProjectModal()" class="w-full py-2 rounded-lg bg-purple-800 hover:bg-purple-700 text-purple-100 font-bold text-xs border border-purple-600/60 shadow cursor-pointer transition flex items-center justify-center gap-1.5">
               ➕ Iniciar Projeto de Pesquisa
             </button>
           </div>
@@ -3973,10 +3979,18 @@
             ${projectsHtml}
           </div>
 
-          <!-- Botão para Painel Central Completo -->
-          <div class="pt-1 border-t border-purple-950">
-            <button onclick="openRDCenterModal()" class="w-full py-2 rounded-xl bg-purple-800 hover:bg-purple-700 text-purple-100 font-bold text-xs border border-purple-600/60 shadow cursor-pointer transition flex items-center justify-center gap-1.5">
-              🔬 Abrir Painel Central de P&D (Árvore & Patentes)
+          <!-- Ações Rápidas: Árvore Tecnológica & Central de Patentes -->
+          <div class="pt-2 border-t border-purple-950 space-y-2">
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="openTechTreeModal()" class="py-2 px-2 rounded-xl bg-teal-950/80 hover:bg-teal-900 text-teal-200 font-bold text-[11px] border border-teal-700/60 shadow cursor-pointer transition flex items-center justify-center gap-1">
+                🧬 Árvore Tech
+              </button>
+              <button onclick="openRDCenterModal(); switchRDTab('market');" class="py-2 px-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-200 font-bold text-[11px] border border-purple-700/60 shadow cursor-pointer transition flex items-center justify-center gap-1">
+                📜 Patentes
+              </button>
+            </div>
+            <button onclick="openRDCenterModal(); switchRDTab('projects');" class="w-full py-2 rounded-xl bg-purple-800 hover:bg-purple-700 text-purple-100 font-bold text-xs border border-purple-600/60 shadow cursor-pointer transition flex items-center justify-center gap-1.5">
+              🔬 Abrir Central Completa de P&D
             </button>
           </div>
         </div>
