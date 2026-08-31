@@ -2857,9 +2857,6 @@
         changeZoom(0.1);
       } else if (k === 'f') {
         toggleTheaterMode();
-      } else if (k === ' ' && e.target === document.body) {
-        e.preventDefault();
-        setSpeed(gameSpeed === 0 ? 1 : 0);
       }
     });
 
@@ -3574,8 +3571,13 @@
       let totalRev = 0, totalCosts = 0, totalNet = 0;
 
       for (const tile of activeFacilitySet.values()) {
+        // Ignora instalações de concorrentes de IA na DRE corporativa do jogador
+        if (!tile.store && !tile.factory && !tile.farm && !tile.mine && !tile.rdCenter) {
+          continue;
+        }
+
         let typeName = 'Instalação';
-        let facName = 'Desconhecida';
+        let facName = 'Instalação Corporativa';
         let emoji = '🏢';
 
         if (tile.store) {
