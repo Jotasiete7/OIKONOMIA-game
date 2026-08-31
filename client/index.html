@@ -521,11 +521,147 @@
           <span>(-) Publicidade & Campanhas de Marketing:</span>
           <strong id="dre-marketing" class="text-rose-400">-$0.00</strong>
         </div>
+        <div class="flex justify-between text-slate-400 py-1 border-b border-slate-800">
+          <span>(-) Despesas Financeiras (Juros de Cheque Especial):</span>
+          <strong id="dre-financial" class="text-rose-400">-$0.00</strong>
+        </div>
         <div class="border-t-2 border-slate-700 pt-3 flex justify-between text-sm font-bold bg-slate-950/60 p-3 rounded-xl">
           <span>LUCRO LÍQUIDO CONSOLIDADO:</span>
           <strong id="dre-net-profit" class="text-emerald-300">$0.00</strong>
         </div>
+        <div class="pt-2 flex items-center justify-between gap-2 border-t border-slate-800/80">
+          <div class="text-[11px] text-slate-400">
+            Patrimônio Líquido: <strong id="dre-net-worth" class="text-slate-200">$0.00</strong>
+          </div>
+          <button onclick="openFacilityDREModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold font-mono cursor-pointer transition flex items-center gap-1.5 shadow">
+            <span>🏢</span> DRE Detalhada por Prédio
+          </button>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!-- 6B. GAVETA FLUTUANTE DRE DETALHADA POR INSTALAÇÃO -->
+  <div id="facility-dre-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-4xl mx-4 overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="bg-slate-800 px-6 py-4 border-b border-slate-700 flex items-center justify-between shrink-0 drag-handle">
+        <div>
+          <h3 class="text-sm font-bold text-indigo-300 flex items-center gap-2">
+            <span>🏢</span> Auditoria Financeira Detalhada por Instalação
+          </h3>
+          <p class="text-[11px] text-slate-400 font-mono mt-0.5">Demonstrativo de resultado discriminado unidade por unidade no mês anterior.</p>
+        </div>
+        <button onclick="closeFacilityDREModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 overflow-y-auto custom-scrollbar flex-1 font-mono text-xs space-y-4">
+        <div class="grid grid-cols-4 gap-3 text-center">
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 uppercase">Receita Total</div>
+            <div id="fdre-total-rev" class="text-sm font-bold text-emerald-400 mt-0.5">$0.00</div>
+          </div>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 uppercase">Custos & CPV</div>
+            <div id="fdre-total-costs" class="text-sm font-bold text-rose-400 mt-0.5">-$0.00</div>
+          </div>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 uppercase">Resultado Operacional</div>
+            <div id="fdre-total-net" class="text-sm font-bold text-emerald-300 mt-0.5">$0.00</div>
+          </div>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 uppercase">Patrimônio Líquido</div>
+            <div id="fdre-net-worth" class="text-sm font-bold text-indigo-300 mt-0.5">$0.00</div>
+          </div>
+        </div>
+
+        <div class="border border-slate-800 rounded-xl overflow-hidden">
+          <table class="w-full text-left border-collapse text-[11px]">
+            <thead class="bg-slate-800/80 text-slate-400 uppercase text-[10px] border-b border-slate-700">
+              <tr>
+                <th class="p-2.5">Instalação</th>
+                <th class="p-2.5">Localização</th>
+                <th class="p-2.5 text-right">Receita</th>
+                <th class="p-2.5 text-right">CPV / Insumos</th>
+                <th class="p-2.5 text-right">OPEX (Solo+Equipe)</th>
+                <th class="p-2.5 text-right">Lucro Líquido</th>
+                <th class="p-2.5 text-right">Margem</th>
+                <th class="p-2.5 text-center">Ação</th>
+              </tr>
+            </thead>
+            <tbody id="facility-dre-table-body" class="divide-y divide-slate-800 bg-slate-950">
+              <!-- Renderizado dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6C. MODAL DE ALERTA DE INSOLVÊNCIA TÉCNICA (NÍVEL 2) -->
+  <div id="insolvency-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center hidden">
+    <div class="bg-slate-900 border-2 border-amber-600 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden space-y-0">
+      <div class="bg-amber-950/80 px-6 py-4 border-b border-amber-700/80 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🚨</span>
+          <div>
+            <h3 class="text-sm font-bold text-amber-300 uppercase tracking-wider">Alerta de Insolvência Técnica (Nível 2)</h3>
+            <p class="text-[11px] text-amber-200/80 font-mono">Notificação Financeira & Risco de Recuperação Judicial</p>
+          </div>
+        </div>
+        <button onclick="closeInsolvencyModal()" class="w-7 h-7 rounded-lg bg-amber-900 hover:bg-amber-800 text-amber-200 text-xs font-bold flex items-center justify-center cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4 font-mono text-xs">
+        <div class="bg-amber-950/40 border border-amber-800/80 p-3.5 rounded-xl space-y-2 text-slate-200 text-[11px]">
+          <p>Sua corporação atingiu um nível crítico de endividamento ou Patrimônio Líquido negativo acumulado.</p>
+          <div class="flex justify-between text-xs pt-1 border-t border-amber-800/50">
+            <span>Caixa / Dívida Atual: <strong id="ins-cash-debt" class="text-rose-400">-$0.00</strong></span>
+            <span>Patrimônio Líquido: <strong id="ins-net-worth" class="text-amber-300">$0.00</strong></span>
+          </div>
+          <div class="text-[11px] text-amber-300 font-bold bg-amber-900/60 p-2 rounded-lg text-center">
+            ⏳ Tolerância Legal: Restam <span id="ins-countdown-months" class="text-white underline">6</span> meses consecutivos para regularizar o Patrimônio Líquido antes da decretação de falência.
+          </div>
+        </div>
+
+        <div id="ins-recommendation-box" class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5">
+          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+            <span>💡</span> Recomendação do Consultor de Reestruturação:
+          </div>
+          <div id="ins-recommended-content" class="text-[11px] text-slate-300">
+            <!-- Preenchido dinamicamente -->
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between gap-3 pt-2">
+          <button onclick="openFacilityDREModal(); closeInsolvencyModal();" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-xs font-bold font-mono cursor-pointer border border-slate-700">
+            📊 Abrir DRE Detalhada
+          </button>
+          <button onclick="closeInsolvencyModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-5 py-2 rounded-xl text-xs font-bold font-mono cursor-pointer transition shadow">
+            Entendido, Vou Reestruturar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6D. MODAL DE FALÊNCIA JUDICIAL (NÍVEL 3 - GAME OVER) -->
+  <div id="bankruptcy-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-lg flex items-center justify-center hidden">
+    <div class="bg-slate-950 border-2 border-rose-600 rounded-3xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden text-center p-8 space-y-5 font-mono">
+      <div class="w-16 h-16 bg-rose-950/80 border-2 border-rose-500 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-xl shadow-rose-950/50">
+        ⚖️
+      </div>
+      <div class="space-y-1">
+        <h2 class="text-lg font-black text-rose-400 tracking-wider uppercase">Decretação de Falência Corporativa</h2>
+        <p class="text-xs text-slate-400">O Tribunal de Justiça decretou a liquidação judicial da sua empresa.</p>
+      </div>
+      <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 text-xs text-left space-y-2 text-slate-300">
+        <div class="flex justify-between"><span>Empresa:</span><strong id="bk-company-name" class="text-slate-100">OikoCorp</strong></div>
+        <div class="flex justify-between"><span>Tempo de Atividade:</span><strong id="bk-playtime" class="text-slate-100">Ano 4</strong></div>
+        <div class="flex justify-between"><span>Dívida Final Insolvente:</span><strong id="bk-final-debt" class="text-rose-400">-$0.00</strong></div>
+        <div class="flex justify-between"><span>Patrimônio Líquido Final:</span><strong id="bk-final-nw" class="text-rose-400">-$0.00</strong></div>
+      </div>
+      <p class="text-[11px] text-slate-400 italic">"O mercado pune a insolvência persistente, mas todo grande magnata aprende com as quedas."</p>
+      <button onclick="location.reload()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-2xl text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-rose-900/50 transition">
+        🔄 Iniciar Novo Império
+      </button>
     </div>
   </div>
 
@@ -1701,7 +1837,7 @@
         }
         if (tile.farm) {
           const isDirectCrop = (tile.farm.cropId === prodId);
-          const isPoultryEggs = (tile.farm.farmTypeId === 'farm_poultry' && prodId === 'eggs');
+          const isPoultryEggs = ((tile.farm.cropId === 'poultry' || tile.farm.farmTypeId === 'farm_poultry') && prodId === 'eggs');
 
           if (isDirectCrop || isPoultryEggs) {
             const dist = CoreMath.calculateManhattanDistance(tile, storeTile);
@@ -1769,7 +1905,10 @@
       currentAppScreen: 'BOOT', // 'BOOT', 'MAIN_MENU', 'PLAYING', 'PAUSED'
       day: 1, month: 1, year: 1,
       cash: 100000.00,
-      monthRevenue: 0, monthCogs: 0, monthFixedExpenses: 0, monthMarketingExpenses: 0,
+      monthRevenue: 0, monthCogs: 0, monthFixedExpenses: 0, monthMarketingExpenses: 0, monthFinancialExpenses: 0,
+      consecutiveInsolventMonths: 0,
+      insolvencyLevel2Triggered: false,
+      insolvencyCountdownMonths: 6,
       gameSpeed: 0, timerInterval: null,
       previousSpeedBeforePause: 1,
       playtimeSeconds: 0,
@@ -1812,6 +1951,10 @@
     let cash = GameState.cash;
     let monthRevenue = GameState.monthRevenue, monthCogs = GameState.monthCogs;
     let monthFixedExpenses = GameState.monthFixedExpenses, monthMarketingExpenses = GameState.monthMarketingExpenses;
+    let monthFinancialExpenses = GameState.monthFinancialExpenses || 0;
+    let consecutiveInsolventMonths = GameState.consecutiveInsolventMonths || 0;
+    let insolvencyLevel2Triggered = GameState.insolvencyLevel2Triggered || false;
+    let insolvencyCountdownMonths = GameState.insolvencyCountdownMonths || 6;
     let gameSpeed = GameState.gameSpeed, timerInterval = GameState.timerInterval;
     let previousSpeedBeforePause = GameState.previousSpeedBeforePause;
     let playtimeSeconds = GameState.playtimeSeconds;
@@ -3330,21 +3473,262 @@
       if (m) m.classList.toggle('hidden');
     }
 
-    function syncDREValues(gross, cogs, rent, mkt, net) {
+    function calculateCorporateNetWorth() {
+      let landTotal = 0;
+      let facilitiesTotal = 0;
+      let inventoryTotal = 0;
+
+      for (const tile of activeFacilitySet.values()) {
+        const d = tile.district;
+        landTotal += (d.landRentDaily || 10) * 350;
+
+        if (tile.store) {
+          const st = (typeof STORE_TYPES !== 'undefined') ? STORE_TYPES.find(s => s.id === tile.store.storeTypeId) : null;
+          facilitiesTotal += st ? st.cost : 14000;
+          if (tile.store.shelves) {
+            for (const shelf of Object.values(tile.store.shelves)) {
+              inventoryTotal += (shelf.stock || 0) * (shelf.landedCost || 1.0);
+            }
+          }
+        }
+        if (tile.mine) {
+          const mt = (typeof MINE_TYPES !== 'undefined') ? MINE_TYPES.find(m => m.id === tile.mine.mineTypeId) : null;
+          facilitiesTotal += mt ? mt.cost : 30000;
+          inventoryTotal += (tile.mine.stock || 0) * (tile.mine.unitCost || 0.8);
+        }
+        if (tile.farm) {
+          facilitiesTotal += tile.farm.cost || 22000;
+          inventoryTotal += (tile.farm.stock || 0) * (tile.farm.dailyOperatingCost || 0.5);
+        }
+        if (tile.factory) {
+          const linesCount = tile.factory.lines ? Object.keys(tile.factory.lines).length : 1;
+          facilitiesTotal += 48000 + (linesCount * 15000);
+          if (tile.factory.lines) {
+            for (const line of Object.values(tile.factory.lines)) {
+              inventoryTotal += (line.finishedStock || 0) * (line.unitCost || 2.0);
+            }
+          }
+        }
+        if (tile.rdCenter) {
+          facilitiesTotal += 40000;
+        }
+      }
+
+      const totalDebt = cash < 0 ? Math.abs(cash) : 0;
+      const liquidCash = cash > 0 ? cash : 0;
+      const totalAssets = liquidCash + landTotal + facilitiesTotal + inventoryTotal;
+      const netWorth = totalAssets - totalDebt;
+
+      return {
+        liquidCash: cash,
+        landTotal,
+        facilitiesTotal,
+        inventoryTotal,
+        totalAssets,
+        totalDebt,
+        netWorth
+      };
+    }
+
+    function syncDREValues(gross, cogs, rent, mkt, net, financial = 0, netWorth = 0) {
       const gEl = document.getElementById('dre-gross-sales');
       const cEl = document.getElementById('dre-cogs');
       const rEl = document.getElementById('dre-rent');
       const mEl = document.getElementById('dre-marketing');
+      const fEl = document.getElementById('dre-financial');
       const nEl = document.getElementById('dre-net-profit');
+      const nwEl = document.getElementById('dre-net-worth');
 
       if (gEl) gEl.textContent = '+$' + gross.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       if (cEl) cEl.textContent = '-$' + cogs.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       if (rEl) rEl.textContent = '-$' + rent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       if (mEl) mEl.textContent = '-$' + mkt.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (fEl) fEl.textContent = '-$' + (financial || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       if (nEl) {
         nEl.textContent = (net >= 0 ? '+$' : '-$') + Math.abs(net).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         nEl.className = net >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold';
       }
+      if (nwEl) {
+        nwEl.textContent = (netWorth >= 0 ? '$' : '-$') + Math.abs(netWorth).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        nwEl.className = netWorth >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold';
+      }
+    }
+
+    function openFacilityDREModal() {
+      const m = document.getElementById('facility-dre-modal');
+      if (!m) return;
+      renderFacilityDRETable();
+      m.classList.remove('hidden');
+    }
+
+    function closeFacilityDREModal() {
+      const m = document.getElementById('facility-dre-modal');
+      if (m) m.classList.add('hidden');
+    }
+
+    function renderFacilityDRETable() {
+      const tbody = document.getElementById('facility-dre-table-body');
+      if (!tbody) return;
+
+      const rows = [];
+      let totalRev = 0, totalCosts = 0, totalNet = 0;
+
+      for (const tile of activeFacilitySet.values()) {
+        let typeName = 'Instalação';
+        let facName = 'Desconhecida';
+        let emoji = '🏢';
+
+        if (tile.store) {
+          typeName = 'Varejo';
+          facName = tile.store.name;
+          emoji = '🏪';
+        } else if (tile.factory) {
+          typeName = 'Fábrica';
+          facName = tile.factory.name;
+          emoji = '🏭';
+        } else if (tile.farm) {
+          typeName = 'Agropecuária';
+          facName = tile.farm.name;
+          emoji = '🌾';
+        } else if (tile.mine) {
+          typeName = 'Mineração';
+          facName = tile.mine.name;
+          emoji = '⛏️';
+        } else if (tile.rdCenter) {
+          typeName = 'P&D';
+          facName = tile.rdCenter.name;
+          emoji = '🔬';
+        }
+
+        const metrics = tile.lastMonthMetrics || tile.monthlyMetrics || { revenue: 0, cogs: 0, opex: 0, netProfit: 0 };
+        const rev = metrics.revenue || 0;
+        const cogs = metrics.cogs || 0;
+        const opex = metrics.opex || 0;
+        const net = rev - cogs - opex;
+        const margin = rev > 0 ? Math.round((net / rev) * 100) : (net < 0 ? -100 : 0);
+
+        totalRev += rev;
+        totalCosts += (cogs + opex);
+        totalNet += net;
+
+        rows.push({
+          tile,
+          emoji,
+          facName,
+          typeName,
+          loc: `${tile.district?.name || 'Interior'} (${tile.x}, ${tile.y})`,
+          rev,
+          cogs,
+          opex,
+          net,
+          margin
+        });
+      }
+
+      rows.sort((a, b) => a.net - b.net); // Piores margens primeiro
+
+      tbody.innerHTML = rows.length > 0 ? rows.map(r => `
+        <tr class="hover:bg-slate-900/60 transition">
+          <td class="p-2.5 font-bold text-slate-200">
+            <span class="mr-1">${r.emoji}</span> ${r.facName}
+            <span class="text-[9px] text-slate-500 block font-normal">${r.typeName}</span>
+          </td>
+          <td class="p-2.5 text-slate-400 text-[10px]">${r.loc}</td>
+          <td class="p-2.5 text-right font-bold text-emerald-400">$${r.rev.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+          <td class="p-2.5 text-right text-rose-400">-$${r.cogs.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+          <td class="p-2.5 text-right text-slate-300">-$${r.opex.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+          <td class="p-2.5 text-right font-black ${r.net >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+            ${r.net >= 0 ? '+$' : '-$'}${Math.abs(r.net).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+          </td>
+          <td class="p-2.5 text-right font-bold ${r.margin >= 0 ? 'text-slate-300' : 'text-rose-400'}">
+            ${r.margin > 0 ? '+' : ''}${r.margin}%
+          </td>
+          <td class="p-2.5 text-center">
+            <button onclick="closeFacilityDREModal(); activeManagedTile=worldGrid[${r.tile.x}][${r.tile.y}]; renderFacilityPanel(activeManagedTile); renderTileInspector(activeManagedTile); scheduleRender();" class="bg-slate-800 hover:bg-slate-700 text-teal-300 px-2 py-1 rounded text-[9px] font-bold border border-slate-700 cursor-pointer">
+              Gerir
+            </button>
+          </td>
+        </tr>
+      `).join('') : `
+        <tr>
+          <td colspan="8" class="p-4 text-center text-slate-500 font-mono">Nenhuma instalação ativa registrada na auditoria.</td>
+        </tr>
+      `;
+
+      const nw = calculateCorporateNetWorth();
+      document.getElementById('fdre-total-rev').textContent = '+$' + totalRev.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('fdre-total-costs').textContent = '-$' + totalCosts.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('fdre-total-net').textContent = (totalNet >= 0 ? '+$' : '-$') + Math.abs(totalNet).toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('fdre-total-net').className = `text-sm font-bold mt-0.5 ${totalNet >= 0 ? 'text-emerald-300' : 'text-rose-400'}`;
+      document.getElementById('fdre-net-worth').textContent = (nw.netWorth >= 0 ? '$' : '-$') + Math.abs(nw.netWorth).toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('fdre-net-worth').className = `text-sm font-bold mt-0.5 ${nw.netWorth >= 0 ? 'text-indigo-300' : 'text-rose-400'}`;
+    }
+
+    function openInsolvencyModal(nwObj) {
+      const modal = document.getElementById('insolvency-modal');
+      if (!modal) return;
+
+      const debtEl = document.getElementById('ins-cash-debt');
+      const nwEl = document.getElementById('ins-net-worth');
+      const countEl = document.getElementById('ins-countdown-months');
+      const recContent = document.getElementById('ins-recommended-content');
+
+      if (debtEl) debtEl.textContent = cash < 0 ? `-$${Math.abs(cash).toLocaleString('en-US', { maximumFractionDigits: 0 })}` : `$${cash.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+      if (nwEl) nwEl.textContent = (nwObj.netWorth >= 0 ? '$' : '-$') + Math.abs(nwObj.netWorth).toLocaleString('en-US', { maximumFractionDigits: 0 });
+      if (countEl) countEl.textContent = insolvencyCountdownMonths;
+
+      // Localiza a instalação de pior resultado financeiro para recomendar venda
+      let worstFacility = null;
+      let worstNet = Infinity;
+
+      for (const tile of activeFacilitySet.values()) {
+        const metrics = tile.lastMonthMetrics || tile.monthlyMetrics || { netProfit: 0 };
+        const net = (metrics.revenue || 0) - (metrics.cogs || 0) - (metrics.opex || 0);
+        if (net < worstNet) {
+          worstNet = net;
+          worstFacility = tile;
+        }
+      }
+
+      if (worstFacility && recContent) {
+        const val = calculateFacilityValue(worstFacility);
+        recContent.innerHTML = `
+          <div class="space-y-2">
+            <p>Identificamos que <strong class="text-amber-300">${val.facilityName}</strong> (${worstFacility.district?.name || ''}) está gerando um impacto negativo de <strong class="text-rose-400">-$${Math.abs(worstNet).toLocaleString('en-US', { maximumFractionDigits: 0 })}/mês</strong>.</p>
+            <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between">
+              <div>
+                <div class="text-[10px] text-slate-400">Valor de Liquidação Rápida:</div>
+                <div class="text-sm font-bold text-emerald-400">+$${val.sellValue.toLocaleString('en-US')}</div>
+              </div>
+              <button onclick="closeInsolvencyModal(); sellFacility(${worstFacility.x}, ${worstFacility.y});" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold font-mono cursor-pointer shadow">
+                🏷️ Vender Esta Instalação
+              </button>
+            </div>
+          </div>
+        `;
+      } else if (recContent) {
+        recContent.innerHTML = `<p class="text-slate-400">Corte orçamentos de P&D ativos ou reduza custos fixos fechando linhas ociosas para restaurar a lucratividade.</p>`;
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeInsolvencyModal() {
+      const modal = document.getElementById('insolvency-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function showBankruptcyModal(nwObj) {
+      const modal = document.getElementById('bankruptcy-modal');
+      if (!modal) return;
+
+      document.getElementById('bk-company-name').textContent = playerProfile?.companyName || 'Sua Corporação';
+      document.getElementById('bk-playtime').textContent = `Ano ${year} · Mês ${month} (${playtimeSeconds > 60 ? `${Math.floor(playtimeSeconds / 60)} min` : `${playtimeSeconds}s`})`;
+      document.getElementById('bk-final-debt').textContent = `-$${Math.abs(cash < 0 ? cash : (nwObj.totalDebt || 0)).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+      document.getElementById('bk-final-nw').textContent = `-$${Math.abs(nwObj.netWorth).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+
+      modal.classList.remove('hidden');
+      gameSpeed = 0;
     }
 
     function renderIdlePanel() {
@@ -4178,6 +4562,8 @@
       cash -= ft.cost;
       pendingTile.farm = {
         id: `farm_${pendingTile.x}_${pendingTile.y}`,
+        farmTypeId: ft.id,
+        cost: ft.cost,
         name: `${ft.emoji} ${ft.name}`,
         cropId: ft.cropId,
         cropName: ft.cropName,
@@ -7362,30 +7748,43 @@
       // === SPARSE INDEX: itera apenas tiles com instalações (O(k)) ===
       for (const tile of activeFacilitySet.values()) {
         const d = tile.district;
+        tile.monthlyMetrics = tile.monthlyMetrics || { revenue: 0, cogs: 0, opex: 0, netProfit: 0 };
+        let tileDailyOpex = 0;
 
         // Custos Fixos & OPEX Diário (Aluguel do Solo + Folha de Pagamento & Manutenção de Instalação)
         if (tile.store) {
           const shelvesCount = tile.store.shelves ? Math.max(1, Object.keys(tile.store.shelves).length) : 1;
           const clerkWages = shelvesCount * 40; // $40/dia por gôndola ativa (atendimento e reposição)
-          dailyFixed += (tile.store.dailyRent || d.landRentDaily) + clerkWages;
+          const op = (tile.store.dailyRent || d.landRentDaily) + clerkWages;
+          dailyFixed += op;
+          tileDailyOpex += op;
         }
         if (tile.mine) {
           const mineWages = 180; // $180/dia (equipe de extração pesada e maquinário)
-          dailyFixed += d.landRentDaily + mineWages;
+          const op = d.landRentDaily + mineWages;
+          dailyFixed += op;
+          tileDailyOpex += op;
         }
         if (tile.farm) {
           const farmWages = 120; // $120/dia (mão de obra rural e manutenção de safra)
-          dailyFixed += d.landRentDaily + farmWages;
+          const op = d.landRentDaily + farmWages;
+          dailyFixed += op;
+          tileDailyOpex += op;
         }
         if (tile.factory) {
           const linesCount = tile.factory.lines ? Math.max(1, Object.keys(tile.factory.lines).length) : 1;
           const factoryWages = linesCount * 200; // $200/dia por linha ativa (operários e energia industrial)
-          dailyFixed += d.landRentDaily + factoryWages;
+          const op = d.landRentDaily + factoryWages;
+          dailyFixed += op;
+          tileDailyOpex += op;
         }
         if (tile.rdCenter) {
           const rdMaintenance = 150; // $150/dia (manutenção predial de infraestrutura científica)
-          dailyFixed += (tile.rdCenter.dailyRent || Math.round(d.landRentDaily * 1.2)) + rdMaintenance;
+          const op = (tile.rdCenter.dailyRent || Math.round(d.landRentDaily * 1.2)) + rdMaintenance;
+          dailyFixed += op;
+          tileDailyOpex += op;
         }
+        tile.monthlyMetrics.opex += tileDailyOpex;
 
         // Produção de Minas
         if (tile.mine) {
@@ -7395,7 +7794,7 @@
         // Produção de Fazendas (com Suplementação de Ração Agropecuária)
         if (tile.farm) {
           const farm = tile.farm;
-          const isLivestock = ['farm_poultry', 'farm_dairy', 'farm_cattle', 'farm_pigs', 'farm_sheep'].includes(farm.farmTypeId);
+          const isLivestock = ['poultry', 'raw_milk', 'cattle', 'pigs', 'wool'].includes(farm.cropId) || ['farm_poultry', 'farm_dairy', 'farm_cattle', 'farm_pigs', 'farm_sheep'].includes(farm.farmTypeId);
           let effectiveYield = farm.dailyYield;
           let effectiveQR = farm.quality || 60;
 
@@ -7524,8 +7923,12 @@
               addLog(`⚠ Stockout de "${prod.name}" na ${tile.store?.name ?? ''}!`, 'text-amber-400');
 
             shelf.stock = Math.max(0, shelf.stock - sold);
-            dailyRev  += sold * shelf.price;
-            dailyCogs += sold * (shelf.landedCost || prod.baseCost);
+            const soldRev = sold * shelf.price;
+            const soldCogs = sold * (shelf.landedCost || prod.baseCost);
+            dailyRev  += soldRev;
+            dailyCogs += soldCogs;
+            tile.monthlyMetrics.revenue += soldRev;
+            tile.monthlyMetrics.cogs += soldCogs;
 
             const restock = Math.min(shelf.dailyRestock, shelf.maxCapacity - shelf.stock);
             if (restock > 0) {
@@ -7585,6 +7988,15 @@
       // Propagação de P&D para prateleiras de varejo
       propagateQualityRD();
 
+      // Nível 1: Juros de Cheque Especial sobre Caixa Negativo (3.5% ao mês)
+      let dailyFinancial = 0;
+      if (cash < 0) {
+        const overdraftInterest = Math.abs(cash) * (0.035 / 30);
+        dailyFinancial += overdraftInterest;
+        cash -= overdraftInterest;
+        monthFinancialExpenses += overdraftInterest;
+      }
+
       cash += dailyRev - dailyFixed - dailyMarketing;
       monthRevenue += dailyRev;
       monthCogs += dailyCogs;
@@ -7614,7 +8026,20 @@
     }
 
     function closeMonthEnd() {
-      const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses;
+      // Snapshot de performance por instalação para auditoria e DRE detalhada
+      for (const tile of activeFacilitySet.values()) {
+        if (tile.monthlyMetrics) {
+          tile.lastMonthMetrics = {
+            revenue: tile.monthlyMetrics.revenue || 0,
+            cogs: tile.monthlyMetrics.cogs || 0,
+            opex: tile.monthlyMetrics.opex || 0,
+            netProfit: (tile.monthlyMetrics.revenue || 0) - (tile.monthlyMetrics.cogs || 0) - (tile.monthlyMetrics.opex || 0)
+          };
+          tile.monthlyMetrics = { revenue: 0, cogs: 0, opex: 0, netProfit: 0 };
+        }
+      }
+
+      const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses - monthFinancialExpenses;
       if (net > 0) {
         GameState.hasRecordedPositiveMonth = true;
       }
@@ -7622,6 +8047,37 @@
         `📊 FIM DO MÊS ${String(month).padStart(2,'0')}: Receita $${monthRevenue.toLocaleString('en-US',{maximumFractionDigits:0})} | Lucro Líq: $${net.toLocaleString('en-US',{maximumFractionDigits:0})}`,
         net >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'
       );
+
+      // Solvência Corporativa em 3 Degraus
+      const nwObj = calculateCorporateNetWorth();
+      const isTechnicallyInsolvent = (nwObj.netWorth < 0 || (nwObj.totalDebt > Math.max(1, monthRevenue * 3) && monthRevenue > 0));
+
+      if (isTechnicallyInsolvent) {
+        consecutiveInsolventMonths++;
+        if (consecutiveInsolventMonths >= 2 && !insolvencyLevel2Triggered) {
+          insolvencyLevel2Triggered = true;
+          insolvencyCountdownMonths = 6;
+          openInsolvencyModal(nwObj);
+          addLog('🚨 ALERTA DE INSOLVÊNCIA TÉCNICA (Nível 2): Patrimônio Líquido negativo acumulado! Restam 6 meses para reestruturar.', 'text-amber-400 font-bold');
+        } else if (insolvencyLevel2Triggered) {
+          insolvencyCountdownMonths--;
+          if (insolvencyCountdownMonths <= 0) {
+            showBankruptcyModal(nwObj);
+            addLog('⚖️ FALÊNCIA DECRETADA: O Tribunal de Justiça decretou a liquidação dos bens da sua corporação.', 'text-rose-500 font-bold');
+          } else {
+            addLog(`🚨 ALERTA JUDICIAL: Restam ${insolvencyCountdownMonths} meses para sanear o Patrimônio Líquido antes da Falência!`, 'text-rose-400 font-bold');
+          }
+        }
+      } else {
+        if (nwObj.netWorth > 0) {
+          if (insolvencyLevel2Triggered) {
+            addLog('⚖️ SOLVÊNCIA RESTAURADA: Sua corporação recuperou o Patrimônio Líquido positivo e o processo judicial foi extinto!', 'text-emerald-400 font-bold');
+          }
+          consecutiveInsolventMonths = 0;
+          insolvencyLevel2Triggered = false;
+          insolvencyCountdownMonths = 6;
+        }
+      }
 
       // Processa o avanço das pesquisas de P&D
       processRDProgress();
@@ -7675,7 +8131,7 @@
         }
       }
 
-      monthRevenue = 0; monthCogs = 0; monthFixedExpenses = 0; monthMarketingExpenses = 0;
+      monthRevenue = 0; monthCogs = 0; monthFixedExpenses = 0; monthMarketingExpenses = 0; monthFinancialExpenses = 0;
       if (activeManagedTile) renderFacilityPanel(activeManagedTile);
     }
 
@@ -8020,7 +8476,7 @@
       }
       updateRDChip();
 
-      const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses;
+      const net = monthRevenue - monthCogs - monthFixedExpenses - monthMarketingExpenses - monthFinancialExpenses;
       const pe = document.getElementById('month-profit');
       if (pe) {
         const fullNetStr = `${net >= 0 ? '+' : '-'}$${Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
@@ -8054,7 +8510,8 @@
         saveStatEl.textContent = currentSaveSlotId ? `💾 Salvo (${currentSaveSlotId.replace('slot_','')})` : '💾 Pronto';
       }
 
-      syncDREValues(monthRevenue, monthCogs, monthFixedExpenses, monthMarketingExpenses, net);
+      const nwObj = calculateCorporateNetWorth();
+      syncDREValues(monthRevenue, monthCogs, monthFixedExpenses, monthMarketingExpenses, net, monthFinancialExpenses, nwObj.netWorth);
 
       checkCityUnlocks();
 
