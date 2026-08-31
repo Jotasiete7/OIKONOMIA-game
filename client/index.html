@@ -1699,29 +1699,40 @@
             }
           }
         }
-        if (tile.farm && tile.farm.cropId === prodId) {
-          const dist = CoreMath.calculateManhattanDistance(tile, storeTile);
-          const freight = CoreMath.calculateUnitFreight(dist, 0.008, 0.01);
-          const farmCost = typeof tile.farm.unitCost === 'number' ? tile.farm.unitCost : (tile.farm.dailyOperatingCost || 0.45);
-          const landed = CoreMath.calculateLandedCost(farmCost, freight);
-          offers.push({
-            type: 'internal_farm',
-            supplierId: `farm_${tile.x}_${tile.y}`,
-            supplierName: `🌾 ${tile.farm.name}`,
-            facilityName: tile.farm.name,
-            ownerName: pName,
-            ownerLogo: playerLogo,
-            ownerTag: '🏛️ Produção Própria',
-            activitySummary: `Cultivo rural direto de ${tile.farm.cropName || 'grãos'} no lote (${tile.x}, ${tile.y})`,
-            stockLabel: `Silo: ${tile.farm.stock || 0} / ${tile.farm.maxCapacity || 500} un (${tile.farm.dailyYield || 80} un/dia)`,
-            wholesalePrice: farmCost,
-            quality: tile.farm.quality || 60,
-            quota: tile.farm.dailyYield || 500,
-            origin: `Produção Agrícola (${tile.x}, ${tile.y})`,
-            distance: dist,
-            freight,
-            landedCost: landed
-          });
+        if (tile.farm) {
+          const isDirectCrop = (tile.farm.cropId === prodId);
+          const isPoultryEggs = (tile.farm.farmTypeId === 'farm_poultry' && prodId === 'eggs');
+
+          if (isDirectCrop || isPoultryEggs) {
+            const dist = CoreMath.calculateManhattanDistance(tile, storeTile);
+            const freight = CoreMath.calculateUnitFreight(dist, 0.008, 0.01);
+            const farmCost = typeof tile.farm.unitCost === 'number' ? tile.farm.unitCost : (tile.farm.dailyOperatingCost || 0.45);
+            const landed = CoreMath.calculateLandedCost(farmCost, freight);
+            const effYield = tile.farm.effectiveYield || tile.farm.dailyYield || 500;
+            const effQuality = tile.farm.effectiveQuality || tile.farm.quality || 60;
+            const isEggs = isPoultryEggs;
+
+            offers.push({
+              type: 'internal_farm',
+              supplierId: isEggs ? `farm_${tile.x}_${tile.y}_eggs` : `farm_${tile.x}_${tile.y}`,
+              supplierName: isEggs ? `🌾 ${tile.farm.name} (Ovos Frescos)` : `🌾 ${tile.farm.name}`,
+              facilityName: isEggs ? `${tile.farm.name} — Postura de Ovos` : tile.farm.name,
+              ownerName: pName,
+              ownerLogo: playerLogo,
+              ownerTag: '🏛️ Produção Própria',
+              activitySummary: isEggs
+                ? `Postura e coleta diária de ovos frescos de granja no lote (${tile.x}, ${tile.y})`
+                : `Cultivo rural direto de ${tile.farm.cropName || 'grãos'} no lote (${tile.x}, ${tile.y})`,
+              stockLabel: `Silo: ${tile.farm.stock || 0} / ${tile.farm.maxCapacity || 5000} un (${effYield} un/dia)`,
+              wholesalePrice: farmCost,
+              quality: effQuality,
+              quota: effYield,
+              origin: `Produção Agrícola (${tile.x}, ${tile.y})`,
+              distance: dist,
+              freight,
+              landedCost: landed
+            });
+          }
         }
         if (tile.mine && tile.mine.resourceId === prodId) {
           const dist = CoreMath.calculateManhattanDistance(tile, storeTile);
@@ -3784,19 +3795,69 @@
       badge.textContent = `-$${totalFarmDaily}/dia (Solo $${tile.district.landRentDaily} + Mão de Obra $120)`;
       badge.classList.remove('hidden');
 
+      const isLivestock = ['farm_poultry', 'farm_dairy', 'farm_cattle', 'farm_pigs', 'farm_sheep'].includes(farm.farmTypeId);
+      let feedHtml = '';
+
+      if (isLivestock) {
+        const hasFeed = !!(farm.feedConfig && farm.feedConfig.active);
+        const effYield = hasFeed ? Math.round(farm.dailyYield * 1.5) : (farm.effectiveYield || farm.dailyYield);
+        const effQR = hasFeed ? Math.min(100, (farm.quality || 60) + 15) : (farm.effectiveQuality || farm.quality || 60);
+
+        feedHtml = `
+          <div class="bg-slate-900/90 p-3 rounded-xl border ${hasFeed ? 'border-amber-600/70 bg-amber-950/20' : 'border-slate-800'} space-y-2 font-mono mt-3">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="font-bold text-slate-200 flex items-center gap-1.5">
+                <span>🌽</span> Nutrição & Ração Pecuária:
+              </span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded font-bold ${hasFeed ? 'bg-amber-900/80 text-amber-300 border border-amber-600' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
+                ${hasFeed ? '⚡ Suplementado (+50% / +15 QR)' : 'Pasto Natural (Básico)'}
+              </span>
+            </div>
+
+            <div class="text-[10px] text-slate-300 space-y-1">
+              ${hasFeed ? `
+                <div class="flex items-center justify-between text-slate-300">
+                  <span>Grão: <strong class="text-amber-300">${farm.feedConfig.grainProdId === 'corn' ? '🌽 Milho Agrícola' : '🌾 Trigo & Cereais'}</strong></span>
+                  <span>Custo Ração: <strong class="text-emerald-400">$${(farm.feedConfig.landedCost || 0.40).toFixed(2)}/un</strong></span>
+                </div>
+                <div class="text-[9px] text-slate-400">Fornecedor: <strong class="text-slate-200">${farm.feedConfig.supplierName || 'Fazenda Própria'}</strong></div>
+                <div class="text-[9px] text-amber-400/90 font-bold pt-0.5">🚀 Rendimento: ${effYield} un/dia · Qualidade: QR ${effQR}</div>
+              ` : `
+                <div class="text-[10px] text-slate-400 italic">
+                  Alimente as criações com Milho ou Trigo para acelerar o rendimento em +50% e elevar a Qualidade (QR).
+                </div>
+              `}
+            </div>
+
+            <div class="flex items-center justify-between gap-2 pt-1 border-t border-slate-800/80">
+              <button onclick="openFarmFeedSupplierModal(${tile.x}, ${tile.y})" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition shadow">
+                ${hasFeed ? '⚙️ Alterar Ração' : '🌽 Conectar Ração (Milho/Trigo)'}
+              </button>
+              ${hasFeed ? `
+                <button onclick="disconnectFarmFeed(${tile.x}, ${tile.y})" class="text-[10px] text-rose-400 hover:text-rose-300 font-bold cursor-pointer">Desativar</button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }
+
+      const effDisplayYield = farm.effectiveYield || farm.dailyYield;
+      const effDisplayQR = farm.effectiveQuality || farm.quality || 60;
+
       document.getElementById('facility-content-panel').innerHTML = `
         <div class="bg-slate-950 p-4 rounded-xl border border-amber-800 space-y-3 font-mono text-xs">
           <div class="flex items-center justify-between">
             <span class="font-bold text-amber-300 text-sm">${farm.cropName}</span>
-            <span class="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded border border-cyan-800">QR: ${farm.quality}/100</span>
+            <span class="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded border border-cyan-800">QR: ${effDisplayQR}/100</span>
           </div>
           <div class="space-y-1 text-slate-300 text-[11px]">
-            <div>Produção Diária: <strong class="text-emerald-400">${farm.dailyYield} un/dia</strong></div>
+            <div>Produção Diária: <strong class="text-emerald-400">${effDisplayYield} un/dia</strong> ${effDisplayYield > farm.dailyYield ? '<span class="text-[9px] text-amber-300 font-bold">(+50% Ração)</span>' : ''}</div>
             <div>Custo Operacional Unitário: <strong class="text-rose-400">$${farm.dailyOperatingCost.toFixed(2)}/un</strong></div>
             <div>Silo / Estoque Rural: <strong class="text-slate-100">${farm.stock} / ${farm.maxCapacity} un</strong></div>
           </div>
-          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-[10px] text-slate-400">
-            💡 Fornece insumos agrícolas de baixo custo para as fábricas de alimentos, bebidas, tecelagens e confecções.
+          ${feedHtml}
+          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-[10px] text-slate-400 mt-2">
+            💡 Fornece matérias-primas e insumos agropecuários de baixo custo para o varejo e fábricas da corporação.
           </div>
         </div>
       `;
@@ -6922,6 +6983,135 @@
       line.outputQuality = Math.min(100, Math.round(avgInputQuality * 0.65 + (researchedQR > 0 ? researchedQR : rec.quality) * 0.35));
     }
 
+    let farmFeedTargetTile = null;
+
+    function openFarmFeedSupplierModal(x, y) {
+      const tile = worldGrid[x]?.[y];
+      if (!tile?.farm) return;
+      farmFeedTargetTile = tile;
+
+      const cornOffers = getSupplierOffersForProduct('corn', tile).map(o => ({ ...o, grainProdId: 'corn', grainName: '🌽 Milho Agrícola' }));
+      const wheatOffers = getSupplierOffersForProduct('wheat', tile).map(o => ({ ...o, grainProdId: 'wheat', grainName: '🌾 Trigo & Cereais' }));
+      const allFeedOffers = [...cornOffers, ...wheatOffers].sort((a, b) => a.landedCost - b.landedCost);
+
+      document.getElementById('supplier-modal-title').textContent = `🌽 Selecionar Ração & Suplementação Pecuária`;
+      document.getElementById('supplier-modal-subtitle').textContent = `Fazenda: ${tile.farm.name} (${tile.district?.name || ''})`;
+
+      const currentSupId = tile.farm.feedConfig?.active ? tile.farm.feedConfig.supplierId : null;
+      const currentGrainId = tile.farm.feedConfig?.active ? tile.farm.feedConfig.grainProdId : null;
+
+      const list = document.getElementById('supplier-options-list');
+      const naturalPastureHtml = `
+        <div class="bg-slate-950 p-3.5 rounded-2xl border ${!currentSupId ? 'border-emerald-500 bg-emerald-950/20 shadow-lg' : 'border-slate-800 hover:border-slate-700'} space-y-2 text-xs font-mono transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🌿</span>
+              <div>
+                <div class="font-bold text-slate-200">Pasto Natural (Sem Ração)</div>
+                <div class="text-[10px] text-slate-400">Alimentação livre no pasto · Custo de insumo zero ($0.00/dia)</div>
+              </div>
+            </div>
+            <div>
+              ${!currentSupId ? `
+                <span class="text-[10px] text-emerald-400 bg-emerald-950/90 px-3 py-1.5 rounded-xl border border-emerald-700/80 font-bold">✓ Ativo</span>
+              ` : `
+                <button onclick="disconnectFarmFeed(${tile.x}, ${tile.y})" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold font-mono cursor-pointer border border-slate-700">Usar Pasto</button>
+              `}
+            </div>
+          </div>
+          <div class="text-[10px] text-slate-400 bg-slate-900/80 p-1.5 rounded-lg border border-slate-800">
+            Produção no ritmo padrão da fazenda (100% de rendimento) e Qualidade base (QR ${tile.farm.quality || 60}).
+          </div>
+        </div>
+      `;
+
+      const feedCardsHtml = allFeedOffers.map(offer => {
+        const isCurrent = (currentSupId === offer.supplierId && currentGrainId === offer.grainProdId);
+        const isInternal = offer.type && offer.type.startsWith('internal_');
+        const logoSvg = getCompanyLogoSvg(offer.ownerLogo, 22);
+
+        return `
+          <div class="bg-slate-950 p-3.5 rounded-2xl border ${isCurrent ? 'border-emerald-500 bg-emerald-950/20 shadow-lg shadow-emerald-950/30' : (isInternal ? 'border-amber-700/60 bg-amber-950/20 hover:border-amber-500' : 'border-slate-800 hover:border-slate-700')} space-y-2 text-xs font-mono transition">
+            <div class="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-1.5">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="shrink-0 flex items-center justify-center">${logoSvg}</div>
+                <div class="truncate">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="font-bold text-xs ${isInternal ? 'text-amber-300' : 'text-sky-300'} truncate">${offer.ownerName}</span>
+                    <span class="text-[9px] px-1.5 py-0.2 rounded border ${isInternal ? 'bg-amber-950/80 text-amber-300 border-amber-700/60' : 'bg-sky-950/80 text-sky-300 border-sky-700/60'} font-bold shrink-0">${offer.grainName}</span>
+                  </div>
+                  <div class="text-[11px] text-slate-200 font-bold truncate mt-0.5">${offer.facilityName}</div>
+                </div>
+              </div>
+              <div class="shrink-0 text-right">
+                <span class="text-[10px] bg-amber-950 text-amber-300 px-2 py-0.5 rounded border border-amber-800 font-bold">⚡ +50% Yield · +15 QR</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800/60 text-[10px] text-slate-300 space-y-1">
+              <div class="text-slate-300 italic truncate">📦 Suplementação nutritiva contínua para as criações</div>
+              <div class="flex items-center justify-between text-[10px] text-slate-400 pt-0.5 border-t border-slate-800/40">
+                <span>Disponibilidade: <strong class="text-slate-200">${offer.stockLabel || `${offer.quota || 500} un/dia`}</strong></span>
+                <span>Distância: <strong class="text-slate-200">${offer.distance} ${offer.distance === 1 ? 'tile' : 'tiles'}</strong></span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 pt-0.5">
+              <div>
+                <div class="text-[10px] text-slate-400">Base $${offer.wholesalePrice.toFixed(2)} + Frete $${offer.freight.toFixed(2)}</div>
+                <div class="text-xs text-slate-200">Custo da Ração: <strong class="text-emerald-400 font-black text-sm">$${offer.landedCost.toFixed(2)}</strong><span class="text-[10px] text-slate-400">/un</span></div>
+              </div>
+              <div>
+                ${isCurrent ? `
+                  <span class="text-[10px] text-emerald-400 bg-emerald-950/90 px-3 py-1.5 rounded-xl border border-emerald-700/80 font-bold flex items-center gap-1">✓ Ração Ativa</span>
+                ` : `
+                  <button onclick="applyFarmFeedSupplierChange('${offer.supplierId}', '${offer.grainProdId}')" class="bg-amber-600 hover:bg-amber-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono cursor-pointer transition shadow hover:shadow-amber-900/50">Alimentar Rebanho</button>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      list.innerHTML = naturalPastureHtml + feedCardsHtml;
+      document.getElementById('supplier-modal').classList.remove('hidden');
+    }
+
+    function applyFarmFeedSupplierChange(supplierId, grainProdId) {
+      if (!farmFeedTargetTile?.farm) return;
+      const tile = farmFeedTargetTile;
+      const offers = getSupplierOffersForProduct(grainProdId, tile);
+      const chosen = offers.find(o => o.supplierId === supplierId);
+      if (!chosen) return;
+
+      tile.farm.feedConfig = {
+        active: true,
+        supplierId: chosen.supplierId,
+        supplierName: chosen.supplierName,
+        grainProdId,
+        landedCost: chosen.landedCost,
+        wholesalePrice: chosen.wholesalePrice,
+        freight: chosen.freight,
+        quality: chosen.quality
+      };
+
+      addLog(`🌽 ${tile.farm.name} agora é suplementada com ${grainProdId === 'corn' ? 'Milho' : 'Trigo'} de ${chosen.supplierName} (+50% produção, +15 QR)!`, 'text-amber-400 font-bold');
+      closeSupplierModal();
+      renderFacilityPanel(tile);
+      updateUI();
+    }
+
+    function disconnectFarmFeed(x, y) {
+      const tile = worldGrid[x]?.[y];
+      if (tile?.farm) {
+        tile.farm.feedConfig = { active: false };
+        addLog(`🌿 ${tile.farm.name} retornou ao pasto natural básico.`, 'text-slate-400');
+        closeSupplierModal();
+        renderFacilityPanel(tile);
+        updateUI();
+      }
+    }
+
     function getDefaultSupplierForInput(inputId, factoryTile) {
       const offers = getSupplierOffersForProduct(inputId, factoryTile);
       if (offers.length > 0) {
@@ -7202,9 +7392,47 @@
           tile.mine.stock = Math.min(tile.mine.maxCapacity, tile.mine.stock + tile.mine.dailyYield);
         }
 
-        // Produção de Fazendas
+        // Produção de Fazendas (com Suplementação de Ração Agropecuária)
         if (tile.farm) {
-          tile.farm.stock = Math.min(tile.farm.maxCapacity, tile.farm.stock + tile.farm.dailyYield);
+          const farm = tile.farm;
+          const isLivestock = ['farm_poultry', 'farm_dairy', 'farm_cattle', 'farm_pigs', 'farm_sheep'].includes(farm.farmTypeId);
+          let effectiveYield = farm.dailyYield;
+          let effectiveQR = farm.quality || 60;
+
+          if (isLivestock && farm.feedConfig && farm.feedConfig.active) {
+            const feedNeeded = Math.ceil(farm.dailyYield * 0.20);
+            let feedSupplied = false;
+
+            if (farm.feedConfig.supplierId?.startsWith('farm_')) {
+              const parts = farm.feedConfig.supplierId.split('_');
+              const fx = Number(parts[1]), fy = Number(parts[2]);
+              const feedFarmTile = worldGrid[fx]?.[fy];
+              if (feedFarmTile?.farm && feedFarmTile.farm.stock >= feedNeeded) {
+                feedFarmTile.farm.stock = Math.max(0, feedFarmTile.farm.stock - feedNeeded);
+                feedSupplied = true;
+              }
+            } else if (farm.feedConfig.supplierId?.startsWith('port_') || farm.feedConfig.supplierId?.startsWith('primary_') || farm.feedConfig.supplierId?.startsWith('port')) {
+              const feedCost = feedNeeded * (farm.feedConfig.landedCost || 0.60);
+              if (cash >= feedCost) {
+                cash -= feedCost;
+                dailyFixed += feedCost;
+                feedSupplied = true;
+              }
+            } else {
+              feedSupplied = true;
+            }
+
+            if (feedSupplied) {
+              effectiveYield = Math.round(farm.dailyYield * 1.5);
+              effectiveQR = Math.min(100, (farm.quality || 60) + 15);
+            } else if (Math.random() < 0.08) {
+              addLog(`⚠ ${farm.name}: Falta de ração de grãos. Produção operando em ritmo básico de pasto.`, 'text-amber-400');
+            }
+          }
+
+          farm.effectiveYield = effectiveYield;
+          farm.effectiveQuality = effectiveQR;
+          farm.stock = Math.min(farm.maxCapacity || 5000, (farm.stock || 0) + effectiveYield);
         }
 
         // Produção de Fábricas & Consumo Físico de Matérias-Primas
@@ -7301,8 +7529,33 @@
 
             const restock = Math.min(shelf.dailyRestock, shelf.maxCapacity - shelf.stock);
             if (restock > 0) {
-              const rc = restock * (shelf.landedCost || prod.baseCost);
-              if (cash >= rc) { cash -= rc; shelf.stock += restock; }
+              let deliverUnits = restock;
+              if (shelf.supplierId?.startsWith('farm_')) {
+                const parts = shelf.supplierId.split('_');
+                const fx = Number(parts[1]), fy = Number(parts[2]);
+                const farmTile = worldGrid[fx]?.[fy];
+                if (farmTile?.farm) {
+                  deliverUnits = Math.min(farmTile.farm.stock, restock);
+                  farmTile.farm.stock = Math.max(0, farmTile.farm.stock - deliverUnits);
+                }
+              } else if (shelf.supplierId?.startsWith('factory_')) {
+                const parts = shelf.supplierId.split('_');
+                const fx = Number(parts[1]), fy = Number(parts[2]), rId = parts.slice(3).join('_');
+                const facTile = worldGrid[fx]?.[fy];
+                const sourceLine = facTile?.factory?.lines[rId];
+                if (sourceLine) {
+                  deliverUnits = Math.min(sourceLine.finishedStock, restock);
+                  sourceLine.finishedStock = Math.max(0, sourceLine.finishedStock - deliverUnits);
+                }
+              }
+
+              if (deliverUnits > 0) {
+                const rc = deliverUnits * (shelf.landedCost || prod.baseCost);
+                if (cash >= rc) {
+                  cash -= rc;
+                  shelf.stock += deliverUnits;
+                }
+              }
             }
           }
         }
