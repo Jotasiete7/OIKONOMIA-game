@@ -69,38 +69,67 @@
     <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-950/98 border border-slate-600 rounded-xl px-3.5 py-2.5 shadow-2xl text-[11px] font-mono z-20 backdrop-blur-md"></div>
   </div>
 
-  <!-- 2. TOP FLOATING HUD BAR (CAPITALISM LAB STYLE) -->
+  <!-- 2. TOP FLOATING HUD BAR (UNIFICADA, ELEGANTE & LIMPA) -->
   <header class="absolute top-2 left-2 right-2 z-30 flex items-center justify-between gap-2 pointer-events-none max-w-[calc(100vw-16px)]">
     
-    <!-- Top Left: Logo, Empresa & Cidades -->
+    <!-- Top Left: Logo, Empresa, Identicon & Cidades -->
     <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2.5 py-1 shadow-2xl shrink-0">
       <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/40 flex items-center justify-center text-xs shrink-0">🏛️</div>
-      <div class="shrink-0">
+      <div class="shrink-0 hidden sm:block">
         <div class="flex items-center gap-1">
           <h1 class="text-xs font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
           <span id="hud-version-tag" class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.8.1</span>
         </div>
       </div>
-      <!-- EMPRESA / AVATAR BADGE -->
-      <div id="hud-corp-badge" class="flex items-center gap-1 bg-slate-950/80 px-1.5 py-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1 shrink-0">
+      <!-- EMPRESA / AVATAR / LOGO BADGE -->
+      <div id="hud-corp-badge" class="flex items-center gap-1.5 bg-slate-950/80 px-2 py-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1 shrink-0">
+        <span id="hud-corp-logo-badge" class="flex items-center justify-center shrink-0"></span>
         <span id="hud-player-avatar" class="text-xs">👨‍💼</span>
         <div class="leading-tight">
-          <span id="hud-company-name" class="font-bold text-emerald-400 block truncate max-w-[90px]">OikoCorp Holding</span>
-          <span id="hud-player-name" class="text-[7px] text-slate-400 block truncate max-w-[90px]">Arthur Vance</span>
+          <span id="hud-company-name" class="font-bold text-emerald-400 block truncate max-w-[100px]">OikoCorp Holding</span>
+          <span id="hud-player-name" class="text-[7px] text-slate-400 block truncate max-w-[100px]">Arthur Vance</span>
         </div>
       </div>
       <!-- CIDADES / ATALHOS -->
       <div class="flex items-center gap-0.5 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1 shrink-0">
-        <button onclick="jumpToCity('nova_atenas')" class="px-1.5 py-0.5 rounded text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ <span class="city-btn-name">Atenas</span></button>
-        <button onclick="jumpToCity('porto_real')" class="px-1.5 py-0.5 rounded text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real (Porto)">🚢 <span class="city-btn-name">P. Real</span></button>
-        <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Polo Industrial">🏭 <span class="city-btn-name">Montargis</span> <span id="lock-montargis">🔒</span></button>
-        <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Cinturão Agrícola">🌾 <span class="city-btn-name">Várzea</span> <span id="lock-varzea">🔒</span></button>
+        <button onclick="jumpToCity('nova_atenas')" class="px-1.5 py-0.5 rounded text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ <span class="city-btn-name hidden md:inline">Atenas</span></button>
+        <button onclick="jumpToCity('porto_real')" class="px-1.5 py-0.5 rounded text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real (Porto)">🚢 <span class="city-btn-name hidden md:inline">P. Real</span></button>
+        <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Polo Industrial">🏭 <span class="city-btn-name hidden md:inline">Montargis</span> <span id="lock-montargis">🔒</span></button>
+        <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Cinturão Agrícola">🌾 <span class="city-btn-name hidden md:inline">Várzea</span> <span id="lock-varzea">🔒</span></button>
       </div>
     </div>
 
-    <!-- Top Right: Relógio, Finanças & Gavetas Flutuantes -->
+    <!-- Top Center: Lentes Compactas & Zoom -->
+    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2 py-1 shadow-2xl shrink-0 font-mono text-[10px]">
+      <!-- Dropdown de Lentes -->
+      <div class="relative" id="lenses-dropdown-container">
+        <button id="btn-lenses-dropdown" onclick="toggleLensesDropdown()" class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold transition shadow-sm" title="Alternar Lente de Dados no Mapa">
+          <span id="current-lens-icon">🌐</span>
+          <span id="current-lens-label" class="hidden sm:inline">Terreno</span>
+          <span class="text-[8px] text-slate-400">▾</span>
+        </button>
+        <div id="lenses-dropdown-menu" class="hidden absolute top-full left-0 mt-1.5 w-36 bg-slate-900/98 backdrop-blur-md border border-slate-700/80 rounded-xl shadow-2xl p-1 z-50 flex flex-col gap-0.5">
+          <button id="hm-terrain" onclick="setHeatmap('terrain')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-200 font-bold text-[10px]">🌐 <span>Terreno</span></button>
+          <button id="hm-traffic" onclick="setHeatmap('traffic')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-300 text-[10px]">🔥 <span>Tráfego</span></button>
+          <button id="hm-pop"     onclick="setHeatmap('pop')"     class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-300 text-[10px]">👥 <span>População</span></button>
+          <button id="hm-comp"    onclick="setHeatmap('comp')"    class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-300 text-[10px]">🏪 <span>Varejo</span></button>
+          <button id="hm-ports"   onclick="setHeatmap('ports')"   class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-300 text-[10px]">⚓ <span>Portos</span></button>
+          <button id="hm-ind"     onclick="setHeatmap('ind')"     class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-300 text-[10px]">🏭 <span>Indústria</span></button>
+          <button id="hm-media"   onclick="setHeatmap('media')"   class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-300 text-[10px]">📡 <span>Mídia</span></button>
+        </div>
+      </div>
+
+      <div class="h-3.5 w-px bg-slate-800 mx-0.5"></div>
+
+      <!-- Zoom -->
+      <button onclick="changeZoom(-0.2)" class="w-5 h-5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 font-bold flex items-center justify-center text-xs" title="Zoom Out (Q / -)">−</button>
+      <button onclick="resetCamera()"    class="px-1.5 h-5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-400 text-[9px] flex items-center justify-center" title="Centralizar Mapa">Centro</button>
+      <button onclick="changeZoom(0.2)"  class="w-5 h-5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 font-bold flex items-center justify-center text-xs" title="Zoom In (E / +)">+</button>
+    </div>
+
+    <!-- Top Right: Relógio, Finanças & Ações Hierarquizadas -->
     <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2.5 py-1 shadow-2xl shrink-0 flex-nowrap">
-      <!-- Relógio & Velocidades (1x, 2x, 3x, 4x, 5x + Atalho Espaço) -->
+      <!-- Relógio & Velocidades (1x..5x + Espaço) -->
       <div class="flex items-center gap-1 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono whitespace-nowrap shrink-0">
         <span id="clock-date" class="px-1.5 font-bold text-amber-400 whitespace-nowrap inline-block">Dia 01 / Mês 01</span>
         <button id="btn-p"  onclick="setSpeed(0)" class="px-1.5 py-0.5 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40" title="Pausar / Retomar [Espaço]">⏸</button>
@@ -111,7 +140,7 @@
         <button id="btn-5x" onclick="setSpeed(5)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 5x [Tecla 5]">5x</button>
       </div>
 
-      <!-- Finanças (Formatação inteligente com valor completo no tooltip) -->
+      <!-- Finanças -->
       <div class="border-l border-slate-800 pl-1.5 font-mono text-right shrink-0">
         <span class="text-[8px] text-slate-400 block uppercase leading-none">Caixa</span>
         <span id="corp-cash" class="text-xs font-black text-emerald-400 leading-tight whitespace-nowrap block cursor-help" title="$100,000.00">$100,000.00</span>
@@ -121,50 +150,46 @@
         <span id="month-profit" class="text-xs font-bold text-slate-300 leading-tight whitespace-nowrap block cursor-help" title="$0.00">$0.00</span>
       </div>
 
-      <!-- Gavetas Flutuantes -->
-        <button onclick="toggleEncyclopediaModal()" class="bg-blue-950/80 hover:bg-blue-900 border border-blue-700/60 text-blue-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Enciclopédia Corporativa & Wiki Completa (F1)">
-          📖 <span class="hud-btn-text">Wiki</span>
+      <!-- Ações Primárias -->
+      <button onclick="toggleDREModal()" class="bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Demonstrativo de Resultados do Exercício">
+        📊 <span class="hud-btn-text">DRE</span>
+      </button>
+      <button onclick="openMarketingCentralModal()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Central de Publicidade">
+        📢 <span id="active-campaigns-badge" class="bg-indigo-700 px-1 rounded text-[8px] text-white">0</span>
+      </button>
+      <button onclick="openRDCenterModal()" class="bg-purple-950/80 hover:bg-purple-900 border border-purple-700/60 text-purple-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Centro de Pesquisa & Desenvolvimento">
+        🔬 <span id="active-rd-badge" class="bg-purple-700 px-1 rounded text-[8px] text-white">0</span>
+      </button>
+
+      <!-- Dropdown de Ações Secundárias (Mais Opções ...) -->
+      <div class="relative" id="hud-more-options-container">
+        <button id="btn-more-options" onclick="toggleMoreOptionsMenu()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Mais Opções & Guias">
+          ⋯ <span class="hidden xl:inline">Mais</span>
+          <span id="more-menu-badge" class="hidden w-1.5 h-1.5 rounded-full bg-amber-400"></span>
         </button>
-        <button onclick="toggleTutorialWidget()" class="bg-amber-950/80 hover:bg-amber-900 border border-amber-700/60 text-amber-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Guia do Magnata — Missões Iniciais">
-          🎓 <span class="hud-btn-text">Tutorial</span>
-        </button>
-        <button onclick="toggleDREModal()" class="bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Demonstrativo de Resultados do Exercício">
-          📊 <span class="hud-btn-text">DRE</span>
-        </button>
-        <button onclick="toggleDiaryModal()" class="bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Diário de Bordo & Log em Tempo Real">
-          📑 <span class="hud-btn-text">Diário</span>
-        </button>
-        <button onclick="openMarketingCentralModal()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Central de Publicidade">
-          📢 <span id="active-campaigns-badge" class="bg-indigo-700 px-1 rounded text-[8px] text-white">0</span>
-        </button>
-        <button onclick="openTechTreeModal()" class="bg-teal-950/80 hover:bg-teal-900 border border-teal-700/60 text-teal-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Árvore Tecnológica & Desbloqueio de Produtos (P&D)">
-          🧬 <span class="hud-btn-text">Tech Tree</span>
-        </button>
-        <button onclick="openRDCenterModal()" class="bg-purple-950/80 hover:bg-purple-900 border border-purple-700/60 text-purple-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Centro de Pesquisa & Desenvolvimento">
-          🔬 <span id="active-rd-badge" class="bg-purple-700 px-1 rounded text-[8px] text-white">0</span>
-        </button>
-        <button onclick="togglePauseMenu()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Menu Principal & Configurações (ESC)">
-          ⚙️ <span class="hud-btn-text">Menu</span>
-        </button>
+        <div id="hud-more-options-menu" class="hidden absolute right-0 top-full mt-1.5 w-48 bg-slate-900/98 backdrop-blur-md border border-slate-700/80 rounded-xl shadow-2xl p-1 z-50 flex flex-col gap-0.5 font-mono text-[10px]">
+          <button onclick="toggleEncyclopediaModal(); closeMoreOptionsMenu();" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-blue-950/80 text-blue-300 text-left transition">
+            📖 <span>Wiki / Enciclopédia [F1]</span>
+          </button>
+          <button id="btn-menu-tutorial" onclick="toggleTutorialWidget(); closeMoreOptionsMenu();" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 text-left transition">
+            <span class="flex items-center gap-2">🎓 <span>Tutorial do Magnata</span></span>
+            <span id="menu-tutorial-badge" class="hidden bg-amber-500/20 text-amber-300 text-[8px] px-1 rounded border border-amber-500/40">Ativo</span>
+          </button>
+          <button onclick="toggleDiaryModal(); closeMoreOptionsMenu();" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-cyan-950/80 text-cyan-300 text-left transition">
+            📑 <span>Diário de Bordo</span>
+          </button>
+          <button onclick="openTechTreeModal(); closeMoreOptionsMenu();" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-teal-950/80 text-teal-200 text-left transition">
+            🧬 <span>Árvore Tecnológica</span>
+          </button>
+        </div>
       </div>
+
+      <!-- Menu Principal / Pausa -->
+      <button onclick="togglePauseMenu()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Menu Principal & Configurações (ESC)">
+        ⚙️ <span class="hud-btn-text">Menu</span>
+      </button>
     </div>
   </header>
-
-  <!-- 2.1 FLOATING LENSES & CAMERA BAR (Barra flutuante de Lentes e Zoom independente) -->
-  <div id="floating-lenses-bar" class="absolute top-14 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex items-center gap-1 bg-slate-900/95 backdrop-blur-md border border-slate-800/90 rounded-xl px-2 py-1 shadow-2xl font-mono text-[10px] select-none transition-transform">
-    <span class="text-slate-500 px-1 text-[9px] hidden sm:inline">Lentes:</span>
-    <button id="hm-terrain" onclick="setHeatmap('terrain')" class="px-1.5 py-0.5 rounded font-bold bg-slate-800 text-slate-200 text-[9px]">Terreno</button>
-    <button id="hm-traffic" onclick="setHeatmap('traffic')" class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🔥 <span class="lenses-text-label hidden md:inline">Tráfego</span></button>
-    <button id="hm-pop"     onclick="setHeatmap('pop')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">👥 <span class="lenses-text-label hidden md:inline">Pop.</span></button>
-    <button id="hm-comp"    onclick="setHeatmap('comp')"    class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏪 <span class="lenses-text-label hidden md:inline">Varejo</span></button>
-    <button id="hm-ports"   onclick="setHeatmap('ports')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">⚓ <span class="lenses-text-label hidden md:inline">Portos</span></button>
-    <button id="hm-ind"     onclick="setHeatmap('ind')"     class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">🏭 <span class="lenses-text-label hidden md:inline">Indústria</span></button>
-    <button id="hm-media"   onclick="setHeatmap('media')"   class="px-1.5 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[9px]">📡 <span class="lenses-text-label hidden md:inline">Mídia</span></button>
-    <div class="h-3.5 w-px bg-slate-700 mx-0.5"></div>
-    <button onclick="changeZoom(-0.2)" class="w-4 h-4 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold leading-none" title="Zoom Out (Q / -)">−</button>
-    <button onclick="resetCamera()"    class="px-1 h-4 rounded bg-slate-950 border border-slate-800 text-slate-400 text-[8px] leading-none">Centro</button>
-    <button onclick="changeZoom(0.2)"  class="w-4 h-4 rounded bg-slate-950 border border-slate-800 text-slate-300 font-bold leading-none" title="Zoom In (E / +)">+</button>
-  </div>
 
   <!-- 3. BOTTOM-LEFT HUD (RADAR MINIMAP & CONTROLS) -->
   <div class="absolute bottom-8 left-3 z-30 flex flex-col gap-1 pointer-events-none">
@@ -996,21 +1021,27 @@
 
       <!-- Conteúdo do Formulário -->
       <div class="p-6 space-y-5 overflow-y-auto custom-scrollbar font-mono text-xs">
-        <!-- Nomes: Jogador & Empresa -->
+        <!-- Nomes: Jogador & Empresa com Logo Preview Procedural -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="space-y-1.5">
             <label class="text-slate-300 font-bold block flex justify-between">
               <span>👤 Nome do Fundador / CEO:</span>
-              <button onclick="randomizePlayerName()" class="text-[10px] text-emerald-400 hover:underline cursor-pointer">🎲 Sortear</button>
+              <button type="button" onclick="randomizePlayerName()" class="text-[10px] text-emerald-400 hover:underline cursor-pointer">🎲 Sortear</button>
             </label>
             <input type="text" id="wiz-player-name" value="Arthur Vance" maxlength="28" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500" placeholder="Ex: Arthur Vance">
           </div>
           <div class="space-y-1.5">
             <label class="text-slate-300 font-bold block flex justify-between">
-              <span>🏛️ Razão Social / Empresa:</span>
-              <button onclick="randomizeCompanyName()" class="text-[10px] text-emerald-400 hover:underline cursor-pointer">🎲 Sortear</button>
+              <span>🏛️ Razão Social & Logo Corporativo:</span>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="regenerateWizLogo()" class="text-[10px] text-amber-400 hover:underline cursor-pointer font-bold" title="Gerar outra variação de ícone e forma">🔀 Gerar outro</button>
+                <button type="button" onclick="randomizeCompanyName()" class="text-[10px] text-emerald-400 hover:underline cursor-pointer">🎲 Sortear</button>
+              </div>
             </label>
-            <input type="text" id="wiz-company-name" value="OikoCorp Holding" maxlength="32" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500" placeholder="Ex: Apex Industries">
+            <div class="flex items-center gap-2">
+              <div id="wiz-logo-preview" class="w-10 h-10 rounded-xl bg-slate-950 border border-slate-700 flex items-center justify-center shrink-0 shadow-inner" title="Preview do Logo da Corporação"></div>
+              <input type="text" id="wiz-company-name" value="OikoCorp Holding" maxlength="32" oninput="updateWizLogoPreview()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500" placeholder="Ex: Apex Industries">
+            </div>
           </div>
         </div>
 
@@ -1379,6 +1410,184 @@
   <!-- SCRIPT PRINCIPAL: MOTOR COMPLETO DE OIKONOMIA (100% CATÁLOGO)           -->
   <!-- ======================================================================= -->
   <script>
+    // ===========================================================================
+    // 0. SISTEMA DE IDENTICONS & LOGOS PROCEDURAIS POR EMPRESA
+    // ===========================================================================
+    function hashStringToSeed(str) {
+      let hash = 0;
+      const s = String(str || '');
+      for (let i = 0; i < s.length; i++) {
+        hash = ((hash << 5) - hash + s.charCodeAt(i)) | 0;
+      }
+      return Math.abs(hash);
+    }
+
+    const LOGO_ICONS = {
+      crown:   { name: 'Coroa',      svgPath: 'M3 17h18v2H3v-2zm1-2l2-7 4.5 3.5L12 4l1.5 7.5L18 8l2 7H4z' },
+      cog:     { name: 'Engrenagem', svgPath: 'M12 8a4 4 0 100 8 4 4 0 000-8zm-1-6h2v3h-2V2zm0 17h2v3h-2v-3zm9-8v2h-3v-2h3zM2 11h3v2H2v-2zm14.8-5.4l1.4 1.4-2.1 2.1-1.4-1.4 2.1-2.1zM6.9 15.7l1.4 1.4-2.1 2.1-1.4-1.4 2.1-2.1zm11.3 2.1l-1.4 1.4-2.1-2.1 1.4-1.4 2.1 2.1zM8.3 4.9l-1.4 1.4-2.1-2.1 1.4-1.4 2.1 2.1z' },
+      anchor:  { name: 'Âncora',     svgPath: 'M12 2a3 3 0 100 6 3 3 0 000-6zm-1 7h2v9.8c3.4-.4 6-3.3 6-6.8h2c0 4.6-3.5 8.4-8 8.9V23h-2v-2.1c-4.5-.5-8-4.3-8-8.9h2c0 3.5 2.6 6.4 6 6.8V9z' },
+      wheat:   { name: 'Trigo',      svgPath: 'M12 2c-.6 2.2-2.5 3.8-4.8 4 2.3.2 4.2 1.8 4.8 4 .6-2.2 2.5-3.8 4.8-4-2.3-.2-4.2-1.8-4.8-4zm-3 8c-.6 2.2-2.5 3.8-4.8 4 2.3.2 4.2 1.8 4.8 4 .6-2.2 2.5-3.8 4.8-4-2.3-.2-4.2-1.8-4.8-4zm6 0c-.6 2.2-2.5 3.8-4.8 4 2.3.2 4.2 1.8 4.8 4 .6-2.2 2.5-3.8 4.8-4-2.3-.2-4.2-1.8-4.8-4zm-4 7v5h2v-5h-2z' },
+      gem:     { name: 'Diamante',   svgPath: 'M6 3h12l5 6-11 12L1 9l5-6zm1.2 2L4 8.5h4.8L7.2 5zm2.8 0l1.4 3.5h3.2L16 5h-6zm5.6 0l-1.6 3.5h4.8L16.8 5zM3.4 10.5l7.6 8.3v-8.3H3.4zm9.6 8.3l7.6-8.3h-7.6v8.3z' },
+      pillar:  { name: 'Templo',     svgPath: 'M12 2L2 7v2h20V7L12 2zm-8 8v9h3v-9H4zm5 0v9h3v-9H9zm5 0v9h3v-9h-3zm5 0v9h3v-9h-3zM2 20v2h20v-2H2z' },
+      swords:  { name: 'Espadas',    svgPath: 'M19.7 2.3a1 1 0 00-1.4 0l-5.3 5.3 1.4 1.4 5.3-5.3a1 1 0 000-1.4zM4.3 17.7l1.4 1.4L11 13.8l-1.4-1.4-5.3 5.3zm-2 2a1 1 0 000 1.4l.6.6a1 1 0 001.4 0l2-2-2-2-2 2zM4.3 6.3L17.7 19.7a1 1 0 001.4 0l.6-.6a1 1 0 000-1.4L6.3 4.3 4.3 6.3z' },
+      diamond: { name: 'Losango',    svgPath: 'M12 2L2 12l10 10 10-10L12 2zm0 4.2L17.8 12 12 17.8 6.2 12 12 6.2z' },
+      eagle:   { name: 'Águia',      svgPath: 'M12 3l-3 4-6 1 4 5-1 6 6-3 6 3-1-6 4-5-6-1-3-4zm0 4.5l1.8 2.4 3.6.6-2.4 3 .6 3.6-3.6-1.8-3.6 1.8.6-3.6-2.4-3 3.6-.6L12 7.5z' },
+      star:    { name: 'Estrela',    svgPath: 'M12 2l2.9 6.6 7.1.6-5.3 4.8 1.6 7-6.3-3.7-6.3 3.7 1.6-7L2 9.2l7.1-.6L12 2z' }
+    };
+
+    function generateCompanyLogo(companyName, regenSeed = 0, isAICompetitor = false) {
+      const name = (companyName || 'OIKONOMIA').trim();
+      const seed = hashStringToSeed(name + (regenSeed || 0).toString());
+
+      const iconKeys = Object.keys(LOGO_ICONS);
+      const iconKey = iconKeys[seed % iconKeys.length];
+      const shapeKeys = ['circle', 'shield', 'hexagon'];
+      const shape = shapeKeys[Math.floor(seed / iconKeys.length) % shapeKeys.length];
+
+      const PLAYER_COLORS = ['#d4b483', '#c9a86a', '#e0c28f', '#b8935f'];
+      const AI_COLORS = ['#c0392b', '#e74c3c', '#d35400', '#a93226'];
+
+      const palette = isAICompetitor ? AI_COLORS : PLAYER_COLORS;
+      const color = palette[seed % palette.length];
+
+      return {
+        iconKey,
+        iconDef: LOGO_ICONS[iconKey],
+        shape,
+        color,
+        seed,
+        isAICompetitor
+      };
+    }
+
+    function getCompanyLogoSvg(logo, size = 24) {
+      if (!logo) logo = generateCompanyLogo('OIKONOMIA', 0, false);
+      const r = size / 2;
+      const strokeW = Math.max(1, (size / 16).toFixed(1));
+      let shapeSvg = '';
+
+      if (logo.shape === 'circle') {
+        shapeSvg = `<circle cx="${r}" cy="${r}" r="${r - 1.5}" fill="${logo.color}" stroke="#0f172a" stroke-width="${strokeW}"/>`;
+      } else if (logo.shape === 'shield') {
+        shapeSvg = `<path d="M 2 2 h ${size - 4} v ${size * 0.45} q -${size * 0.15} ${size * 0.45} -${r - 2} ${size * 0.48} q -${size * 0.35} -${size * 0.03} -${r - 2} -${size * 0.48} Z" fill="${logo.color}" stroke="#0f172a" stroke-width="${strokeW}"/>`;
+      } else if (logo.shape === 'hexagon') {
+        const pts = [];
+        for (let i = 0; i < 6; i++) {
+          const a = (Math.PI / 3) * i - Math.PI / 6;
+          pts.push(`${(r + (r - 2) * Math.cos(a)).toFixed(1)},${(r + (r - 2) * Math.sin(a)).toFixed(1)}`);
+        }
+        shapeSvg = `<polygon points="${pts.join(' ')}" fill="${logo.color}" stroke="#0f172a" stroke-width="${strokeW}"/>`;
+      }
+
+      const iconScale = ((size * 0.52) / 24).toFixed(3);
+      const iconOffset = ((size - 24 * iconScale) / 2).toFixed(1);
+
+      return `
+        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="inline-block shrink-0 select-none overflow-visible">
+          ${shapeSvg}
+          <g transform="translate(${iconOffset}, ${iconOffset}) scale(${iconScale})">
+            <path d="${logo.iconDef ? logo.iconDef.svgPath : ''}" fill="#0f172a"/>
+          </g>
+        </svg>
+      `;
+    }
+
+    function drawCanvasCompanyLogoBadge(ctx, logo, cx, cy, radius, zoom) {
+      if (!logo) return;
+      ctx.save();
+      const r = Math.max(5, radius * zoom);
+
+      // Sombra suave
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+      ctx.shadowBlur = 4 * zoom;
+      ctx.shadowOffsetY = 2 * zoom;
+
+      // Forma geométrica
+      ctx.beginPath();
+      if (logo.shape === 'circle') {
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      } else if (logo.shape === 'shield') {
+        ctx.moveTo(cx - r, cy - r * 0.85);
+        ctx.lineTo(cx + r, cy - r * 0.85);
+        ctx.lineTo(cx + r, cy + r * 0.15);
+        ctx.quadraticCurveTo(cx + r * 0.6, cy + r * 1.05, cx, cy + r * 1.25);
+        ctx.quadraticCurveTo(cx - r * 0.6, cy + r * 1.05, cx - r, cy + r * 0.15);
+        ctx.closePath();
+      } else if (logo.shape === 'hexagon') {
+        for (let i = 0; i < 6; i++) {
+          const angle = (Math.PI / 3) * i - Math.PI / 6;
+          const hx = cx + r * Math.cos(angle);
+          const hy = cy + r * Math.sin(angle);
+          if (i === 0) ctx.moveTo(hx, hy);
+          else ctx.lineTo(hx, hy);
+        }
+        ctx.closePath();
+      }
+
+      ctx.fillStyle = logo.color || '#d4b483';
+      ctx.fill();
+
+      // Borda escura de contraste
+      ctx.shadowColor = 'transparent';
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = Math.max(1, 1.2 * zoom);
+      ctx.stroke();
+
+      // Símbolo iconográfico centralizado
+      if (logo.iconDef && logo.iconDef.svgPath) {
+        if (!logo.iconDef._path2d && typeof Path2D !== 'undefined') {
+          logo.iconDef._path2d = new Path2D(logo.iconDef.svgPath);
+        }
+        if (logo.iconDef._path2d) {
+          ctx.save();
+          const iconScale = (r * 1.05) / 24;
+          ctx.translate(cx, cy + (logo.shape === 'shield' ? 0.3 * zoom : 0));
+          ctx.scale(iconScale, iconScale);
+          ctx.translate(-12, -12);
+          ctx.fillStyle = '#0f172a';
+          ctx.fill(logo.iconDef._path2d);
+          ctx.restore();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    // Dropdown Controllers (Lentes & Mais Opções)
+    function toggleLensesDropdown() {
+      const menu = document.getElementById('lenses-dropdown-menu');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    function closeLensesDropdown() {
+      const menu = document.getElementById('lenses-dropdown-menu');
+      if (menu) menu.classList.add('hidden');
+    }
+
+    function toggleMoreOptionsMenu() {
+      const menu = document.getElementById('hud-more-options-menu');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    function closeMoreOptionsMenu() {
+      const menu = document.getElementById('hud-more-options-menu');
+      if (menu) menu.classList.add('hidden');
+    }
+
+    window.addEventListener('click', (e) => {
+      const lContainer = document.getElementById('lenses-dropdown-container');
+      const lMenu = document.getElementById('lenses-dropdown-menu');
+      if (lContainer && lMenu && !lContainer.contains(e.target)) {
+        lMenu.classList.add('hidden');
+      }
+
+      const mContainer = document.getElementById('hud-more-options-container');
+      const mMenu = document.getElementById('hud-more-options-menu');
+      if (mContainer && mMenu && !mContainer.contains(e.target)) {
+        mMenu.classList.add('hidden');
+      }
+    });
+
     // ===========================================================================
     // 1. DADOS MESTRES & CATÁLOGOS OFICIAIS
     // (Carregados modularmente a partir de data_catalogs.js)
@@ -2359,47 +2568,47 @@
               drawBuilding(sx, sy, w, h, hPx, topC, leftC, rightC);
             }
 
-            // Labels e Emojis Flutuantes
-            if (tile.store) {
-              const emoji = STORE_TYPES.find(s => s.id === tile.store.storeTypeId)?.emoji || '🛒';
-              ctx.fillStyle = '#34d399';
-              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText(`${emoji} ${tile.store.name.split(' ')[0]}`, sx - 22 * camera.zoom, sy - (hPx || 16 * camera.zoom) - 5);
-            } else if (tile.mine) {
-              ctx.fillStyle = '#38bdf8';
-              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText(`⛏️ MINA`, sx - 20 * camera.zoom, sy - (hPx || 16 * camera.zoom) - 5);
-            } else if (tile.farm) {
-              ctx.fillStyle = '#fde047';
-              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText(`🌾 FAZENDA`, sx - 26 * camera.zoom, sy - (hPx || 16 * camera.zoom) - 5);
-            } else if (tile.factory) {
-              ctx.fillStyle = '#fdba74';
-              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText(`🏭 FÁBRICA`, sx - 26 * camera.zoom, sy - (hPx || 16 * camera.zoom) - 5);
-            } else if (tile.rdCenter) {
-              ctx.fillStyle = '#d8b4fe';
-              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText(`🔬 P&D LAB`, sx - 24 * camera.zoom, sy - (hPx || 24 * camera.zoom) - 5);
-            } else if (tile.competitor) {
-              ctx.fillStyle = '#fb7185';
-              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText('🏪 MEGAMART', sx - 32 * camera.zoom, sy - (hPx || 16 * camera.zoom) - 5);
+            // 2. BADGES PROCEDURAIS DE LOGO DE EMPRESA (Substituem textos fixos)
+            let facilityLogo = null;
+            if (tile.competitor) {
+              facilityLogo = generateCompanyLogo(tile.competitor.name || 'Megamart Varejo', 0, true);
+            } else if (tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter) {
+              facilityLogo = generateCompanyLogo(playerProfile.companyName || 'OikoCorp Holding', playerProfile.logoRegenSeed || 0, false);
             } else if (tile.isPort) {
-              ctx.fillStyle = '#fde047';
-              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText(`⚓ PORTO`, sx - 22 * camera.zoom, sy - (hPx || 16 * camera.zoom) - 5);
+              facilityLogo = { shape: 'hexagon', color: '#38bdf8', iconDef: LOGO_ICONS.anchor };
             } else if (tile.isMedia) {
-              ctx.fillStyle = '#e879f9';
-              ctx.font = `bold ${Math.max(9, 10 * camera.zoom)}px monospace`;
-              ctx.fillText(`${tile.mediaData.emoji} MÍDIA`, sx - 22 * camera.zoom, sy - (hPx || 16 * camera.zoom) - 5);
+              facilityLogo = { shape: 'circle', color: '#c084fc', iconDef: LOGO_ICONS.star };
+            }
+
+            if (facilityLogo) {
+              const badgeY = sy - (hPx || 16 * camera.zoom) - 8 * camera.zoom;
+              drawCanvasCompanyLogoBadge(ctx, facilityLogo, sx, badgeY, 7.5, camera.zoom);
             }
           }
 
-          if (gx === hoveredTileX && gy === hoveredTileY)
-            drawDiamond(sx, sy, w, h, 'rgba(255,255,255,0.18)', '#38bdf8');
-          if (gx === selectedTileX && gy === selectedTileY)
-            drawDiamond(sx, sy, w, h, 'rgba(251,191,36,0.28)', '#fbbf24');
+          // Realce de Hover (cursor)
+          if (gx === hoveredTileX && gy === hoveredTileY) {
+            drawDiamond(sx, sy, w, h, 'rgba(255,255,255,0.14)', '#38bdf8');
+          }
+
+          // Destaque Dourado Sofisticado do Lote Selecionado por Clique (#d4b483)
+          if (gx === selectedTileX && gy === selectedTileY) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(sx + w / 2, sy + h / 2);
+            ctx.lineTo(sx, sy + h);
+            ctx.lineTo(sx - w / 2, sy + h / 2);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(212, 180, 131, 0.22)';
+            ctx.fill();
+            ctx.strokeStyle = '#d4b483';
+            ctx.lineWidth = Math.max(1.8, 2.2 * camera.zoom);
+            ctx.shadowColor = 'rgba(212, 180, 131, 0.6)';
+            ctx.shadowBlur = 6 * camera.zoom;
+            ctx.stroke();
+            ctx.restore();
+          }
         }
       }
     }
@@ -2541,21 +2750,114 @@
             <div class="text-[10px] text-amber-400 mt-1">${tile.city.profile.unlockCondition.description}</div>
           `;
         } else if (tile.isPort) {
-          tooltip.innerHTML = `<div class="font-bold text-amber-300 text-xs">⚓ ${tile.portData.name}</div><div class="text-[10px] text-slate-400">Terminal Marítimo (${gx},${gy})</div>`;
+          const portLogo = { shape: 'hexagon', color: '#38bdf8', iconDef: LOGO_ICONS.anchor };
+          tooltip.innerHTML = `
+            <div class="flex items-center gap-2 mb-1">
+              ${getCompanyLogoSvg(portLogo, 20)}
+              <div>
+                <div class="font-bold text-amber-300 text-xs">⚓ ${tile.portData.name}</div>
+                <div class="text-[9px] text-slate-400">Terminal Marítimo Internacional</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-300">Frete Base: $${(tile.portData.freightRatePerTile || 0.01).toFixed(3)}/tile · Insumos Globais</div>
+            <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · ${tile.city.cityName}</div>
+          `;
         } else if (tile.isMedia) {
-          tooltip.innerHTML = `<div class="font-bold text-purple-300 text-xs">${tile.mediaData.emoji} ${tile.mediaData.name}</div><div class="text-[10px] text-slate-400">${tile.mediaData.type} (${gx},${gy})</div>`;
+          const mediaLogo = { shape: 'circle', color: '#c084fc', iconDef: LOGO_ICONS.star };
+          tooltip.innerHTML = `
+            <div class="flex items-center gap-2 mb-1">
+              ${getCompanyLogoSvg(mediaLogo, 20)}
+              <div>
+                <div class="font-bold text-purple-300 text-xs">${tile.mediaData.emoji} ${tile.mediaData.name}</div>
+                <div class="text-[9px] text-slate-400">Emissora de ${tile.mediaData.type}</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-300">Alcance Metropolitano · Contratos de Publicidade</div>
+            <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · ${tile.city.cityName}</div>
+          `;
         } else if (tile.mine) {
-          tooltip.innerHTML = `<div class="font-bold text-sky-400 text-xs">${tile.mine.name}</div><div class="text-[10px] text-slate-300">⛏️ Extração: ${tile.mine.dailyYield} un/dia · QR: ${tile.mine.quality}</div>`;
+          const logo = generateCompanyLogo(playerProfile.companyName, playerProfile.logoRegenSeed || 0, false);
+          tooltip.innerHTML = `
+            <div class="flex items-center gap-2 mb-1">
+              ${getCompanyLogoSvg(logo, 20)}
+              <div>
+                <div class="font-bold text-sky-400 text-xs">⛏️ ${tile.mine.name}</div>
+                <div class="text-[9px] text-slate-400">${playerProfile.companyName} · ${d.name}</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-300">Extração: ${tile.mine.dailyYield} un/dia · Qualidade QR: ${tile.mine.quality}</div>
+            <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · 💰 Aluguel $${d.landRentDaily}/dia</div>
+          `;
         } else if (tile.farm) {
-          tooltip.innerHTML = `<div class="font-bold text-amber-400 text-xs">${tile.farm.name}</div><div class="text-[10px] text-slate-300">🌾 Produção: ${tile.farm.dailyYield} un/dia · QR: ${tile.farm.quality}</div>`;
+          const logo = generateCompanyLogo(playerProfile.companyName, playerProfile.logoRegenSeed || 0, false);
+          tooltip.innerHTML = `
+            <div class="flex items-center gap-2 mb-1">
+              ${getCompanyLogoSvg(logo, 20)}
+              <div>
+                <div class="font-bold text-amber-400 text-xs">🌾 ${tile.farm.name}</div>
+                <div class="text-[9px] text-slate-400">${playerProfile.companyName} · ${d.name}</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-300">Produção: ${tile.farm.dailyYield} un/dia · Qualidade QR: ${tile.farm.quality}</div>
+            <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · 💰 Aluguel $${d.landRentDaily}/dia</div>
+          `;
         } else if (tile.factory) {
-          tooltip.innerHTML = `<div class="font-bold text-orange-400 text-xs">${tile.factory.name}</div><div class="text-[10px] text-slate-300">🏭 Linhas: ${Object.keys(tile.factory.lines).length}/${tile.factory.maxLines}</div>`;
+          const logo = generateCompanyLogo(playerProfile.companyName, playerProfile.logoRegenSeed || 0, false);
+          tooltip.innerHTML = `
+            <div class="flex items-center gap-2 mb-1">
+              ${getCompanyLogoSvg(logo, 20)}
+              <div>
+                <div class="font-bold text-orange-400 text-xs">🏭 ${tile.factory.name}</div>
+                <div class="text-[9px] text-slate-400">${playerProfile.companyName} · ${d.name}</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-300">Linhas Produtivas: ${Object.keys(tile.factory.lines || {}).length}/${tile.factory.maxLines || 4} ativas</div>
+            <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · 💰 Aluguel $${d.landRentDaily}/dia</div>
+          `;
         } else if (tile.rdCenter) {
-          tooltip.innerHTML = `<div class="font-bold text-purple-300 text-xs">${tile.rdCenter.name}</div><div class="text-[10px] text-slate-300">🔬 Centro de Pesquisa & Desenvolvimento</div>`;
+          const logo = generateCompanyLogo(playerProfile.companyName, playerProfile.logoRegenSeed || 0, false);
+          tooltip.innerHTML = `
+            <div class="flex items-center gap-2 mb-1">
+              ${getCompanyLogoSvg(logo, 20)}
+              <div>
+                <div class="font-bold text-purple-300 text-xs">🔬 ${tile.rdCenter.name}</div>
+                <div class="text-[9px] text-slate-400">${playerProfile.companyName} · ${d.name}</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-300">Centro de Pesquisa & Desenvolvimento</div>
+            <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · ${tile.city.cityName}</div>
+          `;
+        } else if (tile.store) {
+          const logo = generateCompanyLogo(playerProfile.companyName, playerProfile.logoRegenSeed || 0, false);
+          const emoji = STORE_TYPES.find(s => s.id === tile.store.storeTypeId)?.emoji || '🛒';
+          tooltip.innerHTML = `
+            <div class="flex items-center gap-2 mb-1">
+              ${getCompanyLogoSvg(logo, 20)}
+              <div>
+                <div class="font-bold text-emerald-400 text-xs">${emoji} ${tile.store.name}</div>
+                <div class="text-[9px] text-slate-400">${playerProfile.companyName} · ${d.name}</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-300">Vendas: $${(tile.store.monthSales || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}/mês</div>
+            <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · 👥 ${d.population.toLocaleString()} hab · 🚶 Tráfego ${d.trafficIndex}/100</div>
+          `;
+        } else if (tile.competitor) {
+          const logo = generateCompanyLogo(tile.competitor.name, 0, true);
+          tooltip.innerHTML = `
+            <div class="flex items-center gap-2 mb-1">
+              ${getCompanyLogoSvg(logo, 20)}
+              <div>
+                <div class="font-bold text-rose-400 text-xs">🏪 ${tile.competitor.name}</div>
+                <div class="text-[9px] text-rose-300/80">IA Concorrente · ${d.name}</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-300">Preços Agressivos · Grande Escala</div>
+            <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · 👥 ${d.population.toLocaleString()} hab · 🚶 Tráfego ${d.trafficIndex}/100</div>
+          `;
         } else {
           tooltip.innerHTML = `
-            <div class="font-bold text-amber-300 text-xs">${tile.store ? tile.store.name : (tile.competitor ? tile.competitor.name : d.name)}</div>
-            <div class="text-[10px] text-slate-400">(${gx},${gy}) · ${d.type} · ${tile.city.cityName}</div>
+            <div class="font-bold text-amber-300 text-xs">${d.name}</div>
+            <div class="text-[10px] text-slate-400">(${gx}, ${gy}) · ${d.type} · ${tile.city.cityName}</div>
             <div class="text-[10px] text-slate-300 mt-0.5">🚶 ${d.trafficIndex}/100 · 👥 ${d.population.toLocaleString()} hab · 💰 $${d.landRentDaily}/dia</div>
           `;
         }
@@ -6947,14 +7249,31 @@
 
     function setHeatmap(mode) {
       currentHeatmap = mode;
+      const lensMeta = {
+        terrain: { name: 'Terreno', icon: '🌐' },
+        traffic: { name: 'Tráfego', icon: '🔥' },
+        pop:     { name: 'População', icon: '👥' },
+        comp:    { name: 'Varejo', icon: '🏪' },
+        ports:   { name: 'Portos', icon: '⚓' },
+        ind:     { name: 'Indústria', icon: '🏭' },
+        media:   { name: 'Mídia', icon: '📡' }
+      };
+
+      const meta = lensMeta[mode] || lensMeta.terrain;
+      const iconEl = document.getElementById('current-lens-icon');
+      const labelEl = document.getElementById('current-lens-label');
+      if (iconEl) iconEl.textContent = meta.icon;
+      if (labelEl) labelEl.textContent = meta.name;
+
       const btns = { terrain:'hm-terrain', traffic:'hm-traffic', pop:'hm-pop', comp:'hm-comp', ports:'hm-ports', ind:'hm-ind', media:'hm-media' };
       for (const [m, id] of Object.entries(btns)) {
         const btn = document.getElementById(id);
         if (!btn) continue;
         btn.className = m === mode
-          ? 'px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-200'
-          : 'px-2 py-0.5 rounded-md text-slate-400 hover:text-slate-200';
+          ? 'flex items-center gap-1.5 px-2 py-1 rounded-lg text-left bg-slate-800 text-slate-100 font-bold text-[10px]'
+          : 'flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800/80 text-slate-400 hover:text-slate-200 text-[10px]';
       }
+      closeLensesDropdown();
       scheduleRender();
     }
 
@@ -7798,6 +8117,23 @@
       'S.A.', 'Group', '& Co.', 'Holding', 'Corporation', 'Brasil', 'Internacional', 'Alliance', 'Consortium', 'Corp'
     ];
 
+    let selectedWizLogoSeed = 0;
+
+    function updateWizLogoPreview() {
+      const cName = document.getElementById('wiz-company-name')?.value.trim() || 'OikoCorp Holding';
+      const logo = generateCompanyLogo(cName, selectedWizLogoSeed, false);
+      const previewEl = document.getElementById('wiz-logo-preview');
+      if (previewEl) {
+        previewEl.innerHTML = getCompanyLogoSvg(logo, 28);
+      }
+    }
+
+    function regenerateWizLogo() {
+      selectedWizLogoSeed = (selectedWizLogoSeed + 1) % 1000;
+      updateWizLogoPreview();
+      playBeep(640, 'sine', 0.05);
+    }
+
     function randomizePlayerName() {
       const first = CEO_FIRST_NAMES[Math.floor(Math.random() * CEO_FIRST_NAMES.length)];
       const last = CEO_LAST_NAMES[Math.floor(Math.random() * CEO_LAST_NAMES.length)];
@@ -7812,12 +8148,14 @@
       const name = Math.random() < 0.4 ? `${p} ${r}` : `${p} ${r} ${s}`;
       const input = document.getElementById('wiz-company-name');
       if (input) input.value = name;
+      updateWizLogoPreview();
     }
 
     function openNewGameWizard() {
       selectedWizAvatarId = 'human_ceo';
       selectedWizColorId = 'emerald';
       selectedWizDifficultyId = 'standard';
+      selectedWizLogoSeed = 0;
 
       randomizePlayerName();
       randomizeCompanyName();
@@ -7825,6 +8163,7 @@
       renderWizAvatars();
       renderWizColors();
       renderWizDifficulties();
+      updateWizLogoPreview();
 
       const modal = document.getElementById('new-game-modal');
       if (modal) modal.classList.remove('hidden');
@@ -7919,7 +8258,8 @@
         companyName: cName,
         avatarId: selectedWizAvatarId,
         themeColor: selectedWizColorId,
-        difficulty: selectedWizDifficultyId
+        difficulty: selectedWizDifficultyId,
+        logoRegenSeed: selectedWizLogoSeed || 0
       };
 
       cash = diff.startingCash;
@@ -8093,6 +8433,20 @@
         claimBtn.textContent = tutorialState.rewardClaimed ? '✓ Resgatado' : (allDone ? '🎉 Resgatar (+$15k)' : 'Resgatar');
       }
 
+      const menuBadge = document.getElementById('menu-tutorial-badge');
+      const moreMenuBadge = document.getElementById('more-menu-badge');
+      if (allDone && tutorialState.rewardClaimed) {
+        if (menuBadge) menuBadge.classList.add('hidden');
+        if (moreMenuBadge) moreMenuBadge.classList.add('hidden');
+      } else {
+        if (menuBadge) menuBadge.classList.remove('hidden');
+        if (year === 1 && month <= 6) {
+          if (moreMenuBadge) moreMenuBadge.classList.remove('hidden');
+        } else {
+          if (moreMenuBadge) moreMenuBadge.classList.add('hidden');
+        }
+      }
+
       container.innerHTML = TUTORIAL_MISSIONS.map((m) => {
         const done = !!tutorialState.completedSteps[m.id];
         return `
@@ -8122,10 +8476,16 @@
       const avEl = document.getElementById('hud-player-avatar');
       const compEl = document.getElementById('hud-company-name');
       const nameEl = document.getElementById('hud-player-name');
+      const logoEl = document.getElementById('hud-corp-logo-badge');
 
       if (avEl) avEl.textContent = avatarObj.emoji;
       if (compEl) compEl.textContent = playerProfile.companyName;
       if (nameEl) nameEl.textContent = playerProfile.playerName;
+
+      if (logoEl) {
+        const logo = generateCompanyLogo(playerProfile.companyName, playerProfile.logoRegenSeed || 0, false);
+        logoEl.innerHTML = getCompanyLogoSvg(logo, 22);
+      }
 
       const pauseTag = document.getElementById('pause-company-tag');
       if (pauseTag) pauseTag.textContent = `${playerProfile.companyName} • ${playerProfile.playerName}`;
