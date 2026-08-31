@@ -483,6 +483,27 @@
           <div class="flex justify-between border-t border-purple-800/50 pt-1 mt-1"><span class="text-slate-400">Custo Total Estimado (Setup + Mensalidades):</span><span id="rd-prev-total-cost" class="text-slate-100 font-bold">--</span></div>
         </div>
 
+        <!-- 5. CALCULADORA DE RETORNO & PAYBACK DE P&D (ROI) -->
+        <div id="rd-roi-calculator-box" class="bg-slate-950 p-3.5 rounded-xl border border-indigo-700/60 space-y-2 text-[10px] hidden font-mono">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+            <span class="font-bold text-indigo-300 flex items-center gap-1.5">
+              <span>📈</span> Calculadora de Retorno & Payback
+            </span>
+            <span id="rd-roi-verdict-badge" class="text-[9px] px-1.5 py-0.2 rounded font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">Alta Escala</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-slate-300">
+            <div>Volume na Rede: <strong id="rd-calc-volume" class="text-slate-100">0 un/mês</strong></div>
+            <div>Lojas Ativas: <strong id="rd-calc-stores" class="text-sky-300">0 filiais</strong></div>
+            <div>Ganho Mensal Est.: <strong id="rd-calc-gain" class="text-emerald-400">+$0/mês</strong></div>
+            <div>Payback do P&D: <strong id="rd-calc-payback" class="text-amber-300">0 meses</strong></div>
+          </div>
+
+          <div id="rd-calc-explanation" class="text-[9px] text-slate-400 bg-slate-900/80 p-2 rounded-lg border border-slate-800 leading-relaxed">
+            Calculando viabilidade comercial da patente com base no volume da rede...
+          </div>
+        </div>
+
         <!-- Botões -->
         <div class="flex gap-2 pt-1">
           <button onclick="closeRDNewProjectModal()" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-slate-700 cursor-pointer">Cancelar</button>
@@ -5852,6 +5873,8 @@
 
       if (!prod) {
         preview.classList.add('hidden');
+        const roiBox = document.getElementById('rd-roi-calculator-box');
+        if (roiBox) roiBox.classList.add('hidden');
         startBtn.disabled = true;
         badge.classList.add('hidden');
         if (teamCostEl) teamCostEl.textContent = '$0/mês';
@@ -5954,6 +5977,73 @@
       document.getElementById('rd-prev-eta').textContent = etaText;
       document.getElementById('rd-prev-total-cost').textContent = grandTotalCost ? `≈ $${grandTotalCost.toLocaleString('en-US')} ($${setupFee.toLocaleString('en-US')} setup + $${totalMonthlyCost.toLocaleString('en-US')} mensal)` : (reachedTarget ? '--' : 'Incalculável (aumente a verba mensal)');
       preview.classList.remove('hidden');
+
+      // 5. CÁLCULO DA CALCULADORA DE RETORNO & PAYBACK DE P&D (ROI)
+      const roiBox = document.getElementById('rd-roi-calculator-box');
+      if (roiBox) {
+        let activeStoresCount = 0;
+        let totalMonthlyNetworkUnits = 0;
+        let avgSellingPrice = prod.standardPrice;
+        let priceCount = 0;
+
+        for (const tile of activeFacilitySet.values()) {
+          if (tile.store?.shelves[prodId]) {
+            activeStoresCount++;
+            const shelf = tile.store.shelves[prodId];
+            const d = tile.district;
+            const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
+            const dailySales = Math.max(0, Math.floor(d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast));
+            totalMonthlyNetworkUnits += (dailySales * 30);
+            avgSellingPrice += shelf.price;
+            priceCount++;
+          }
+        }
+
+        if (priceCount > 0) avgSellingPrice /= (priceCount + 1);
+
+        const volumeEl = document.getElementById('rd-calc-volume');
+        const storesEl = document.getElementById('rd-calc-stores');
+        const gainEl = document.getElementById('rd-calc-gain');
+        const paybackEl = document.getElementById('rd-calc-payback');
+        const verdictBadge = document.getElementById('rd-roi-verdict-badge');
+        const explEl = document.getElementById('rd-calc-explanation');
+
+        if (volumeEl) volumeEl.textContent = `${totalMonthlyNetworkUnits.toLocaleString()} un/mês`;
+        if (storesEl) storesEl.textContent = `${activeStoresCount} ${activeStoresCount === 1 ? 'loja' : 'lojas'}`;
+
+        const qrDelta = Math.max(0, targetQR - currentQR);
+        // Ganho estimado de poder de preço por ponto de QR extra (~0.55% por ponto de QR)
+        const unitMarginGain = Number((avgSellingPrice * (qrDelta / 100) * 0.55).toFixed(2));
+        const estimatedMonthlyGain = Math.round(totalMonthlyNetworkUnits * unitMarginGain);
+
+        if (gainEl) gainEl.textContent = `+$${estimatedMonthlyGain.toLocaleString('en-US')}/mês`;
+
+        if (grandTotalCost && estimatedMonthlyGain > 0) {
+          const paybackMonths = Number((grandTotalCost / estimatedMonthlyGain).toFixed(1));
+          if (paybackEl) paybackEl.textContent = `${paybackMonths} meses`;
+
+          if (paybackMonths <= 12) {
+            verdictBadge.textContent = '🟢 Alta Escala (Excelente)';
+            verdictBadge.className = 'text-[9px] px-1.5 py-0.2 rounded font-bold bg-emerald-950 text-emerald-300 border border-emerald-800';
+            explEl.innerHTML = `Sua rede vende <strong>${totalMonthlyNetworkUnits.toLocaleString()} un/mês</strong> em ${activeStoresCount} filiais. O ganho de atratividade (+${qrDelta.toFixed(0)} QR) gerará <strong>+$${estimatedMonthlyGain.toLocaleString()}/mês</strong>, quitando o investimento em apenas <strong>${paybackMonths} meses</strong>!`;
+          } else if (paybackMonths <= 24) {
+            verdictBadge.textContent = '🟡 Médio Prazo (Viável)';
+            verdictBadge.className = 'text-[9px] px-1.5 py-0.2 rounded font-bold bg-amber-950 text-amber-300 border border-amber-800';
+            explEl.innerHTML = `Investimento viável. A pesquisa de $${grandTotalCost.toLocaleString()} se pagará em <strong>${paybackMonths} meses</strong> com o volume atual das suas ${activeStoresCount} lojas.`;
+          } else {
+            verdictBadge.textContent = '🔴 Longo Prazo (Baixa Escala)';
+            verdictBadge.className = 'text-[9px] px-1.5 py-0.2 rounded font-bold bg-rose-950 text-rose-300 border border-rose-800';
+            explEl.innerHTML = `Com apenas ${totalMonthlyNetworkUnits.toLocaleString()} un/mês vendidas, o payback levará <strong>${paybackMonths} meses</strong>. Recomendamos expandir mais lojas para amortizar o P&D mais rapidamente.`;
+          }
+        } else {
+          if (paybackEl) paybackEl.textContent = '--';
+          verdictBadge.textContent = '⚪ Sem Escala Comercial';
+          verdictBadge.className = 'text-[9px] px-1.5 py-0.2 rounded font-bold bg-slate-800 text-slate-400 border border-slate-700';
+          explEl.innerHTML = `Sua corporação ainda não vende <strong>${prod.name}</strong> em nenhuma loja. A pesquisa melhorará sua qualidade fabril, mas você precisará colocá-lo nas gôndolas para monetizar a patente.`;
+        }
+
+        roiBox.classList.remove('hidden');
+      }
 
       // Habilita apenas se produto selecionado, verba >= minCostTotal, currentQR < targetQR e cash >= setupFee
       startBtn.disabled = !prodId || budget < minCostTotal || currentQR >= targetQR || cash < setupFee;
