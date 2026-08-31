@@ -5171,17 +5171,39 @@
         heroTarStatus.textContent = targetQR >= 90 ? 'Liderança Global' : (targetQR >= 80 ? 'Grau Superior' : 'Aprimorado');
       }
 
-      // Ganho mensal assintótico fiel ao cálculo de processRDProgress acelerado pelo número de bancadas
-      const gainSingle = (typeof CoreMath !== 'undefined' && CoreMath.applyQRAsymptoticGrowth)
-        ? CoreMath.applyQRAsymptoticGrowth(currentQR, budget / labsCount)
-        : CoreMath.calculateRDQualityGain(currentQR, targetQR, budget / labsCount, minCostSingle);
-      const gainTotal = gainSingle * labsCount;
-      const monthsNeeded = gainTotal > 0.0001 ? Math.ceil((targetQR - currentQR) / gainTotal) : Infinity;
-      const totalCost = monthsNeeded < Infinity ? Math.round(monthsNeeded * budget) : null;
+      // Ganho do primeiro mês (para exibição informativa imediata)
+      const gainMonth1 = (typeof CoreMath !== 'undefined' && CoreMath.applyQRAsymptoticGrowth)
+        ? (CoreMath.applyQRAsymptoticGrowth(currentQR, budget / labsCount) * labsCount)
+        : (CoreMath.calculateRDQualityGain(currentQR, targetQR, budget / labsCount, minCostSingle) * labsCount);
+
+      // Simulação Iterativa Mês a Mês da Curva Assintótica Real (evita ilusão linear)
+      let simQR = currentQR;
+      let monthsNeeded = 0;
+      const MAX_SIM_MONTHS = 360; // Teto de 30 anos para simulação
+      let reachedTarget = false;
+
+      if (gainMonth1 > 0.00001 && targetQR > currentQR) {
+        while (monthsNeeded < MAX_SIM_MONTHS) {
+          const mGain = (typeof CoreMath !== 'undefined' && CoreMath.applyQRAsymptoticGrowth)
+            ? (CoreMath.applyQRAsymptoticGrowth(simQR, budget / labsCount) * labsCount)
+            : (CoreMath.calculateRDQualityGain(simQR, targetQR, budget / labsCount, minCostSingle) * labsCount);
+
+          if (mGain <= 0.00001) break;
+          simQR += mGain;
+          monthsNeeded++;
+
+          if (simQR >= targetQR) {
+            reachedTarget = true;
+            break;
+          }
+        }
+      }
+
+      const totalMonthlyCost = reachedTarget ? Math.round(monthsNeeded * budget) : null;
       const setupFee = (typeof CoreMath !== 'undefined' && CoreMath.calculateRDSetupCost)
         ? CoreMath.calculateRDSetupCost(targetQR, labsCount)
         : Math.round(targetQR * 120 * labsCount);
-      const grandTotalCost = totalCost !== null ? totalCost + setupFee : null;
+      const grandTotalCost = totalMonthlyCost !== null ? totalMonthlyCost + setupFee : null;
 
       badge.textContent = `${cat.icon || '🔬'} ${prod.category} · Custo Mínimo: $${minCostTotal.toLocaleString('en-US')}/mês`;
       badge.classList.remove('hidden');
@@ -5189,10 +5211,22 @@
       const setupEl = document.getElementById('rd-prev-setup-cost');
       if (setupEl) setupEl.textContent = `$${setupFee.toLocaleString('en-US')}`;
 
+      let etaText = 'Indeterminado';
+      if (reachedTarget) {
+        if (monthsNeeded < 12) {
+          etaText = `≈ ${monthsNeeded} ${monthsNeeded === 1 ? 'mês' : 'meses'}`;
+        } else {
+          const yrs = (monthsNeeded / 12).toFixed(1);
+          etaText = `≈ ${monthsNeeded} meses (${yrs} anos)`;
+        }
+      } else {
+        etaText = `> 30 anos (Verba insuficiente para meta)`;
+      }
+
       document.getElementById('rd-prev-current-qr').textContent = `${currentQR.toFixed(1)} / 100`;
-      document.getElementById('rd-prev-gain').textContent = gainTotal > 0 ? `+${gainTotal.toFixed(2)} QR/mês (${labsCount}x acelerado)` : 'Sem progresso (verba insuficiente)';
-      document.getElementById('rd-prev-eta').textContent = monthsNeeded < Infinity ? `≈ ${monthsNeeded} meses` : 'Indeterminado';
-      document.getElementById('rd-prev-total-cost').textContent = grandTotalCost ? `≈ $${grandTotalCost.toLocaleString('en-US')}` : '--';
+      document.getElementById('rd-prev-gain').textContent = gainMonth1 > 0 ? `+${gainMonth1.toFixed(2)} QR no 1º mês (${labsCount}x acelerado)` : 'Sem progresso (verba insuficiente)';
+      document.getElementById('rd-prev-eta').textContent = etaText;
+      document.getElementById('rd-prev-total-cost').textContent = grandTotalCost ? `≈ $${grandTotalCost.toLocaleString('en-US')} ($${setupFee.toLocaleString('en-US')} setup + $${totalMonthlyCost.toLocaleString('en-US')} mensal)` : (reachedTarget ? '--' : 'Incalculável (aumente a verba mensal)');
       preview.classList.remove('hidden');
 
       // Habilita apenas se produto selecionado, verba >= minCostTotal, currentQR < targetQR e cash >= setupFee

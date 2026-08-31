@@ -11,7 +11,7 @@
     };
 
     const STORE_TYPES = [
-      { id:"kombini", name:"Kombini de Bairro", emoji:"🛒", category:"all", cost:8000, maxShelves:4, rentMultiplier:1.0, desc:"Varejo de conveniência ultrarrápido com poucas gôndolas e baixo risco." },
+      { id:"kombini", name:"Kombini de Bairro", emoji:"🛒", category:"all", cost:14000, maxShelves:4, rentMultiplier:1.35, desc:"Varejo de conveniência de bairro com 4 gôndolas e baixo risco operacional." },
       { id:"supermarket", name:"Supermercado & Alimentos", emoji:"🏬", category:"Alimentos", cost:45000, maxShelves:10, rentMultiplier:1.8, desc:"Grande porte para vendas em massa de alimentos, carnes, bebidas e laticínios (10 gôndolas)." },
       { id:"apparel", name:"Boutique de Vestuário & Moda", emoji:"👗", category:"Vestuário", cost:35000, maxShelves:6, rentMultiplier:1.5, desc:"Loja sofisticada para jeans, ternos, calçados e vestidos de luxo (6 gôndolas)." },
       { id:"electronics", name:"MegaStore de Eletrônicos", emoji:"💻", category:"Eletrônicos", cost:60000, maxShelves:6, rentMultiplier:2.0, desc:"Varejo especializado em smartphones, notebooks, TVs 4K e eletrodomésticos (6 gôndolas)." },
@@ -27,9 +27,9 @@
         id: 'lic_kombini',
         storeTypeId: 'kombini',
         name: 'Alvará de Conveniência de Bairro',
-        cost: 0,
+        cost: 3000,
         icon: '🛒',
-        desc: 'Autorização municipal simplificada para comércio de conveniência (Isento no Early Game).'
+        desc: 'Autorização municipal simplificada para comércio de conveniência de bairro.'
       },
       supermarket: {
         id: 'lic_supermarket',
