@@ -3,8 +3,8 @@
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
 > **Última Atualização:** 31 de Agosto de 2026  
-> **Versão Oficial Corrente:** `v0.8.2 (bld.20260831.01)`  
-> **Save Schema:** `v0.8.1` (Compatibilidade Retroativa Total com Migrações)
+> **Versão Oficial Corrente:** `v0.8.3 (bld.20260831.02)`  
+> **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
 
@@ -15,14 +15,16 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 - **MAJOR (v1.0.0, v2.0.0)**: Marcos definitivos de lançamento comercial / saída de Beta.
 - **MINOR (v0.7.x -> v0.8.0 -> v0.9.0)**: Grandes módulos ou mecânicas novas (ex: P&D, QG Corporativo, frotas visuais).
-- **PATCH (v0.8.1 -> v0.8.2)**: Pacotes de usabilidade, balanceamento, sprites, tutorial, IA e refinamentos de UI.
+- **PATCH (v0.8.1 -> v0.8.2 -> v0.8.3)**: Pacotes de usabilidade, balanceamento, sprites, tutorial, IA e refinamentos de UI.
 - **BUILD STAMP (`bld.YYYYMMDD.XX`)**: Carimbo diário com a data e o número da entrega daquele dia.
-- **SAVE SCHEMA (`0.8.1`)**: Controla a compatibilidade dos saves `.oiko` e do `localStorage`.
+- **SAVE SCHEMA (`0.8.2`)**: Controla a compatibilidade dos saves `.oiko` e do `localStorage`.
 
 ---
 
 ## 🧭 Agenda de Desenvolvimento (Ideias & Backlog em Standby)
 
+- [ ] **Fase 3 Causalidade — Botão "Por quê?" & DRE Drill-Down**: Decomposição em árvore dos fatores de preço, atratividade e custos.
+- [ ] **Fase 4 Narrativa — Diário Econômico Procedural**: Manchetes de jornal geradas dinamicamente pelo TimeSeriesBuffer.
 - [ ] **QG Corporativo & Diretoria Executiva (v0.9.0)**: Sede global única com contratação de executivos (CEO, COO, CMO, CTO, CFO) com bônus setoriais de margem e pesquisa.
 - [ ] **IA Concorrente com P&D Dinâmico**: Concorrentes evoluindo tecnologia mensalmente, solicitando patentes exclusivas e reagindo ao avanço do jogador.
 - [ ] **Módulo de Logística Visual**: Frotas de caminhões e navios com animação isométrica navegando pelas rodovias e rotas marítimas entre portos e cidades.
@@ -32,6 +34,36 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 10: Fundação de Séries Temporais (`TimeSeriesBuffer`), Diagnóstico Econômico & Quick Wins de Causalidade
+- **Data:** 31/08/2026 — 19:15
+- **Versão Oficial:** `v0.8.3 (bld.20260831.02)` | **Save Schema:** `v0.8.2`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Fundação de Séries Temporais (`TimeSeriesBuffer` de 24 Meses):**
+   - Implementado buffer circular permanente em `GameState.historicalLedger` registrando a cada fechamento mensal (`closeMonthEnd`):
+     - Receita, CPV, Despesas Fixas, Marketing, Juros Financeiros, Lucro Líquido, Caixa e Patrimônio Líquido.
+     - Snapshot discriminado por instalação ativa (lojas, fábricas, fazendas, minas, P&D).
+   - Sanitização e migração retroativa em `migrateSaveData` e persistência total no formato de save `.oiko`.
+2. **Auditoria Financeira DRE com Gráficos Sparklines & Analista Corporativo:**
+   - Gráfico de barras verticais compactas de evolução histórica exibindo barras azuis (receita) e verdes/rosas (lucro/prejuízo) dos últimos meses.
+   - Card inteligente do **Analista Corporativo** gerando diagnósticos determinísticos de variância mês a mês (apontando filiais destaque e pontos de prejuízo).
+3. **Lente de Oportunidade de Mercado (`🎯 Oportunidade`):**
+   - Nova lente integrada no dropdown da Top Bar unificada.
+   - Heatmap de potencial de investimento baseado no índice $I = (População \times Tráfego) / (1 + Concorrência)$, colorindo em esmeralda neon os lotes com alta demanda e baixa concorrência.
+4. **Gestão de Estoque como Capital de Giro:**
+   - Cálculo e exibição em tempo real de **Dias de Cobertura de Estoque** nas gôndolas com badges semânticos (`🔴 Ruptura`, `🔴 Risco`, `🟡 Médio`, `🟢 Seguro`).
+   - Exibição de **Capital Imobilizado ($)** em cada prateleira e silo.
+5. **Calculadora de Payback & ROI no Wizard de Construção:**
+   - Estimativa matemática de retorno de investimento (meses para payback e ROI anualizado) em lojas comerciais, fazendas e minas baseada na densidade demográfica local.
+6. **Simulador "E se?" (Sandbox de Precificação):**
+   - Modal interativo `#price-simulator-modal` com slider de preço de venda projetando em tempo real: vendas diárias estimadas, receita diária, margem bruta (%) e lucro operacional mensal projetado antes de confirmar a alteração no jogo real.
+7. **Suprimento & Cadeia Agropecuária (Ovos e Ração):**
+   - Correção do botão `Encher` para drenar primeiro o silo de granjas/fábricas próprias a Custo \$0 e comprar apenas o saldo importado.
+   - Ativação universal do módulo de Nutrição & Ração Pecuária na Granja Avícola (+50% rendimento com Milho/Trigo).
 
 ---
 

@@ -1,7 +1,7 @@
 # 🗺️ Roadmap de Desenvolvimento — OIKONOMIA
 
-**Versão Atual**: `v0.8.2 (Build 20260831.01)`  
-**Status da Infraestrutura**: 100% Validada em Navegador Real via Protocolo CDP (Edge Headless) com Evidências Visuais Capturadas.
+**Versão Atual**: `v0.8.3 (Build 20260831.02)`  
+**Status da Infraestrutura**: 100% Validada com Séries Temporais (TimeSeriesBuffer 24 meses), Diagnóstico Executivo de Variância e Simulador "E se?".
 
 ---
 
@@ -11,6 +11,7 @@
 | :--- | :--- | :--- | :--- |
 | **Fase 1** | **Sim-Core & Fundamentos Econômicos** | Motor temporal contínuo (Ticks/Dias/Meses), cálculo de atratividade quadrática de clientes, curvas de elasticidade de preço, gôndolas de varejo, contabilidade gerencial e DRE mensal automatizada. | ✅ **Concluída** |
 | **Fase 2** | **Cadeia Produtiva Integrada (Supply Chain & P&D)** | 14 culturas agrícolas, 7 jazidas minerais, 77 receitas industriais, 99 produtos catalogados. Sistema de P&D com Curva Assintótica (Tech Levels 1 a 5), Árvore Tecnológica de 249 nós e desbloqueio *in-place*. | ✅ **Concluída** |
+| **Fase 2.5** | **Diagnóstico Econômico, Séries Temporais & Causalidade** | `TimeSeriesBuffer` de 24 meses, Analista Corporativo com diagnóstico de variância, Gráficos históricos Sparklines na DRE, Lente de Oportunidade (`🎯`), Simulador "E se?", métricas de cobertura em dias e payback em wizards. | ✅ **Concluída** |
 | **Fase 3** | **Macro-Mundo 128×128 & Interface Capitalism Lab** | Mapa continental isométrico 128×128 com 4 metrópoles (Nova Atenas, Porto Real, Montargis, Várzea), portos mercantes, janelas flutuantes com arrasto, minimapa radar, câmera WASD e zoom suave. | ✅ **Concluída** |
 | **Fase 3.5** | **Balanceamento de Nicho & Enciclopédia In-Game** | Payback corrigido para todos os 9 formatos comerciais (4 a 18 meses) via Licenças de Nicho. Enciclopédia Corporativa in-game (`F1` e botões `📖 Wiki`) com 7 abas funcionais e calculadora industrial de insumos. | ✅ **Concluída** |
 | **Fase 4** | **Contratos Públicos, Editais & Sistema Bancário** | Editais governamentais de suprimento municipal (merenda escolar, obras públicas, frota municipal). Linhas de crédito bancário com taxas de juros mensais, debêntures e dívida de longo prazo. | ⏳ **Planejada (Próxima)** |

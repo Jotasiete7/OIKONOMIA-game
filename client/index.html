@@ -8,7 +8,7 @@
   <script src="audio.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.8.2)</title>
+  <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.8.3)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     canvas { image-rendering: pixelated; }
@@ -78,7 +78,7 @@
       <div class="shrink-0 hidden sm:block">
         <div class="flex items-center gap-1">
           <h1 class="text-xs font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
-          <span id="hud-version-tag" class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.8.2</span>
+          <span id="hud-version-tag" class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.8.3</span>
         </div>
       </div>
       <!-- EMPRESA / AVATAR / LOGO BADGE -->
@@ -110,6 +110,7 @@
         </button>
         <div id="lenses-dropdown-menu" class="hidden absolute top-full left-0 mt-1.5 w-36 bg-slate-900/98 backdrop-blur-md border border-slate-700/80 rounded-xl shadow-2xl p-1 z-50 flex flex-col gap-0.5">
           <button id="hm-terrain" onclick="setHeatmap('terrain')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-200 font-bold text-[10px]">🌐 <span>Terreno</span></button>
+          <button id="hm-opportunity" onclick="setHeatmap('opportunity')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-amber-300 font-bold text-[10px]">🎯 <span>Oportunidade</span></button>
           <button id="hm-traffic" onclick="setHeatmap('traffic')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-300 text-[10px]">🔥 <span>Tráfego</span></button>
           <button id="hm-pop"     onclick="setHeatmap('pop')"     class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-300 text-[10px]">👥 <span>População</span></button>
           <button id="hm-comp"    onclick="setHeatmap('comp')"    class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-300 text-[10px]">🏪 <span>Varejo</span></button>
@@ -231,7 +232,7 @@
         🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
       </button>
       <span id="telemetry-version-badge" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-bold text-[9px]" title="Versão Oficial do Jogo & Build">
-        🏛️ OIKONOMIA <span class="text-emerald-400">v0.8.2</span> <span class="text-slate-500 text-[8px]">bld.20260831.01</span>
+        🏛️ OIKONOMIA <span class="text-emerald-400">v0.8.3</span> <span class="text-slate-500 text-[8px]">bld.20260831.02</span>
       </span>
     </div>
   </footer>
@@ -573,6 +574,32 @@
           </div>
         </div>
 
+        <!-- Card do Analista Corporativo (Diagnóstico de Variância & Causalidade) -->
+        <div id="fdre-diagnostic-box" class="bg-indigo-950/40 border border-indigo-700/60 rounded-xl p-3 space-y-1.5 hidden">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+              <span>🧠</span> Diagnóstico do Analista Corporativo
+            </span>
+            <span id="fdre-diag-badge" class="text-[9px] px-2 py-0.5 rounded font-bold bg-indigo-900 text-indigo-200 border border-indigo-700">Análise Mensal</span>
+          </div>
+          <p id="fdre-diag-text" class="text-[11px] text-slate-300 leading-relaxed font-mono">
+            Aguardando fechamento do primeiro ciclo mensal para análise de variância comparativa.
+          </p>
+        </div>
+
+        <!-- Gráfico de Séries Temporais dos Últimos Meses (Sparklines / Barras SVG) -->
+        <div id="fdre-history-container" class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 hidden">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-slate-300 font-bold flex items-center gap-1.5">
+              <span>📈</span> Evolução Histórica dos Resultados (Últimos Meses)
+            </span>
+            <span class="text-[9px] text-slate-500 font-mono">Verde: Lucro | Rosa: Prejuízo | Azul: Receita</span>
+          </div>
+          <div id="fdre-history-bars" class="flex items-end gap-1.5 h-20 pt-2 border-b border-slate-800 pb-1 overflow-x-auto custom-scrollbar">
+            <!-- Barras renderizadas dinamicamente via JS -->
+          </div>
+        </div>
+
         <div class="border border-slate-800 rounded-xl overflow-hidden">
           <table class="w-full text-left border-collapse text-[11px]">
             <thead class="bg-slate-800/80 text-slate-400 uppercase text-[10px] border-b border-slate-700">
@@ -592,6 +619,82 @@
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6B2. MODAL SIMULADOR "E SE?" — SANDBOX DE PRECIFICAÇÃO E ELASTICIDADE -->
+  <div id="price-simulator-modal" class="fixed inset-0 z-[65] bg-black/80 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-indigo-700/60 rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden flex flex-col font-mono text-xs max-h-[90vh]">
+      <div class="bg-slate-800 px-5 py-3.5 border-b border-slate-700 flex items-center justify-between shrink-0 drag-handle">
+        <div class="flex items-center gap-2.5">
+          <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
+          <div class="w-8 h-8 rounded-xl bg-indigo-950 border border-indigo-700/60 flex items-center justify-center text-sm">📊</div>
+          <div>
+            <h3 class="text-sm font-bold text-indigo-300">Simulador 'E se?' — Precificação</h3>
+            <p id="sim-product-subtitle" class="text-[10px] text-slate-400">Projeção matemática em tempo real</p>
+          </div>
+        </div>
+        <button onclick="closePriceSimulatorModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center cursor-pointer">✕</button>
+      </div>
+
+      <div class="p-5 space-y-4 overflow-y-auto custom-scrollbar flex-1">
+        <!-- Controle de Preço do Sandbox -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-indigo-900/60 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-slate-300 font-bold text-[11px]">Preço Simulado de Venda:</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500 font-normal line-through" id="sim-current-price-label">Atual: $3.50</span>
+              <span class="text-base font-black text-emerald-400" id="sim-price-display">$3.50</span>
+            </div>
+          </div>
+          <input type="range" id="sim-price-slider" min="0.5" max="25" step="0.25" value="3.5"
+            oninput="updatePriceSimulatorLive()"
+            class="w-full accent-indigo-500 cursor-pointer">
+          <div class="flex justify-between text-[9px] text-slate-500">
+            <span>Mais Barato (Giro Alto)</span>
+            <span>Preço Padrão de Mercado</span>
+            <span>Premium (Margem Alta)</span>
+          </div>
+        </div>
+
+        <!-- Cards de Projeção em Tempo Real -->
+        <div class="grid grid-cols-2 gap-2.5 text-center">
+          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+            <span class="text-[9px] text-slate-400 uppercase block">Vendas Diárias Estimadas</span>
+            <span id="sim-sales-display" class="text-xs font-bold text-sky-300">0 un/dia</span>
+          </div>
+          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+            <span class="text-[9px] text-slate-400 uppercase block">Receita Diária Projetada</span>
+            <span id="sim-revenue-display" class="text-xs font-bold text-emerald-400">$0.00/dia</span>
+          </div>
+          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+            <span class="text-[9px] text-slate-400 uppercase block">Margem Bruta Unitária</span>
+            <span id="sim-margin-display" class="text-xs font-bold text-amber-300">+0%</span>
+          </div>
+          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+            <span class="text-[9px] text-slate-400 uppercase block">Lucro Líquido Projetado</span>
+            <span id="sim-profit-display" class="text-xs font-bold text-emerald-300">+$0.00/mês</span>
+          </div>
+        </div>
+
+        <!-- Análise da Dinâmica de Mercado -->
+        <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-1.5 text-[10px] text-slate-400 leading-relaxed">
+          <div class="flex justify-between items-center text-slate-300 font-bold border-b border-slate-800/80 pb-1">
+            <span>Análise de Sensibilidade & Elasticidade:</span>
+            <span id="sim-rating-badge" class="text-[9px] px-1.5 py-0.2 rounded bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono">Atratividade 65/100</span>
+          </div>
+          <p id="sim-analysis-text">Calculando impacto nas vendas contra a concorrência do bairro...</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-950 border-t border-slate-800 px-5 py-3 flex items-center justify-between shrink-0">
+        <button onclick="closePriceSimulatorModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs cursor-pointer">
+          Cancelar
+        </button>
+        <button onclick="applyPriceSimulatorResult()" class="px-5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-950/50 cursor-pointer flex items-center gap-1.5">
+          <span>✓</span> Aplicar Novo Preço
+        </button>
       </div>
     </div>
   </div>
@@ -677,7 +780,7 @@
       </div>
       <div class="p-4">
         <div id="game-log-floating" class="space-y-1.5 font-mono text-[11px] max-h-96 overflow-y-auto custom-scrollbar pr-1">
-          <div class="text-slate-500">OIKONOMIA v0.8.2 inicializado em modo tela cheia com motor de cadeia produtiva e P&D completos.</div>
+          <div class="text-slate-500">OIKONOMIA v0.8.3 inicializado em modo tela cheia com motor de cadeia produtiva e P&D completos.</div>
         </div>
       </div>
     </div>
@@ -1129,7 +1232,7 @@
     <div class="flex justify-between items-center text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-4">
       <div class="flex items-center gap-2">
         <span class="text-slate-400 font-bold">OIKONOMIA PROJECT © 2026</span>
-        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.8.2 Oficial (bld.20260831.01)</span>
+        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.8.3 Oficial (bld.20260831.02)</span>
       </div>
       <div class="flex gap-4">
         <span>Atalho: <strong>F3</strong> (Dev Dashboard)</span>
@@ -1300,7 +1403,7 @@
       </div>
 
       <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-800 pt-3">
-        <span>OIKONOMIA <strong id="pause-version-tag" class="text-emerald-400">v0.8.2</strong></span>
+        <span>OIKONOMIA <strong id="pause-version-tag" class="text-emerald-400">v0.8.3</strong></span>
         <button onclick="openDevDashboard()" class="text-indigo-400 hover:text-indigo-300 font-bold">🛠️ Dev Dashboard [F3]</button>
       </div>
     </div>
@@ -1421,7 +1524,7 @@
           <div class="w-8 h-8 rounded-xl bg-indigo-950 border border-indigo-700/60 flex items-center justify-center text-sm">🛠️</div>
           <div>
             <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">Painel de Desenvolvimento & Diagnóstico</h3>
-            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.8.2 · Build 20260831.01 (Oficial)</span>
+            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.8.3 · Build 20260831.02 (Oficial)</span>
           </div>
         </div>
         <button onclick="closeDevDashboard()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
@@ -1442,11 +1545,11 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Versão Oficial</span>
-              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.8.2 (bld.20260831.01)</span>
+              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.8.3 (bld.20260831.02)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Schema de Saves</span>
-              <span id="dev-card-save-schema" class="text-xs font-bold text-amber-400">v0.8.1 (Compatível)</span>
+              <span id="dev-card-save-schema" class="text-xs font-bold text-amber-400">v0.8.2 (Compatível)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Sparse Index</span>
@@ -1942,7 +2045,8 @@
         montargis: false,
         varzea: false
       },
-      acquiredLicenses: new Set(['kombini'])
+      acquiredLicenses: new Set(['kombini']),
+      historicalLedger: []
     };
 
     // Aliases globais de interoperabilidade direta
@@ -1963,6 +2067,7 @@
     let lastSavedStateSnapshot = GameState.lastSavedStateSnapshot;
     let gameSettings = GameState.gameSettings;
     const playerBrandRating = GameState.playerBrandRating;
+    const historicalLedger = GameState.historicalLedger;
     const activeMarketingContracts = GameState.activeMarketingContracts;
     const rdLabs = GameState.rdLabs;
     const unlockedProducts = GameState.unlockedProducts;
@@ -2674,7 +2779,21 @@
           // Lentes de Heatmap (sobreposição translúcida)
           if (!tile.city.isLocked && currentHeatmap !== 'terrain') {
             let heatFill = null;
-            if (currentHeatmap === 'traffic' && tile.district.trafficIndex > 0) {
+            if (currentHeatmap === 'opportunity') {
+              if (!tile.isWater && !tile.isRoad) {
+                const popScore = Math.min(1, (tile.district?.population || 0) / 16000);
+                const trafficScore = (tile.district?.trafficIndex || 30) / 100;
+                let compPenalty = 0;
+                if (tile.competitor) compPenalty += 0.45;
+                if (tile.store) compPenalty += 0.25;
+
+                const oppIndex = Math.max(0, Math.min(1, (popScore * 0.5 + trafficScore * 0.5) - compPenalty));
+                if (oppIndex > 0.60) heatFill = 'rgba(16, 185, 129, 0.72)'; // Alto Potencial / Verde Esmeralda
+                else if (oppIndex > 0.35) heatFill = 'rgba(245, 158, 11, 0.65)'; // Médio Potencial / Âmbar
+                else if (oppIndex > 0.15) heatFill = 'rgba(59, 130, 246, 0.45)'; // Baixo Potencial / Azul
+                else heatFill = 'rgba(30, 41, 59, 0.35)'; // Saturado / Escuro
+              }
+            } else if (currentHeatmap === 'traffic' && tile.district.trafficIndex > 0) {
               const t = tile.district.trafficIndex / 100;
               heatFill = `rgba(239, 68, 68, ${Math.min(0.85, 0.2 + t * 0.65)})`;
             } else if (currentHeatmap === 'pop' && tile.district.population > 0) {
@@ -3664,6 +3783,81 @@
       document.getElementById('fdre-total-net').className = `text-sm font-bold mt-0.5 ${totalNet >= 0 ? 'text-emerald-300' : 'text-rose-400'}`;
       document.getElementById('fdre-net-worth').textContent = (nw.netWorth >= 0 ? '$' : '-$') + Math.abs(nw.netWorth).toLocaleString('en-US', { maximumFractionDigits: 0 });
       document.getElementById('fdre-net-worth').className = `text-sm font-bold mt-0.5 ${nw.netWorth >= 0 ? 'text-indigo-300' : 'text-rose-400'}`;
+
+      // 1. Renderiza o Gráfico de Séries Temporais dos Últimos Meses (Sparklines / Barras SVG)
+      const histContainer = document.getElementById('fdre-history-container');
+      const histBars = document.getElementById('fdre-history-bars');
+      if (histContainer && histBars) {
+        if (historicalLedger.length > 0) {
+          histContainer.classList.remove('hidden');
+          const maxVal = Math.max(1, ...historicalLedger.map(h => Math.max(h.revenue, Math.abs(h.netProfit))));
+          histBars.innerHTML = historicalLedger.map(h => {
+            const revHeight = Math.max(4, Math.round((h.revenue / maxVal) * 60));
+            const netHeight = Math.max(4, Math.round((Math.abs(h.netProfit) / maxVal) * 60));
+            const isProfit = h.netProfit >= 0;
+            return `
+              <div class="flex flex-col items-center gap-0.5 shrink-0 group relative cursor-pointer" title="Mês ${String(h.month).padStart(2,'0')}/Ano ${h.year} | Receita: $${h.revenue.toLocaleString()} | Lucro: ${isProfit ? '+$' : '-$'}${Math.abs(h.netProfit).toLocaleString()}">
+                <div class="flex items-end gap-0.5 h-16">
+                  <div class="w-2 bg-sky-500/60 rounded-t" style="height:${revHeight}px"></div>
+                  <div class="w-2 ${isProfit ? 'bg-emerald-500' : 'bg-rose-500'} rounded-t" style="height:${netHeight}px"></div>
+                </div>
+                <span class="text-[8px] text-slate-500 font-mono">M${h.month}</span>
+              </div>
+            `;
+          }).join('');
+        } else {
+          histContainer.classList.add('hidden');
+        }
+      }
+
+      // 2. Renderiza o Diagnóstico Inteligente do Analista Corporativo
+      const diagBox = document.getElementById('fdre-diagnostic-box');
+      const diagText = document.getElementById('fdre-diag-text');
+      const diagBadge = document.getElementById('fdre-diag-badge');
+      if (diagBox && diagText && diagBadge) {
+        diagBox.classList.remove('hidden');
+        if (historicalLedger.length >= 2) {
+          const curr = historicalLedger[historicalLedger.length - 1];
+          const prev = historicalLedger[historicalLedger.length - 2];
+          const diffNet = curr.netProfit - prev.netProfit;
+          const pctNet = prev.netProfit !== 0 ? Math.round((diffNet / Math.abs(prev.netProfit)) * 100) : 0;
+          const diffRev = curr.revenue - prev.revenue;
+
+          let bestFac = null, worstFac = null;
+          if (curr.facilities && Object.keys(curr.facilities).length > 0) {
+            const facList = Object.values(curr.facilities).sort((a, b) => b.netProfit - a.netProfit);
+            bestFac = facList[0];
+            worstFac = facList[facList.length - 1];
+          }
+
+          let diagSummary = '';
+          if (diffNet >= 0) {
+            diagSummary = `📈 <strong class="text-emerald-400">Desempenho em Alta:</strong> O Lucro Líquido aumentou <strong>+$${diffNet.toLocaleString()}</strong> (${pctNet >= 0 ? '+' : ''}${pctNet}%) em relação ao mês anterior (Receita: ${diffRev >= 0 ? '+$' : '-$'}${Math.abs(diffRev).toLocaleString()}). `;
+          } else {
+            diagSummary = `📉 <strong class="text-rose-400">Atenção Executiva:</strong> O Lucro Líquido recuou <strong>-$${Math.abs(diffNet).toLocaleString()}</strong> (${pctNet}%) comparado ao mês anterior. `;
+          }
+
+          if (bestFac && bestFac.netProfit > 0) {
+            diagSummary += `Destaque operacional: <strong>${bestFac.name}</strong> gerou <strong>+$${bestFac.netProfit.toLocaleString()}</strong> de margem limpa. `;
+          }
+          if (worstFac && worstFac.netProfit < 0) {
+            diagSummary += `Ponto de atenção: <strong>${worstFac.name}</strong> teve prejuízo de <strong>-$${Math.abs(worstFac.netProfit).toLocaleString()}</strong> (verifique custos de solo ou reposição).`;
+          }
+
+          diagText.innerHTML = diagSummary;
+          diagBadge.textContent = `Mês ${String(curr.month).padStart(2,'0')} vs Mês ${String(prev.month).padStart(2,'0')}`;
+          diagBadge.className = diffNet >= 0 ? 'text-[9px] px-2 py-0.5 rounded font-bold bg-emerald-950 text-emerald-300 border border-emerald-800' : 'text-[9px] px-2 py-0.5 rounded font-bold bg-rose-950 text-rose-300 border border-rose-800';
+        } else if (historicalLedger.length === 1) {
+          const curr = historicalLedger[0];
+          diagText.innerHTML = `📊 Primeiro ciclo mensal contabilizado: Receita de <strong>$${curr.revenue.toLocaleString()}</strong> e Lucro Líquido de <strong>${curr.netProfit >= 0 ? '+$' : '-$'}${Math.abs(curr.netProfit).toLocaleString()}</strong>. A partir do próximo mês, você terá análises comparativas automáticas de variância.`;
+          diagBadge.textContent = `Ciclo Inicial (Mês ${curr.month})`;
+          diagBadge.className = 'text-[9px] px-2 py-0.5 rounded font-bold bg-indigo-950 text-indigo-200 border border-indigo-700';
+        } else {
+          diagText.textContent = `Aguardando a conclusão do primeiro mês de simulação para gerar a análise de variância corporativa.`;
+          diagBadge.textContent = 'Em Andamento';
+          diagBadge.className = 'text-[9px] px-2 py-0.5 rounded font-bold bg-slate-800 text-slate-400 border border-slate-700';
+        }
+      }
     }
 
     function openInsolvencyModal(nwObj) {
@@ -4392,10 +4586,20 @@
         const brand = playerBrandRating[prodId] || 20;
         const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
         const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
-        const estSales = Math.floor(d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast);
+        const estSales = Math.max(1, Math.floor(d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast));
+        const daysCover = Math.floor(shelf.stock / estSales);
+        const capitalTied = Math.round(shelf.stock * (shelf.landedCost || prod.baseCost));
         const stockPct = Math.round((shelf.stock / shelf.maxCapacity) * 100);
         const markupPct = Math.round(((shelf.price - shelf.landedCost) / shelf.landedCost) * 100);
         const isStockout = shelf.stock < 15;
+
+        const coverBadge = isStockout
+          ? '<span class="text-rose-400 font-bold bg-rose-950/80 px-1 py-0.2 rounded border border-rose-800 text-[8px]">🔴 Ruptura</span>'
+          : (daysCover <= 2
+            ? `<span class="text-rose-300 font-bold bg-rose-950/80 px-1 py-0.2 rounded border border-rose-800 text-[8px]">🔴 ${daysCover}d (Risco)</span>`
+            : (daysCover <= 5
+              ? `<span class="text-amber-300 font-bold bg-amber-950/80 px-1 py-0.2 rounded border border-amber-800 text-[8px]">🟡 ${daysCover}d</span>`
+              : `<span class="text-emerald-400 font-bold bg-emerald-950/80 px-1 py-0.2 rounded border border-emerald-800 text-[8px]">🟢 ${daysCover}d</span>`));
 
         const costFill = Math.round((shelf.maxCapacity - shelf.stock) * shelf.landedCost);
         const isInternal = !!(shelf.supplierId?.startsWith('factory_') || shelf.supplierId?.startsWith('farm_') || shelf.supplierId?.startsWith('mine_'));
@@ -4433,10 +4637,17 @@
               <div class="stock-bar-fill h-full rounded-full ${isStockout ? 'bg-rose-500' : stockPct > 50 ? 'bg-emerald-500' : 'bg-amber-500'}" style="width:${stockPct}%"></div>
             </div>
 
+            <!-- Métricas de Capital de Giro & Cobertura -->
+            <div class="flex items-center justify-between text-[9px] font-mono text-slate-400 pb-1 mb-1 border-b border-slate-900">
+              <span class="flex items-center gap-1">Cobertura: ${coverBadge}</span>
+              <span>Imobilizado: <strong class="text-amber-300 font-bold">$${capitalTied.toLocaleString()}</strong></span>
+            </div>
+
             <div class="flex items-center gap-1.5 text-[9px] font-mono">
               <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', 100)" class="bg-slate-900 hover:bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700">+100 un</button>
               <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', ${shelf.maxCapacity - shelf.stock})" class="bg-slate-900 hover:bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded border border-slate-700">Encher (-$${costFill})</button>
-              <button onclick="openMarketingCentralModal()" class="ml-auto text-indigo-400 hover:text-indigo-300 font-bold">📢 Anunciar</button>
+              <button onclick="openPriceSimulatorModal(${tile.x}, ${tile.y}, '${prodId}')" class="ml-auto text-indigo-400 hover:text-indigo-300 font-bold flex items-center gap-0.5 cursor-pointer">📊 Simular 'E se?'</button>
+              <button onclick="openMarketingCentralModal()" class="text-amber-400 hover:text-amber-300 font-bold ml-1">📢</button>
             </div>
           </div>
 
@@ -4483,6 +4694,12 @@
       list.innerHTML = NATURAL_MINES.map(m => {
         const canAfford = cash >= m.cost;
         const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getMineSpriteKey) ? SpriteManager.getMineSpriteKey(m.id) : `minas/${m.id}`;
+        const estMonthlyExtraction = m.dailyYield * 30;
+        const estUnitProfit = Math.max(0.5, (m.unitCost * 1.8) - m.unitCost);
+        const estMonthlyProfit = Math.max(400, Math.round(estMonthlyExtraction * estUnitProfit - (tile.district.landRentDaily * 30)));
+        const paybackMin = Math.max(2, Math.round(m.cost / (estMonthlyProfit * 1.2)));
+        const paybackMax = Math.max(paybackMin + 2, Math.round(m.cost / (estMonthlyProfit * 0.8)));
+
         return `
           <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
             <div class="flex items-center gap-3">
@@ -4493,12 +4710,15 @@
               <div>
                 <div class="text-sm font-bold text-slate-100">${m.name}</div>
                 <div class="text-[11px] text-slate-400 mt-0.5">Extração: <strong class="text-emerald-400">${m.dailyYield} un/dia</strong> · Custo: <strong class="text-slate-200">$${m.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${m.quality}</strong></div>
+                <div class="text-[9px] font-mono text-sky-300 bg-sky-950/50 p-1 rounded-lg border border-sky-800/60 mt-1">
+                  ⏱ Payback Estimado: <strong>${paybackMin} a ${paybackMax} meses</strong>
+                </div>
                 <div class="text-[10px] text-slate-500 mt-0.5">${m.desc}</div>
               </div>
             </div>
             <div class="text-right shrink-0">
               <div class="text-sm font-bold text-rose-400 mb-1">$${m.cost.toLocaleString()}</div>
-              <button onclick="confirmBuildMine('${m.id}')" ${!canAfford ? 'disabled' : ''} class="bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-white font-bold px-3 py-1.5 rounded-xl text-xs">Construir</button>
+              <button onclick="confirmBuildMine('${m.id}')" ${!canAfford ? 'disabled' : ''} class="bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-white font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer">Construir</button>
             </div>
           </div>
         `;
@@ -4547,6 +4767,12 @@
       list.innerHTML = FARM_TYPES.map(ft => {
         const canAfford = cash >= ft.cost;
         const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getFarmSpriteKey) ? SpriteManager.getFarmSpriteKey(ft.id) : `agro/${ft.id}`;
+        const estMonthlyYield = ft.dailyYield * 30;
+        const estUnitProfit = Math.max(0.4, (ft.unitCost * 1.7) - ft.unitCost);
+        const estMonthlyProfit = Math.max(400, Math.round(estMonthlyYield * estUnitProfit - (tile.district.landRentDaily * 30)));
+        const paybackMin = Math.max(2, Math.round(ft.cost / (estMonthlyProfit * 1.2)));
+        const paybackMax = Math.max(paybackMin + 2, Math.round(ft.cost / (estMonthlyProfit * 0.8)));
+
         return `
           <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
             <div class="flex items-center gap-3">
@@ -4557,12 +4783,15 @@
               <div>
                 <div class="text-sm font-bold text-slate-100">${ft.name}</div>
                 <div class="text-[11px] text-slate-400 mt-0.5">Produção: <strong class="text-emerald-400">${ft.dailyYield} un/dia</strong> · Custo: <strong class="text-slate-200">$${ft.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${ft.quality}</strong></div>
+                <div class="text-[9px] font-mono text-amber-300 bg-amber-950/50 p-1 rounded-lg border border-amber-800/60 mt-1">
+                  ⏱ Payback Estimado: <strong>${paybackMin} a ${paybackMax} meses</strong>
+                </div>
                 <div class="text-[10px] text-slate-500 mt-0.5">${ft.desc}</div>
               </div>
             </div>
             <div class="text-right shrink-0">
               <div class="text-sm font-bold text-rose-400 mb-1">$${ft.cost.toLocaleString()}</div>
-              <button onclick="confirmBuildFarm('${ft.id}')" ${!canAfford ? 'disabled' : ''} class="bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs">Construir</button>
+              <button onclick="confirmBuildFarm('${ft.id}')" ${!canAfford ? 'disabled' : ''} class="bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer">Construir</button>
             </div>
           </div>
         `;
@@ -6953,6 +7182,12 @@
         const lic = (typeof STORE_NICHE_LICENSES !== 'undefined' && STORE_NICHE_LICENSES[st.id]) ? STORE_NICHE_LICENSES[st.id] : null;
         const hasLicense = hasNicheLicense(st.id);
         const licCost = hasLicense ? 0 : (lic?.cost || 0);
+        const totalInvestment = st.cost + licCost;
+        const estMonthlyVolume = Math.round(d.population * 0.035 * (d.trafficIndex / 100) * st.maxShelves * 30);
+        const estMonthlyProfit = Math.max(600, Math.round(estMonthlyVolume * 1.6 - (actualRent * 30) - (st.maxShelves * 40 * 30)));
+        const paybackMonthsMin = Math.max(2, Math.round(totalInvestment / (estMonthlyProfit * 1.25)));
+        const paybackMonthsMax = Math.max(paybackMonthsMin + 2, Math.round(totalInvestment / (estMonthlyProfit * 0.75)));
+        const estRoi = Math.min(250, Math.max(15, Math.round((estMonthlyProfit * 12 / totalInvestment) * 100)));
 
         return `
           <div onclick="selectStoreType('${st.id}')"
@@ -6977,7 +7212,14 @@
                 </div>
               </div>
             </div>
-            <div class="text-[10px] font-mono text-slate-400">📦 ${st.maxShelves} gôndolas · Aluguel: <strong class="text-rose-400">$${actualRent}/dia</strong></div>
+            <div class="text-[10px] font-mono text-slate-400 flex items-center justify-between">
+              <span>📦 ${st.maxShelves} gôndolas</span>
+              <span>Aluguel: <strong class="text-rose-400">$${actualRent}/dia</strong></span>
+            </div>
+            <div class="text-[9px] font-mono text-indigo-300 bg-indigo-950/50 p-1.5 rounded-lg border border-indigo-800/60 flex items-center justify-between">
+              <span>⏱ Payback: <strong>${paybackMonthsMin} a ${paybackMonthsMax} meses</strong></span>
+              <span class="text-slate-400">ROI Est.: <strong class="text-emerald-400 font-bold">~${estRoi}%/ano</strong></span>
+            </div>
             ${!hasLicense && lic && lic.cost > 0 ? `
               <div class="text-[9px] text-amber-300/90 bg-amber-950/40 border border-amber-800/60 rounded p-1.5 font-mono leading-tight">
                 ${lic.icon} <strong>${lic.name}</strong>: ${lic.desc} (Taxa única corporativa: <strong class="text-amber-300">$${lic.cost.toLocaleString('en-US')}</strong>)
@@ -7600,6 +7842,122 @@
       updateUI();
     }
 
+    // ===========================================================================
+    // 8.1 SIMULADOR "E SE?" — SANDBOX DE PRECIFICAÇÃO E ELASTICIDADE
+    // ===========================================================================
+    let priceSimTarget = null;
+
+    function openPriceSimulatorModal(x, y, prodId) {
+      const tile = worldGrid[x]?.[y];
+      const shelf = tile?.store?.shelves[prodId];
+      const prod = PRODUCT_CATALOG[prodId];
+      if (!tile || !shelf || !prod) return;
+
+      const brand = playerBrandRating[prodId] || 20;
+      const d = tile.district;
+
+      priceSimTarget = {
+        x, y, prodId,
+        currentPrice: shelf.price,
+        landedCost: shelf.landedCost || prod.baseCost,
+        quality: shelf.quality || 50,
+        brand,
+        standardPrice: prod.standardPrice,
+        necessityIndex: prod.necessityIndex,
+        perCapitaDailyDemand: prod.perCapitaDailyDemand,
+        pop: d.population,
+        traffic: d.trafficIndex,
+        storeName: tile.store.name,
+        districtName: d.name
+      };
+
+      const subtitleEl = document.getElementById('sim-product-subtitle');
+      if (subtitleEl) subtitleEl.textContent = `${prod.name} · ${priceSimTarget.storeName} (${priceSimTarget.districtName})`;
+
+      const currLabel = document.getElementById('sim-current-price-label');
+      if (currLabel) currLabel.textContent = `Atual: $${shelf.price.toFixed(2)}`;
+
+      const slider = document.getElementById('sim-price-slider');
+      if (slider) {
+        const minP = Math.max(0.5, Number((prod.standardPrice * 0.3).toFixed(2)));
+        const maxP = Number((prod.standardPrice * 2.8).toFixed(2));
+        slider.min = minP;
+        slider.max = maxP;
+        slider.step = minP < 2 ? "0.10" : "0.50";
+        slider.value = shelf.price;
+      }
+
+      updatePriceSimulatorLive();
+      document.getElementById('price-simulator-modal')?.classList.remove('hidden');
+    }
+
+    function closePriceSimulatorModal() {
+      document.getElementById('price-simulator-modal')?.classList.add('hidden');
+      priceSimTarget = null;
+    }
+
+    function updatePriceSimulatorLive() {
+      if (!priceSimTarget) return;
+      const slider = document.getElementById('sim-price-slider');
+      if (!slider) return;
+
+      const simPrice = parseFloat(slider.value);
+      const prod = PRODUCT_CATALOG[priceSimTarget.prodId];
+
+      document.getElementById('sim-price-display').textContent = `$${simPrice.toFixed(2)}`;
+
+      // Fórmulas Determinísticas do Core Engine
+      const rating = calcProductRating(prod, simPrice, priceSimTarget.quality, priceSimTarget.brand);
+      const elast = calcElasticity(priceSimTarget.necessityIndex, priceSimTarget.standardPrice, simPrice);
+      const estDailySales = Math.max(0, Math.floor(priceSimTarget.pop * priceSimTarget.perCapitaDailyDemand * (priceSimTarget.traffic / 100) * 0.45 * elast));
+      const dailyRevenue = estDailySales * simPrice;
+      const dailyCogs = estDailySales * priceSimTarget.landedCost;
+      const dailyGrossProfit = dailyRevenue - dailyCogs;
+      const monthlyNetProfit = Math.round(dailyGrossProfit * 30);
+      const markupPct = Math.round(((simPrice - priceSimTarget.landedCost) / priceSimTarget.landedCost) * 100);
+
+      document.getElementById('sim-sales-display').textContent = `${estDailySales.toLocaleString()} un/dia`;
+      document.getElementById('sim-revenue-display').textContent = `$${dailyRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/dia`;
+      document.getElementById('sim-margin-display').textContent = `${markupPct >= 0 ? '+' : ''}${markupPct}%`;
+      document.getElementById('sim-margin-display').className = `text-xs font-bold ${markupPct >= 0 ? 'text-amber-300' : 'text-rose-400'}`;
+      document.getElementById('sim-profit-display').textContent = `${monthlyNetProfit >= 0 ? '+$' : '-$'}${Math.abs(monthlyNetProfit).toLocaleString('en-US')}/mês`;
+      document.getElementById('sim-profit-display').className = `text-xs font-bold ${monthlyNetProfit >= 0 ? 'text-emerald-300' : 'text-rose-400'}`;
+
+      const ratingBadge = document.getElementById('sim-rating-badge');
+      if (ratingBadge) {
+        ratingBadge.textContent = `Score de Atratividade: ${rating}/100`;
+        ratingBadge.className = `text-[9px] px-1.5 py-0.2 rounded font-mono ${rating >= 60 ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : rating >= 40 ? 'bg-indigo-950 text-indigo-300 border border-indigo-800' : 'bg-rose-950 text-rose-300 border border-rose-800'}`;
+      }
+
+      const analysisText = document.getElementById('sim-analysis-text');
+      if (analysisText) {
+        let diffPct = Math.round(((simPrice - priceSimTarget.currentPrice) / priceSimTarget.currentPrice) * 100);
+        let diffStr = diffPct === 0 ? 'mantém o preço atual' : (diffPct > 0 ? `aumento de +${diffPct}% sobre o preço atual` : `desconto de ${Math.abs(diffPct)}% sobre o preço atual`);
+        
+        let elastAnalysis = '';
+        if (elast > 1.2) {
+          elastAnalysis = '🚀 Preço super competitivo! Grande atração de clientes sensíveis a preço no bairro.';
+        } else if (elast < 0.7) {
+          elastAnalysis = '⚠️ Preço elevado reduz o volume de vendas, mas pode ser lucrativo se a margem compensar.';
+        } else {
+          elastAnalysis = '⚖️ Ponto de equilíbrio equilibrado entre giro de estoque e margem unitária.';
+        }
+
+        analysisText.innerHTML = `Com $${simPrice.toFixed(2)} (${diffStr}), sua margem unitária é de <strong>${markupPct}%</strong>. ${elastAnalysis}`;
+      }
+    }
+
+    function applyPriceSimulatorResult() {
+      if (!priceSimTarget) return;
+      const slider = document.getElementById('sim-price-slider');
+      if (!slider) return;
+
+      const simPrice = parseFloat(slider.value);
+      updateShelfPrice(priceSimTarget.x, priceSimTarget.y, priceSimTarget.prodId, simPrice);
+      addLog(`📊 SIMULADOR 'E SE?': Preço de ${PRODUCT_CATALOG[priceSimTarget.prodId].name} ajustado para $${simPrice.toFixed(2)}!`, 'text-indigo-300 font-bold');
+      closePriceSimulatorModal();
+    }
+
     function openAddProductModal(x, y) {
       const tile = worldGrid[x][y];
       if (!tile?.store) return;
@@ -8197,6 +8555,46 @@
         }
       }
 
+      // Registra Snapshot Mensal Granular no TimeSeriesBuffer (Buffer circular de 24 meses)
+      const facilitiesSnapshot = {};
+      for (const tile of activeFacilitySet.values()) {
+        if (!tile.store && !tile.factory && !tile.farm && !tile.mine && !tile.rdCenter) continue;
+        const key = `${tile.x}_${tile.y}`;
+        const name = tile.store?.name || tile.factory?.name || tile.farm?.name || tile.mine?.name || tile.rdCenter?.name || 'Instalação';
+        const type = tile.store ? 'store' : (tile.factory ? 'factory' : (tile.farm ? 'farm' : (tile.mine ? 'mine' : 'rdCenter')));
+        const lm = tile.lastMonthMetrics || { revenue: 0, cogs: 0, opex: 0, netProfit: 0 };
+        facilitiesSnapshot[key] = {
+          x: tile.x,
+          y: tile.y,
+          name,
+          type,
+          loc: `${tile.district?.name || 'Interior'} (${tile.x}, ${tile.y})`,
+          revenue: lm.revenue,
+          cogs: lm.cogs,
+          opex: lm.opex,
+          netProfit: lm.netProfit
+        };
+      }
+
+      historicalLedger.push({
+        month,
+        year,
+        revenue: monthRevenue,
+        cogs: monthCogs,
+        fixedExpenses: monthFixedExpenses,
+        marketingExpenses: monthMarketingExpenses,
+        financialExpenses: monthFinancialExpenses,
+        totalOpex: monthFixedExpenses + monthMarketingExpenses + monthFinancialExpenses,
+        netProfit: net,
+        cash,
+        netWorth: nwObj.netWorth,
+        facilities: facilitiesSnapshot
+      });
+
+      if (historicalLedger.length > 24) {
+        historicalLedger.shift();
+      }
+
       monthRevenue = 0; monthCogs = 0; monthFixedExpenses = 0; monthMarketingExpenses = 0; monthFinancialExpenses = 0;
       if (activeManagedTile) renderFacilityPanel(activeManagedTile);
     }
@@ -8262,13 +8660,14 @@
     function setHeatmap(mode) {
       currentHeatmap = mode;
       const lensMeta = {
-        terrain: { name: 'Terreno', icon: '🌐' },
-        traffic: { name: 'Tráfego', icon: '🔥' },
-        pop:     { name: 'População', icon: '👥' },
-        comp:    { name: 'Varejo', icon: '🏪' },
-        ports:   { name: 'Portos', icon: '⚓' },
-        ind:     { name: 'Indústria', icon: '🏭' },
-        media:   { name: 'Mídia', icon: '📡' }
+        terrain:     { name: 'Terreno', icon: '🌐' },
+        opportunity: { name: 'Oportunidade', icon: '🎯' },
+        traffic:     { name: 'Tráfego', icon: '🔥' },
+        pop:         { name: 'População', icon: '👥' },
+        comp:        { name: 'Varejo', icon: '🏪' },
+        ports:       { name: 'Portos', icon: '⚓' },
+        ind:         { name: 'Indústria', icon: '🏭' },
+        media:       { name: 'Mídia', icon: '📡' }
       };
 
       const meta = lensMeta[mode] || lensMeta.terrain;
@@ -8277,7 +8676,7 @@
       if (iconEl) iconEl.textContent = meta.icon;
       if (labelEl) labelEl.textContent = meta.name;
 
-      const btns = { terrain:'hm-terrain', traffic:'hm-traffic', pop:'hm-pop', comp:'hm-comp', ports:'hm-ports', ind:'hm-ind', media:'hm-media' };
+      const btns = { terrain:'hm-terrain', opportunity:'hm-opportunity', traffic:'hm-traffic', pop:'hm-pop', comp:'hm-comp', ports:'hm-ports', ind:'hm-ind', media:'hm-media' };
       for (const [m, id] of Object.entries(btns)) {
         const btn = document.getElementById(id);
         if (!btn) continue;
@@ -8614,9 +9013,9 @@
     const GAME_VERSION_INFO = {
       major: 0,
       minor: 8,
-      patch: 1,
-      build: '20260828.03',
-      saveSchema: '0.8.1',
+      patch: 3,
+      build: '20260831.02',
+      saveSchema: '0.8.2',
       get version() { return `${this.major}.${this.minor}.${this.patch}`; },
       get fullString() { return `v${this.version} (bld.${this.build})`; }
     };
@@ -8695,6 +9094,13 @@
           }
         }
         migrated.rdLabs = sanitized;
+      }
+
+      // 6. Sanitização de Séries Temporais — historicalLedger
+      if (Array.isArray(migrated.historicalLedger)) {
+        migrated.historicalLedger = migrated.historicalLedger.slice(-24);
+      } else {
+        migrated.historicalLedger = [];
       }
 
       const rawTiles = Array.isArray(migrated.builtTiles) ? migrated.builtTiles : [];
@@ -8785,6 +9191,7 @@
         rdLabs: { ...rdLabs },
         unlockedProducts: Array.from(unlockedProducts),
         acquiredLicenses: Array.from(acquiredLicenses),
+        historicalLedger: [...historicalLedger],
         tutorialState: { ...tutorialState },
         builtTiles: extractBuiltTiles(),
         playtimeSeconds
@@ -8870,6 +9277,11 @@
       Object.keys(rdLabs).forEach(k => delete rdLabs[k]);
       if (saveData.rdLabs && typeof saveData.rdLabs === 'object') {
         Object.assign(rdLabs, saveData.rdLabs);
+      }
+
+      historicalLedger.length = 0;
+      if (Array.isArray(saveData.historicalLedger)) {
+        historicalLedger.push(...saveData.historicalLedger);
       }
 
       unlockedProducts.clear();
@@ -9289,6 +9701,7 @@
       unlockedCities.varzea = false;
 
       activeMarketingContracts.clear();
+      historicalLedger.length = 0;
       Object.keys(PRODUCT_CATALOG).forEach(id => playerBrandRating[id] = 20);
       Object.keys(rdLabs).forEach(k => delete rdLabs[k]);
       unlockedProducts.clear();
