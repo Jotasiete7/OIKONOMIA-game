@@ -275,7 +275,7 @@
     </div>
     <div id="tutorial-steps-container" class="p-3 space-y-2 max-h-72 overflow-y-auto custom-scrollbar"></div>
     <div class="p-2.5 bg-slate-950 border-t border-slate-800 flex justify-between items-center text-[10px]">
-      <span id="tutorial-reward-badge" class="text-amber-400 font-bold">Recompensa: +$15.000</span>
+      <span id="tutorial-reward-badge" class="text-amber-400 font-bold">Recompensa: +$5.000 & +5⭐ Marca</span>
       <button id="tutorial-claim-btn" onclick="claimTutorialReward()" class="px-2.5 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold disabled:opacity-40 disabled:pointer-events-none cursor-pointer" disabled>Resgatar</button>
     </div>
   </div>
@@ -478,7 +478,8 @@
           <div class="flex justify-between"><span class="text-slate-400">Progresso atual do produto:</span><span id="rd-prev-current-qr" class="text-amber-300 font-bold">--</span></div>
           <div class="flex justify-between"><span class="text-slate-400">Ganho estimado / mês:</span><span id="rd-prev-gain" class="text-emerald-400 font-bold">--</span></div>
           <div class="flex justify-between"><span class="text-slate-400">Tempo Estimado (ETA):</span><span id="rd-prev-eta" class="text-purple-300 font-bold">--</span></div>
-          <div class="flex justify-between border-t border-purple-800/50 pt-1 mt-1"><span class="text-slate-400">Custo Total Estimado:</span><span id="rd-prev-total-cost" class="text-slate-100 font-bold">--</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Taxa de Instrumentação (Setup Inicial):</span><span id="rd-prev-setup-cost" class="text-amber-400 font-bold">--</span></div>
+          <div class="flex justify-between border-t border-purple-800/50 pt-1 mt-1"><span class="text-slate-400">Custo Total Estimado (Setup + Mensalidades):</span><span id="rd-prev-total-cost" class="text-slate-100 font-bold">--</span></div>
         </div>
 
         <!-- Botões -->
@@ -1495,14 +1496,14 @@
     function drawCanvasCompanyLogoBadge(ctx, logo, cx, cy, radius, zoom) {
       if (!logo) return;
       ctx.save();
-      const r = Math.max(5, radius * zoom);
+      const r = Math.max(6, radius * zoom);
 
-      // Sombra suave
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-      ctx.shadowBlur = 4 * zoom;
-      ctx.shadowOffsetY = 2 * zoom;
+      // Sombra projetada elegante
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
+      ctx.shadowBlur = 5 * zoom;
+      ctx.shadowOffsetY = 2.5 * zoom;
 
-      // Forma geométrica
+      // Forma geométrica do brasão
       ctx.beginPath();
       if (logo.shape === 'circle') {
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -1530,7 +1531,12 @@
       // Borda escura de contraste
       ctx.shadowColor = 'transparent';
       ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = Math.max(1, 1.2 * zoom);
+      ctx.lineWidth = Math.max(1.2, 1.6 * zoom);
+      ctx.stroke();
+
+      // Anel interno sutil de acabamento
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.lineWidth = Math.max(0.8, 0.9 * zoom);
       ctx.stroke();
 
       // Símbolo iconográfico centralizado
@@ -1837,11 +1843,11 @@
       { id: 'cyan',    name: 'Titânio',   hex: '#06b6d4', borderClass: 'border-cyan-500',    bgClass: 'bg-cyan-500',    textClass: 'text-cyan-400' }
     ];
 
-    // Predefinições de Dificuldade
+    // Predefinições de Dificuldade (Balanceamento Estilo Capitalism Lab)
     const DIFFICULTY_PRESETS = [
-      { id: 'easy',     name: '🌱 Empreendedor',   startingCash: 250000, desc: 'Aporte de $250k. Expansão rápida e fôlego de caixa.' },
-      { id: 'standard', name: '🏛️ Magnata Padrão', startingCash: 100000, desc: 'Aporte de $100k. Experiência de mercado clássica.' },
-      { id: 'hard',     name: '⚡ Hardcore',       startingCash: 35000,  desc: 'Aporte de $35k. Margem de erro mínima e disciplina rígida.' }
+      { id: 'easy',     name: '🌱 Empreendedor',   startingCash: 120000, desc: 'Aporte de $120k. Expansão acelerada e margem de segurança.' },
+      { id: 'standard', name: '🏛️ Magnata Padrão', startingCash: 50000,  desc: 'Aporte de $50k. Desafio equilibrado: comece no varejo e expanda com cautela.' },
+      { id: 'hard',     name: '⚡ Hardcore',       startingCash: 20000,  desc: 'Aporte de $20k. Capital reduzido, disciplina rígida e margem de erro zero.' }
     ];
 
     // Dicas Estratégicas para o Loading
@@ -2581,8 +2587,10 @@
             }
 
             if (facilityLogo) {
-              const badgeY = sy - (hPx || 16 * camera.zoom) - 8 * camera.zoom;
-              drawCanvasCompanyLogoBadge(ctx, facilityLogo, sx, badgeY, 7.5, camera.zoom);
+              const isPlayer = !!(tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter);
+              const badgeRadius = isPlayer ? 9.5 : 7.5;
+              const badgeY = sy - (hPx || 16 * camera.zoom) - (isPlayer ? 10 : 8) * camera.zoom;
+              drawCanvasCompanyLogoBadge(ctx, facilityLogo, sx, badgeY, badgeRadius, camera.zoom);
             }
           }
 
@@ -3421,9 +3429,9 @@
       const iconEl = document.getElementById('facility-icon');
       if (iconEl) iconEl.innerHTML = '🔬';
       document.getElementById('facility-title').textContent = rd.name;
-      document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Complexo de P&D (Pesquisa & Inovação)`;
-      const badge = document.getElementById('facility-rent-badge');
-      badge.textContent = `-$${rd.dailyRent || tile.district.landRentDaily}/dia`;
+      const rdRent = rd.dailyRent || tile.district.landRentDaily;
+      const totalRDDaily = rdRent + 150;
+      badge.textContent = `-$${totalRDDaily}/dia (Solo $${rdRent} + Infra $150)`;
       badge.classList.remove('hidden');
 
       const allProjects = Object.values(rdLabs);
@@ -3707,7 +3715,8 @@
       document.getElementById('facility-title').textContent = m.name;
       document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Instalação Extrativista de Recursos`;
       const badge = document.getElementById('facility-rent-badge');
-      badge.textContent = `-$${tile.district.landRentDaily}/dia`;
+      const totalMineDaily = tile.district.landRentDaily + 180;
+      badge.textContent = `-$${totalMineDaily}/dia (Solo $${tile.district.landRentDaily} + Extração $180)`;
       badge.classList.remove('hidden');
 
       document.getElementById('facility-content-panel').innerHTML = `
@@ -3737,7 +3746,8 @@
       document.getElementById('facility-title').textContent = farm.name;
       document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Propriedade Agropecuária`;
       const badge = document.getElementById('facility-rent-badge');
-      badge.textContent = `-$${tile.district.landRentDaily}/dia`;
+      const totalFarmDaily = tile.district.landRentDaily + 120;
+      badge.textContent = `-$${totalFarmDaily}/dia (Solo $${tile.district.landRentDaily} + Mão de Obra $120)`;
       badge.classList.remove('hidden');
 
       document.getElementById('facility-content-panel').innerHTML = `
@@ -3766,7 +3776,10 @@
       document.getElementById('facility-title').textContent = factory.name;
       document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Complexo Fabril Multinível`;
       const badge = document.getElementById('facility-rent-badge');
-      badge.textContent = `-$${tile.district.landRentDaily}/dia`;
+      const linesCount = factory.lines ? Object.keys(factory.lines).length : 0;
+      const factoryWages = linesCount * 200;
+      const totalFactoryDaily = tile.district.landRentDaily + factoryWages;
+      badge.textContent = `-$${totalFactoryDaily}/dia (Solo $${tile.district.landRentDaily} + $${factoryWages} Linhas)`;
       badge.classList.remove('hidden');
 
       const panel = document.getElementById('facility-content-panel');
@@ -3862,10 +3875,11 @@
 
       const iconEl = document.getElementById('facility-icon');
       if (iconEl) iconEl.innerHTML = `<img src="assets/lojas/${store.storeTypeId}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🏪'">`;
-      document.getElementById('facility-title').textContent = store.name;
-      document.getElementById('facility-subtitle').textContent = `${d.name} · ${Object.keys(store.shelves).length}/${store.maxShelves} gôndolas`;
       const badge = document.getElementById('facility-rent-badge');
-      badge.textContent = `-$${store.dailyRent.toFixed(2)}/dia`;
+      const shelvesCount = Object.keys(store.shelves).length;
+      const clerkCost = shelvesCount * 40;
+      const totalStoreDaily = (store.dailyRent || d.landRentDaily) + clerkCost;
+      badge.textContent = `-$${totalStoreDaily.toFixed(0)}/dia (Solo $${(store.dailyRent || d.landRentDaily).toFixed(0)} + $${clerkCost} Equipe)`;
       badge.classList.remove('hidden');
 
       const panel = document.getElementById('facility-content-panel');
@@ -5164,18 +5178,25 @@
       const gainTotal = gainSingle * labsCount;
       const monthsNeeded = gainTotal > 0.0001 ? Math.ceil((targetQR - currentQR) / gainTotal) : Infinity;
       const totalCost = monthsNeeded < Infinity ? Math.round(monthsNeeded * budget) : null;
+      const setupFee = (typeof CoreMath !== 'undefined' && CoreMath.calculateRDSetupCost)
+        ? CoreMath.calculateRDSetupCost(targetQR, labsCount)
+        : Math.round(targetQR * 120 * labsCount);
+      const grandTotalCost = totalCost !== null ? totalCost + setupFee : null;
 
       badge.textContent = `${cat.icon || '🔬'} ${prod.category} · Custo Mínimo: $${minCostTotal.toLocaleString('en-US')}/mês`;
       badge.classList.remove('hidden');
 
+      const setupEl = document.getElementById('rd-prev-setup-cost');
+      if (setupEl) setupEl.textContent = `$${setupFee.toLocaleString('en-US')}`;
+
       document.getElementById('rd-prev-current-qr').textContent = `${currentQR.toFixed(1)} / 100`;
       document.getElementById('rd-prev-gain').textContent = gainTotal > 0 ? `+${gainTotal.toFixed(2)} QR/mês (${labsCount}x acelerado)` : 'Sem progresso (verba insuficiente)';
       document.getElementById('rd-prev-eta').textContent = monthsNeeded < Infinity ? `≈ ${monthsNeeded} meses` : 'Indeterminado';
-      document.getElementById('rd-prev-total-cost').textContent = totalCost ? `≈ $${totalCost.toLocaleString('en-US')}` : '--';
+      document.getElementById('rd-prev-total-cost').textContent = grandTotalCost ? `≈ $${grandTotalCost.toLocaleString('en-US')}` : '--';
       preview.classList.remove('hidden');
 
-      // Habilita apenas se produto selecionado, verba >= minCostTotal e currentQR < targetQR
-      startBtn.disabled = !prodId || budget < minCostTotal || currentQR >= targetQR;
+      // Habilita apenas se produto selecionado, verba >= minCostTotal, currentQR < targetQR e cash >= setupFee
+      startBtn.disabled = !prodId || budget < minCostTotal || currentQR >= targetQR || cash < setupFee;
     }
 
     /** Retorna o QR atual do produto para fins de pesquisa (melhor QR de linha existente ou padrão do catálogo) */
@@ -5230,6 +5251,17 @@
         return;
       }
 
+      const setupFee = (typeof CoreMath !== 'undefined' && CoreMath.calculateRDSetupCost)
+        ? CoreMath.calculateRDSetupCost(targetQR, labsCount)
+        : Math.round(targetQR * 120 * labsCount);
+
+      if (cash < setupFee) {
+        alert(`Caixa insuficiente para taxa de setup! Você precisa de $${setupFee.toLocaleString('en-US')} para adquirir reagentes e instrumentação para este projeto de P&D.`);
+        return;
+      }
+
+      cash -= setupFee;
+
       const key = 'proj_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
       rdLabs[key] = {
         id: key,
@@ -5243,12 +5275,12 @@
         currentQR: currentQR,
         targetQR: targetQR,
         monthsInvested: 0,
-        totalSpent: 0,
+        totalSpent: setupFee,
         status: 'active',
         completedAt: null
       };
 
-      addGameLog(`🔬 P&D Iniciado: ${prod.name} com ${labsCount} Bancada(s) → QR ${targetQR} ($${budget.toLocaleString('en-US')}/mês)`, 'text-purple-400 font-bold');
+      addGameLog(`🔬 P&D Iniciado: ${prod.name} com ${labsCount} Bancada(s) → QR ${targetQR} (Setup: -$${setupFee.toLocaleString('en-US')} | Verba: $${budget.toLocaleString('en-US')}/mês)`, 'text-purple-400 font-bold');
       playSuccessChime();
       closeRDNewProjectModal();
       renderRDProjectsList();
@@ -7061,11 +7093,29 @@
       for (const tile of activeFacilitySet.values()) {
         const d = tile.district;
 
-        if (tile.store) dailyFixed += tile.store.dailyRent;
-        if (tile.mine)  dailyFixed += d.landRentDaily;
-        if (tile.farm)  dailyFixed += d.landRentDaily;
-        if (tile.factory) dailyFixed += d.landRentDaily;
-        if (tile.rdCenter) dailyFixed += tile.rdCenter.dailyRent || Math.round(d.landRentDaily * 1.2);
+        // Custos Fixos & OPEX Diário (Aluguel do Solo + Folha de Pagamento & Manutenção de Instalação)
+        if (tile.store) {
+          const shelvesCount = tile.store.shelves ? Math.max(1, Object.keys(tile.store.shelves).length) : 1;
+          const clerkWages = shelvesCount * 40; // $40/dia por gôndola ativa (atendimento e reposição)
+          dailyFixed += (tile.store.dailyRent || d.landRentDaily) + clerkWages;
+        }
+        if (tile.mine) {
+          const mineWages = 180; // $180/dia (equipe de extração pesada e maquinário)
+          dailyFixed += d.landRentDaily + mineWages;
+        }
+        if (tile.farm) {
+          const farmWages = 120; // $120/dia (mão de obra rural e manutenção de safra)
+          dailyFixed += d.landRentDaily + farmWages;
+        }
+        if (tile.factory) {
+          const linesCount = tile.factory.lines ? Math.max(1, Object.keys(tile.factory.lines).length) : 1;
+          const factoryWages = linesCount * 200; // $200/dia por linha ativa (operários e energia industrial)
+          dailyFixed += d.landRentDaily + factoryWages;
+        }
+        if (tile.rdCenter) {
+          const rdMaintenance = 150; // $150/dia (manutenção predial de infraestrutura científica)
+          dailyFixed += (tile.rdCenter.dailyRent || Math.round(d.landRentDaily * 1.2)) + rdMaintenance;
+        }
 
         // Produção de Minas
         if (tile.mine) {
@@ -8410,9 +8460,9 @@
         icon: '🎓',
         title: 'Guia do Magnata (Tutorial)',
         subtitle: `Corporação: ${playerProfile.companyName}`,
-        description: 'Deseja iniciar o <strong>Guia do Magnata Interativo</strong> (passo a passo com <strong>+$15.000</strong> de incentivo) ou prefere jogar no <strong>Modo Livre (Sandbox)</strong>?',
+        description: 'Deseja iniciar o <strong>Guia do Magnata Interativo</strong> (passo a passo com incentivo de <strong>+$5.000</strong> e <strong>+5 de Reputação de Marca</strong>) ou prefere jogar no <strong>Modo Livre (Sandbox)</strong>?',
         details: [
-          { label: 'Recompensa do Tutorial', value: '+$15,000 em Caixa', color: 'text-amber-400 font-bold' },
+          { label: 'Recompensa do Tutorial', value: '+$5,000 + 5⭐ Marca Global', color: 'text-amber-400 font-bold' },
           { label: 'Estrutura', value: '7 Missões de Progressão Real', color: 'text-purple-300' },
           { label: 'Modo Livre', value: 'Acesso total com autonomia imediata', color: 'text-slate-400' }
         ],
@@ -8538,7 +8588,7 @@
       const claimBtn = document.getElementById('tutorial-claim-btn');
       if (claimBtn) {
         claimBtn.disabled = !allDone || tutorialState.rewardClaimed;
-        claimBtn.textContent = tutorialState.rewardClaimed ? '✓ Resgatado' : (allDone ? '🎉 Resgatar (+$15k)' : 'Resgatar');
+        claimBtn.textContent = tutorialState.rewardClaimed ? '✓ Resgatado' : (allDone ? '🎉 Resgatar (+$5k + 5⭐)' : 'Resgatar');
       }
 
       const menuBadge = document.getElementById('menu-tutorial-badge');
@@ -8572,8 +8622,11 @@
     function claimTutorialReward() {
       if (tutorialState.rewardClaimed) return;
       tutorialState.rewardClaimed = true;
-      cash += 15000;
-      addGameLog('🎓 Parabéns! Você concluiu o Guia do Magnata e recebeu +$15.000 de incentivo corporativo!', 'text-amber-400 font-black');
+      cash += 5000;
+      Object.keys(PRODUCT_CATALOG).forEach(id => {
+        playerBrandRating[id] = Math.min(100, (playerBrandRating[id] || 20) + 5);
+      });
+      addGameLog('🎓 Parabéns! Você concluiu o Guia do Magnata e recebeu +$5.000 em caixa e +5 de Reputação de Marca (Brand Rating) em todos os produtos da holding!', 'text-amber-400 font-black');
       playYearCelebration();
       renderTutorialGuide();
       updateUI();

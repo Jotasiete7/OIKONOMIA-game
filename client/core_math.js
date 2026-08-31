@@ -272,20 +272,31 @@ const CoreMath = {
   /**
    * Bônus de convergência para produtos complexos que integram múltiplos ramos de insumos.
    */
-  calculateConvergenceBonus(productId, recipes, baseCost = 60) {
+  calculateConvergenceBonus(productId, recipes, baseCost = 8000) {
     const roots = this.getRootBranches(productId, recipes);
     if (roots.size <= 1) return 0;
     return Math.round((roots.size - 1) * baseCost * 1.5);
   },
 
   /**
-   * Calcula o custo total de pontos de pesquisa para desbloquear um produto.
-   * Fórmula exponencial por tier: C = round(60 * 2.4^(tier - 1)) + bônus de convergência.
+   * Calcula o custo financeiro para desbloquear uma tecnologia na Árvore Tecnológica.
+   * Fórmula exponencial por tier: C = round(baseCost * multiplier^(tier - 1)) + bônus de convergência.
+   * Tier 1: ~$8.000 | Tier 2: ~$17.600 | Tier 3: ~$38.700 | Tier 4: ~$85.000
    */
-  calculateResearchCost(tier, convergenceBonus = 0, baseCost = 60, multiplier = 2.4) {
+  calculateResearchCost(tier, convergenceBonus = 0, baseCost = 8000, multiplier = 2.2) {
     if (tier <= 0) return 0;
     const tierCost = Math.round(baseCost * Math.pow(multiplier, tier - 1));
     return tierCost + (convergenceBonus || 0);
+  },
+
+  /**
+   * Calcula o custo inicial de instrumentação e reagentes (CapEx de Setup) para iniciar um projeto de P&D.
+   * Proporcional ao QR alvo e ao número de bancadas laboratoriais alocadas.
+   */
+  calculateRDSetupCost(targetQR, labsCount = 1, costPerQRPt = 120) {
+    const qr = Math.max(0, targetQR || 0);
+    const labs = Math.max(1, labsCount || 1);
+    return Math.round(qr * costPerQRPt * labs);
   },
 
   /**
