@@ -4195,7 +4195,7 @@
       badge.textContent = `-$${totalFarmDaily}/dia (Solo $${tile.district.landRentDaily} + Mão de Obra $120)`;
       badge.classList.remove('hidden');
 
-      const isLivestock = ['farm_poultry', 'farm_dairy', 'farm_cattle', 'farm_pigs', 'farm_sheep'].includes(farm.farmTypeId);
+      const isLivestock = ['poultry', 'raw_milk', 'cattle', 'pigs', 'wool'].includes(farm.cropId) || ['farm_poultry', 'farm_dairy', 'farm_cattle', 'farm_pigs', 'farm_sheep', 'poultry'].includes(farm.farmTypeId);
       let feedHtml = '';
 
       if (isLivestock) {
@@ -7537,14 +7537,64 @@
       const shelf = tile.store.shelves[prodId];
       const maxPossible = shelf.maxCapacity - shelf.stock;
       const actualQty = Math.min(qty, maxPossible);
-
       if (actualQty <= 0) return;
-      const cost = Math.round(actualQty * shelf.landedCost);
-      if (cash < cost) return;
 
-      cash -= cost;
+      let transferredInternal = 0;
+      let internalSourceName = '';
+
+      // 1. Se o fornecedor configurado for uma fazenda/granja própria, drena primeiro do silo interno
+      if (shelf.supplierId?.startsWith('farm_')) {
+        const parts = shelf.supplierId.split('_');
+        const fx = Number(parts[1]), fy = Number(parts[2]);
+        const farmTile = worldGrid[fx]?.[fy];
+        if (farmTile?.farm && farmTile.farm.stock > 0) {
+          transferredInternal = Math.min(farmTile.farm.stock, actualQty);
+          farmTile.farm.stock = Math.max(0, farmTile.farm.stock - transferredInternal);
+          internalSourceName = farmTile.farm.name;
+        }
+      }
+      // 2. Se for uma fábrica própria, drena do estoque de produtos acabados da linha
+      else if (shelf.supplierId?.startsWith('factory_')) {
+        const parts = shelf.supplierId.split('_');
+        const fx = Number(parts[1]), fy = Number(parts[2]), rId = parts.slice(3).join('_');
+        const facTile = worldGrid[fx]?.[fy];
+        const line = facTile?.factory?.lines[rId];
+        if (line && line.finishedStock > 0) {
+          transferredInternal = Math.min(line.finishedStock, actualQty);
+          line.finishedStock = Math.max(0, line.finishedStock - transferredInternal);
+          internalSourceName = `${facTile.factory.name} (${line.productName || 'Fábrica'})`;
+        }
+      }
+
+      const neededFromMarket = actualQty - transferredInternal;
+      let costMarket = 0;
+
+      if (neededFromMarket > 0) {
+        costMarket = Math.round(neededFromMarket * (shelf.landedCost || PRODUCT_CATALOG[prodId]?.baseCost || 1));
+        if (cash < costMarket) {
+          // Se não tem caixa para o restante, transfere apenas o estoque interno
+          if (transferredInternal > 0) {
+            shelf.stock += transferredInternal;
+            addLog(`📦 Transferidas ${transferredInternal} un de ${PRODUCT_CATALOG[prodId]?.name || prodId} de ${internalSourceName} (Custo $0)!`, 'text-emerald-400 font-bold');
+            renderFacilityPanel(tile);
+            updateUI();
+          } else {
+            addLog(`⚠ Caixa insuficiente para comprar ${neededFromMarket} un ($${costMarket.toLocaleString()})!`, 'text-amber-400');
+          }
+          return;
+        }
+        cash -= costMarket;
+      }
+
       shelf.stock += actualQty;
-      addLog(`📦 Compradas ${actualQty} un de ${PRODUCT_CATALOG[prodId].name} por $${cost.toLocaleString()}!`, 'text-emerald-400');
+
+      if (transferredInternal > 0 && neededFromMarket > 0) {
+        addLog(`📦 Transferidas ${transferredInternal} un de ${internalSourceName} + ${neededFromMarket} un compradas de emergência (-$${costMarket.toLocaleString()})!`, 'text-emerald-400 font-bold');
+      } else if (transferredInternal > 0) {
+        addLog(`📦 Transferidas ${transferredInternal} un de ${PRODUCT_CATALOG[prodId]?.name || prodId} direto de ${internalSourceName} (Custo $0)!`, 'text-emerald-400 font-bold');
+      } else {
+        addLog(`📦 Compradas ${actualQty} un de ${PRODUCT_CATALOG[prodId]?.name || prodId} do fornecedor (-$${costMarket.toLocaleString()})!`, 'text-emerald-400 font-bold');
+      }
 
       renderFacilityPanel(tile);
       updateUI();
