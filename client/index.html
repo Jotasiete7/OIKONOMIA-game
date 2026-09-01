@@ -6,6 +6,7 @@
   <script src="data_catalogs.js"></script>
   <script src="sprite_manager.js"></script>
   <script src="audio.js"></script>
+  <script src="ticker_system.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.8.3)</title>
@@ -23,6 +24,25 @@
     .stock-bar-fill { transition: width 0.3s ease; }
     @keyframes stockout-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     .stockout-alert { animation: stockout-pulse 0.8s infinite ease-in-out; }
+
+    /* Ticker de Notícias Estilo Nasdaq / Diário Corporativo */
+    @keyframes tickerScroll {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+    .ticker-scroll-track {
+      width: max-content;
+      will-change: transform;
+      animation: tickerScroll 45s linear infinite;
+    }
+    .ticker-scroll-track:hover {
+      animation-play-state: paused;
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      user-select: none;
+    }
 
     /* Janelas e painéis arrastáveis (Draggable Windows) */
     .draggable-panel { touch-action: none; }
@@ -44,16 +64,16 @@
       .hud-btn-text { display: none; }
       .city-btn-name { display: none; }
       #hud-company-name, #hud-player-name { max-width: 75px; }
-      #floating-lenses-bar { top: 3.75rem; }
+      #floating-lenses-bar { top: 4.75rem; }
     }
     @media (max-width: 1280px) {
       #hud-corp-badge { display: none; }
-      #floating-lenses-bar { top: 3.75rem; transform: translateX(-50%) scale(0.92); }
+      #floating-lenses-bar { top: 4.75rem; transform: translateX(-50%) scale(0.92); }
       #month-profit-box { display: none; }
     }
     @media (max-width: 1024px) {
       .lenses-text-label { display: none; }
-      #floating-lenses-bar { top: 3.6rem; transform: translateX(-50%) scale(0.85); }
+      #floating-lenses-bar { top: 4.6rem; transform: translateX(-50%) scale(0.85); }
     }
     @media (max-width: 768px) {
       #floating-lenses-bar { display: none; }
@@ -63,6 +83,18 @@
 
 <body class="bg-slate-950 text-slate-100 font-sans h-screen w-screen overflow-hidden select-none relative m-0 p-0">
 
+  <!-- 0. TOP FINANCIAL & NEWS TICKER BAR (MARQUEE GPU-ACCELERATED) -->
+  <div id="financial-news-ticker" class="fixed top-0 left-0 right-0 h-7 bg-slate-950/95 border-b border-slate-800/90 flex items-center z-50 overflow-hidden font-mono text-[10px] select-none shadow-md">
+    <div class="flex items-center gap-1.5 px-3 h-full bg-emerald-950/90 border-r border-slate-800 text-emerald-400 font-bold shrink-0">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="tracking-wider uppercase text-[9px] hidden sm:inline">DIÁRIO CORPORATIVO</span>
+      <span class="sm:hidden">📰</span>
+    </div>
+    <div class="flex-1 overflow-hidden relative h-full flex items-center">
+      <div id="ticker-track" class="ticker-scroll-track flex items-center whitespace-nowrap h-full"></div>
+    </div>
+  </div>
+
   <!-- 1. FULLSCREEN CANVAS LAYER -->
   <div id="canvas-container" class="absolute inset-0 w-full h-full z-0 overflow-hidden bg-slate-950">
     <canvas id="iso-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
@@ -70,7 +102,7 @@
   </div>
 
   <!-- 2. TOP FLOATING HUD BAR (UNIFICADA, ELEGANTE & LIMPA) -->
-  <header class="absolute top-2 left-2 right-2 z-30 flex items-center justify-between gap-2 pointer-events-none max-w-[calc(100vw-16px)]">
+  <header class="absolute top-8 left-2 right-2 z-30 flex items-center justify-between gap-2 pointer-events-none max-w-[calc(100vw-16px)]">
     
     <!-- Top Left: Logo, Empresa, Identicon & Cidades -->
     <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2.5 py-1 shadow-2xl shrink-0">
@@ -1513,6 +1545,17 @@
             <span id="setting-sfx-label" class="text-emerald-400">70%</span>
           </div>
           <input type="range" id="setting-sfx-volume" min="0" max="1" step="0.05" value="0.7" oninput="saveGameSettings()" class="w-full accent-emerald-500">
+        </div>
+
+        <!-- Terminal de Notícias (Ticker Bar) -->
+        <div class="space-y-1.5 pt-2 border-t border-slate-800">
+          <div class="flex justify-between items-center">
+            <label class="text-slate-300 font-bold flex items-center gap-1.5">
+              <span>📰 Diário Corporativo / Ticker Superior:</span>
+            </label>
+            <input type="checkbox" id="setting-ticker-enabled" onchange="TickerSystem.toggleEnabled(this.checked)" class="accent-emerald-500 w-4 h-4 cursor-pointer">
+          </div>
+          <p class="text-[10px] text-slate-400">Exibe a barra rolante de notícias e eventos no topo da tela.</p>
         </div>
 
         <!-- Guia de Teclado e Acessibilidade -->
@@ -5699,7 +5742,7 @@
       unlockedProducts.add(productId);
 
       playSuccessChime();
-      addGameLog(`🧬 P&D CONCLUÍDO: Tecnologia "${prod.name}" (Tier ${tier}) desbloqueada com sucesso! (-$${cost.toLocaleString('en-US')})`, 'text-teal-300 font-bold');
+      addGameLog(`🧬 P&D CONCLUÍDO: Tecnologia "${prod.name}" (Tier ${tier}) desbloqueada com sucesso! (-$${cost.toLocaleString('en-US')})`, 'text-teal-300 font-bold', { actionType: 'OPEN_RD' });
       updateUI();
       renderTechTree('tech-tree-grid');
       if (currentRDTab === 'techtree') renderTechTree('rd-embedded-tech-tree');
@@ -6228,7 +6271,7 @@
           proj.status = 'completed';
           proj.completedAt = { day, month, year };
           anyCompleted = true;
-          addLog(`🎉 P&D CONCLUÍDO! "${proj.productName}" atingiu QR ${proj.targetQR.toFixed(1)}! Custo total: $${proj.totalSpent.toLocaleString('en-US')}`, 'text-emerald-400 font-bold');
+          addLog(`🎉 P&D CONCLUÍDO! "${proj.productName}" atingiu QR ${proj.targetQR.toFixed(1)}! Custo total: $${proj.totalSpent.toLocaleString('en-US')}`, 'text-emerald-400 font-bold', { actionType: 'OPEN_RD' });
         } else if (gainTotal > 0) {
           addLog(`🔬 P&D "${proj.productName}" (${labsCount} Labs): +${gainTotal.toFixed(2)} QR/mês → QR atual: ${proj.currentQR.toFixed(1)} / ${proj.targetQR}`, 'text-sky-300');
         }
@@ -7999,7 +8042,21 @@
       // Fórmulas Determinísticas do Core Engine
       const rating = calcProductRating(prod, simPrice, priceSimTarget.quality, priceSimTarget.brand);
       const elast = calcElasticity(priceSimTarget.necessityIndex, priceSimTarget.standardPrice, simPrice);
-      const estDailySales = Math.max(0, Math.floor(priceSimTarget.pop * priceSimTarget.perCapitaDailyDemand * (priceSimTarget.traffic / 100) * 0.45 * elast));
+
+      // Market share real via CoreMath, espelhando exatamente o tick de vendas de simulateDay()
+      // (busca o concorrente no tile vizinho, em vez de assumir uma fração fixa de mercado)
+      const simTile = worldGrid[priceSimTarget.x]?.[priceSimTarget.y];
+      let simCompRating = 0;
+      if (simTile) {
+        const nb = worldGrid[simTile.x+1]?.[simTile.y]?.competitor || worldGrid[simTile.x]?.[simTile.y+1]?.competitor || worldGrid[simTile.x-1]?.[simTile.y]?.competitor || worldGrid[simTile.x]?.[simTile.y-1]?.competitor || simTile.competitor;
+        const cs = nb?.shelves?.[priceSimTarget.prodId];
+        if (cs) {
+          simCompRating = calcProductRating(prod, cs.price, cs.quality, cs.brand || 30);
+        }
+      }
+      const { playerShare: simShare } = CoreMath.calculateQuadraticMarketShare(rating, simCompRating, 25);
+
+      const estDailySales = Math.max(0, Math.floor(priceSimTarget.pop * priceSimTarget.perCapitaDailyDemand * (priceSimTarget.traffic / 100) * simShare * elast));
       const dailyRevenue = estDailySales * simPrice;
       const dailyCogs = estDailySales * priceSimTarget.landedCost;
       const dailyGrossProfit = dailyRevenue - dailyCogs;
@@ -8023,7 +8080,7 @@
       if (analysisText) {
         let diffPct = Math.round(((simPrice - priceSimTarget.currentPrice) / priceSimTarget.currentPrice) * 100);
         let diffStr = diffPct === 0 ? 'mantém o preço atual' : (diffPct > 0 ? `aumento de +${diffPct}% sobre o preço atual` : `desconto de ${Math.abs(diffPct)}% sobre o preço atual`);
-        
+
         let elastAnalysis = '';
         if (elast > 1.2) {
           elastAnalysis = '🚀 Preço super competitivo! Grande atração de clientes sensíveis a preço no bairro.';
@@ -8033,7 +8090,10 @@
           elastAnalysis = '⚖️ Ponto de equilíbrio equilibrado entre giro de estoque e margem unitária.';
         }
 
-        analysisText.innerHTML = `Com $${simPrice.toFixed(2)} (${diffStr}), sua margem unitária é de <strong>${markupPct}%</strong>. ${elastAnalysis}`;
+        const compNote = simCompRating > 0
+          ? ` Projeção considera o concorrente vizinho (rating ${simCompRating}/100) disputando este mercado.`
+          : ` Nenhum concorrente vizinho ativo detectado — projeção assume mercado local sem disputa direta.`;
+        analysisText.innerHTML = `Com $${simPrice.toFixed(2)} (${diffStr}), sua margem unitária é de <strong>${markupPct}%</strong>. ${elastAnalysis}${compNote}`;
       }
     }
 
@@ -8235,14 +8295,20 @@
       return CoreMath.calculatePriceElasticityFactor(necessityIndex, standardPrice, price);
     }
 
-    function addLog(text, color = 'text-slate-300') {
+    function addLog(text, color = 'text-slate-300', options = {}) {
       const logs = document.getElementById('game-log-floating') || document.getElementById('game-logs');
-      if (!logs) return;
-      const item = document.createElement('div');
-      item.className = color;
-      item.innerText = `[${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')}/A${year}] ${text}`;
-      logs.prepend(item);
-      while (logs.children.length > 80) logs.removeChild(logs.lastChild);
+      if (logs) {
+        const item = document.createElement('div');
+        item.className = color;
+        item.innerText = `[${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')}/A${year}] ${text}`;
+        logs.prepend(item);
+        while (logs.children.length > 80) logs.removeChild(logs.lastChild);
+      }
+
+      // Espelha no Ticker (reaproveita o mesmo evento com filtragem interna por cor)
+      if (typeof TickerSystem !== 'undefined') {
+        TickerSystem.pushFromLog(text, color, options);
+      }
     }
     const addGameLog = addLog;
 
@@ -8559,7 +8625,8 @@
       }
       addLog(
         `📊 FIM DO MÊS ${String(month).padStart(2,'0')}: Receita $${monthRevenue.toLocaleString('en-US',{maximumFractionDigits:0})} | Lucro Líq: $${net.toLocaleString('en-US',{maximumFractionDigits:0})}`,
-        net >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'
+        net >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold',
+        { actionType: 'OPEN_DRE' }
       );
 
       // Solvência Corporativa em 3 Degraus
@@ -10248,6 +10315,11 @@
       if (autoEl) autoEl.value = gameSettings.autoSave || 'monthly';
       if (sfxEl) sfxEl.value = gameSettings.sfxVolume !== undefined ? gameSettings.sfxVolume : 0.7;
       if (lbl) lbl.textContent = `${Math.round((gameSettings.sfxVolume !== undefined ? gameSettings.sfxVolume : 0.7) * 100)}%`;
+
+      const tickEl = document.getElementById('setting-ticker-enabled');
+      if (tickEl && typeof TickerSystem !== 'undefined') {
+        tickEl.checked = TickerSystem.isEnabled();
+      }
     }
 
     function saveGameSettings() {
@@ -10441,6 +10513,9 @@
       updatePlayerProfileHUD();
       updateUI();
       initAllDraggableWindows();
+      if (typeof TickerSystem !== 'undefined') {
+        TickerSystem.init('ticker-track');
+      }
       startBootSequence();
 
       // Ticker de tempo real jogado (Playtime persistente)
