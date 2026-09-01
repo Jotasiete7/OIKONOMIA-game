@@ -193,28 +193,20 @@ class SpriteManager {
       let destX = sx - destW / 2;
       let destY = (sy + h) - destH;
 
-      // 1. VIAS, ESTRADAS, MONTANHAS & COLINAS: Imagens 64x64 cujo diamante base estÃ¡ em Y=16..48
+            // 1. VIAS, ESTRADAS, MONTANHAS & COLINAS: Imagens 64x64 cujo diamante base está em Y=16..48
       if (spriteKey.startsWith('vias/') || spriteKey.startsWith('estradas/') || spriteKey === 'terrenos/mountain' || spriteKey === 'terrenos/hill') {
         destX = sx - destW / 2;
         destY = sy - (16 * scale);
       }
-      // 2. EDIFÃCIOS RESIDENCIAIS LARGOS (128x64): Centralizar o conteÃºdo no diamante 64px
-      else if (spriteKey.includes('apartment_building')) {
-        destX = sx - (80 * scale);
-        destY = (sy + h) - destH;
-      } else if (spriteKey.includes('commercial_tower')) {
-        destX = sx - (74 * scale);
-        destY = (sy + h) - destH;
-      }
-      // 3. FLORESTAS & ESTRUTURAS 2.5D (64x64, base do diamante em Y=32..64 ancorada no chÃ£o)
-      else if (spriteKey === 'terrenos/forest' || spriteKey.startsWith('decoracao/') || spriteKey.startsWith('minas/') || spriteKey.startsWith('agricultura/') || spriteKey.startsWith('industrial/') || spriteKey.startsWith('comercial/') || spriteKey.startsWith('residencial/')) {
-        destX = sx - destW / 2;
-        destY = (sy + h) - destH;
-      }
-      // 4. TERRENOS PLANOS 64x32 (Grama, Areia, Terra FÃ©rtil, Ãgua)
-      else if (spriteKey.startsWith('terrenos/')) {
+      // 2. TERRENOS PLANOS 64x32 (Grama, Areia, Terra Fértil, Água)
+      else if (spriteKey.startsWith('terrenos/') && spriteKey !== 'terrenos/forest') {
         destX = sx - destW / 2;
         destY = sy;
+      }
+      // 3. TODOS OS EDIFÍCIOS, LOJAS, FÁBRICAS, FLORESTAS E TORRES (Base 64px ancorada no diamante inferior)
+      else {
+        destX = sx - destW / 2;
+        destY = (sy + h) - destH;
       }
 
       ctx.drawImage(img, destX, destY, destW, destH);
@@ -339,4 +331,5 @@ if (typeof window !== 'undefined') {
   window.SpriteManager = SpriteManager;
   SpriteManager.init();
 }
+
 
