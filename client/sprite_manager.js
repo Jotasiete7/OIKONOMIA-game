@@ -1,6 +1,6 @@
-/**
- * sprite_manager.js — Gerenciador de Sprites & Assets Isométricos do OIKONOMIA
- * Suporta a distribuição oficial do OIKONOMIA-buildings:
+﻿/**
+ * sprite_manager.js â€” Gerenciador de Sprites & Assets IsomÃ©tricos do OIKONOMIA
+ * Suporta a distribuiÃ§Ã£o oficial do OIKONOMIA-buildings:
  * - residencial/
  * - industrial/
  * - comercial/
@@ -45,7 +45,7 @@ class SpriteManager {
     'lojas/hardware': 'assets/lojas/hardware.png',
     'lojas/competitor': 'assets/lojas/competitor.png',
 
-    // 2. INDUSTRIAL / EMPRESAS & FÁBRICAS
+    // 2. INDUSTRIAL / EMPRESAS & FÃBRICAS
     'industrial/steel_mill': 'assets/industrial/steel_mill.png',
     'industrial/refinery': 'assets/industrial/refinery.png',
     'industrial/electronics_factory': 'assets/industrial/electronics_factory.png',
@@ -68,6 +68,7 @@ class SpriteManager {
     'residencial/apartment_building': 'assets/residencial/apartment_building.png',
     'residencial/mansion': 'assets/residencial/mansion.png',
     'residencial/commercial_tower': 'assets/residencial/commercial_tower.png',
+    'residencial/commercial_tower_2': 'assets/residencial/commercial_tower_2.png',
     'residencial/office_building': 'assets/residencial/office_building.png',
 
     // Legado residencial
@@ -91,7 +92,7 @@ class SpriteManager {
     'estradas/road_curve': 'assets/estradas/road_curve.png',
     'estradas/bridge': 'assets/estradas/bridge.png',
 
-    // 5. AGRICULTURA & AGROPECUÁRIA
+    // 5. AGRICULTURA & AGROPECUÃRIA
     'agricultura/farm_wheat': 'assets/agricultura/farm_wheat.png',
     'agricultura/farm_corn': 'assets/agricultura/farm_corn.png',
     'agricultura/farm_cotton': 'assets/agricultura/farm_cotton.png',
@@ -109,17 +110,17 @@ class SpriteManager {
     'agro/farm_dairy': 'assets/agro/farm_dairy.png',
     'agro/farm_default': 'assets/agro/farm_default.png',
 
-    // 6. PORTUÁRIO & LOGÍSTICA
+    // 6. PORTUÃRIO & LOGÃSTICA
     'portuario/seaport': 'assets/portuario/seaport.png',
     'logistica_midia/seaport': 'assets/logistica_midia/seaport.png',
 
-    // 7. UTILIDADE PÚBLICA & MÍDIA
+    // 7. UTILIDADE PÃšBLICA & MÃDIA
     'utilidade_publica/media_tv': 'assets/utilidade_publica/media_tv.png',
     'utilidade_publica/media_radio': 'assets/utilidade_publica/media_radio.png',
     'logistica_midia/media_tv': 'assets/logistica_midia/media_tv.png',
     'logistica_midia/media_radio': 'assets/logistica_midia/media_radio.png',
 
-    // 8. MINAS & EXTRAÇÃO
+    // 8. MINAS & EXTRAÃ‡ÃƒO
     'minas/mine_iron': 'assets/minas/mine_iron.png',
     'minas/mine_oil': 'assets/minas/mine_oil.png',
     'minas/mine_bauxite': 'assets/minas/mine_bauxite.png',
@@ -139,7 +140,7 @@ class SpriteManager {
   };
 
   /**
-   * Inicializa o pré-carregamento de todas as imagens.
+   * Inicializa o prÃ©-carregamento de todas as imagens.
    */
   static init() {
     const keys = Object.keys(this.ASSET_CATALOG);
@@ -169,7 +170,7 @@ class SpriteManager {
   }
 
   /**
-   * Obtém a imagem do cache se estiver pronta.
+   * ObtÃ©m a imagem do cache se estiver pronta.
    */
   static get(key) {
     const img = this.images.get(key);
@@ -180,7 +181,7 @@ class SpriteManager {
   }
 
   /**
-   * Renderiza um sprite isométrico 2.5D com ancoragem geométrica precisa na base do diamante.
+   * Renderiza um sprite isomÃ©trico 2.5D com ancoragem geomÃ©trica precisa na base do diamante.
    */
   static draw(ctx, spriteKey, sx, sy, w, h, fallbackFn = null) {
     const img = this.get(spriteKey);
@@ -192,12 +193,12 @@ class SpriteManager {
       let destX = sx - destW / 2;
       let destY = (sy + h) - destH;
 
-      // 1. VIAS, ESTRADAS, MONTANHAS & COLINAS: Imagens 64x64 cujo diamante base está em Y=16..48
+      // 1. VIAS, ESTRADAS, MONTANHAS & COLINAS: Imagens 64x64 cujo diamante base estÃ¡ em Y=16..48
       if (spriteKey.startsWith('vias/') || spriteKey.startsWith('estradas/') || spriteKey === 'terrenos/mountain' || spriteKey === 'terrenos/hill') {
         destX = sx - destW / 2;
         destY = sy - (16 * scale);
       }
-      // 2. EDIFÍCIOS RESIDENCIAIS LARGOS (128x64): Centralizar o conteúdo no diamante 64px
+      // 2. EDIFÃCIOS RESIDENCIAIS LARGOS (128x64): Centralizar o conteÃºdo no diamante 64px
       else if (spriteKey.includes('apartment_building')) {
         destX = sx - (80 * scale);
         destY = (sy + h) - destH;
@@ -205,12 +206,12 @@ class SpriteManager {
         destX = sx - (74 * scale);
         destY = (sy + h) - destH;
       }
-      // 3. FLORESTAS & ESTRUTURAS 2.5D (64x64, base do diamante em Y=32..64 ancorada no chão)
+      // 3. FLORESTAS & ESTRUTURAS 2.5D (64x64, base do diamante em Y=32..64 ancorada no chÃ£o)
       else if (spriteKey === 'terrenos/forest' || spriteKey.startsWith('decoracao/') || spriteKey.startsWith('minas/') || spriteKey.startsWith('agricultura/') || spriteKey.startsWith('industrial/') || spriteKey.startsWith('comercial/') || spriteKey.startsWith('residencial/')) {
         destX = sx - destW / 2;
         destY = (sy + h) - destH;
       }
-      // 4. TERRENOS PLANOS 64x32 (Grama, Areia, Terra Fértil, Água)
+      // 4. TERRENOS PLANOS 64x32 (Grama, Areia, Terra FÃ©rtil, Ãgua)
       else if (spriteKey.startsWith('terrenos/')) {
         destX = sx - destW / 2;
         destY = sy;
@@ -227,7 +228,7 @@ class SpriteManager {
   }
 
   // ===========================================================================
-  // MAPEADORES DE SPRITE POR ELEMENTO DE SIMULAÇÃO (Com suporte a ambas nomenclaturas)
+  // MAPEADORES DE SPRITE POR ELEMENTO DE SIMULAÃ‡ÃƒO (Com suporte a ambas nomenclaturas)
   // ===========================================================================
 
   static getStoreSprite(storeTypeId) {
@@ -282,31 +283,37 @@ class SpriteManager {
     const hasContinuousX = left && right;
     const hasContinuousY = up && down;
 
-    // 1. Rodovia contínua ao longo do Eixo X (mantém faixa amarela contínua mesmo com pista paralela)
+    // 1. Rodovia contÃ­nua ao longo do Eixo X (mantÃ©m faixa amarela contÃ­nua mesmo com pista paralela)
     if (hasContinuousX && !hasContinuousY) return 'vias/road_straight_x';
 
-    // 2. Rodovia contínua ao longo do Eixo Y (mantém faixa amarela contínua mesmo com pista paralela)
+    // 2. Rodovia contÃ­nua ao longo do Eixo Y (mantÃ©m faixa amarela contÃ­nua mesmo com pista paralela)
     if (hasContinuousY && !hasContinuousX) return 'vias/road_straight_y';
 
     // 3. Segmentos lineares puros
     if ((left || right) && !(up || down)) return 'vias/road_straight_x';
     if ((up || down) && !(left || right)) return 'vias/road_straight_y';
 
-    // 4. Cruzamentos completos de 4 direções
+    // 4. Cruzamentos completos de 4 direÃ§Ãµes
     if (hasContinuousX && hasContinuousY) return 'vias/road_intersection';
 
-    // 5. Curvas em ângulo
+    // 5. Curvas em Ã¢ngulo
     if ((left || right) && (up || down)) return 'vias/road_curve';
 
     return (x + y) % 2 === 0 ? 'vias/road_straight_x' : 'vias/road_straight_y';
   }
 
   static getUrbanSprite(districtId, x, y) {
+    const hash = Math.abs((x * 73856093 ^ y * 19349663) % 4);
     if (districtId === 'downtown') {
-      return (x + y) % 2 === 0 ? 'residencial/commercial_tower' : 'residencial/office_building';
+      if (hash === 0) return 'residencial/commercial_tower';
+      if (hash === 1) return 'residencial/commercial_tower_2';
+      if (hash === 2) return 'residencial/office_building';
+      return 'residencial/apartment_building';
     }
     if (districtId === 'northside') {
-      return (x + y) % 2 === 0 ? 'residencial/apartment_building' : 'residencial/mansion';
+      if (hash === 0 || hash === 1) return 'residencial/apartment_building';
+      if (hash === 2) return 'residencial/office_building';
+      return 'residencial/mansion';
     }
     if (districtId === 'west_suburbs') {
       return 'residencial/house_suburban';
@@ -327,8 +334,9 @@ class SpriteManager {
   }
 }
 
-// Inicialização automática ao carregar o script
+// InicializaÃ§Ã£o automÃ¡tica ao carregar o script
 if (typeof window !== 'undefined') {
   window.SpriteManager = SpriteManager;
   SpriteManager.init();
 }
+
