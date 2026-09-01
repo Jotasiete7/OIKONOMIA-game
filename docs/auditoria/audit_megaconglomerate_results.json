@@ -1,0 +1,73 @@
+﻿{
+    "version":  "v0.8.3 (bld.20260831.02)",
+    "timestamp":  "2026-09-01T14:19:19.215Z",
+    "conglomerateSetup":  {
+                              "totalFacilitiesBuilt":  23,
+                              "activeSparseTiles":  23,
+                              "facilitiesList":  [
+                                                     "Fazenda Trigo",
+                                                     "Granja Avícola",
+                                                     "Fazenda Algodão",
+                                                     "Pecuária Leiteira",
+                                                     "Mina Ferro",
+                                                     "Mina Sílica",
+                                                     "Mina Bauxita",
+                                                     "Mina Ouro",
+                                                     "Fábrica Alimentos",
+                                                     "Fábrica Siderúrgica",
+                                                     "Fábrica Têxtil",
+                                                     "Montadora Automotiva",
+                                                     "Manufatura Joias",
+                                                     "1. Kombini",
+                                                     "2. Supermercado",
+                                                     "3. Loja de Vestuário",
+                                                     "4. Megastore Eletrônicos",
+                                                     "5. Concessionária de Carros",
+                                                     "6. Joalheria de Luxo",
+                                                     "7. Material de Construção",
+                                                     "8. Farmácia",
+                                                     "9. Loja de Móveis",
+                                                     "Centro de P\u0026D"
+                                                 ]
+                          },
+    "simulationReport":  {
+                             "totalDays":  1095,
+                             "startingCash":  10000000,
+                             "lowestCash":  10000000,
+                             "peakCash":  18837275,
+                             "finalCash":  18837275,
+                             "netProfitTotal3Years":  8837275,
+                             "bankruptOccurred":  false,
+                             "yearlyData":  [
+                                                {
+                                                    "yearCompleted":  1,
+                                                    "currentDate":  "Dia 6 / Mês 1 / Ano 2",
+                                                    "cash":  13003334,
+                                                    "netWorth":  14868230,
+                                                    "annualGrowthRatePct":  30
+                                                },
+                                                {
+                                                    "yearCompleted":  2,
+                                                    "currentDate":  "Dia 11 / Mês 1 / Ano 3",
+                                                    "cash":  15920304,
+                                                    "netWorth":  17785200,
+                                                    "annualGrowthRatePct":  59.2
+                                                },
+                                                {
+                                                    "yearCompleted":  3,
+                                                    "currentDate":  "Dia 16 / Mês 1 / Ano 4",
+                                                    "cash":  18837275,
+                                                    "netWorth":  20702171,
+                                                    "annualGrowthRatePct":  88.4
+                                                }
+                                            ]
+                         },
+    "dreConsolidated":  {
+                            "revenueMonthly":  "+$547,845",
+                            "cogsMonthly":  "",
+                            "opexMonthly":  "",
+                            "netProfitMonthly":  "+$239,751",
+                            "analystVerdict":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$0 (+0%) em relação ao mês anterior (Receita: +$0). Destaque operacional: 🚗 Showroom Titan Motors gerou +$259.650 de margem limpa. Ponto de atenção: 🏭 Polo Agroindustrial de Alimentos teve prejuízo de -$18.240 (verifique custos de solo ou reposição).",
+                            "analystBadge":  "Mês 12 vs Mês 11"
+                        }
+}
