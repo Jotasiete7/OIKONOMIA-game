@@ -1,0 +1,67 @@
+﻿{
+    "version":  "v0.8.3 (bld.20260831.02)",
+    "timestamp":  "2026-09-01T15:27:27.908Z",
+    "mode":  "Hardcore Autêntico (Zero to Hero)",
+    "startingCash":  20000,
+    "progressionLog":  [
+                           {
+                               "day":  1,
+                               "event":  "Inauguração da Kombini Pioneira com abastecimento portuário (Caixa restante: $8500)"
+                           },
+                           {
+                               "day":  180,
+                               "event":  "Construção da 1ª Fazenda de Trigo própria (Caixa: $65423)"
+                           },
+                           {
+                               "day":  400,
+                               "event":  "Inauguração da Panificadora Industrial Própria (Custo do Pão caiu 38%!)"
+                           }
+                       ],
+    "yearlyFinancials":  [
+                             {
+                                 "yearCompleted":  1,
+                                 "currentDate":  "Dia 6 / Mês 1 / Ano 2",
+                                 "cash":  121756,
+                                 "netWorth":  171195,
+                                 "growthMultiplier":  "8.6x"
+                             },
+                             {
+                                 "yearCompleted":  2,
+                                 "currentDate":  "Dia 11 / Mês 1 / Ano 3",
+                                 "cash":  74048,
+                                 "netWorth":  210825,
+                                 "growthMultiplier":  "10.5x"
+                             },
+                             {
+                                 "yearCompleted":  3,
+                                 "currentDate":  "Dia 16 / Mês 1 / Ano 4",
+                                 "cash":  59266,
+                                 "netWorth":  196042,
+                                 "growthMultiplier":  "9.8x"
+                             },
+                             {
+                                 "yearCompleted":  4,
+                                 "currentDate":  "Dia 21 / Mês 1 / Ano 5",
+                                 "cash":  44483,
+                                 "netWorth":  181260,
+                                 "growthMultiplier":  "9.1x"
+                             },
+                             {
+                                 "yearCompleted":  5,
+                                 "currentDate":  "Dia 26 / Mês 1 / Ano 6",
+                                 "cash":  29701,
+                                 "netWorth":  166477,
+                                 "growthMultiplier":  "8.3x"
+                             }
+                         ],
+    "finalResults":  {
+                         "survived5YearsHardcore":  true,
+                         "startingCash":  20000,
+                         "finalCash":  29701,
+                         "finalNetWorth":  166477,
+                         "growthTotalMultiple":  "8.3x do capital inicial",
+                         "finalMonthlyRevenue":  "+$28,710",
+                         "finalMonthlyProfit":  "-$1,215",
+                         "analystVerdict":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$0 (+0%) em relação ao mês anterior (Receita: +$0). Destaque operacional: 🏪 Kombini Pioneira gerou +$14.865 de margem limpa. Ponto de atenção: 🏭 Panificadora Industrial teve prejuízo de -$12.240 (verifique custos de solo ou reposição)."
+                     }
+}
