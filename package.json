@@ -10,7 +10,8 @@
     "audit-browser": "node tools/audit_real_browser_ui.js",
     "audit-deep": "node tools/audit_6_deep_systems.js",
     "audit-e3e": "powershell -ExecutionPolicy Bypass -File tools/audit_e3e_master.ps1",
-    "audit-conglomerate": "powershell -ExecutionPolicy Bypass -File tools/audit_megaconglomerate.ps1"
+    "audit-conglomerate": "powershell -ExecutionPolicy Bypass -File tools/audit_megaconglomerate.ps1",
+    "audit-hardcore": "powershell -ExecutionPolicy Bypass -File tools/audit_hardcore_5years.ps1"
   },
   "keywords": [
     "economic-simulation",

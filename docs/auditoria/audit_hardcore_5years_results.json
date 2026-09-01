@@ -1,0 +1,252 @@
+﻿{
+    "version":  "v0.8.3 (bld.20260831.02)",
+    "timestamp":  "2026-09-01T15:11:33.004Z",
+    "difficulty":  "hard (Hardcore)",
+    "simulationPeriodDays":  1825,
+    "conglomerateSetup":  {
+                              "totalFacilitiesBuilt":  36,
+                              "activeSparseTiles":  36,
+                              "facilities":  [
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🌾 Fazenda de Trigo",
+                                                     "loc":  "44,37"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🌽 Fazenda de Milho",
+                                                     "loc":  "45,36"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🌱 Fazenda de Algodão",
+                                                     "loc":  "50,40"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🐔 Granja Avícola (Ovos/Aves)",
+                                                     "loc":  "46,37"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🥛 Pecuária Leiteira",
+                                                     "loc":  "47,37"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🐂 Pecuária Bovina",
+                                                     "loc":  "48,36"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🎋 Fazenda de Cana",
+                                                     "loc":  "49,36"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "☕ Plantação de Café",
+                                                     "loc":  "50,36"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🍫 Plantação de Cacau",
+                                                     "loc":  "51,36"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🍊 Pomar de Frutas",
+                                                     "loc":  "52,36"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🌱 Lavoura de Soja",
+                                                     "loc":  "53,36"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🥔 Lavoura de Batata",
+                                                     "loc":  "54,36"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🥬 Hortaliças \u0026 Legumes",
+                                                     "loc":  "55,36"
+                                                 },
+                                                 {
+                                                     "type":  "farm",
+                                                     "name":  "🐑 Fazenda de Ovinos \u0026 Lã",
+                                                     "loc":  "56,36"
+                                                 },
+                                                 {
+                                                     "type":  "mine",
+                                                     "name":  "⛏️ Mina de Minério de Ferro",
+                                                     "loc":  "35,30"
+                                                 },
+                                                 {
+                                                     "type":  "mine",
+                                                     "name":  "⛏️ Jazida de Sílica Industrial",
+                                                     "loc":  "36,30"
+                                                 },
+                                                 {
+                                                     "type":  "mine",
+                                                     "name":  "⛏️ Mina de Bauxita (Alumínio)",
+                                                     "loc":  "37,30"
+                                                 },
+                                                 {
+                                                     "type":  "mine",
+                                                     "name":  "⛏️ Mina de Carvão Mineral",
+                                                     "loc":  "38,30"
+                                                 },
+                                                 {
+                                                     "type":  "mine",
+                                                     "name":  "🛢️ Poço de Petróleo Bruto",
+                                                     "loc":  "39,30"
+                                                 },
+                                                 {
+                                                     "type":  "mine",
+                                                     "name":  "⛏️ Mina de Minério de Ouro",
+                                                     "loc":  "40,30"
+                                                 },
+                                                 {
+                                                     "type":  "mine",
+                                                     "name":  "⛏️ Mina de Prata \u0026 Cobre",
+                                                     "loc":  "41,30"
+                                                 },
+                                                 {
+                                                     "type":  "factory",
+                                                     "name":  "🏭 Polo de Moagem \u0026 Alimentos",
+                                                     "loc":  "43,37"
+                                                 },
+                                                 {
+                                                     "type":  "factory",
+                                                     "name":  "🏭 Complexo Siderúrgico de Aço \u0026 Alumínio",
+                                                     "loc":  "42,37"
+                                                 },
+                                                 {
+                                                     "type":  "factory",
+                                                     "name":  "🏭 Indústria Têxtil \u0026 Alta Costura",
+                                                     "loc":  "41,38"
+                                                 },
+                                                 {
+                                                     "type":  "factory",
+                                                     "name":  "🏭 Montadora Industrial de Veículos",
+                                                     "loc":  "39,36"
+                                                 },
+                                                 {
+                                                     "type":  "factory",
+                                                     "name":  "🏭 Manufatura de Joias \u0026 Pedras Preciosas",
+                                                     "loc":  "40,36"
+                                                 },
+                                                 {
+                                                     "type":  "store",
+                                                     "name":  "1. Kombini de Bairro",
+                                                     "loc":  "40,37"
+                                                 },
+                                                 {
+                                                     "type":  "store",
+                                                     "name":  "2. Supermercado Geral",
+                                                     "loc":  "41,37"
+                                                 },
+                                                 {
+                                                     "type":  "store",
+                                                     "name":  "3. Boutique de Moda",
+                                                     "loc":  "42,38"
+                                                 },
+                                                 {
+                                                     "type":  "store",
+                                                     "name":  "4. Megastore Eletrônicos",
+                                                     "loc":  "43,38"
+                                                 },
+                                                 {
+                                                     "type":  "store",
+                                                     "name":  "5. Concessionária de Carros",
+                                                     "loc":  "44,38"
+                                                 },
+                                                 {
+                                                     "type":  "store",
+                                                     "name":  "6. Joalheria de Luxo",
+                                                     "loc":  "45,38"
+                                                 },
+                                                 {
+                                                     "type":  "store",
+                                                     "name":  "7. Material de Construção",
+                                                     "loc":  "46,38"
+                                                 },
+                                                 {
+                                                     "type":  "store",
+                                                     "name":  "8. Farmácia \u0026 Drogaria",
+                                                     "loc":  "47,38"
+                                                 },
+                                                 {
+                                                     "type":  "store",
+                                                     "name":  "9. Loja de Móveis",
+                                                     "loc":  "48,38"
+                                                 },
+                                                 {
+                                                     "type":  "rdCenter",
+                                                     "name":  "Centro de P\u0026D",
+                                                     "loc":  "45,37"
+                                                 }
+                                             ]
+                          },
+    "yearlyFinancials":  [
+                             {
+                                 "yearCompleted":  1,
+                                 "currentDate":  "Dia 6 / Mês 1 / Ano 2",
+                                 "cash":  18372072,
+                                 "netWorth":  21410274,
+                                 "annualGrowthPct":  22.5,
+                                 "historyEntriesBuffer":  12
+                             },
+                             {
+                                 "yearCompleted":  2,
+                                 "currentDate":  "Dia 11 / Mês 1 / Ano 3",
+                                 "cash":  21619805,
+                                 "netWorth":  24658007,
+                                 "annualGrowthPct":  44.1,
+                                 "historyEntriesBuffer":  24
+                             },
+                             {
+                                 "yearCompleted":  3,
+                                 "currentDate":  "Dia 16 / Mês 1 / Ano 4",
+                                 "cash":  24867539,
+                                 "netWorth":  27905741,
+                                 "annualGrowthPct":  65.8,
+                                 "historyEntriesBuffer":  24
+                             },
+                             {
+                                 "yearCompleted":  4,
+                                 "currentDate":  "Dia 21 / Mês 1 / Ano 5",
+                                 "cash":  28115272,
+                                 "netWorth":  31153474,
+                                 "annualGrowthPct":  87.4,
+                                 "historyEntriesBuffer":  24
+                             },
+                             {
+                                 "yearCompleted":  5,
+                                 "currentDate":  "Dia 26 / Mês 1 / Ano 6",
+                                 "cash":  31363006,
+                                 "netWorth":  34401208,
+                                 "annualGrowthPct":  109.1,
+                                 "historyEntriesBuffer":  24
+                             }
+                         ],
+    "dreFinalConsolidated":  {
+                                 "revenueMonthly":  "+$671,595",
+                                 "cogsMonthly":  "",
+                                 "opexMonthly":  "",
+                                 "netProfitMonthly":  "+$266,937",
+                                 "analystVerdict":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$0 (+0%) em relação ao mês anterior (Receita: +$0). Destaque operacional: 🚗 Showroom Titan Motors gerou +$325.350 de margem limpa. Ponto de atenção: 🏭 Polo de Moagem \u0026 Alimentos teve prejuízo de -$18.240 (verifique custos de solo ou reposição).",
+                                 "analystBadge":  "Mês 12 vs Mês 11"
+                             },
+    "verdict":  {
+                    "totalDaysSimulated":  1825,
+                    "startingCash":  15000000,
+                    "lowestCash":  15000000,
+                    "peakCash":  31363006,
+                    "finalCash":  31363006,
+                    "totalNetProfit5Years":  16363006,
+                    "survivedHardcore5Years":  true,
+                    "roiTotalPct":  109.1
+                }
+}
