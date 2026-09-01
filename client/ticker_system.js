@@ -82,23 +82,33 @@ const TickerSystem = (() => {
     _render();
   }
 
+  const PIXELS_PER_SECOND = 55; // Velocidade linear constante (px/s) para leitura confortável independente da quantidade de itens
+
   function _render() {
     if (!_domTrack) return;
     if (_items.length === 0) {
       const placeholder = '<div class="ticker-item text-slate-400">🏛️ OIKONOMIA Corp — Pregão aberto e simulação em andamento</div><span class="mx-6 text-slate-600">•</span>';
       _domTrack.innerHTML = placeholder + placeholder;
-      return;
+    } else {
+      const html = _items.map(it => {
+        const clickAttr = it.actionType
+          ? `onclick="TickerSystem.handleClick('${it.actionType}')" style="cursor:pointer" title="Clique para abrir detalhes"`
+          : '';
+        return `<div class="ticker-item ${it.colorClass}" ${clickAttr}>${it.text}</div><span class="mx-6 text-slate-600">•</span>`;
+      }).join('');
+
+      // Duplica o conteúdo uma vez para o loop do marquee ficar contínuo sem salto visual
+      _domTrack.innerHTML = html + html;
     }
 
-    const html = _items.map(it => {
-      const clickAttr = it.actionType
-        ? `onclick="TickerSystem.handleClick('${it.actionType}')" style="cursor:pointer" title="Clique para abrir detalhes"`
-        : '';
-      return `<div class="ticker-item ${it.colorClass}" ${clickAttr}>${it.text}</div><span class="mx-6 text-slate-600">•</span>`;
-    }).join('');
-
-    // Duplica o conteúdo uma vez para o loop do marquee ficar contínuo sem salto visual
-    _domTrack.innerHTML = html + html;
+    // Calcula a duração dinâmica para manter a velocidade em pixels por segundo CONSTANTE
+    // independente de ter 1 item ou 25 itens na fila!
+    requestAnimationFrame(() => {
+      if (!_domTrack) return;
+      const halfWidth = _domTrack.scrollWidth / 2;
+      const duration = Math.max(12, halfWidth / PIXELS_PER_SECOND);
+      _domTrack.style.animationDuration = `${duration.toFixed(2)}s`;
+    });
   }
 
   // Ponte simples pros modais que já existem no jogo — sem sistema de roteamento novo
