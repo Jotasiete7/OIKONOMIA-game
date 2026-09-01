@@ -9027,7 +9027,7 @@
     function devAddCash(amt) {
       cash += amt;
       updateUI();
-      addLog(`💵 DEV SANDBOX: Adicionado +$${amt.toLocaleString()} ao caixa.`, 'text-emerald-400 font-bold');
+      addLog(`💵 DEV SANDBOX: Adicionado +$${amt.toLocaleString()} ao caixa.`, 'text-emerald-400 font-bold', { category: 'system' });
       logDebug(`Injetado +$${amt} no caixa via Dev Sandbox. Novo saldo: $${cash}`, 'SANDBOX');
     }
 
@@ -9035,7 +9035,7 @@
       for (let i = 0; i < 30; i++) {
         simulateDay();
       }
-      addLog(`⏩ DEV SANDBOX: Avançados 30 dias de simulação instantaneamente.`, 'text-amber-400 font-bold');
+      addLog(`⏩ DEV SANDBOX: Avançados 30 dias de simulação instantaneamente.`, 'text-amber-400 font-bold', { category: 'system' });
       logDebug('Avançados 30 dias via Dev Sandbox.', 'SANDBOX');
     }
 
@@ -9043,7 +9043,7 @@
       Object.keys(unlockedCities).forEach(c => unlockedCities[c] = true);
       checkCityUnlocks();
       updateUI();
-      addLog(`🔓 DEV SANDBOX: Todas as 4 cidades foram desbloqueadas.`, 'text-sky-400 font-bold');
+      addLog(`🔓 DEV SANDBOX: Todas as 4 cidades foram desbloqueadas.`, 'text-sky-400 font-bold', { category: 'system' });
       logDebug('Todas as cidades desbloqueadas via Dev Sandbox.', 'SANDBOX');
     }
 
@@ -9381,7 +9381,7 @@
         
         lastSavedStateSnapshot = state;
         playSuccessChime();
-        addLog(`💾 JOGO SALVO: [${metadata.companyName}] registrado com sucesso.`, 'text-emerald-400 font-bold');
+        addLog(`💾 JOGO SALVO: [${metadata.companyName}] registrado com sucesso.`, 'text-emerald-400 font-bold', { category: 'system' });
         renderSavesCountInMenu();
         return true;
       } catch (e) {
@@ -9491,7 +9491,7 @@
       const verInfo = saveData.migratedFromVersion && saveData.migratedFromVersion !== CURRENT_SAVE_VERSION
         ? ` (migrado de v${saveData.migratedFromVersion})`
         : '';
-      addLog(`📂 SAVE CARREGADO: Empresa [${playerProfile.companyName}] iniciada${verInfo}.`, 'text-sky-300 font-bold');
+      addLog(`📂 SAVE CARREGADO: Empresa [${playerProfile.companyName}] iniciada${verInfo}.`, 'text-sky-300 font-bold', { category: 'system' });
       return true;
     }
 
@@ -9536,7 +9536,7 @@
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
-      addLog(`📦 BACKUP EXPORTADO: Arquivo .oiko salvo no seu computador.`, 'text-amber-300');
+      addLog(`📦 BACKUP EXPORTADO: Arquivo .oiko salvo no seu computador.`, 'text-amber-300', { category: 'system' });
     }
 
     function handleImportSaveFile(event) {

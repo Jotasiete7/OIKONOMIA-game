@@ -41,10 +41,25 @@ const TickerSystem = (() => {
     _render();
   }
 
+  const SYSTEM_BLACKLIST_KEYWORDS = [
+    'JOGO SALVO',
+    'SAVE CARREGADO',
+    'BACKUP EXPORTADO',
+    'DEV SANDBOX'
+  ];
+
   // Chamado a partir do addLog() já existente no jogo — não cria fonte de dado nova.
   // options.actionType é opcional (ex: 'OPEN_DRE', 'OPEN_RD') — só nos eventos que valem atalho.
   function pushFromLog(text, colorClass, options = {}) {
-    if (!colorClass) return;
+    if (!colorClass || !text) return;
+
+    // 1. Filtro explícito de categoria (ignora sistema, autosaves, backups e sandbox)
+    if (options.category === 'system' || options.category === 'save') return;
+
+    // 2. Filtro por palavras-chave de sistema (camada de proteção extra)
+    if (SYSTEM_BLACKLIST_KEYWORDS.some(kw => text.includes(kw))) return;
+
+    // 3. Allowlist por cor de destaque
     const isRelevant = ALLOWED_COLOR_KEYWORDS.some(kw => colorClass.includes(kw));
     if (!isRelevant) return; // Filtra ruído operacional na origem
 
