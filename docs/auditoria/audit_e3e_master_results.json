@@ -1,0 +1,162 @@
+﻿{
+    "version":  "v0.8.3 (bld.20260831.02)",
+    "timestamp":  "2026-09-01T13:45:17.455Z",
+    "phases":  {
+                   "phase1_difficulties":  {
+                                               "totalPresets":  3,
+                                               "presets":  [
+                                                               {
+                                                                   "id":  "easy",
+                                                                   "name":  "🌱 Empreendedor",
+                                                                   "startingCash":  120000
+                                                               },
+                                                               {
+                                                                   "id":  "standard",
+                                                                   "name":  "🏛️ Magnata Padrão",
+                                                                   "startingCash":  50000
+                                                               },
+                                                               {
+                                                                   "id":  "hard",
+                                                                   "name":  "⚡ Hardcore",
+                                                                   "startingCash":  20000
+                                                               }
+                                                           ],
+                                               "configuredCompany":  "Apex Industrial Holding",
+                                               "startingCash":  3500000
+                                           },
+                   "phase2_supply_chain":  {
+                                               "totalFacilities":  9,
+                                               "sparseIndexCount":  10,
+                                               "facilities":  [
+                                                                  {
+                                                                      "type":  "farm",
+                                                                      "name":  "🌾 Fazenda de Trigo Imperial",
+                                                                      "loc":  "44,37"
+                                                                  },
+                                                                  {
+                                                                      "type":  "farm",
+                                                                      "name":  "🐔 Granja Avícola Santa Fé",
+                                                                      "loc":  "46,37"
+                                                                  },
+                                                                  {
+                                                                      "type":  "farm",
+                                                                      "name":  "🥛 Pecuária Leiteira Bela Vista",
+                                                                      "loc":  "47,37"
+                                                                  },
+                                                                  {
+                                                                      "type":  "mine",
+                                                                      "name":  "⛏️ Mina de Ferro Monte Alto",
+                                                                      "loc":  "35,30"
+                                                                  },
+                                                                  {
+                                                                      "type":  "mine",
+                                                                      "name":  "⛏️ Jazida de Sílica Industrial",
+                                                                      "loc":  "36,30"
+                                                                  },
+                                                                  {
+                                                                      "type":  "factory",
+                                                                      "name":  "🏭 Complexo Industrial Metropolitano",
+                                                                      "loc":  "43,37"
+                                                                  },
+                                                                  {
+                                                                      "type":  "store",
+                                                                      "name":  "🏪 Kombini de Bairro (Nova Atenas)",
+                                                                      "loc":  "40,37"
+                                                                  },
+                                                                  {
+                                                                      "type":  "store",
+                                                                      "name":  "🏪 Kombini de Bairro (Porto Real)",
+                                                                      "loc":  "92,37"
+                                                                  },
+                                                                  {
+                                                                      "type":  "rdCenter",
+                                                                      "name":  "🔬 Centro de P\u0026D Metropolitano",
+                                                                      "loc":  "45,37"
+                                                                  }
+                                                              ]
+                                           },
+                   "phase3_ui_verification":  {
+                                                  "uiChecks":  [
+                                                                   {
+                                                                       "element":  "Lens: opportunity",
+                                                                       "activeHeatmap":  "opportunity"
+                                                                   },
+                                                                   {
+                                                                       "element":  "Lens: terrain",
+                                                                       "activeHeatmap":  "terrain"
+                                                                   },
+                                                                   {
+                                                                       "element":  "PriceSimulator",
+                                                                       "simOpen":  true,
+                                                                       "salesText":  "90 un/dia",
+                                                                       "marginText":  "+378%",
+                                                                       "profitText":  "+$6,939/mês",
+                                                                       "newPriceApplied":  false
+                                                                   },
+                                                                   {
+                                                                       "element":  "InstantRefillInternal",
+                                                                       "postStock":  1000,
+                                                                       "postFacStock":  2000,
+                                                                       "cashDiffZero":  true
+                                                                   },
+                                                                   {
+                                                                       "element":  "RDReturnCalculator",
+                                                                       "roiBoxVisible":  true,
+                                                                       "calcVolume":  "4.260 un/mês",
+                                                                       "calcStores":  "2 lojas",
+                                                                       "calcGain":  "+$1,278/mês",
+                                                                       "calcPayback":  "119.3 meses",
+                                                                       "verdict":  "🔴 Longo Prazo (Baixa Escala)"
+                                                                   },
+                                                                   {
+                                                                       "element":  "DRE_Table",
+                                                                       "dreRev":  "+$0",
+                                                                       "dreNet":  "+$0"
+                                                                   }
+                                                               ]
+                                              },
+                   "phase4_stress_test":  {
+                                              "totalDaysSimulated":  1095,
+                                              "nanDetected":  false,
+                                              "infinityDetected":  false,
+                                              "lowestCash":  2626491,
+                                              "peakCash":  3500000,
+                                              "finalCash":  2626491,
+                                              "bankruptOccurred":  false,
+                                              "yearlyReports":  [
+                                                                    {
+                                                                        "yearCompleted":  1,
+                                                                        "currentDate":  "Dia 6 / Mês 1 / Ano 2",
+                                                                        "cash":  3214686,
+                                                                        "netWorth":  3579244,
+                                                                        "historyEntries":  12,
+                                                                        "brandRatingBread":  10
+                                                                    },
+                                                                    {
+                                                                        "yearCompleted":  2,
+                                                                        "currentDate":  "Dia 11 / Mês 1 / Ano 3",
+                                                                        "cash":  2921007,
+                                                                        "netWorth":  3285233,
+                                                                        "historyEntries":  24,
+                                                                        "brandRatingBread":  10
+                                                                    },
+                                                                    {
+                                                                        "yearCompleted":  3,
+                                                                        "currentDate":  "Dia 16 / Mês 1 / Ano 4",
+                                                                        "cash":  2626491,
+                                                                        "netWorth":  2990716,
+                                                                        "historyEntries":  24,
+                                                                        "brandRatingBread":  10
+                                                                    }
+                                                                ],
+                                              "historyLedgerCount":  24
+                                          },
+                   "phase5_corporate_analyst":  {
+                                                    "analystSummary":  "📉 Atenção Executiva: O Lucro Líquido recuou -$6,72 (0%) comparado ao mês anterior. Destaque operacional: 🏪 Kombini de Bairro (Nova Atenas) gerou +$22.043,14 de margem limpa. Ponto de atenção: 🏭 Complexo Industrial Metropolitano teve prejuízo de -$24.240 (verifique custos de solo ou reposição).",
+                                                    "analystBadge":  "Mês 12 vs Mês 11",
+                                                    "renderedHistoryBars":  24,
+                                                    "totalRevenue":  "+$47,495",
+                                                    "totalNetProfit":  "-$24,212"
+                                                }
+               }
+}

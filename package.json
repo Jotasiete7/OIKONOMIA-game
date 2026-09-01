@@ -1,6 +1,6 @@
 {
   "name": "oikonomia-game",
-  "version": "0.8.1",
+  "version": "0.8.3",
   "description": "OIKONOMIA — Economic Simulation & Business Tycoon Game",
   "main": "client/index.html",
   "scripts": {
@@ -8,7 +8,8 @@
     "generate-wiki": "node tools/generate_production_wiki.js",
     "validate-balance": "node tools/validate_market_balance.js",
     "audit-browser": "node tools/audit_real_browser_ui.js",
-    "audit-deep": "node tools/audit_6_deep_systems.js"
+    "audit-deep": "node tools/audit_6_deep_systems.js",
+    "audit-e3e": "powershell -ExecutionPolicy Bypass -File tools/audit_e3e_master.ps1"
   },
   "keywords": [
     "economic-simulation",
