@@ -70,9 +70,11 @@ class SpriteManager {
     'residencial/commercial_tower': 'assets/residencial/commercial_tower.png',
     'residencial/commercial_tower_2': 'assets/residencial/commercial_tower_2.png',
     'residencial/office_building': 'assets/residencial/office_building.png',
-    'residencial/apartment_classic': 'assets/residencial/apartment_classic.png',
     'residencial/commercial_midrise': 'assets/residencial/commercial_midrise.png',
-    'residencial/apartment_eco': 'assets/residencial/apartment_eco.png',
+    'residencial/residential_var1': 'assets/residencial/residential_var1.png',
+    'residencial/residential_var2': 'assets/residencial/residential_var2.png',
+    'residencial/residential_var3': 'assets/residencial/residential_var3.png',
+    'residencial/residential_var4': 'assets/residencial/residential_var4.png',
 
     // Legado residencial
     'casas/house_suburban': 'assets/casas/house_suburban.png',
@@ -80,6 +82,11 @@ class SpriteManager {
     'casas/mansion': 'assets/casas/mansion.png',
     'casas/commercial_tower': 'assets/casas/commercial_tower.png',
     'casas/office_building': 'assets/casas/office_building.png',
+    'casas/commercial_midrise': 'assets/casas/commercial_midrise.png',
+    'casas/residential_var1': 'assets/casas/residential_var1.png',
+    'casas/residential_var2': 'assets/casas/residential_var2.png',
+    'casas/residential_var3': 'assets/casas/residential_var3.png',
+    'casas/residential_var4': 'assets/casas/residential_var4.png',
 
     // 4. VIAS / ESTRADAS & PONTES
     'vias/road_straight_x': 'assets/vias/road_straight_x.png',
@@ -298,23 +305,27 @@ class SpriteManager {
   }
 
   static getUrbanSprite(districtId, x, y) {
-    const hash = Math.abs((x * 73856093 ^ y * 19349663) % 5);
+    const hash = Math.abs((x * 73856093 ^ y * 19349663) % 6);
     if (districtId === 'downtown') {
       if (hash === 0) return 'residencial/commercial_tower';
       if (hash === 1) return 'residencial/commercial_tower_2';
-      if (hash === 2) return 'residencial/commercial_midrise';
-      if (hash === 3) return 'residencial/office_building';
-      return 'residencial/apartment_classic';
+      if (hash === 2) return 'residencial/residential_var3';
+      if (hash === 3) return 'residencial/commercial_midrise';
+      if (hash === 4) return 'residencial/residential_var1';
+      return 'residencial/office_building';
     }
     if (districtId === 'northside') {
-      if (hash === 0 || hash === 1) return 'residencial/apartment_building';
-      if (hash === 2) return 'residencial/commercial_midrise';
-      if (hash === 3) return 'residencial/apartment_classic';
+      if (hash === 0) return 'residencial/mansion';
+      if (hash === 1) return 'residencial/residential_var2';
+      if (hash === 2) return 'residencial/apartment_building';
+      if (hash === 3) return 'residencial/residential_var4';
+      if (hash === 4) return 'residencial/commercial_midrise';
       return 'residencial/house_suburban';
     }
     if (districtId === 'west_suburbs') {
       if (hash === 0 || hash === 1 || hash === 2) return 'residencial/house_suburban';
-      return 'residencial/apartment_classic';
+      if (hash === 3) return 'residencial/residential_var4';
+      return 'residencial/house_suburban';
     }
     return 'residencial/house_suburban';
   }
