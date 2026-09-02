@@ -3961,7 +3961,8 @@
           const curr = historicalLedger[historicalLedger.length - 1];
           const prev = historicalLedger[historicalLedger.length - 2];
           const diffNet = curr.netProfit - prev.netProfit;
-          const pctNet = prev.netProfit !== 0 ? Math.round((diffNet / Math.abs(prev.netProfit)) * 100) : 0;
+          const rawPctNet = prev.netProfit !== 0 ? (diffNet / Math.abs(prev.netProfit)) * 100 : 0;
+          const pctNetStr = Math.abs(rawPctNet) < 0.05 ? 'estável' : (rawPctNet > 0 ? '+' : '') + rawPctNet.toFixed(1) + '%';
           const diffRev = curr.revenue - prev.revenue;
 
           let bestFac = null, worstFac = null;
@@ -3973,18 +3974,22 @@
 
           let diagSummary = '';
           if (diffNet > 0) {
-            diagSummary = `📈 <strong class="text-emerald-400">Desempenho em Alta:</strong> O Lucro Líquido aumentou <strong>+$${diffNet.toLocaleString()}</strong> (${pctNet >= 0 ? '+' : ''}${pctNet}%) em relação ao mês anterior (Receita: ${diffRev >= 0 ? '+$' : '-$'}${Math.abs(diffRev).toLocaleString()}). `;
+            diagSummary = `📈 <strong class="text-emerald-400">Desempenho em Alta:</strong> O Lucro Líquido aumentou <strong>+$${Math.round(diffNet).toLocaleString()}</strong> (${pctNetStr}) em relação ao mês anterior (Receita: ${diffRev >= 0 ? '+$' : '-$'}${Math.round(Math.abs(diffRev)).toLocaleString()}). `;
           } else if (diffNet < 0) {
-            diagSummary = `📉 <strong class="text-rose-400">Atenção Executiva:</strong> O Lucro Líquido recuou <strong>-$${Math.abs(diffNet).toLocaleString()}</strong> (${pctNet}%) comparado ao mês anterior (Receita: ${diffRev >= 0 ? '+$' : '-$'}${Math.abs(diffRev).toLocaleString()}). `;
+            diagSummary = `📉 <strong class="text-rose-400">Atenção Executiva:</strong> O Lucro Líquido recuou <strong>-$${Math.round(Math.abs(diffNet)).toLocaleString()}</strong> (${pctNetStr}) comparado ao mês anterior (Receita: ${diffRev >= 0 ? '+$' : '-$'}${Math.round(Math.abs(diffRev)).toLocaleString()}). `;
           } else {
-            diagSummary = `⚖️ <strong class="text-slate-300">Estabilidade Financeira:</strong> O Lucro Líquido manteve-se estável em <strong>$${curr.netProfit.toLocaleString()}</strong> em relação ao mês anterior. `;
+            diagSummary = `⚖️ <strong class="text-slate-300">Estabilidade Financeira:</strong> O Lucro Líquido manteve-se estável em <strong>$${Math.round(curr.netProfit).toLocaleString()}</strong> em relação ao mês anterior. `;
           }
 
           if (bestFac && bestFac.netProfit > 0) {
-            diagSummary += `Destaque operacional: <strong>${bestFac.name}</strong> gerou <strong>+$${bestFac.netProfit.toLocaleString()}</strong> de margem limpa. `;
+            diagSummary += `Destaque operacional: <strong>${bestFac.name}</strong> gerou <strong>+$${Math.round(bestFac.netProfit).toLocaleString()}</strong> de margem limpa. `;
           }
           if (worstFac && worstFac.netProfit < 0) {
-            diagSummary += `Ponto de atenção: <strong>${worstFac.name}</strong> teve prejuízo de <strong>-$${Math.abs(worstFac.netProfit).toLocaleString()}</strong> (verifique custos de solo ou reposição).`;
+            if (worstFac.type === 'store') {
+              diagSummary += `Ponto de atenção: <strong>${worstFac.name}</strong> teve prejuízo de <strong>-$${Math.round(Math.abs(worstFac.netProfit)).toLocaleString()}</strong> (verifique preços ou demanda).`;
+            } else {
+              diagSummary += `Centro de custo: <strong>${worstFac.name}</strong> absorveu <strong>-$${Math.round(Math.abs(worstFac.netProfit)).toLocaleString()}</strong> em custos operacionais e salários.`;
+            }
           }
 
           diagText.innerHTML = diagSummary;

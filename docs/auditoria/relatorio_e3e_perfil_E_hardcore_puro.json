@@ -1,0 +1,1176 @@
+{
+    "profileId":  "E",
+    "profileName":  "Henrik Drake",
+    "company":  "OmniCorp",
+    "tag":  "Hardcore Puro",
+    "difficulty":  "hardcore",
+    "startingCash":  20000,
+    "simulatedYears":  20,
+    "finalCash":  2960888,
+    "finalNetWorth":  2983442,
+    "totalRevenue":  4437944,
+    "totalNetProfit":  2945202,
+    "yearlyData":  [
+                       {
+                           "year":  2,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  2,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  164624,
+                           "netWorth":  187178,
+                           "annualRevenue":  224504,
+                           "annualCOGS":  56126,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  148938,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  55440,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  146880
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44901,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  130961,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  56126,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  71433,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $12.240 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$12.240 de margem limpa."
+                       },
+                       {
+                           "year":  3,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  3,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  311504,
+                           "netWorth":  334058,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  55440,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  146880,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  55440,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  146880
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $12.240 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$12.240 de margem limpa."
+                       },
+                       {
+                           "year":  4,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  4,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  450068,
+                           "netWorth":  472622,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  63756,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  138564,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  63756,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  138564
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.547 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$11.547 de margem limpa."
+                       },
+                       {
+                           "year":  5,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  5,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  588632,
+                           "netWorth":  611186,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  63756,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  138564,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  63756,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  138564
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.547 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$11.547 de margem limpa."
+                       },
+                       {
+                           "year":  6,
+                           "macroPhase":  "Saturação \u0026 Desaceleração",
+                           "macroPhaseYearWithinCycle":  6,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  727196,
+                           "netWorth":  749750,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  63756,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  138564,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  63756,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  138564
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.547 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$11.547 de margem limpa."
+                       },
+                       {
+                           "year":  7,
+                           "macroPhase":  "Saturação \u0026 Desaceleração",
+                           "macroPhaseYearWithinCycle":  7,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  871304,
+                           "netWorth":  893858,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  58212,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  144108,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  58212,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  144108
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $12.009 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$12.009 de margem limpa."
+                       },
+                       {
+                           "year":  8,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  8,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1015412,
+                           "netWorth":  1037966,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  58212,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  144108,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  58212,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  144108
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $12.009 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$12.009 de margem limpa."
+                       },
+                       {
+                           "year":  9,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  9,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1173380,
+                           "netWorth":  1195934,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  44352,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  157968,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  44352,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  157968
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $13.164 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$13.164 de margem limpa."
+                       },
+                       {
+                           "year":  10,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  10,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1331348,
+                           "netWorth":  1353902,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  44352,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  157968,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  44352,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  157968
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $13.164 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$13.164 de margem limpa."
+                       },
+                       {
+                           "year":  11,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  1,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1489316,
+                           "netWorth":  1511870,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  44352,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  157968,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  44352,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  157968
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $13.164 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$13.164 de margem limpa."
+                       },
+                       {
+                           "year":  12,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  2,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1636196,
+                           "netWorth":  1658750,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  55440,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  146880,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  55440,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  146880
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $12.240 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$12.240 de margem limpa."
+                       },
+                       {
+                           "year":  13,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  3,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1783076,
+                           "netWorth":  1805630,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  55440,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  146880,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  55440,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  146880
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $12.240 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$12.240 de margem limpa."
+                       },
+                       {
+                           "year":  14,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  4,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1921640,
+                           "netWorth":  1944194,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  63756,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  138564,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  63756,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  138564
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.547 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$11.547 de margem limpa."
+                       },
+                       {
+                           "year":  15,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  5,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  2060204,
+                           "netWorth":  2082758,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  63756,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  138564,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  63756,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  138564
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.547 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$11.547 de margem limpa."
+                       },
+                       {
+                           "year":  16,
+                           "macroPhase":  "Saturação \u0026 Desaceleração",
+                           "macroPhaseYearWithinCycle":  6,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  2198768,
+                           "netWorth":  2221322,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  63756,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  138564,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  63756,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  138564
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.547 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$11.547 de margem limpa."
+                       },
+                       {
+                           "year":  17,
+                           "macroPhase":  "Saturação \u0026 Desaceleração",
+                           "macroPhaseYearWithinCycle":  7,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  2342876,
+                           "netWorth":  2365430,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  58212,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  144108,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  58212,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  144108
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $12.009 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$12.009 de margem limpa."
+                       },
+                       {
+                           "year":  18,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  8,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  2486984,
+                           "netWorth":  2509538,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  58212,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  144108,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  58212,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  144108
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $12.009 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$12.009 de margem limpa."
+                       },
+                       {
+                           "year":  19,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  9,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  2644952,
+                           "netWorth":  2667506,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  44352,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  157968,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  44352,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  157968
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $13.164 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$13.164 de margem limpa."
+                       },
+                       {
+                           "year":  20,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  10,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  2802920,
+                           "netWorth":  2825474,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  44352,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  157968,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  44352,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  157968
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $13.164 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$13.164 de margem limpa."
+                       },
+                       {
+                           "year":  21,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  1,
+                           "cycleNumber":  3,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  2960888,
+                           "netWorth":  2983442,
+                           "annualRevenue":  221760,
+                           "annualCOGS":  44352,
+                           "annualFixedCosts":  19440,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  157968,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Kombini Drake",
+                                                           "type":  "store",
+                                                           "annualRevenue":  221760,
+                                                           "annualCogs":  44352,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  157968
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  44352,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  129360,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  55440,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  70560,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $13.164 em relação ao mês anterior. Destaque operacional: Kombini Drake gerou +$13.164 de margem limpa."
+                       }
+                   ],
+    "automatedSanityAlerts":  "OK: Nenhuma anomalia matematica, semantica ou de teto artificial detectada."
+}

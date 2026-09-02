@@ -1,0 +1,1499 @@
+{
+    "profileId":  "D",
+    "profileName":  "Julian Reyes",
+    "company":  "Reyes Media Corp",
+    "tag":  "Marketing Agressivo",
+    "difficulty":  "standard",
+    "startingCash":  50000,
+    "simulatedYears":  20,
+    "finalCash":  1548100,
+    "finalNetWorth":  1729805,
+    "totalRevenue":  7322677,
+    "totalNetProfit":  1515060,
+    "yearlyData":  [
+                       {
+                           "year":  2,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  2,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  134695,
+                           "netWorth":  314233,
+                           "annualRevenue":  395715,
+                           "annualCOGS":  82973,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  99622,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  390600,
+                                                           "annualCogs":  81900,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  289260
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  79143,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  230834,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  98929,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  125909,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.965 em relação ao mês anterior. Destaque operacional: MegaStore Reyes Nova Atenas gerou +$24.105 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  3,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  3,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  230275,
+                           "netWorth":  409813,
+                           "annualRevenue":  390600,
+                           "annualCOGS":  81900,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  95580,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  390600,
+                                                           "annualCogs":  81900,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  289260
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  78120,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  227850,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  97650,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  124282,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.965 em relação ao mês anterior. Destaque operacional: MegaStore Reyes Nova Atenas gerou +$24.105 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  4,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  4,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  313570,
+                           "netWorth":  493108,
+                           "annualRevenue":  390600,
+                           "annualCOGS":  94185,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  83295,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  390600,
+                                                           "annualCogs":  94185,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  276975
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  78120,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  227850,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  97650,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  124282,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $6.941 em relação ao mês anterior. Destaque operacional: MegaStore Reyes Nova Atenas gerou +$23.081 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  5,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  5,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  396865,
+                           "netWorth":  576403,
+                           "annualRevenue":  390600,
+                           "annualCOGS":  94185,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  83295,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  390600,
+                                                           "annualCogs":  94185,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  276975
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  78120,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  227850,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  97650,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  124282,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $6.941 em relação ao mês anterior. Destaque operacional: MegaStore Reyes Nova Atenas gerou +$23.081 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  6,
+                           "macroPhase":  "Saturação \u0026 Desaceleração",
+                           "macroPhaseYearWithinCycle":  6,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  480160,
+                           "netWorth":  659698,
+                           "annualRevenue":  390600,
+                           "annualCOGS":  94185,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  83295,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  390600,
+                                                           "annualCogs":  94185,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  276975
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  78120,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  227850,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  97650,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  124282,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $6.941 em relação ao mês anterior. Destaque operacional: MegaStore Reyes Nova Atenas gerou +$23.081 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  7,
+                           "macroPhase":  "Saturação \u0026 Desaceleração",
+                           "macroPhaseYearWithinCycle":  7,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  558661,
+                           "netWorth":  739807,
+                           "annualRevenue":  376117,
+                           "annualCOGS":  82806,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  80190,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  398486,
+                                                           "annualCogs":  87731,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  291315
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  75223,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  219401,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  94029,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  119674,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$176 (-2.1%) comparado ao mês anterior (Receita: -$226). Destaque operacional: MegaStore Reyes Nova Atenas gerou +$24.276 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  8,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  8,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  638619,
+                           "netWorth":  819759,
+                           "annualRevenue":  375810,
+                           "annualCOGS":  82739,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  79951,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  400012,
+                                                           "annualCogs":  88067,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  292505
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  75162,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  219222,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  93952,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  119576,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$140 (+1.7%) em relação ao mês anterior (Receita: +$180). Destaque operacional: MegaStore Reyes Nova Atenas gerou +$24.375 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  9,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  9,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  689294,
+                           "netWorth":  870945,
+                           "annualRevenue":  317390,
+                           "annualCOGS":  53240,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  51031,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  335693,
+                                                           "annualCogs":  56310,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  259943
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  63478,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  185144,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  79348,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  100988,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$28 (+0.5%) em relação ao mês anterior (Receita: +$34). Destaque operacional: MegaStore Reyes Nova Atenas gerou +$21.662 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  10,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  10,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  739212,
+                           "netWorth":  920889,
+                           "annualRevenue":  316054,
+                           "annualCOGS":  53016,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  49919,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  334837,
+                                                           "annualCogs":  56166,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  259231
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  63211,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  184365,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  79014,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  100563,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$23 (-0.4%) comparado ao mês anterior (Receita: -$28). Destaque operacional: MegaStore Reyes Nova Atenas gerou +$21.603 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  11,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  1,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  788713,
+                           "netWorth":  970372,
+                           "annualRevenue":  315552,
+                           "annualCOGS":  52931,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  49501,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  335395,
+                                                           "annualCogs":  56260,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  259695
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  63110,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  184072,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  78888,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  100403,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$219 (+4.2%) em relação ao mês anterior (Receita: +$264). Destaque operacional: MegaStore Reyes Nova Atenas gerou +$21.641 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  12,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  2,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  892461,
+                           "netWorth":  1071998,
+                           "annualRevenue":  398344,
+                           "annualCOGS":  83524,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  101700,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  390600,
+                                                           "annualCogs":  81900,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  289260
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  79669,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  232367,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  99586,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  126746,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.965 em relação ao mês anterior. Destaque operacional: MegaStore Reyes Nova Atenas gerou +$24.105 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  13,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  3,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  988041,
+                           "netWorth":  1167578,
+                           "annualRevenue":  390600,
+                           "annualCOGS":  81900,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  95580,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  390600,
+                                                           "annualCogs":  81900,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  289260
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  78120,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  227850,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  97650,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  124282,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.965 em relação ao mês anterior. Destaque operacional: MegaStore Reyes Nova Atenas gerou +$24.105 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  14,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  4,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1071336,
+                           "netWorth":  1250873,
+                           "annualRevenue":  390600,
+                           "annualCOGS":  94185,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  83295,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  390600,
+                                                           "annualCogs":  94185,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  276975
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  78120,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  227850,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  97650,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  124282,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $6.941 em relação ao mês anterior. Destaque operacional: MegaStore Reyes Nova Atenas gerou +$23.081 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  15,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  5,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1154631,
+                           "netWorth":  1334168,
+                           "annualRevenue":  390600,
+                           "annualCOGS":  94185,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  83295,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  390600,
+                                                           "annualCogs":  94185,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  276975
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  78120,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  227850,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  97650,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  124282,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $6.941 em relação ao mês anterior. Destaque operacional: MegaStore Reyes Nova Atenas gerou +$23.081 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  16,
+                           "macroPhase":  "Saturação \u0026 Desaceleração",
+                           "macroPhaseYearWithinCycle":  6,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1237926,
+                           "netWorth":  1417463,
+                           "annualRevenue":  390600,
+                           "annualCOGS":  94185,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  83295,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  390600,
+                                                           "annualCogs":  94185,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  276975
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  78120,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  227850,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  97650,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  124282,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $6.941 em relação ao mês anterior. Destaque operacional: MegaStore Reyes Nova Atenas gerou +$23.081 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  17,
+                           "macroPhase":  "Saturação \u0026 Desaceleração",
+                           "macroPhaseYearWithinCycle":  7,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1316108,
+                           "netWorth":  1497279,
+                           "annualRevenue":  375742,
+                           "annualCOGS":  82724,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  79898,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  396217,
+                                                           "annualCogs":  87232,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  289546
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  75148,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  219183,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  93935,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  119554,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$133 (-1.6%) comparado ao mês anterior (Receita: -$171). Destaque operacional: MegaStore Reyes Nova Atenas gerou +$24.129 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  18,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  8,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1396620,
+                           "netWorth":  1577773,
+                           "annualRevenue":  376504,
+                           "annualCOGS":  82892,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  80493,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  400049,
+                                                           "annualCogs":  88075,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  292534
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  75301,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  219628,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  94126,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  119797,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$5 (+0.1%) em relação ao mês anterior (Receita: +$6). Destaque operacional: MegaStore Reyes Nova Atenas gerou +$24.378 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  19,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  9,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1447184,
+                           "netWorth":  1628857,
+                           "annualRevenue":  317245,
+                           "annualCOGS":  53215,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  50909,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  336400,
+                                                           "annualCogs":  56428,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  260531
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  63449,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  185059,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  79311,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  100941,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$160 (-2.8%) comparado ao mês anterior (Receita: -$192). Destaque operacional: MegaStore Reyes Nova Atenas gerou +$21.711 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  20,
+                           "macroPhase":  "Recessão \u0026 Liquidação de Ativos",
+                           "macroPhaseYearWithinCycle":  10,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1497714,
+                           "netWorth":  1679375,
+                           "annualRevenue":  316789,
+                           "annualCOGS":  53139,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  50530,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  333535,
+                                                           "annualCogs":  55948,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  258147
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  63358,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  184794,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  79197,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  100797,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$77 (+1.5%) em relação ao mês anterior (Receita: +$93). Destaque operacional: MegaStore Reyes Nova Atenas gerou +$21.512 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  21,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  1,
+                           "cycleNumber":  3,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1548100,
+                           "netWorth":  1729805,
+                           "annualRevenue":  316615,
+                           "annualCOGS":  53110,
+                           "annualFixedCosts":  213120,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  50386,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Fazenda Reyes",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Fabrica Reyes Alimentos",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "MegaStore Reyes Nova Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  336437,
+                                                           "annualCogs":  56435,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  260562
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  63323,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  184692,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  79154,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  100741,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$472 (+9.3%) em relação ao mês anterior (Receita: +$567). Destaque operacional: MegaStore Reyes Nova Atenas gerou +$21.714 de margem limpa. Centro de custo: Fabrica Reyes Alimentos absorveu -$12.300 em custos operacionais e salários."
+                       }
+                   ],
+    "automatedSanityAlerts":  [
+                                  "INFO: Centro de Custo Upstream Integrado (farm): \u0027Fazenda Reyes\u0027 absorveu $-921.600 em custos operacionais absorvidos pelo varejo.",
+                                  "INFO: Centro de Custo Upstream Integrado (factory): \u0027Fabrica Reyes Alimentos\u0027 absorveu $-2.952.000 em custos operacionais absorvidos pelo varejo."
+                              ]
+}
