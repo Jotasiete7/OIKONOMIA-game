@@ -641,14 +641,16 @@
         </div>
 
         <!-- Gráfico de Séries Temporais dos Últimos Meses (Sparklines / Barras SVG) -->
-        <div id="fdre-history-container" class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 hidden">
-          <div class="flex items-center justify-between text-[11px]">
-            <span class="text-slate-300 font-bold flex items-center gap-1.5">
-              <span>📈</span> Evolução Histórica dos Resultados (Últimos Meses)
+        <div id="fdre-history-container" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2 hidden">
+          <div class="flex flex-wrap items-center justify-between text-[11px] gap-2 pb-1 border-b border-slate-800/80 font-mono">
+            <span class="text-slate-200 font-bold flex items-center gap-1.5">
+              <span>📈</span> Evolução Histórica (Últimos Meses)
             </span>
-            <span class="text-[9px] text-slate-500 font-mono">Verde: Lucro | Rosa: Prejuízo | Azul: Receita</span>
+            <div id="fdre-history-summary-stats" class="text-[10px] flex items-center gap-3 text-slate-400">
+              <!-- Renderizado dinamicamente: Legenda, Pico, Margem Média -->
+            </div>
           </div>
-          <div id="fdre-history-bars" class="flex items-end gap-1.5 h-20 pt-2 border-b border-slate-800 pb-1 overflow-x-auto custom-scrollbar">
+          <div id="fdre-history-bars" class="flex items-end gap-1.5 h-24 pt-3 pb-1 overflow-x-auto custom-scrollbar relative">
             <!-- Barras renderizadas dinamicamente via JS -->
           </div>
         </div>
@@ -3862,24 +3864,80 @@
       document.getElementById('fdre-net-worth').textContent = (nw.netWorth >= 0 ? '$' : '-$') + Math.abs(nw.netWorth).toLocaleString('en-US', { maximumFractionDigits: 0 });
       document.getElementById('fdre-net-worth').className = `text-sm font-bold mt-0.5 ${nw.netWorth >= 0 ? 'text-indigo-300' : 'text-rose-400'}`;
 
-      // 1. Renderiza o Gráfico de Séries Temporais dos Últimos Meses (Sparklines / Barras SVG)
+      // 1. Renderiza o Gráfico de Séries Temporais dos Últimos Meses (Escala Dinâmica & Relevo)
       const histContainer = document.getElementById('fdre-history-container');
       const histBars = document.getElementById('fdre-history-bars');
+      const histStats = document.getElementById('fdre-history-summary-stats');
+
       if (histContainer && histBars) {
         if (historicalLedger.length > 0) {
           histContainer.classList.remove('hidden');
-          const maxVal = Math.max(1, ...historicalLedger.map(h => Math.max(h.revenue, Math.abs(h.netProfit))));
-          histBars.innerHTML = historicalLedger.map(h => {
-            const revHeight = Math.max(4, Math.round((h.revenue / maxVal) * 60));
-            const netHeight = Math.max(4, Math.round((Math.abs(h.netProfit) / maxVal) * 60));
+
+          const revs = historicalLedger.map(h => h.revenue || 0);
+          const nets = historicalLedger.map(h => h.netProfit || 0);
+          const maxRev = Math.max(...revs, 1);
+          const minRev = Math.min(...revs);
+          const maxNet = Math.max(...nets.map(Math.abs), 1);
+          const avgRev = revs.reduce((a, b) => a + b, 0) / Math.max(1, revs.length);
+          const avgNet = nets.reduce((a, b) => a + b, 0) / Math.max(1, nets.length);
+          const avgMargin = avgRev > 0 ? Math.round((avgNet / avgRev) * 100) : 0;
+
+          if (histStats) {
+            histStats.innerHTML = `
+              <span class="flex items-center gap-1 text-sky-300 font-bold"><span class="w-2 h-2 rounded-sm bg-sky-400 inline-block"></span> Receita</span>
+              <span class="flex items-center gap-1 text-emerald-300 font-bold"><span class="w-2 h-2 rounded-sm bg-emerald-400 inline-block"></span> Lucro</span>
+              <span class="text-slate-600">|</span>
+              <span>Pico: <strong class="text-sky-300">$${maxRev.toLocaleString('en-US', { maximumFractionDigits: 0 })}</strong></span>
+              <span>Margem Média: <strong class="${avgMargin >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${avgMargin}%</strong></span>
+            `;
+          }
+
+          // Escala dinâmica com visualização de relevo
+          const revRange = Math.max(1, maxRev - minRev);
+          // Se a variação for estreita (<15%), expande a faixa visual relativa para o relevo aparecer com clareza
+          const isTightRange = (revRange / maxRev) < 0.15;
+
+          histBars.innerHTML = historicalLedger.map((h, idx) => {
+            let revHeight = 0;
+            if (isTightRange) {
+              const normRatio = (h.revenue - minRev) / Math.max(1, revRange);
+              revHeight = Math.round(35 + normRatio * 40); // 35px a 75px
+            } else {
+              revHeight = Math.max(12, Math.round((h.revenue / maxRev) * 75));
+            }
+
+            const netRatio = Math.min(1, Math.abs(h.netProfit) / maxNet);
+            const netHeight = Math.max(6, Math.round(netRatio * 50));
             const isProfit = h.netProfit >= 0;
+            const marginPct = h.revenue > 0 ? Math.round((h.netProfit / h.revenue) * 100) : 0;
+
+            let diffStr = '';
+            if (idx > 0) {
+              const prev = historicalLedger[idx - 1];
+              const diffR = h.revenue - prev.revenue;
+              const diffN = h.netProfit - prev.netProfit;
+              diffStr = `<div class="text-[9px] pt-1 mt-1 border-t border-slate-700 text-slate-400">vs M${prev.month}: Receita ${diffR >= 0 ? '+$' : '-$'}${Math.abs(diffR).toLocaleString()} | Lucro ${diffN >= 0 ? '+$' : '-$'}${Math.abs(diffN).toLocaleString()}</div>`;
+            }
+
+            const isNewYear = h.month === 1 && idx > 0;
+
             return `
-              <div class="flex flex-col items-center gap-0.5 shrink-0 group relative cursor-pointer" title="Mês ${String(h.month).padStart(2,'0')}/Ano ${h.year} | Receita: $${h.revenue.toLocaleString()} | Lucro: ${isProfit ? '+$' : '-$'}${Math.abs(h.netProfit).toLocaleString()}">
-                <div class="flex items-end gap-0.5 h-16">
-                  <div class="w-2 bg-sky-500/60 rounded-t" style="height:${revHeight}px"></div>
-                  <div class="w-2 ${isProfit ? 'bg-emerald-500' : 'bg-rose-500'} rounded-t" style="height:${netHeight}px"></div>
+              <div class="flex items-end shrink-0 ${isNewYear ? 'border-l-2 border-amber-500/60 pl-2 ml-1' : ''}">
+                <div class="flex flex-col items-center gap-1 shrink-0 group relative cursor-pointer hover:bg-slate-900/90 p-1 rounded-lg transition-all">
+                  <!-- Tooltip Flutuante no Hover -->
+                  <div class="absolute bottom-full mb-2 hidden group-hover:flex flex-col bg-slate-950/98 border border-slate-700 rounded-xl px-3 py-2 text-[10px] font-mono shadow-2xl z-30 pointer-events-none whitespace-nowrap -translate-x-1/2 left-1/2 min-w-[170px] backdrop-blur-md">
+                    <div class="font-bold text-amber-300 pb-0.5 border-b border-slate-800">📅 Mês ${String(h.month).padStart(2,'0')} / Ano ${h.year}</div>
+                    <div class="flex justify-between gap-3 text-sky-300 mt-1"><span>Receita:</span> <strong>$${h.revenue.toLocaleString()}</strong></div>
+                    <div class="flex justify-between gap-3 ${isProfit ? 'text-emerald-400' : 'text-rose-400'}"><span>Lucro Líq:</span> <strong>${isProfit ? '+$' : '-$'}${Math.abs(h.netProfit).toLocaleString()} (${marginPct}%)</strong></div>
+                    ${diffStr}
+                  </div>
+
+                  <div class="flex items-end gap-1 h-20">
+                    <div class="w-2.5 bg-gradient-to-t from-sky-600/50 to-sky-400 rounded-t shadow-sm" style="height:${revHeight}px"></div>
+                    <div class="w-2.5 bg-gradient-to-t ${isProfit ? 'from-emerald-600 to-emerald-400' : 'from-rose-600 to-rose-400'} rounded-t shadow-sm" style="height:${netHeight}px"></div>
+                  </div>
+                  <span class="text-[8px] text-slate-400 font-mono ${isNewYear ? 'text-amber-300 font-bold' : ''}">M${h.month}</span>
                 </div>
-                <span class="text-[8px] text-slate-500 font-mono">M${h.month}</span>
               </div>
             `;
           }).join('');
