@@ -1,0 +1,18 @@
+{
+    "timestamp":  "2026-09-02T08:54:17.0247540-03:00",
+    "version":  "v0.8.3",
+    "simulatedYears":  10,
+    "passedAll":  true,
+    "phases":  {
+                   "discountApplied":  "35%",
+                   "discountedBuyout":  29250,
+                   "finalYear":  11,
+                   "finalMonth":  1,
+                   "finalCash":  1266369,
+                   "totalFacilities":  8,
+                   "totalRevenue10Years":  7705428,
+                   "totalNetProfit10Years":  1246179,
+                   "avgMargin10Years":  "16.2",
+                   "macroStatus":  "🌱 Ano 1/10 · Retomada \u0026 Estabilidade"
+               }
+}

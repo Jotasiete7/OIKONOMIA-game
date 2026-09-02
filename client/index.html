@@ -5425,8 +5425,7 @@
       const list = document.getElementById('rd-market-list');
       const subtitle = document.getElementById('rd-header-subtitle');
       if (!list) return;
-
-      subtitle.textContent = 'Mercado de Patentes & Aquisição Direta de Tecnologia de Concorrentes';
+      if (subtitle) subtitle.textContent = 'Mercado de Patentes & Aquisição Direta de Tecnologia de Concorrentes';
 
       // Coleta o líder de qualidade do mercado para cada produto
       const marketTechs = {};
