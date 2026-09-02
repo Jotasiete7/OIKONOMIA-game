@@ -1,24 +1,24 @@
 # OIKONOMIA - Relatorio Consolidado de Auditoria E2E Definitiva
 
-> **Data da Auditoria:** 2026-09-02 15:45:05 | **Engine:** v0.8.3 | **Ambiente:** Microsoft Edge Chromium Headless (DevTools CDP)
+> **Data da Auditoria:** 2026-09-02 17:01:49 | **Engine:** v0.8.3 | **Ambiente:** Microsoft Edge Chromium Headless (DevTools CDP)
 
 ## Comparativo Side-by-Side dos 6 Perfis de Jogador
 
 | Perfil | Empresa / Player | Dificuldade | Anos | Capital Inicial | Caixa Final | Faturamento Total | Lucro Liq. Total | Status de Sanidade |
 |---|---|---|---|---|---|---|---|---|
-| **A** - Conservador/Poupador | Voss Holdings (Elena Voss) | standard | 20a | $50.000 | $1.598.318 | $8.333.582 | $1.565.791 | 2 Alertas |
-| **B** - Agressivo/Expansionista | Ferreira Group (Marco Ferreira) | standard | 20a | $50.000 | $2.084.823 | $9.118.034 | $2.056.169 | 2 Alertas |
-| **C** - Tech Leader / P&D Pesado | Okafor Innovations (Dr. Amara Okafor) | standard | 20a | $50.000 | $1.166.165 | $9.836.729 | $1.137.264 | 3 Alertas |
-| **D** - Marketing Agressivo | Reyes Media Corp (Julian Reyes) | standard | 20a | $50.000 | $1.544.934 | $7.318.886 | $1.511.978 | 2 Alertas |
-| **E** - Hardcore Puro | OmniCorp (Henrik Drake) | hardcore | 20a | $20.000 | $2.960.888 | $4.437.944 | $2.945.202 | 1 Alertas |
-| **F** - Mega-Conglomerado (Regressao) | Sterling Global (Vance Sterling) | standard | 5a | $15.000.000 | $16.792.225 | $3.934.282 | $1.795.249 | 2 Alertas |
+| **A** - Conservador/Poupador | Voss Holdings (Elena Voss) | standard | 20a | $50.000 | $2.073.819 | $9.117.480 | $2.039.968 | 2 Alertas |
+| **B** - Agressivo/Expansionista | Ferreira Group (Marco Ferreira) | standard | 20a | $50.000 | $2.095.466 | $9.122.520 | $2.065.566 | 2 Alertas |
+| **C** - Tech Leader / P&D Pesado | Okafor Innovations (Dr. Amara Okafor) | standard | 20a | $50.000 | $1.177.006 | $9.843.102 | $1.147.054 | 3 Alertas |
+| **D** - Marketing Agressivo | Reyes Media Corp (Julian Reyes) | standard | 20a | $50.000 | $1.849.063 | $7.716.396 | $1.813.960 | 2 Alertas |
+| **E** - Hardcore Puro | OmniCorp (Henrik Drake) | hardcore | 20a | $20.000 | $2.938.281 | $4.438.067 | $2.922.575 | 1 Alertas |
+| **F** - Mega-Conglomerado (Regressao) | Sterling Global (Vance Sterling) | standard | 5a | $15.000.000 | $17.031.040 | $4.239.779 | $2.030.240 | 2 Alertas |
 
 ## Analise Comparativa dos Comportamentos Emergentes
-1. **Perfil A (Conservador) vs Perfil B (Agressivo):** Ambos completam com sucesso os 2 ciclos decenais (20 anos). O Perfil B atinge maior escala de receita bruta ($9.118.034 vs $8.333.582), enquanto o Perfil A preserva margens operacionais mais limpas.
-2. **Perfil C (Tech Leader):** O investimento continuo em P&D garante poder de precificacao e margens superiores (QR 78+), acumulando $1.166.165 ao fim de 20 anos.
-3. **Perfil D (Marketing):** O investimento em multiplos canais de midia (Jornal + Radio) sustenta o Brand Rating em niveis elevados, acumulando $1.544.934.
-4. **Perfil E (Hardcore):** Demonstra que a economia do jogo e 100% viavel e sustentavel mesmo partindo de $20.000 em dificuldade restritiva, acumulando $2.960.888.
-5. **Perfil F (Mega-Conglomerado):** A simulacao de 5 anos confirma que a sazonalidade e o ciclo macroeconomico geram flutuacoes realistas nao-lineares, acumulando $16.792.225.
+1. **Perfil A (Conservador) vs Perfil B (Agressivo):** Ambos completam com sucesso os 2 ciclos decenais (20 anos). O Perfil B atinge maior escala de receita bruta ($9.122.520 vs $9.117.480), enquanto o Perfil A preserva margens operacionais mais limpas.
+2. **Perfil C (Tech Leader):** O investimento continuo em P&D garante poder de precificacao e margens superiores (QR 78+), acumulando $1.177.006 ao fim de 20 anos.
+3. **Perfil D (Marketing):** O investimento em multiplos canais de midia (Jornal + Radio) sustenta o Brand Rating em niveis elevados, acumulando $1.849.063.
+4. **Perfil E (Hardcore):** Demonstra que a economia do jogo e 100% viavel e sustentavel mesmo partindo de $20.000 em dificuldade restritiva, acumulando $2.938.281.
+5. **Perfil F (Mega-Conglomerado):** A simulacao de 5 anos confirma que a sazonalidade e o ciclo macroeconomico geram flutuacoes realistas nao-lineares, acumulando $17.031.040.
 
 ## Matriz Consolidada de Alertas Automaticos
 

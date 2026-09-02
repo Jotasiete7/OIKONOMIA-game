@@ -123,6 +123,14 @@
           <span id="hud-player-name" class="text-[7px] text-slate-400 block truncate max-w-[100px]">Arthur Vance</span>
         </div>
       </div>
+      <!-- BADGE SAÚDE DA CADEIA INTEGRADA (UPSTREAM VS VAREJO) -->
+      <div id="hud-chain-health-badge" onclick="openFacilityDREModal()" class="hidden items-center gap-1.5 bg-slate-950/80 px-2 py-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1 shrink-0 cursor-pointer hover:border-slate-700 transition" title="Saúde da Cadeia Integrada: Balanço entre a margem bruta do varejo e os custos upstream de fazendas, fábricas e P&D (Clique para abrir DRE)">
+        <span id="hud-chain-icon" class="text-xs">⛓️</span>
+        <div class="leading-tight">
+          <span class="text-[7px] text-slate-400 block uppercase">Cadeia</span>
+          <span id="hud-chain-val" class="font-bold text-slate-300 block">--</span>
+        </div>
+      </div>
       <!-- CIDADES / ATALHOS -->
       <div class="flex items-center gap-0.5 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1 shrink-0">
         <button onclick="jumpToCity('nova_atenas')" class="px-1.5 py-0.5 rounded text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ <span class="city-btn-name hidden md:inline">Atenas</span></button>
@@ -3985,10 +3993,11 @@
           }
 
           let diagSummary = '';
-          if (diffNet > 0) {
-            diagSummary = `📈 <strong class="text-emerald-400">Desempenho em Alta:</strong> O Lucro Líquido aumentou <strong>+$${Math.round(diffNet).toLocaleString()}</strong> (${pctNetStr}) em relação ao mês anterior (Receita: ${diffRev >= 0 ? '+$' : '-$'}${Math.round(Math.abs(diffRev)).toLocaleString()}). `;
-          } else if (diffNet < 0) {
-            diagSummary = `📉 <strong class="text-rose-400">Atenção Executiva:</strong> O Lucro Líquido recuou <strong>-$${Math.round(Math.abs(diffNet)).toLocaleString()}</strong> (${pctNetStr}) comparado ao mês anterior (Receita: ${diffRev >= 0 ? '+$' : '-$'}${Math.round(Math.abs(diffRev)).toLocaleString()}). `;
+          const roundedDiff = Math.round(diffNet);
+          if (roundedDiff > 0) {
+            diagSummary = `📈 <strong class="text-emerald-400">Desempenho em Alta:</strong> O Lucro Líquido aumentou <strong>+$${roundedDiff.toLocaleString()}</strong> (${pctNetStr}) em relação ao mês anterior (Receita: ${diffRev >= 0 ? '+$' : '-$'}${Math.round(Math.abs(diffRev)).toLocaleString()}). `;
+          } else if (roundedDiff < 0) {
+            diagSummary = `📉 <strong class="text-rose-400">Atenção Executiva:</strong> O Lucro Líquido recuou <strong>-$${Math.abs(roundedDiff).toLocaleString()}</strong> (${pctNetStr}) comparado ao mês anterior (Receita: ${diffRev >= 0 ? '+$' : '-$'}${Math.round(Math.abs(diffRev)).toLocaleString()}). `;
           } else {
             diagSummary = `⚖️ <strong class="text-slate-300">Estabilidade Financeira:</strong> O Lucro Líquido manteve-se estável em <strong>$${Math.round(curr.netProfit).toLocaleString()}</strong> em relação ao mês anterior. `;
           }
@@ -3998,9 +4007,24 @@
           }
           if (worstFac && worstFac.netProfit < 0) {
             if (worstFac.type === 'store') {
-              diagSummary += `Ponto de atenção: <strong>${worstFac.name}</strong> teve prejuízo de <strong>-$${Math.round(Math.abs(worstFac.netProfit)).toLocaleString()}</strong> (verifique preços ou demanda).`;
+              diagSummary += `Ponto de atenção: <strong>${worstFac.name}</strong> teve prejuízo de <strong>-$${Math.round(Math.abs(worstFac.netProfit)).toLocaleString()}</strong> (verifique preços ou demanda). `;
             } else {
-              diagSummary += `Centro de custo: <strong>${worstFac.name}</strong> absorveu <strong>-$${Math.round(Math.abs(worstFac.netProfit)).toLocaleString()}</strong> em custos operacionais e salários.`;
+              diagSummary += `Centro de custo: <strong>${worstFac.name}</strong> absorveu <strong>-$${Math.round(Math.abs(worstFac.netProfit)).toLocaleString()}</strong> em custos operacionais e salários. `;
+            }
+          }
+
+          // Contextualização macroeconômica do ciclo decenal
+          if (typeof MacroCycleSystem !== 'undefined') {
+            const phase = MacroCycleSystem.getPhaseInfo(year);
+            const cy = MacroCycleSystem.getCycleYear(year);
+            if (phase.code === 'BOOM') {
+              diagSummary += `<span class="text-amber-300 font-bold">🔥 Macro Boom (Ano ${cy}/10):</span> Demanda aquecida (+20%), custos no atacado +15%.`;
+            } else if (phase.code === 'RECESSION') {
+              diagSummary += `<span class="text-rose-300 font-bold">📉 Macro Recessão (Ano ${cy}/10):</span> Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto.`;
+            } else if (phase.code === 'SATURATION') {
+              diagSummary += `<span class="text-orange-300 font-bold">⚠️ Macro Saturação (Ano ${cy}/10):</span> Margens comprimidas e estoques desacelerando.`;
+            } else if (phase.code === 'RECOVERY') {
+              diagSummary += `<span class="text-emerald-300 font-bold">🌱 Macro Retomada (Ano ${cy}/10):</span> Demanda em expansão estável (+5%) e custos balanceados.`;
             }
           }
 
@@ -4761,8 +4785,10 @@
               ? `<span class="text-amber-300 font-bold bg-amber-950/80 px-1 py-0.2 rounded border border-amber-800 text-[8px]">🟡 ${daysCover}d</span>`
               : `<span class="text-emerald-400 font-bold bg-emerald-950/80 px-1 py-0.2 rounded border border-emerald-800 text-[8px]">🟢 ${daysCover}d</span>`));
 
-        const costFill = Math.round((shelf.maxCapacity - shelf.stock) * shelf.landedCost);
         const isInternal = !!(shelf.supplierId?.startsWith('factory_') || shelf.supplierId?.startsWith('farm_') || shelf.supplierId?.startsWith('mine_'));
+        const macroWholesaleMult = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getWholesaleCostMultiplier(year) : 1.0;
+        const effectiveUnitCost = (shelf.landedCost || prod.baseCost || 1) * (isInternal ? 1.0 : macroWholesaleMult);
+        const costFill = Math.round((shelf.maxCapacity - shelf.stock) * effectiveUnitCost);
 
         const card = document.createElement('div');
         card.className = `rounded-xl border ${isStockout ? 'border-rose-800 stockout-alert' : 'border-slate-800'} bg-slate-950 p-2.5 space-y-2`;
@@ -4803,9 +4829,12 @@
               <span>Imobilizado: <strong class="text-amber-300 font-bold">$${capitalTied.toLocaleString()}</strong></span>
             </div>
 
-            <div class="flex items-center gap-1.5 text-[9px] font-mono">
+            <div class="flex items-center gap-1.5 text-[9px] font-mono flex-wrap">
               <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', 100)" class="bg-slate-900 hover:bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700">+100 un</button>
-              <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', ${shelf.maxCapacity - shelf.stock})" class="bg-slate-900 hover:bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded border border-slate-700">Encher (-$${costFill})</button>
+              <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', ${shelf.maxCapacity - shelf.stock})" class="bg-slate-900 hover:bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded border border-slate-700 flex items-center gap-1" title="Reposição imediata de estoque">
+                <span>Encher (-$${costFill.toLocaleString()})</span>
+                ${macroWholesaleMult < 1.0 && !isInternal ? '<span class="text-[7px] bg-emerald-950 text-emerald-300 px-1 rounded border border-emerald-800 font-bold">-20% Macro</span>' : ''}
+              </button>
               <button onclick="openPriceSimulatorModal(${tile.x}, ${tile.y}, '${prodId}')" class="ml-auto text-indigo-400 hover:text-indigo-300 font-bold flex items-center gap-0.5 cursor-pointer">📊 Simular 'E se?'</button>
               <button onclick="openMarketingCentralModal()" class="text-amber-400 hover:text-amber-300 font-bold ml-1">📢</button>
             </div>
@@ -8117,7 +8146,9 @@
       let costMarket = 0;
 
       if (neededFromMarket > 0) {
-        costMarket = Math.round(neededFromMarket * (shelf.landedCost || PRODUCT_CATALOG[prodId]?.baseCost || 1));
+        const macroWholesaleMult = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getWholesaleCostMultiplier(year) : 1.0;
+        const unitCost = (shelf.landedCost || PRODUCT_CATALOG[prodId]?.baseCost || 1) * macroWholesaleMult;
+        costMarket = Math.round(neededFromMarket * unitCost);
         if (cash < costMarket) {
           // Se não tem caixa para o restante, transfere apenas o estoque interno
           if (transferredInternal > 0) {
@@ -8136,11 +8167,13 @@
       shelf.stock += actualQty;
 
       if (transferredInternal > 0 && neededFromMarket > 0) {
-        addLog(`📦 Transferidas ${transferredInternal} un de ${internalSourceName} + ${neededFromMarket} un compradas de emergência (-$${costMarket.toLocaleString()})!`, 'text-emerald-400 font-bold');
+        addLog(`📦 Transferidas ${transferredInternal} un de ${internalSourceName} + ${neededFromMarket} un compradas (-$${costMarket.toLocaleString()})!`, 'text-emerald-400 font-bold');
       } else if (transferredInternal > 0) {
         addLog(`📦 Transferidas ${transferredInternal} un de ${PRODUCT_CATALOG[prodId]?.name || prodId} direto de ${internalSourceName} (Custo $0)!`, 'text-emerald-400 font-bold');
       } else {
-        addLog(`📦 Compradas ${actualQty} un de ${PRODUCT_CATALOG[prodId]?.name || prodId} do fornecedor (-$${costMarket.toLocaleString()})!`, 'text-emerald-400 font-bold');
+        const macroWholesaleMult = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getWholesaleCostMultiplier(year) : 1.0;
+        const macroDiscountStr = macroWholesaleMult < 1.0 ? ` (Estoque Estratégico com -${Math.round((1 - macroWholesaleMult)*100)}% de desconto macro)` : '';
+        addLog(`📦 Compradas ${actualQty} un de ${PRODUCT_CATALOG[prodId]?.name || prodId} do fornecedor (-$${costMarket.toLocaleString()})${macroDiscountStr}!`, 'text-emerald-400 font-bold');
       }
 
       renderFacilityPanel(tile);
@@ -8213,7 +8246,7 @@
 
       // Fórmulas Determinísticas do Core Engine
       const rating = calcProductRating(prod, simPrice, priceSimTarget.quality, priceSimTarget.brand);
-      const elast = calcElasticity(priceSimTarget.necessityIndex, priceSimTarget.standardPrice, simPrice);
+      const elast = calcElasticity(priceSimTarget.necessityIndex, priceSimTarget.standardPrice, simPrice, priceSimTarget.quality);
 
       // Market share real via CoreMath, espelhando exatamente o tick de vendas de simulateDay()
       // (busca o concorrente no tile vizinho, em vez de assumir uma fração fixa de mercado)
@@ -8262,10 +8295,16 @@
           elastAnalysis = '⚖️ Ponto de equilíbrio equilibrado entre giro de estoque e margem unitária.';
         }
 
+        let qrTip = '';
+        if (priceSimTarget.quality > 50) {
+          const wtpBonus = Math.round((priceSimTarget.quality - 50) * 0.75);
+          qrTip = ` <span class="text-cyan-300 font-bold">✨ Qualidade Superior (QR ${priceSimTarget.quality}):</span> Bônus de tolerância de preço de +${wtpBonus}% pelo valor agregado da marca.`;
+        }
+
         const compNote = simCompRating > 0
           ? ` Projeção considera o concorrente vizinho (rating ${simCompRating}/100) disputando este mercado.`
           : ` Nenhum concorrente vizinho ativo detectado — projeção assume mercado local sem disputa direta.`;
-        analysisText.innerHTML = `Com $${simPrice.toFixed(2)} (${diffStr}), sua margem unitária é de <strong>${markupPct}%</strong>. ${elastAnalysis}${compNote}`;
+        analysisText.innerHTML = `Com $${simPrice.toFixed(2)} (${diffStr}), sua margem unitária é de <strong>${markupPct}%</strong>. ${elastAnalysis}${qrTip}${compNote}`;
       }
     }
 
@@ -8463,8 +8502,8 @@
       return CoreMath.calculateProductRating(prod, price, quality, brand);
     }
 
-    function calcElasticity(necessityIndex, standardPrice, price) {
-      return CoreMath.calculatePriceElasticityFactor(necessityIndex, standardPrice, price);
+    function calcElasticity(necessityIndex, standardPrice, price, quality = 50) {
+      return CoreMath.calculatePriceElasticityFactor(necessityIndex, standardPrice, price, quality);
     }
 
     function addLog(text, color = 'text-slate-300', options = {}) {
@@ -8661,7 +8700,7 @@
             const macroDemandMult = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getDemandMultiplier(year) : 1.0;
             const macroWholesaleMult = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getWholesaleCostMultiplier(year) : 1.0;
             const baseDem = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * noise * seasonalMult * macroDemandMult;
-            const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
+            const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price, shelf.quality);
             const brand = playerBrandRating[prodId] || 20;
             const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
 
@@ -8691,7 +8730,9 @@
             tile.monthlyMetrics.revenue += soldRev;
             tile.monthlyMetrics.cogs += soldCogs;
 
-            const restock = Math.min(shelf.dailyRestock, shelf.maxCapacity - shelf.stock);
+            // Restock: ajusta dinamicamente a cadência de pedidos pelo ciclo macroeconômico (Boom = +20% giro, Recessão = -20%)
+            const effectiveRestockRate = Math.round(shelf.dailyRestock * macroDemandMult);
+            const restock = Math.min(effectiveRestockRate, shelf.maxCapacity - shelf.stock);
             if (restock > 0) {
               let deliverUnits = restock;
               if (shelf.supplierId?.startsWith('farm_')) {
@@ -9323,6 +9364,51 @@
           pe.textContent = `${sign}$${absNet.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})}`;
         }
         pe.className = `text-xs font-bold leading-tight whitespace-nowrap block ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      }
+
+      // Atualiza Indicador de Saúde da Cadeia Integrada no Top HUD
+      const chainBadge = document.getElementById('hud-chain-health-badge');
+      const chainValEl = document.getElementById('hud-chain-val');
+      const chainIconEl = document.getElementById('hud-chain-icon');
+      if (chainBadge && chainValEl) {
+        let upstreamOpex = 0;
+        let retailMargin = 0;
+        let hasUpstream = false;
+        let hasRetail = false;
+
+        for (const tile of activeFacilitySet.values()) {
+          const lm = tile.monthlyMetrics || tile.lastMonthMetrics || { revenue: 0, cogs: 0, opex: 0, netProfit: 0 };
+          if (tile.store) {
+            hasRetail = true;
+            retailMargin += ((lm.revenue || 0) - (lm.cogs || 0));
+          }
+          if (tile.farm || tile.mine || tile.factory || tile.rdCenter) {
+            hasUpstream = true;
+            upstreamOpex += (lm.opex || 0);
+          }
+        }
+
+        if (hasUpstream && hasRetail) {
+          chainBadge.classList.remove('hidden');
+          chainBadge.classList.add('flex');
+          const chainContribution = retailMargin - upstreamOpex;
+          const sign = chainContribution >= 0 ? '+' : '-';
+          const absVal = Math.abs(chainContribution);
+          const valStr = absVal >= 1_000_000 ? `$${(absVal/1_000_000).toFixed(2)}M` : (absVal >= 1_000 ? `$${(absVal/1_000).toFixed(1)}k` : `$${Math.round(absVal)}`);
+          chainValEl.textContent = `${sign}${valStr}/mês`;
+          if (chainContribution >= 0) {
+            chainValEl.className = 'font-bold text-emerald-400 block';
+            if (chainIconEl) chainIconEl.textContent = '🟢';
+            chainBadge.title = `Cadeia Integrada Saudável!\nMargem Bruta do Varejo: +$${Math.round(retailMargin).toLocaleString()}\nCustos Upstream (Fábricas/Fazendas/P&D): -$${Math.round(upstreamOpex).toLocaleString()}\nSaldo Líquido da Cadeia: +$${Math.round(chainContribution).toLocaleString()}/mês (Clique para abrir DRE)`;
+          } else {
+            chainValEl.className = 'font-bold text-rose-400 block';
+            if (chainIconEl) chainIconEl.textContent = '🔴';
+            chainBadge.title = `Cadeia Integrada Sob Pressão!\nMargem Bruta do Varejo: +$${Math.round(retailMargin).toLocaleString()}\nCustos Upstream (Fábricas/Fazendas/P&D): -$${Math.round(upstreamOpex).toLocaleString()}\nDéficit da Cadeia: -$${Math.round(absVal).toLocaleString()}/mês (adicione lojas ou ajuste preços)`;
+          }
+        } else {
+          chainBadge.classList.add('hidden');
+          chainBadge.classList.remove('flex');
+        }
       }
 
       // Atualiza a Barra de Telemetria de Rodapé

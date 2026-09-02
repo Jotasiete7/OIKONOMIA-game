@@ -6,10 +6,10 @@
     "difficulty":  "standard",
     "startingCash":  50000,
     "simulatedYears":  20,
-    "finalCash":  1598318,
-    "finalNetWorth":  1819924,
-    "totalRevenue":  8333582,
-    "totalNetProfit":  1565791,
+    "finalCash":  2073819,
+    "finalNetWorth":  2296466,
+    "totalRevenue":  9117480,
+    "totalNetProfit":  2039968,
     "yearlyData":  [
                        {
                            "year":  1,
@@ -17,14 +17,14 @@
                            "macroPhaseYearWithinCycle":  1,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  122562,
-                           "netWorth":  342108,
-                           "annualRevenue":  430747,
-                           "annualCOGS":  96785,
-                           "annualFixedCosts":  245160,
+                           "cash":  170449,
+                           "netWorth":  392946,
+                           "annualRevenue":  499601,
+                           "annualCOGS":  116704,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  88802,
+                           "annualNetProfit":  136657,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -45,45 +45,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  365400,
-                                                           "annualCogs":  81900,
+                                                           "annualRevenue":  274572,
+                                                           "annualCogs":  61542,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  249660
+                                                           "annualNetProfit":  179190
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  11700,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  21960
+                                                           "annualRevenue":  215460,
+                                                           "annualCogs":  52920,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  143820
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  86149,
+                                                         "unitsSoldYear":  99920,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  251269,
+                                                         "unitsSoldYear":  291434,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  107687,
+                                                         "unitsSoldYear":  124900,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  137056,
+                                                         "unitsSoldYear":  158964,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -91,7 +91,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $6.495 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$20.805 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $10.777 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$14.933 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 🌱 Macro Retomada (Ano 2/10): Demanda em expansão estável (+5%) e custos balanceados."
                        },
                        {
                            "year":  2,
@@ -99,14 +99,14 @@
                            "macroPhaseYearWithinCycle":  2,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  200502,
-                           "netWorth":  420048,
-                           "annualRevenue":  416700,
-                           "annualCOGS":  93600,
-                           "annualFixedCosts":  245160,
+                           "cash":  299779,
+                           "netWorth":  522276,
+                           "annualRevenue":  490032,
+                           "annualCOGS":  114462,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  77940,
+                           "annualNetProfit":  129330,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -127,45 +127,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  365400,
-                                                           "annualCogs":  81900,
+                                                           "annualRevenue":  274572,
+                                                           "annualCogs":  61542,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  249660
+                                                           "annualNetProfit":  179190
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  11700,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  21960
+                                                           "annualRevenue":  215460,
+                                                           "annualCogs":  52920,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  143820
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83340,
+                                                         "unitsSoldYear":  98006,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  243075,
+                                                         "unitsSoldYear":  285852,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104175,
+                                                         "unitsSoldYear":  122508,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132586,
+                                                         "unitsSoldYear":  155919,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -173,7 +173,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $6.495 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$20.805 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $10.777 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$14.933 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 3/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  3,
@@ -181,14 +181,14 @@
                            "macroPhaseYearWithinCycle":  3,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  264403,
-                           "netWorth":  483948,
-                           "annualRevenue":  416700,
-                           "annualCOGS":  107640,
-                           "annualFixedCosts":  245160,
+                           "cash":  442372,
+                           "netWorth":  655832,
+                           "annualRevenue":  531146,
+                           "annualCOGS":  142293,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  63900,
+                           "annualNetProfit":  142613,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -209,45 +209,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  365400,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  313200,
+                                                           "annualCogs":  80730,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  237375
+                                                           "annualNetProfit":  198630
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  13455,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  20205
+                                                           "annualRevenue":  205200,
+                                                           "annualCogs":  57960,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  128520
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83340,
+                                                         "unitsSoldYear":  106229,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  243075,
+                                                         "unitsSoldYear":  309835,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104175,
+                                                         "unitsSoldYear":  132787,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132586,
+                                                         "unitsSoldYear":  169001,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -255,7 +255,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $5.325 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$19.781 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.123 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$16.553 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 4/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  4,
@@ -263,14 +263,14 @@
                            "macroPhaseYearWithinCycle":  4,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  328303,
-                           "netWorth":  547848,
-                           "annualRevenue":  416700,
-                           "annualCOGS":  107640,
-                           "annualFixedCosts":  245160,
+                           "cash":  575842,
+                           "netWorth":  789302,
+                           "annualRevenue":  518400,
+                           "annualCOGS":  138690,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  63900,
+                           "annualNetProfit":  133470,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -291,45 +291,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  365400,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  313200,
+                                                           "annualCogs":  80730,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  237375
+                                                           "annualNetProfit":  198630
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  13455,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  20205
+                                                           "annualRevenue":  205200,
+                                                           "annualCogs":  57960,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  128520
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83340,
+                                                         "unitsSoldYear":  103680,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  243075,
+                                                         "unitsSoldYear":  302400,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104175,
+                                                         "unitsSoldYear":  129600,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132586,
+                                                         "unitsSoldYear":  164945,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -337,7 +337,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $5.325 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$19.781 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.123 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$16.553 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 5/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  5,
@@ -345,14 +345,14 @@
                            "macroPhaseYearWithinCycle":  5,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  392203,
-                           "netWorth":  611748,
-                           "annualRevenue":  416700,
-                           "annualCOGS":  107640,
-                           "annualFixedCosts":  245160,
+                           "cash":  709312,
+                           "netWorth":  922772,
+                           "annualRevenue":  518400,
+                           "annualCOGS":  138690,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  63900,
+                           "annualNetProfit":  133470,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -373,45 +373,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  365400,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  313200,
+                                                           "annualCogs":  80730,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  237375
+                                                           "annualNetProfit":  198630
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  13455,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  20205
+                                                           "annualRevenue":  205200,
+                                                           "annualCogs":  57960,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  128520
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83340,
+                                                         "unitsSoldYear":  103680,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  243075,
+                                                         "unitsSoldYear":  302400,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104175,
+                                                         "unitsSoldYear":  129600,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132586,
+                                                         "unitsSoldYear":  164945,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -419,7 +419,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $5.325 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$19.781 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.123 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$16.553 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. ⚠️ Macro Saturação (Ano 6/10): Margens comprimidas e estoques desacelerando."
                        },
                        {
                            "year":  6,
@@ -427,14 +427,14 @@
                            "macroPhaseYearWithinCycle":  6,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  465463,
-                           "netWorth":  685008,
-                           "annualRevenue":  416700,
-                           "annualCOGS":  98280,
-                           "annualFixedCosts":  245160,
+                           "cash":  797942,
+                           "netWorth":  1020499,
+                           "annualRevenue":  443620,
+                           "annualCOGS":  108800,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  73260,
+                           "annualNetProfit":  88580,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -455,45 +455,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  388855,
-                                                           "annualCogs":  91515,
+                                                           "annualRevenue":  248472,
+                                                           "annualCogs":  58477,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  263500
+                                                           "annualNetProfit":  156155
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  12285,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  21375
+                                                           "annualRevenue":  194940,
+                                                           "annualCogs":  50274,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  125946
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83340,
+                                                         "unitsSoldYear":  88724,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  243075,
+                                                         "unitsSoldYear":  258779,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104175,
+                                                         "unitsSoldYear":  110905,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132586,
+                                                         "unitsSoldYear":  141152,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -501,7 +501,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$60 (-0.8%) comparado ao mês anterior (Receita: -$78). Destaque operacional: Padaria Nobre Voss gerou +$21.958 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.368 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$13.013 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. ⚠️ Macro Saturação (Ano 7/10): Margens comprimidas e estoques desacelerando."
                        },
                        {
                            "year":  7,
@@ -509,14 +509,14 @@
                            "macroPhaseYearWithinCycle":  7,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  538723,
-                           "netWorth":  758268,
-                           "annualRevenue":  416700,
-                           "annualCOGS":  98280,
-                           "annualFixedCosts":  245160,
+                           "cash":  886364,
+                           "netWorth":  1108920,
+                           "annualRevenue":  443412,
+                           "annualCOGS":  108751,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  73260,
+                           "annualNetProfit":  88421,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -537,45 +537,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  383844,
-                                                           "annualCogs":  90336,
+                                                           "annualRevenue":  248472,
+                                                           "annualCogs":  58477,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  259668
+                                                           "annualNetProfit":  156155
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  12285,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  21375
+                                                           "annualRevenue":  194940,
+                                                           "annualCogs":  50274,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  125946
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83340,
+                                                         "unitsSoldYear":  88682,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  243075,
+                                                         "unitsSoldYear":  258657,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104175,
+                                                         "unitsSoldYear":  110853,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132586,
+                                                         "unitsSoldYear":  141086,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -583,7 +583,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$523 (-6.7%) comparado ao mês anterior (Receita: -$684). Destaque operacional: Padaria Nobre Voss gerou +$21.639 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.368 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$13.013 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 8/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  8,
@@ -591,14 +591,14 @@
                            "macroPhaseYearWithinCycle":  8,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  625358,
-                           "netWorth":  846980,
-                           "annualRevenue":  406676,
-                           "annualCOGS":  73219,
-                           "annualFixedCosts":  245160,
+                           "cash":  943583,
+                           "netWorth":  1166230,
+                           "annualRevenue":  373156,
+                           "annualCOGS":  69733,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  88297,
+                           "annualNetProfit":  57183,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -619,45 +619,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  329312,
-                                                           "annualCogs":  59049,
+                                                           "annualRevenue":  208800,
+                                                           "annualCogs":  37440,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  236423
+                                                           "annualNetProfit":  137520
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  85979,
-                                                           "annualCogs":  15687,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  52651
+                                                           "annualRevenue":  164160,
+                                                           "annualCogs":  32256,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  113184
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  81335,
+                                                         "unitsSoldYear":  74631,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  237228,
+                                                         "unitsSoldYear":  217674,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  101669,
+                                                         "unitsSoldYear":  93289,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  129397,
+                                                         "unitsSoldYear":  118731,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -665,7 +665,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$74 (-0.9%) comparado ao mês anterior (Receita: -$90). Destaque operacional: Padaria Nobre Voss gerou +$19.702 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.752 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$11.460 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 9/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  9,
@@ -673,14 +673,14 @@
                            "macroPhaseYearWithinCycle":  9,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  721142,
-                           "netWorth":  942748,
-                           "annualRevenue":  415824,
-                           "annualCOGS":  74892,
-                           "annualFixedCosts":  245160,
+                           "cash":  1000607,
+                           "netWorth":  1223254,
+                           "annualRevenue":  372960,
+                           "annualCOGS":  69696,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  95772,
+                           "annualNetProfit":  57024,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -701,45 +701,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  331714,
-                                                           "annualCogs":  59480,
+                                                           "annualRevenue":  208800,
+                                                           "annualCogs":  37440,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  238394
+                                                           "annualNetProfit":  137520
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  85329,
-                                                           "annualCogs":  15569,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  52120
+                                                           "annualRevenue":  164160,
+                                                           "annualCogs":  32256,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  113184
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83165,
+                                                         "unitsSoldYear":  74592,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  242564,
+                                                         "unitsSoldYear":  217560,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  103956,
+                                                         "unitsSoldYear":  93240,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132308,
+                                                         "unitsSoldYear":  118669,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -747,7 +747,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$124 (+1.6%) em relação ao mês anterior (Receita: +$151). Destaque operacional: Padaria Nobre Voss gerou +$19.866 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.752 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$11.460 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 10/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  10,
@@ -755,14 +755,14 @@
                            "macroPhaseYearWithinCycle":  10,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  816796,
-                           "netWorth":  1038421,
-                           "annualRevenue":  415693,
-                           "annualCOGS":  74864,
-                           "annualFixedCosts":  245160,
+                           "cash":  1057631,
+                           "netWorth":  1280278,
+                           "annualRevenue":  372960,
+                           "annualCOGS":  69696,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  95669,
+                           "annualNetProfit":  57024,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -783,45 +783,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  329626,
-                                                           "annualCogs":  59105,
+                                                           "annualRevenue":  208800,
+                                                           "annualCogs":  37440,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  236680
+                                                           "annualNetProfit":  137520
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  86252,
-                                                           "annualCogs":  15737,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  52875
+                                                           "annualRevenue":  164160,
+                                                           "annualCogs":  32256,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  113184
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83139,
+                                                         "unitsSoldYear":  74592,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  242488,
+                                                         "unitsSoldYear":  217560,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  103923,
+                                                         "unitsSoldYear":  93240,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132266,
+                                                         "unitsSoldYear":  118669,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -829,7 +829,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$45 (+0.6%) em relação ao mês anterior (Receita: +$55). Destaque operacional: Padaria Nobre Voss gerou +$19.723 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.752 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$11.460 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 🌱 Macro Retomada (Ano 1/10): Demanda em expansão estável (+5%) e custos balanceados."
                        },
                        {
                            "year":  11,
@@ -837,14 +837,14 @@
                            "macroPhaseYearWithinCycle":  1,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  904016,
-                           "netWorth":  1123561,
-                           "annualRevenue":  425980,
-                           "annualCOGS":  95681,
-                           "annualFixedCosts":  245160,
+                           "cash":  1186636,
+                           "netWorth":  1409133,
+                           "annualRevenue":  489707,
+                           "annualCOGS":  114386,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  85140,
+                           "annualNetProfit":  129081,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -865,45 +865,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  365400,
-                                                           "annualCogs":  81900,
+                                                           "annualRevenue":  274572,
+                                                           "annualCogs":  61542,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  249660
+                                                           "annualNetProfit":  179190
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  11700,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  21960
+                                                           "annualRevenue":  215460,
+                                                           "annualCogs":  52920,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  143820
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  85196,
+                                                         "unitsSoldYear":  97941,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  248489,
+                                                         "unitsSoldYear":  285662,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  106495,
+                                                         "unitsSoldYear":  122427,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  135539,
+                                                         "unitsSoldYear":  155816,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -911,7 +911,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $6.495 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$20.805 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $10.777 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$14.933 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 🌱 Macro Retomada (Ano 2/10): Demanda em expansão estável (+5%) e custos balanceados."
                        },
                        {
                            "year":  12,
@@ -919,14 +919,14 @@
                            "macroPhaseYearWithinCycle":  2,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  981956,
-                           "netWorth":  1201501,
-                           "annualRevenue":  416700,
-                           "annualCOGS":  93600,
-                           "annualFixedCosts":  245160,
+                           "cash":  1315966,
+                           "netWorth":  1538463,
+                           "annualRevenue":  490032,
+                           "annualCOGS":  114462,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  77940,
+                           "annualNetProfit":  129330,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -947,45 +947,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  365400,
-                                                           "annualCogs":  81900,
+                                                           "annualRevenue":  274572,
+                                                           "annualCogs":  61542,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  249660
+                                                           "annualNetProfit":  179190
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  11700,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  21960
+                                                           "annualRevenue":  215460,
+                                                           "annualCogs":  52920,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  143820
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83340,
+                                                         "unitsSoldYear":  98006,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  243075,
+                                                         "unitsSoldYear":  285852,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104175,
+                                                         "unitsSoldYear":  122508,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132586,
+                                                         "unitsSoldYear":  155919,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -993,7 +993,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $6.495 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$20.805 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $10.777 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$14.933 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 3/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  13,
@@ -1001,14 +1001,14 @@
                            "macroPhaseYearWithinCycle":  3,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1045856,
-                           "netWorth":  1265401,
-                           "annualRevenue":  416700,
-                           "annualCOGS":  107640,
-                           "annualFixedCosts":  245160,
+                           "cash":  1458560,
+                           "netWorth":  1672020,
+                           "annualRevenue":  531146,
+                           "annualCOGS":  142293,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  63900,
+                           "annualNetProfit":  142613,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -1029,45 +1029,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  365400,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  313200,
+                                                           "annualCogs":  80730,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  237375
+                                                           "annualNetProfit":  198630
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  13455,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  20205
+                                                           "annualRevenue":  205200,
+                                                           "annualCogs":  57960,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  128520
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83340,
+                                                         "unitsSoldYear":  106229,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  243075,
+                                                         "unitsSoldYear":  309835,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104175,
+                                                         "unitsSoldYear":  132787,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132586,
+                                                         "unitsSoldYear":  169001,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1075,7 +1075,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $5.325 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$19.781 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.123 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$16.553 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 4/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  14,
@@ -1083,14 +1083,14 @@
                            "macroPhaseYearWithinCycle":  4,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1109756,
-                           "netWorth":  1329301,
-                           "annualRevenue":  416700,
-                           "annualCOGS":  107640,
-                           "annualFixedCosts":  245160,
+                           "cash":  1592030,
+                           "netWorth":  1805490,
+                           "annualRevenue":  518400,
+                           "annualCOGS":  138690,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  63900,
+                           "annualNetProfit":  133470,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -1111,45 +1111,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  365400,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  313200,
+                                                           "annualCogs":  80730,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  237375
+                                                           "annualNetProfit":  198630
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  13455,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  20205
+                                                           "annualRevenue":  205200,
+                                                           "annualCogs":  57960,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  128520
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83340,
+                                                         "unitsSoldYear":  103680,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  243075,
+                                                         "unitsSoldYear":  302400,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104175,
+                                                         "unitsSoldYear":  129600,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132586,
+                                                         "unitsSoldYear":  164945,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1157,7 +1157,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $5.325 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$19.781 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.123 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$16.553 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 5/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  15,
@@ -1165,14 +1165,14 @@
                            "macroPhaseYearWithinCycle":  5,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1173656,
-                           "netWorth":  1393201,
-                           "annualRevenue":  416700,
-                           "annualCOGS":  107640,
-                           "annualFixedCosts":  245160,
+                           "cash":  1725500,
+                           "netWorth":  1938960,
+                           "annualRevenue":  518400,
+                           "annualCOGS":  138690,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  63900,
+                           "annualNetProfit":  133470,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -1193,45 +1193,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  365400,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  313200,
+                                                           "annualCogs":  80730,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  237375
+                                                           "annualNetProfit":  198630
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  13455,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  20205
+                                                           "annualRevenue":  205200,
+                                                           "annualCogs":  57960,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  128520
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83340,
+                                                         "unitsSoldYear":  103680,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  243075,
+                                                         "unitsSoldYear":  302400,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104175,
+                                                         "unitsSoldYear":  129600,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132586,
+                                                         "unitsSoldYear":  164945,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1239,7 +1239,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $5.325 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$19.781 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $11.123 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$16.553 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. ⚠️ Macro Saturação (Ano 6/10): Margens comprimidas e estoques desacelerando."
                        },
                        {
                            "year":  16,
@@ -1247,14 +1247,14 @@
                            "macroPhaseYearWithinCycle":  6,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1246461,
-                           "netWorth":  1466108,
-                           "annualRevenue":  416245,
-                           "annualCOGS":  98173,
-                           "annualFixedCosts":  245160,
+                           "cash":  1814129,
+                           "netWorth":  2036686,
+                           "annualRevenue":  443620,
+                           "annualCOGS":  108800,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  72912,
+                           "annualNetProfit":  88580,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -1275,45 +1275,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  394249,
-                                                           "annualCogs":  92785,
+                                                           "annualRevenue":  248472,
+                                                           "annualCogs":  58477,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  267625
+                                                           "annualNetProfit":  156155
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  12285,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  21375
+                                                           "annualRevenue":  194940,
+                                                           "annualCogs":  50274,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  125946
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83249,
+                                                         "unitsSoldYear":  88724,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  242809,
+                                                         "unitsSoldYear":  258779,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104061,
+                                                         "unitsSoldYear":  110905,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132441,
+                                                         "unitsSoldYear":  141152,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1321,7 +1321,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$297 (+3.9%) em relação ao mês anterior (Receita: +$389). Destaque operacional: Padaria Nobre Voss gerou +$22.302 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.368 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$13.013 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. ⚠️ Macro Saturação (Ano 7/10): Margens comprimidas e estoques desacelerando."
                        },
                        {
                            "year":  17,
@@ -1329,14 +1329,14 @@
                            "macroPhaseYearWithinCycle":  7,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1320176,
-                           "netWorth":  1539721,
-                           "annualRevenue":  417155,
-                           "annualCOGS":  98387,
-                           "annualFixedCosts":  245160,
+                           "cash":  1902551,
+                           "netWorth":  2125108,
+                           "annualRevenue":  443412,
+                           "annualCOGS":  108751,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  73608,
+                           "annualNetProfit":  88421,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -1357,45 +1357,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  380956,
-                                                           "annualCogs":  89656,
+                                                           "annualRevenue":  248472,
+                                                           "annualCogs":  58477,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  257460
+                                                           "annualNetProfit":  156155
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  51300,
-                                                           "annualCogs":  12285,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  21375
+                                                           "annualRevenue":  194940,
+                                                           "annualCogs":  50274,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  125946
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83431,
+                                                         "unitsSoldYear":  88682,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  243341,
+                                                         "unitsSoldYear":  258657,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  104289,
+                                                         "unitsSoldYear":  110853,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132731,
+                                                         "unitsSoldYear":  141086,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1403,7 +1403,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$679 (-8.7%) comparado ao mês anterior (Receita: -$887). Destaque operacional: Padaria Nobre Voss gerou +$21.455 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.368 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$13.013 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 8/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  18,
@@ -1411,14 +1411,14 @@
                            "macroPhaseYearWithinCycle":  8,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1406797,
-                           "netWorth":  1628419,
-                           "annualRevenue":  406661,
-                           "annualCOGS":  73219,
-                           "annualFixedCosts":  245160,
+                           "cash":  1959771,
+                           "netWorth":  2182418,
+                           "annualRevenue":  373156,
+                           "annualCOGS":  69733,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  88282,
+                           "annualNetProfit":  57183,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -1439,45 +1439,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  328616,
-                                                           "annualCogs":  58924,
+                                                           "annualRevenue":  208800,
+                                                           "annualCogs":  37440,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  235852
+                                                           "annualNetProfit":  137520
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  87244,
-                                                           "annualCogs":  15918,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  53686
+                                                           "annualRevenue":  164160,
+                                                           "annualCogs":  32256,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  113184
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  81332,
+                                                         "unitsSoldYear":  74631,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  237219,
+                                                         "unitsSoldYear":  217674,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  101665,
+                                                         "unitsSoldYear":  93289,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  129392,
+                                                         "unitsSoldYear":  118731,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1485,7 +1485,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$40 (-0.5%) comparado ao mês anterior (Receita: -$48). Destaque operacional: Padaria Nobre Voss gerou +$19.654 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.752 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$11.460 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 9/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  19,
@@ -1493,14 +1493,14 @@
                            "macroPhaseYearWithinCycle":  9,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1502513,
-                           "netWorth":  1724140,
-                           "annualRevenue":  415756,
-                           "annualCOGS":  74876,
-                           "annualFixedCosts":  245160,
+                           "cash":  2016795,
+                           "netWorth":  2239442,
+                           "annualRevenue":  372960,
+                           "annualCOGS":  69696,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  95720,
+                           "annualNetProfit":  57024,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -1521,45 +1521,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  326807,
-                                                           "annualCogs":  58600,
+                                                           "annualRevenue":  208800,
+                                                           "annualCogs":  37440,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  234367
+                                                           "annualNetProfit":  137520
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  88612,
-                                                           "annualCogs":  16168,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  54804
+                                                           "annualRevenue":  164160,
+                                                           "annualCogs":  32256,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  113184
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83151,
+                                                         "unitsSoldYear":  74592,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  242525,
+                                                         "unitsSoldYear":  217560,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  103939,
+                                                         "unitsSoldYear":  93240,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132286,
+                                                         "unitsSoldYear":  118669,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1567,7 +1567,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$36 (-0.4%) comparado ao mês anterior (Receita: -$42). Destaque operacional: Padaria Nobre Voss gerou +$19.531 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.752 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$11.460 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 10/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  20,
@@ -1575,14 +1575,14 @@
                            "macroPhaseYearWithinCycle":  10,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1598318,
-                           "netWorth":  1819924,
-                           "annualRevenue":  415845,
-                           "annualCOGS":  74896,
-                           "annualFixedCosts":  245160,
+                           "cash":  2073819,
+                           "netWorth":  2296466,
+                           "annualRevenue":  372960,
+                           "annualCOGS":  69696,
+                           "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  95789,
+                           "annualNetProfit":  57024,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Fazenda Voss Cereais",
@@ -1603,45 +1603,45 @@
                                                        {
                                                            "name":  "Padaria Nobre Voss",
                                                            "type":  "store",
-                                                           "annualRevenue":  329556,
-                                                           "annualCogs":  59093,
+                                                           "annualRevenue":  208800,
+                                                           "annualCogs":  37440,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  236623
+                                                           "annualNetProfit":  137520
                                                        },
                                                        {
-                                                           "name":  "Padaria Regional Voss",
+                                                           "name":  "Padaria Nobre Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  86971,
-                                                           "annualCogs":  15868,
-                                                           "annualOpex":  17640,
-                                                           "annualNetProfit":  53462
+                                                           "annualRevenue":  164160,
+                                                           "annualCogs":  32256,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  113184
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  83169,
+                                                         "unitsSoldYear":  74592,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  242576,
+                                                         "unitsSoldYear":  217560,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  103961,
+                                                         "unitsSoldYear":  93240,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  132314,
+                                                         "unitsSoldYear":  118669,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1649,7 +1649,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$25 (+0.3%) em relação ao mês anterior (Receita: +$29). Destaque operacional: Padaria Nobre Voss gerou +$19.719 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.752 em relação ao mês anterior. Destaque operacional: Padaria Nobre Voss gerou +$11.460 de margem limpa. Centro de custo: Moinho \u0026 Padaria Voss absorveu -$12.300 em custos operacionais e salários. 🌱 Macro Retomada (Ano 1/10): Demanda em expansão estável (+5%) e custos balanceados."
                        }
                    ],
     "automatedSanityAlerts":  [

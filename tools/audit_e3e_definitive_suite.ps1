@@ -312,23 +312,25 @@ try {
         const fac = worldGrid[38][88];
         fac.district = { name: 'Polo Industrial Montargis', population: 9000, trafficIndex: 40, landRentDaily: 10 };
         fac.factory = { id: 'fac_a_1', name: 'Moinho & Padaria Voss', lines: {
-            'rec_flour': { recipeId: 'rec_flour', dailyCapacity: 450, finishedStock: 1800, maxStock: 5000, inputsConfig: { 'wheat': { supplierId: 'farm_44_37', landedCost: 0.25 } } },
-            'rec_bread': { recipeId: 'rec_bread', dailyCapacity: 400, finishedStock: 1500, maxStock: 5000, inputsConfig: { 'flour': { supplierId: 'factory_38_88_rec_flour', landedCost: 0.45 } } }
+            'rec_flour': { recipeId: 'rec_flour', dailyCapacity: 500, finishedStock: 2000, maxStock: 5000, inputsConfig: { 'wheat': { supplierId: 'farm_44_37', landedCost: 0.25 } } },
+            'rec_bread': { recipeId: 'rec_bread', dailyCapacity: 500, finishedStock: 2000, maxStock: 5000, inputsConfig: { 'flour': { supplierId: 'factory_38_88_rec_flour', landedCost: 0.45 } } }
         }};
         _indexTile(fac);
 
         const st1 = worldGrid[40][37];
         st1.district = { name: 'Distrito Residencial Nova Atenas', population: 22500, trafficIndex: 65, landRentDaily: 14 };
         st1.store = { id: 'st_a_1', name: 'Padaria Nobre Voss', storeTypeId: 'supermarket', shelves: {
-            'bread': { price: 2.90, stock: 2000, maxCapacity: 3500, dailyRestock: 350, quality: 68, supplierId: 'factory_38_88_rec_bread', landedCost: 0.65 },
-            'flour': { price: 1.95, stock: 1500, maxCapacity: 2500, dailyRestock: 200, quality: 65, supplierId: 'factory_38_88_rec_flour', landedCost: 0.45 }
+            'bread': { price: 2.90, stock: 2000, maxCapacity: 3500, dailyRestock: 250, quality: 68, supplierId: 'factory_38_88_rec_bread', landedCost: 0.65 },
+            'flour': { price: 1.95, stock: 1500, maxCapacity: 2500, dailyRestock: 150, quality: 65, supplierId: 'factory_38_88_rec_flour', landedCost: 0.45 }
         }};
         _indexTile(st1);
 
-        const st2 = worldGrid[88][84];
-        st2.district = { name: 'Distrito Comercial Varzea', population: 13500, trafficIndex: 50, landRentDaily: 9 };
-        st2.store = { id: 'st_a_2', name: 'Padaria Regional Voss', storeTypeId: 'supermarket', shelves: {
-            'bread': { price: 2.85, stock: 1800, maxCapacity: 3000, dailyRestock: 280, quality: 68, supplierId: 'factory_38_88_rec_bread', landedCost: 0.65 }
+        unlockedCities['porto_real'] = true;
+
+        const st2 = worldGrid[86][38];
+        st2.district = { name: 'Distrito Comercial Porto Real', population: 18500, trafficIndex: 58, landRentDaily: 12 };
+        st2.store = { id: 'st_a_2', name: 'Padaria Nobre Porto', storeTypeId: 'supermarket', shelves: {
+            'bread': { price: 2.85, stock: 1800, maxCapacity: 3000, dailyRestock: 200, quality: 68, supplierId: 'factory_38_88_rec_bread', landedCost: 0.70 }
         }};
         _indexTile(st2);
 

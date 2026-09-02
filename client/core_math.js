@@ -5,11 +5,14 @@
 
 const CoreMath = {
   /**
-   * Avaliação de Preço (0-100): Razão inversa ao preço padrão de mercado.
+   * Avaliação de Preço (0-100): Razão inversa ao preço padrão ajustado por qualidade (P&D).
    */
-  calculatePriceRating(standardPrice, currentPrice) {
+  calculatePriceRating(standardPrice, currentPrice, qualityRating = 50) {
     if (currentPrice <= 0) return 100;
-    const ratio = standardPrice / currentPrice;
+    // Qualidade elevada (P&D / QR > 50) aumenta o valor de referência percebido pelo consumidor (+0.75% por ponto de QR)
+    const qualityBonus = Math.max(0, ((qualityRating || 50) - 50) * 0.0075);
+    const effectiveStandardPrice = standardPrice * (1 + qualityBonus);
+    const ratio = effectiveStandardPrice / currentPrice;
     return Number(Math.min(100, Math.max(0, ratio * 50)).toFixed(2));
   },
 
@@ -22,7 +25,7 @@ const CoreMath = {
     const bWeight = product.brandWeight || 20;
     const pWeight = Math.max(0, 100 - (qWeight + bWeight));
 
-    const priceRating = this.calculatePriceRating(product.standardPrice, currentPrice);
+    const priceRating = this.calculatePriceRating(product.standardPrice, currentPrice, currentQuality);
     const qrClamped = Math.min(100, Math.max(0, currentQuality || 0));
     const brClamped = Math.min(100, Math.max(0, currentBrand || 0));
 
@@ -31,16 +34,21 @@ const CoreMath = {
   },
 
   /**
-   * Fator de Elasticidade de Preço por Índice de Necessidade (0.05x a 3.00x).
+   * Fator de Elasticidade de Preço por Índice de Necessidade e Qualidade (0.05x a 3.00x).
+   * Produtos de alto QR (P&D) expandem o poder de precificação premium da marca.
    */
-  calculatePriceElasticityFactor(necessityIndex, standardPrice, currentPrice) {
+  calculatePriceElasticityFactor(necessityIndex, standardPrice, currentPrice, qualityRating = 50) {
     if (currentPrice <= 0) return 2.5;
     if (standardPrice <= 0) return 1.0;
 
     const nClamped = Math.min(100, Math.max(0, necessityIndex || 50));
     const elasticityExponent = 2.20 - 1.85 * (nClamped / 100);
 
-    const priceRatio = standardPrice / currentPrice;
+    // Bônus de qualidade na disposição a pagar (Willingness to Pay)
+    const qualityBonus = Math.max(0, ((qualityRating || 50) - 50) * 0.0075);
+    const effectiveStandardPrice = standardPrice * (1 + qualityBonus);
+
+    const priceRatio = effectiveStandardPrice / currentPrice;
     const factor = Math.pow(priceRatio, elasticityExponent);
 
     return Number(Math.min(3.0, Math.max(0.05, factor)).toFixed(4));

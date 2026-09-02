@@ -6,10 +6,10 @@
     "difficulty":  "standard",
     "startingCash":  50000,
     "simulatedYears":  20,
-    "finalCash":  2084823,
-    "finalNetWorth":  2307197,
-    "totalRevenue":  9118034,
-    "totalNetProfit":  2056169,
+    "finalCash":  2095466,
+    "finalNetWorth":  2315767,
+    "totalRevenue":  9122520,
+    "totalNetProfit":  2065566,
     "yearlyData":  [
                        {
                            "year":  1,
@@ -17,10 +17,10 @@
                            "macroPhaseYearWithinCycle":  1,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  143035,
+                           "cash":  143036,
                            "netWorth":  363333,
-                           "annualRevenue":  469995,
-                           "annualCOGS":  110623,
+                           "annualRevenue":  469672,
+                           "annualCOGS":  110299,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
@@ -45,45 +45,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  81900,
+                                                           "annualRevenue":  370944,
+                                                           "annualCogs":  86112,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  237060
+                                                           "annualNetProfit":  250992
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  25200,
+                                                           "annualRevenue":  84132,
+                                                           "annualCogs":  20664,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  58680
+                                                           "annualNetProfit":  44748
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  93999,
+                                                         "unitsSoldYear":  93934,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  274164,
+                                                         "unitsSoldYear":  273975,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  117499,
+                                                         "unitsSoldYear":  117418,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  149544,
+                                                         "unitsSoldYear":  149441,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -91,7 +91,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.505 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$19.755 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.505 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$20.916 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 🌱 Macro Retomada (Ano 2/10): Demanda em expansão estável (+5%) e custos balanceados."
                        },
                        {
                            "year":  2,
@@ -99,10 +99,10 @@
                            "macroPhaseYearWithinCycle":  2,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  245095,
+                           "cash":  245096,
                            "netWorth":  465393,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  107100,
+                           "annualRevenue":  455076,
+                           "annualCOGS":  106776,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
@@ -127,45 +127,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  81900,
+                                                           "annualRevenue":  370944,
+                                                           "annualCogs":  86112,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  237060
+                                                           "annualNetProfit":  250992
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  25200,
+                                                           "annualRevenue":  84132,
+                                                           "annualCogs":  20664,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  58680
+                                                           "annualNetProfit":  44748
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  91015,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  265461,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113769,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144797,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -173,7 +173,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.505 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$19.755 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.505 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$20.916 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 3/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  3,
@@ -181,14 +181,14 @@
                            "macroPhaseYearWithinCycle":  3,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  331090,
-                           "netWorth":  551388,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  123165,
+                           "cash":  331282,
+                           "netWorth":  551576,
+                           "annualRevenue":  454143,
+                           "annualCOGS":  121719,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  85995,
+                           "annualNetProfit":  86184,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -209,45 +209,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  423360,
+                                                           "annualCogs":  113022,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  224775
+                                                           "annualNetProfit":  276498
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  28980,
+                                                           "annualRevenue":  30780,
+                                                           "annualCogs":  8694,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  54900
+                                                           "annualNetProfit":  3366
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  90829,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  264917,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113536,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144500,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -255,7 +255,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.166 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$18.731 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.182 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$23.042 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 4/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  4,
@@ -263,14 +263,14 @@
                            "macroPhaseYearWithinCycle":  4,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  417085,
-                           "netWorth":  637383,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  123165,
+                           "cash":  417466,
+                           "netWorth":  637760,
+                           "annualRevenue":  454140,
+                           "annualCOGS":  121716,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  85995,
+                           "annualNetProfit":  86184,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -291,45 +291,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  423360,
+                                                           "annualCogs":  113022,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  224775
+                                                           "annualNetProfit":  276498
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  28980,
+                                                           "annualRevenue":  30780,
+                                                           "annualCogs":  8694,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  54900
+                                                           "annualNetProfit":  3366
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  90828,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  264915,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113535,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144499,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -337,7 +337,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.166 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$18.731 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.182 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$23.042 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 5/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  5,
@@ -345,14 +345,14 @@
                            "macroPhaseYearWithinCycle":  5,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  503080,
-                           "netWorth":  723378,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  123165,
+                           "cash":  503650,
+                           "netWorth":  723944,
+                           "annualRevenue":  454140,
+                           "annualCOGS":  121716,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  85995,
+                           "annualNetProfit":  86184,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -373,45 +373,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  423360,
+                                                           "annualCogs":  113022,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  224775
+                                                           "annualNetProfit":  276498
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  28980,
+                                                           "annualRevenue":  30780,
+                                                           "annualCogs":  8694,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  54900
+                                                           "annualNetProfit":  3366
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  90828,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  264915,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113535,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144499,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -419,7 +419,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.166 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$18.731 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.182 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$23.042 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. ⚠️ Macro Saturação (Ano 6/10): Margens comprimidas e estoques desacelerando."
                        },
                        {
                            "year":  6,
@@ -427,14 +427,14 @@
                            "macroPhaseYearWithinCycle":  6,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  599785,
-                           "netWorth":  820083,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  112455,
+                           "cash":  600336,
+                           "netWorth":  820634,
+                           "annualRevenue":  455702,
+                           "annualCOGS":  112772,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  96705,
+                           "annualNetProfit":  96690,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -455,45 +455,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  85995,
+                                                           "annualRevenue":  335664,
+                                                           "annualCogs":  81818,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  232965
+                                                           "annualNetProfit":  220006
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  26460,
+                                                           "annualRevenue":  120042,
+                                                           "annualCogs":  30958,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  57420
+                                                           "annualNetProfit":  70364
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  91140,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  265826,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113925,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144996,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -501,7 +501,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$623 (-7.2%) comparado ao mês anterior (Receita: -$823). Destaque operacional: Hiper Ferreira Atenas gerou +$19.414 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.057 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$18.334 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. ⚠️ Macro Saturação (Ano 7/10): Margens comprimidas e estoques desacelerando."
                        },
                        {
                            "year":  7,
@@ -509,14 +509,14 @@
                            "macroPhaseYearWithinCycle":  7,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  696490,
-                           "netWorth":  916787,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  112455,
+                           "cash":  697026,
+                           "netWorth":  917324,
+                           "annualRevenue":  455706,
+                           "annualCOGS":  112776,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  96705,
+                           "annualNetProfit":  96690,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -537,45 +537,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  85995,
+                                                           "annualRevenue":  335664,
+                                                           "annualCogs":  81818,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  232965
+                                                           "annualNetProfit":  220006
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  26460,
+                                                           "annualRevenue":  120042,
+                                                           "annualCogs":  30958,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  57420
+                                                           "annualNetProfit":  70364
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  91141,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  265828,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113926,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144997,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -583,7 +583,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$906 (-10.1%) comparado ao mês anterior (Receita: -$1.198). Destaque operacional: Hiper Ferreira Atenas gerou +$19.414 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.057 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$18.334 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 8/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  8,
@@ -591,14 +591,14 @@
                            "macroPhaseYearWithinCycle":  8,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  811237,
-                           "netWorth":  1033592,
-                           "annualRevenue":  447176,
-                           "annualCOGS":  84543,
+                           "cash":  820755,
+                           "netWorth":  1041056,
+                           "annualRevenue":  456657,
+                           "annualCOGS":  86686,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  116393,
+                           "annualNetProfit":  123731,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -619,45 +619,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  323938,
-                                                           "annualCogs":  60160,
+                                                           "annualRevenue":  282240,
+                                                           "annualCogs":  52416,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  229938
+                                                           "annualNetProfit":  195984
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  132662,
-                                                           "annualCogs":  26067,
+                                                           "annualRevenue":  174420,
+                                                           "annualCogs":  34272,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  87875
+                                                           "annualNetProfit":  121428
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  89435,
+                                                         "unitsSoldYear":  91331,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  260853,
+                                                         "unitsSoldYear":  266383,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  111794,
+                                                         "unitsSoldYear":  114164,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  142283,
+                                                         "unitsSoldYear":  145300,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -665,7 +665,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$56 (+0.5%) em relação ao mês anterior (Receita: +$75). Destaque operacional: Hiper Ferreira Atenas gerou +$19.161 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $10.311 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$16.332 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 9/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  9,
@@ -673,14 +673,14 @@
                            "macroPhaseYearWithinCycle":  9,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  934833,
-                           "netWorth":  1157197,
-                           "annualRevenue":  456136,
-                           "annualCOGS":  86293,
+                           "cash":  944487,
+                           "netWorth":  1164788,
+                           "annualRevenue":  456660,
+                           "annualCOGS":  86688,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  123603,
+                           "annualNetProfit":  123732,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -701,45 +701,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  326827,
-                                                           "annualCogs":  60696,
+                                                           "annualRevenue":  282240,
+                                                           "annualCogs":  52416,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  232291
+                                                           "annualNetProfit":  195984
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  128934,
-                                                           "annualCogs":  25334,
+                                                           "annualRevenue":  174420,
+                                                           "annualCogs":  34272,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  84880
+                                                           "annualNetProfit":  121428
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91227,
+                                                         "unitsSoldYear":  91332,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  266079,
+                                                         "unitsSoldYear":  266385,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  114034,
+                                                         "unitsSoldYear":  114165,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  145134,
+                                                         "unitsSoldYear":  145301,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -747,7 +747,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$17 (+0.2%) em relação ao mês anterior (Receita: +$25). Destaque operacional: Hiper Ferreira Atenas gerou +$19.358 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $10.311 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$16.332 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 10/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  10,
@@ -755,14 +755,14 @@
                            "macroPhaseYearWithinCycle":  10,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1058493,
-                           "netWorth":  1280853,
-                           "annualRevenue":  456222,
-                           "annualCOGS":  86326,
+                           "cash":  1068219,
+                           "netWorth":  1288520,
+                           "annualRevenue":  456660,
+                           "annualCOGS":  86688,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  123656,
+                           "annualNetProfit":  123732,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -783,45 +783,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  326592,
-                                                           "annualCogs":  60653,
+                                                           "annualRevenue":  282240,
+                                                           "annualCogs":  52416,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  232099
+                                                           "annualNetProfit":  195984
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  129139,
-                                                           "annualCogs":  25375,
+                                                           "annualRevenue":  174420,
+                                                           "annualCogs":  34272,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  85044
+                                                           "annualNetProfit":  121428
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91244,
+                                                         "unitsSoldYear":  91332,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  266130,
+                                                         "unitsSoldYear":  266385,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  114056,
+                                                         "unitsSoldYear":  114165,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  145162,
+                                                         "unitsSoldYear":  145301,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -829,7 +829,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$55 (-0.5%) comparado ao mês anterior (Receita: -$68). Destaque operacional: Hiper Ferreira Atenas gerou +$19.342 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $10.311 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$16.332 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 🌱 Macro Retomada (Ano 1/10): Demanda em expansão estável (+5%) e custos balanceados."
                        },
                        {
                            "year":  11,
@@ -837,92 +837,10 @@
                            "macroPhaseYearWithinCycle":  1,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1169433,
-                           "netWorth":  1389730,
-                           "annualRevenue":  464280,
-                           "annualCOGS":  109162,
-                           "annualFixedCosts":  246240,
-                           "annualMarketingSpend":  0,
-                           "annualRDInvestment":  0,
-                           "annualNetProfit":  108878,
-                           "facilitiesBreakdown":  [
-                                                       {
-                                                           "name":  "Agropecuaria Ferreira",
-                                                           "type":  "farm",
-                                                           "annualRevenue":  0,
-                                                           "annualCogs":  0,
-                                                           "annualOpex":  46080,
-                                                           "annualNetProfit":  -46080
-                                                       },
-                                                       {
-                                                           "name":  "Complexo Ferreira",
-                                                           "type":  "factory",
-                                                           "annualRevenue":  0,
-                                                           "annualCogs":  0,
-                                                           "annualOpex":  147600,
-                                                           "annualNetProfit":  -147600
-                                                       },
-                                                       {
-                                                           "name":  "Hiper Ferreira Atenas",
-                                                           "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  81900,
-                                                           "annualOpex":  33840,
-                                                           "annualNetProfit":  237060
-                                                       },
-                                                       {
-                                                           "name":  "Hiper Ferreira Porto",
-                                                           "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  25200,
-                                                           "annualOpex":  18720,
-                                                           "annualNetProfit":  58680
-                                                       }
-                                                   ],
-                           "productsBreakdown":  [
-                                                     {
-                                                         "productId":  "bread",
-                                                         "unitsSoldYear":  92856,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "flour",
-                                                         "unitsSoldYear":  270830,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "milk",
-                                                         "unitsSoldYear":  116070,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "cola",
-                                                         "unitsSoldYear":  147725,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     }
-                                                 ],
-                           "consecutiveInsolventMonthsAtYearEnd":  0,
-                           "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.505 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$19.755 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
-                       },
-                       {
-                           "year":  12,
-                           "macroPhase":  "Retomada \u0026 Estabilidade",
-                           "macroPhaseYearWithinCycle":  2,
-                           "cycleNumber":  2,
-                           "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1271493,
-                           "netWorth":  1491790,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  107100,
+                           "cash":  1170283,
+                           "netWorth":  1390580,
+                           "annualRevenue":  455080,
+                           "annualCOGS":  106780,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
@@ -947,45 +865,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  81900,
+                                                           "annualRevenue":  370944,
+                                                           "annualCogs":  86112,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  237060
+                                                           "annualNetProfit":  250992
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  25200,
+                                                           "annualRevenue":  84132,
+                                                           "annualCogs":  20664,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  58680
+                                                           "annualNetProfit":  44748
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  91016,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  265464,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113770,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144798,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -993,7 +911,89 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.505 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$19.755 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.505 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$20.916 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 🌱 Macro Retomada (Ano 2/10): Demanda em expansão estável (+5%) e custos balanceados."
+                       },
+                       {
+                           "year":  12,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  2,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  1272343,
+                           "netWorth":  1492640,
+                           "annualRevenue":  455076,
+                           "annualCOGS":  106776,
+                           "annualFixedCosts":  246240,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  102060,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Agropecuaria Ferreira",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Complexo Ferreira",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "Hiper Ferreira Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  370944,
+                                                           "annualCogs":  86112,
+                                                           "annualOpex":  33840,
+                                                           "annualNetProfit":  250992
+                                                       },
+                                                       {
+                                                           "name":  "Hiper Ferreira Porto",
+                                                           "type":  "store",
+                                                           "annualRevenue":  84132,
+                                                           "annualCogs":  20664,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  44748
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  91015,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  265461,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  113769,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  144797,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.505 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$20.916 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 3/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  13,
@@ -1001,14 +1001,14 @@
                            "macroPhaseYearWithinCycle":  3,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1357488,
-                           "netWorth":  1577785,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  123165,
+                           "cash":  1358530,
+                           "netWorth":  1578824,
+                           "annualRevenue":  454143,
+                           "annualCOGS":  121719,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  85995,
+                           "annualNetProfit":  86184,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -1029,45 +1029,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  423360,
+                                                           "annualCogs":  113022,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  224775
+                                                           "annualNetProfit":  276498
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  28980,
+                                                           "annualRevenue":  30780,
+                                                           "annualCogs":  8694,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  54900
+                                                           "annualNetProfit":  3366
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  90829,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  264917,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113536,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144500,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1075,7 +1075,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.166 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$18.731 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.182 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$23.042 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 4/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  14,
@@ -1083,14 +1083,14 @@
                            "macroPhaseYearWithinCycle":  4,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1443483,
-                           "netWorth":  1663780,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  123165,
+                           "cash":  1444714,
+                           "netWorth":  1665008,
+                           "annualRevenue":  454140,
+                           "annualCOGS":  121716,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  85995,
+                           "annualNetProfit":  86184,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -1111,45 +1111,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  423360,
+                                                           "annualCogs":  113022,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  224775
+                                                           "annualNetProfit":  276498
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  28980,
+                                                           "annualRevenue":  30780,
+                                                           "annualCogs":  8694,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  54900
+                                                           "annualNetProfit":  3366
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  90828,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  264915,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113535,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144499,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1157,7 +1157,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.166 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$18.731 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.182 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$23.042 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 🔥 Macro Boom (Ano 5/10): Demanda aquecida (+20%), custos no atacado +15%."
                        },
                        {
                            "year":  15,
@@ -1165,14 +1165,14 @@
                            "macroPhaseYearWithinCycle":  5,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1529478,
-                           "netWorth":  1749775,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  123165,
+                           "cash":  1530898,
+                           "netWorth":  1751192,
+                           "annualRevenue":  454140,
+                           "annualCOGS":  121716,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  85995,
+                           "annualNetProfit":  86184,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -1193,45 +1193,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  94185,
+                                                           "annualRevenue":  423360,
+                                                           "annualCogs":  113022,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  224775
+                                                           "annualNetProfit":  276498
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  28980,
+                                                           "annualRevenue":  30780,
+                                                           "annualCogs":  8694,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  54900
+                                                           "annualNetProfit":  3366
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  90828,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  264915,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113535,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144499,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1239,7 +1239,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.166 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$18.731 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $7.182 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$23.042 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. ⚠️ Macro Saturação (Ano 6/10): Margens comprimidas e estoques desacelerando."
                        },
                        {
                            "year":  16,
@@ -1247,14 +1247,14 @@
                            "macroPhaseYearWithinCycle":  6,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1626183,
-                           "netWorth":  1846480,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  112455,
+                           "cash":  1627583,
+                           "netWorth":  1847882,
+                           "annualRevenue":  455702,
+                           "annualCOGS":  112772,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  96705,
+                           "annualNetProfit":  96690,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -1275,45 +1275,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  85995,
+                                                           "annualRevenue":  335664,
+                                                           "annualCogs":  81818,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  232965
+                                                           "annualNetProfit":  220006
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  26460,
+                                                           "annualRevenue":  120042,
+                                                           "annualCogs":  30958,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  57420
+                                                           "annualNetProfit":  70364
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  91140,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  265826,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113925,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144996,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1321,7 +1321,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$1.025 (-11.3%) comparado ao mês anterior (Receita: -$1.355). Destaque operacional: Hiper Ferreira Atenas gerou +$19.414 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.057 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$18.334 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. ⚠️ Macro Saturação (Ano 7/10): Margens comprimidas e estoques desacelerando."
                        },
                        {
                            "year":  17,
@@ -1329,14 +1329,14 @@
                            "macroPhaseYearWithinCycle":  7,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1722888,
-                           "netWorth":  1943185,
-                           "annualRevenue":  455400,
-                           "annualCOGS":  112455,
+                           "cash":  1724273,
+                           "netWorth":  1944571,
+                           "annualRevenue":  455706,
+                           "annualCOGS":  112776,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  96705,
+                           "annualNetProfit":  96690,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -1357,45 +1357,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  352800,
-                                                           "annualCogs":  85995,
+                                                           "annualRevenue":  335664,
+                                                           "annualCogs":  81818,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  232965
+                                                           "annualNetProfit":  220006
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  102600,
-                                                           "annualCogs":  26460,
+                                                           "annualRevenue":  120042,
+                                                           "annualCogs":  30958,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  57420
+                                                           "annualNetProfit":  70364
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91080,
+                                                         "unitsSoldYear":  91141,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  265650,
+                                                         "unitsSoldYear":  265828,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  113850,
+                                                         "unitsSoldYear":  113926,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  144900,
+                                                         "unitsSoldYear":  144997,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1403,7 +1403,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$459 (-5.4%) comparado ao mês anterior (Receita: -$608). Destaque operacional: Hiper Ferreira Atenas gerou +$19.414 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $8.057 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$18.334 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 8/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  18,
@@ -1411,14 +1411,14 @@
                            "macroPhaseYearWithinCycle":  8,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1837578,
-                           "netWorth":  2059946,
-                           "annualRevenue":  447116,
-                           "annualCOGS":  84530,
+                           "cash":  1848002,
+                           "netWorth":  2068303,
+                           "annualRevenue":  456657,
+                           "annualCOGS":  86686,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  116347,
+                           "annualNetProfit":  123731,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -1439,45 +1439,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  325618,
-                                                           "annualCogs":  60472,
+                                                           "annualRevenue":  282240,
+                                                           "annualCogs":  52416,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  231306
+                                                           "annualNetProfit":  195984
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  130302,
-                                                           "annualCogs":  25603,
+                                                           "annualRevenue":  174420,
+                                                           "annualCogs":  34272,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  85979
+                                                           "annualNetProfit":  121428
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  89423,
+                                                         "unitsSoldYear":  91331,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  260818,
+                                                         "unitsSoldYear":  266383,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  111779,
+                                                         "unitsSoldYear":  114164,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  142264,
+                                                         "unitsSoldYear":  145300,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1485,7 +1485,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$17 (-0.2%) comparado ao mês anterior (Receita: -$25). Destaque operacional: Hiper Ferreira Atenas gerou +$19.275 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $10.311 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$16.332 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 9/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  19,
@@ -1493,14 +1493,14 @@
                            "macroPhaseYearWithinCycle":  9,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1961226,
-                           "netWorth":  2183591,
-                           "annualRevenue":  456185,
-                           "annualCOGS":  86299,
+                           "cash":  1971734,
+                           "netWorth":  2192035,
+                           "annualRevenue":  456660,
+                           "annualCOGS":  86688,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  123646,
+                           "annualNetProfit":  123732,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -1521,45 +1521,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  328877,
-                                                           "annualCogs":  61077,
+                                                           "annualRevenue":  282240,
+                                                           "annualCogs":  52416,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  233960
+                                                           "annualNetProfit":  195984
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  127498,
-                                                           "annualCogs":  25052,
+                                                           "annualRevenue":  174420,
+                                                           "annualCogs":  34272,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  83725
+                                                           "annualNetProfit":  121428
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91237,
+                                                         "unitsSoldYear":  91332,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  266108,
+                                                         "unitsSoldYear":  266385,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  114046,
+                                                         "unitsSoldYear":  114165,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  145150,
+                                                         "unitsSoldYear":  145301,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1567,7 +1567,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$98 (+1.0%) em relação ao mês anterior (Receita: +$121). Destaque operacional: Hiper Ferreira Atenas gerou +$19.497 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $10.311 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$16.332 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 📉 Macro Recessão (Ano 10/10): Demanda contraída (-20%), reposição de insumos no atacado com 20% de desconto."
                        },
                        {
                            "year":  20,
@@ -1575,14 +1575,14 @@
                            "macroPhaseYearWithinCycle":  10,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  2084823,
-                           "netWorth":  2307197,
-                           "annualRevenue":  456124,
-                           "annualCOGS":  86280,
+                           "cash":  2095466,
+                           "netWorth":  2315767,
+                           "annualRevenue":  456660,
+                           "annualCOGS":  86688,
                            "annualFixedCosts":  246240,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  123604,
+                           "annualNetProfit":  123732,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Agropecuaria Ferreira",
@@ -1603,45 +1603,45 @@
                                                        {
                                                            "name":  "Hiper Ferreira Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  327331,
-                                                           "annualCogs":  60790,
+                                                           "annualRevenue":  282240,
+                                                           "annualCogs":  52416,
                                                            "annualOpex":  33840,
-                                                           "annualNetProfit":  232701
+                                                           "annualNetProfit":  195984
                                                        },
                                                        {
                                                            "name":  "Hiper Ferreira Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  127840,
-                                                           "annualCogs":  25119,
+                                                           "annualRevenue":  174420,
+                                                           "annualCogs":  34272,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  84000
+                                                           "annualNetProfit":  121428
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  91225,
+                                                         "unitsSoldYear":  91332,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  266072,
+                                                         "unitsSoldYear":  266385,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  114031,
+                                                         "unitsSoldYear":  114165,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  145130,
+                                                         "unitsSoldYear":  145301,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1649,7 +1649,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$45 (-0.4%) comparado ao mês anterior (Receita: -$52). Destaque operacional: Hiper Ferreira Atenas gerou +$19.392 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $10.311 em relação ao mês anterior. Destaque operacional: Hiper Ferreira Atenas gerou +$16.332 de margem limpa. Centro de custo: Complexo Ferreira absorveu -$12.300 em custos operacionais e salários. 🌱 Macro Retomada (Ano 1/10): Demanda em expansão estável (+5%) e custos balanceados."
                        }
                    ],
     "automatedSanityAlerts":  [
