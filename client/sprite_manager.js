@@ -70,6 +70,9 @@ class SpriteManager {
     'residencial/commercial_tower': 'assets/residencial/commercial_tower.png',
     'residencial/commercial_tower_2': 'assets/residencial/commercial_tower_2.png',
     'residencial/office_building': 'assets/residencial/office_building.png',
+    'residencial/apartment_classic': 'assets/residencial/apartment_classic.png',
+    'residencial/commercial_midrise': 'assets/residencial/commercial_midrise.png',
+    'residencial/apartment_eco': 'assets/residencial/apartment_eco.png',
 
     // Legado residencial
     'casas/house_suburban': 'assets/casas/house_suburban.png',
@@ -295,21 +298,29 @@ class SpriteManager {
   }
 
   static getUrbanSprite(districtId, x, y) {
-    const hash = Math.abs((x * 73856093 ^ y * 19349663) % 4);
+    const hash = Math.abs((x * 73856093 ^ y * 19349663) % 6);
     if (districtId === 'downtown') {
       if (hash === 0) return 'residencial/commercial_tower';
       if (hash === 1) return 'residencial/commercial_tower_2';
-      if (hash === 2) return 'residencial/office_building';
-      return 'residencial/apartment_building';
+      if (hash === 2) return 'residencial/commercial_midrise';
+      if (hash === 3) return 'residencial/apartment_eco';
+      if (hash === 4) return 'residencial/office_building';
+      return 'residencial/apartment_classic';
     }
     if (districtId === 'northside') {
-      if (hash === 0 || hash === 1) return 'residencial/apartment_building';
-      if (hash === 2) return 'residencial/office_building';
-      return 'residencial/mansion';
-    }
-    if (districtId === 'west_suburbs') {
+      if (hash === 0 || hash === 1) return 'residencial/mansion';
+      if (hash === 2) return 'residencial/apartment_eco';
+      if (hash === 3) return 'residencial/apartment_building';
+      if (hash === 4) return 'residencial/commercial_midrise';
       return 'residencial/house_suburban';
     }
+    if (districtId === 'west_suburbs') {
+      if (hash === 0 || hash === 1 || hash === 2) return 'residencial/house_suburban';
+      if (hash === 3) return 'residencial/apartment_classic';
+      return 'residencial/house_suburban';
+    }
+    return 'residencial/house_suburban';
+  }
     return 'residencial/house_suburban';
   }
 
@@ -331,5 +342,6 @@ if (typeof window !== 'undefined') {
   window.SpriteManager = SpriteManager;
   SpriteManager.init();
 }
+
 
 
