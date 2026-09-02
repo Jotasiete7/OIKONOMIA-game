@@ -1,4 +1,4 @@
-﻿/**
+/**
  * sprite_manager.js â€” Gerenciador de Sprites & Assets IsomÃ©tricos do OIKONOMIA
  * Suporta a distribuiÃ§Ã£o oficial do OIKONOMIA-buildings:
  * - residencial/
@@ -319,8 +319,6 @@ class SpriteManager {
       if (hash === 3) return 'residencial/apartment_classic';
       return 'residencial/house_suburban';
     }
-    return 'residencial/house_suburban';
-  }
     return 'residencial/house_suburban';
   }
 
