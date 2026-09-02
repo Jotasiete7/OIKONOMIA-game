@@ -373,6 +373,143 @@ const CoreMath = {
     if (q >= 75) return { level: 3, label: 'Grau Superior', icon: '🥇', color: 'text-cyan-300 border-cyan-500 bg-cyan-950/60' };
     if (q >= 65) return { level: 2, label: 'Qualidade Comercial', icon: '🥈', color: 'text-emerald-300 border-emerald-500 bg-emerald-950/60' };
     return { level: 1, label: 'Padrão Genérico', icon: '🥉', color: 'text-slate-300 border-slate-600 bg-slate-900/60' };
+  },
+
+  /**
+   * =========================================================================
+   * MOTOR MACROECONÔMICO DE SAZONALIDADE & TRIMESTRES (QUARTERS)
+   * =========================================================================
+   */
+  QUARTERS: {
+    1: {
+      id: 'Q1',
+      code: 'Q1',
+      name: 'Verão & Retomada',
+      season: 'Verão',
+      emoji: '☀️',
+      months: [1, 2, 3],
+      productMultipliers: {
+        cola: 1.35,
+        mineral_water: 1.40,
+        tshirt: 1.20,
+        chocolate: 0.85,
+        canned_soup: 0.80,
+        coffee: 0.90
+      },
+      categoryMultipliers: {
+        beverages: 1.30,
+        apparel: 1.15,
+        agriculture: 1.10
+      },
+      agroYieldMultiplier: 1.10, // Safra normal-alta
+      alertMessage: '☀️ INÍCIO DO Q1 (Verão): Alta temporada de bebidas refrescantes e vestuário leve!'
+    },
+    2: {
+      id: 'Q2',
+      code: 'Q2',
+      name: 'Outono & Safra',
+      season: 'Outono',
+      emoji: '🍂',
+      months: [4, 5, 6],
+      productMultipliers: {
+        bread: 1.20,
+        flour: 1.25,
+        refined_sugar: 1.20,
+        wheat: 1.30,
+        sugar_cane: 1.25,
+        milk: 1.10
+      },
+      categoryMultipliers: {
+        agriculture: 1.25,
+        packaged_food: 1.15
+      },
+      agroYieldMultiplier: 1.25, // Safra máxima do ano (+25% de colheita nas fazendas)
+      alertMessage: '🍂 INÍCIO DO Q2 (Outono): Safra recorde no campo e demanda aquecida por panificação!'
+    },
+    3: {
+      id: 'Q3',
+      code: 'Q3',
+      name: 'Inverno & Entressafra',
+      season: 'Inverno',
+      emoji: '❄️',
+      months: [7, 8, 9],
+      productMultipliers: {
+        canned_soup: 1.40,
+        beef: 1.25,
+        frozen_beef: 1.30,
+        coffee: 1.35,
+        chocolate: 1.25,
+        chocolate_bar: 1.25,
+        jeans: 1.25,
+        cold_pills: 1.45,
+        cola: 0.80,
+        mineral_water: 0.85,
+        tshirt: 0.85
+      },
+      categoryMultipliers: {
+        packaged_food: 1.30,
+        apparel: 1.10
+      },
+      agroYieldMultiplier: 0.80, // Entressafra (-20% colheita nas fazendas)
+      alertMessage: '❄️ INÍCIO DO Q3 (Inverno): Entressafra no campo e forte consumo de café, sopas e fármacos!'
+    },
+    4: {
+      id: 'Q4',
+      code: 'Q4',
+      name: 'Festas de Fim de Ano',
+      season: 'Fim de Ano',
+      emoji: '🎄',
+      months: [10, 11, 12],
+      productMultipliers: {
+        chocolate: 1.45,
+        chocolate_bar: 1.45,
+        beef: 1.35,
+        poultry_meat: 1.40,
+        pork_meat: 1.35,
+        sneakers: 1.30,
+        jeans: 1.25,
+        tshirt: 1.20,
+        bread: 1.15,
+        cold_pills: 1.10
+      },
+      categoryMultipliers: {
+        packaged_food: 1.35,
+        electronics: 1.40,
+        apparel: 1.30,
+        beverages: 1.20
+      },
+      agroYieldMultiplier: 1.00,
+      alertMessage: '🎄 INÍCIO DO Q4 (Festas de Fim de Ano): O Grande Trimestre de Compras no varejo começou!'
+    }
+  },
+
+  getQuarterIndex(month) {
+    const m = Number(month) || 1;
+    if (m >= 1 && m <= 3) return 1;
+    if (m >= 4 && m <= 6) return 2;
+    if (m >= 7 && m <= 9) return 3;
+    return 4;
+  },
+
+  getQuarterInfo(month) {
+    const qIndex = this.getQuarterIndex(month);
+    return this.QUARTERS[qIndex] || this.QUARTERS[1];
+  },
+
+  getSeasonalDemandMultiplier(productId, month, category = null) {
+    const qInfo = this.getQuarterInfo(month);
+    if (qInfo.productMultipliers && qInfo.productMultipliers[productId]) {
+      return qInfo.productMultipliers[productId];
+    }
+    if (category && qInfo.categoryMultipliers && qInfo.categoryMultipliers[category]) {
+      return qInfo.categoryMultipliers[category];
+    }
+    return 1.0;
+  },
+
+  getSeasonalAgroYieldMultiplier(month) {
+    const qInfo = this.getQuarterInfo(month);
+    return qInfo.agroYieldMultiplier || 1.0;
   }
 };
 
