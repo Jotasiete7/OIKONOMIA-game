@@ -3,10 +3,10 @@
 > **Player:** Vance Sterling | **Capital Inicial:** $15.000.000 | **Dificuldade:** standard | **Anos Simulados:** 5
 
 ## Resumo Consolidado
-* **Caixa Final:** $16.793.746
-* **Patrimonio Liquido:** $17.053.902
-* **Faturamento Acumulado:** $3.936.320
-* **Lucro Liquido Acumulado:** $1.796.771
+* **Caixa Final:** $16.792.225
+* **Patrimonio Liquido:** $17.051.326
+* **Faturamento Acumulado:** $3.934.282
+* **Lucro Liquido Acumulado:** $1.795.249
 
 ## Alertas Automaticos de Sanidade
 * INFO: Centro de Custo Upstream Integrado (farm): 'Mega Agropecuaria Sterling' absorveu $-230.400 em custos operacionais absorvidos pelo varejo.
@@ -15,8 +15,8 @@
 ## Historico Detalhado Ano a Ano
 | Ano | Ciclo / Fase | Caixa | Receita | Lucro Liq. | Margem | Veredito do Analista Corporativo |
 |---|---|---|---|---|---|---|
-| Ano 2 | C1 Retomada & Estabilidade (Ano 2/10) | $15.327.552 | $728.060 | $330.577 | 45,4% | 📉 Atenção Executiva: O Lucro Líquido recuou -$194 (-0.6%) comparado ao mês anterior (Receita: -$248). Destaque operacional: Sterling Mall Atenas gerou +$26.971 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários. |
-| Ano 3 | C1 Expansão & Superaquecimento (Ano 3/10) | $15.654.941 | $723.933 | $327.389 | 45,2% | 📈 Desempenho em Alta: O Lucro Líquido aumentou +$196 (+0.7%) em relação ao mês anterior (Receita: +$257). Destaque operacional: Sterling Mall Atenas gerou +$27.211 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários. |
-| Ano 4 | C1 Expansão & Superaquecimento (Ano 4/10) | $16.036.198 | $830.339 | $381.257 | 45,9% | 📉 Atenção Executiva: O Lucro Líquido recuou -$279 (-0.8%) comparado ao mês anterior (Receita: -$384). Destaque operacional: Sterling Mall Atenas gerou +$30.065 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários. |
-| Ano 5 | C1 Expansão & Superaquecimento (Ano 5/10) | $16.415.021 | $827.065 | $378.823 | 45,8% | 📉 Atenção Executiva: O Lucro Líquido recuou -$390 (-1.1%) comparado ao mês anterior (Receita: -$522). Destaque operacional: Sterling Mall Atenas gerou +$29.431 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários. |
-| Ano 6 | C1 Saturação & Desaceleração (Ano 6/10) | $16.793.746 | $826.923 | $378.725 | 45,8% | 📉 Atenção Executiva: O Lucro Líquido recuou -$460 (-1.3%) comparado ao mês anterior (Receita: -$628). Destaque operacional: Sterling Mall Atenas gerou +$29.713 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários. |
+| Ano 1 | C1 Retomada & Estabilidade (Ano 1/10) | $15.326.088 | $726.157 | $329.113 | 45,3% | 📉 Atenção Executiva: O Lucro Líquido recuou -$688 (-2.3%) comparado ao mês anterior (Receita: -$891). Destaque operacional: Sterling Mall Atenas gerou +$26.978 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários. |
+| Ano 2 | C1 Retomada & Estabilidade (Ano 2/10) | $15.654.071 | $724.703 | $327.983 | 45,3% | 📈 Desempenho em Alta: O Lucro Líquido aumentou +$730 (+2.5%) em relação ao mês anterior (Receita: +$938). Destaque operacional: Sterling Mall Atenas gerou +$27.480 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários. |
+| Ano 3 | C1 Expansão & Superaquecimento (Ano 3/10) | $16.032.644 | $826.720 | $378.572 | 45,8% | 📉 Atenção Executiva: O Lucro Líquido recuou -$433 (-1.3%) comparado ao mês anterior (Receita: -$587). Destaque operacional: Sterling Mall Atenas gerou +$29.614 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários. |
+| Ano 4 | C1 Expansão & Superaquecimento (Ano 4/10) | $16.412.727 | $828.746 | $380.084 | 45,9% | 📈 Desempenho em Alta: O Lucro Líquido aumentou +$101 (+0.3%) em relação ao mês anterior (Receita: +$142). Destaque operacional: Sterling Mall Atenas gerou +$29.911 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários. |
+| Ano 5 | C1 Expansão & Superaquecimento (Ano 5/10) | $16.792.225 | $827.956 | $379.497 | 45,8% | 📈 Desempenho em Alta: O Lucro Líquido aumentou +$210 (+0.6%) em relação ao mês anterior (Receita: +$283). Destaque operacional: Sterling Mall Atenas gerou +$29.810 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários. |

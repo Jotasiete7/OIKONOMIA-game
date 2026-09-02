@@ -6,15 +6,15 @@
     "difficulty":  "standard",
     "startingCash":  50000,
     "simulatedYears":  20,
-    "finalCash":  1166188,
-    "finalNetWorth":  1432778,
-    "totalRevenue":  9836775,
-    "totalNetProfit":  1137284,
+    "finalCash":  1166165,
+    "finalNetWorth":  1432759,
+    "totalRevenue":  9836729,
+    "totalNetProfit":  1137264,
     "yearlyData":  [
                        {
-                           "year":  2,
+                           "year":  1,
                            "macroPhase":  "Retomada \u0026 Estabilidade",
-                           "macroPhaseYearWithinCycle":  2,
+                           "macroPhaseYearWithinCycle":  1,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
                            "cash":  98215,
@@ -102,9 +102,9 @@
                            "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.680 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$23.130 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
-                           "year":  3,
-                           "macroPhase":  "Expansão \u0026 Superaquecimento",
-                           "macroPhaseYearWithinCycle":  3,
+                           "year":  2,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  2,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
                            "cash":  154375,
@@ -192,13 +192,103 @@
                            "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.680 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$23.130 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
+                           "year":  3,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  3,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  196225,
+                           "netWorth":  461061,
+                           "annualRevenue":  491400,
+                           "annualCOGS":  109710,
+                           "annualFixedCosts":  339840,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  36000,
+                           "annualNetProfit":  41850,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Bio-Fazenda Okafor",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Laboratorio de Alimentos Okafor",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "Boutique Gourmet Okafor",
+                                                           "type":  "store",
+                                                           "annualRevenue":  367200,
+                                                           "annualCogs":  80730,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  267030
+                                                       },
+                                                       {
+                                                           "name":  "Boutique Porto Real",
+                                                           "type":  "store",
+                                                           "annualRevenue":  124200,
+                                                           "annualCogs":  28980,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  76500
+                                                       },
+                                                       {
+                                                           "name":  "Instituto Okafor de P\u0026D",
+                                                           "type":  "rdCenter",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  108000,
+                                                           "annualNetProfit":  -108000
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  98280,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  286650,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  122850,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  156355,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $3.488 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$22.253 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
                            "year":  4,
                            "macroPhase":  "Expansão \u0026 Superaquecimento",
                            "macroPhaseYearWithinCycle":  4,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  196225,
-                           "netWorth":  461061,
+                           "cash":  238075,
+                           "netWorth":  502911,
                            "annualRevenue":  491400,
                            "annualCOGS":  109710,
                            "annualFixedCosts":  339840,
@@ -287,8 +377,8 @@
                            "macroPhaseYearWithinCycle":  5,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  238075,
-                           "netWorth":  502911,
+                           "cash":  279925,
+                           "netWorth":  544761,
                            "annualRevenue":  491400,
                            "annualCOGS":  109710,
                            "annualFixedCosts":  339840,
@@ -377,14 +467,14 @@
                            "macroPhaseYearWithinCycle":  6,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  279925,
-                           "netWorth":  544761,
+                           "cash":  331315,
+                           "netWorth":  596151,
                            "annualRevenue":  491400,
-                           "annualCOGS":  109710,
+                           "annualCOGS":  100170,
                            "annualFixedCosts":  339840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  36000,
-                           "annualNetProfit":  41850,
+                           "annualNetProfit":  51390,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Bio-Fazenda Okafor",
@@ -406,17 +496,17 @@
                                                            "name":  "Boutique Gourmet Okafor",
                                                            "type":  "store",
                                                            "annualRevenue":  367200,
-                                                           "annualCogs":  80730,
+                                                           "annualCogs":  73710,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  267030
+                                                           "annualNetProfit":  274050
                                                        },
                                                        {
                                                            "name":  "Boutique Porto Real",
                                                            "type":  "store",
                                                            "annualRevenue":  124200,
-                                                           "annualCogs":  28980,
+                                                           "annualCogs":  26460,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  76500
+                                                           "annualNetProfit":  79020
                                                        },
                                                        {
                                                            "name":  "Instituto Okafor de P\u0026D",
@@ -459,7 +549,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $3.488 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$22.253 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.283 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$22.838 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
                            "year":  7,
@@ -467,8 +557,8 @@
                            "macroPhaseYearWithinCycle":  7,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  331315,
-                           "netWorth":  596151,
+                           "cash":  382705,
+                           "netWorth":  647541,
                            "annualRevenue":  491400,
                            "annualCOGS":  100170,
                            "annualFixedCosts":  339840,
@@ -557,14 +647,14 @@
                            "macroPhaseYearWithinCycle":  8,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  382705,
-                           "netWorth":  647541,
-                           "annualRevenue":  491400,
-                           "annualCOGS":  100170,
+                           "cash":  448761,
+                           "netWorth":  715369,
+                           "annualRevenue":  482520,
+                           "annualCOGS":  75206,
                            "annualFixedCosts":  339840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  36000,
-                           "annualNetProfit":  51390,
+                           "annualNetProfit":  67473,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Bio-Fazenda Okafor",
@@ -585,18 +675,18 @@
                                                        {
                                                            "name":  "Boutique Gourmet Okafor",
                                                            "type":  "store",
-                                                           "annualRevenue":  367200,
-                                                           "annualCogs":  73710,
+                                                           "annualRevenue":  351329,
+                                                           "annualCogs":  53733,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  274050
+                                                           "annualNetProfit":  278156
                                                        },
                                                        {
                                                            "name":  "Boutique Porto Real",
                                                            "type":  "store",
-                                                           "annualRevenue":  124200,
-                                                           "annualCogs":  26460,
+                                                           "annualRevenue":  140056,
+                                                           "annualCogs":  22734,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  79020
+                                                           "annualNetProfit":  98602
                                                        },
                                                        {
                                                            "name":  "Instituto Okafor de P\u0026D",
@@ -610,28 +700,28 @@
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  98280,
+                                                         "unitsSoldYear":  96504,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  286650,
+                                                         "unitsSoldYear":  281470,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  122850,
+                                                         "unitsSoldYear":  120630,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  156355,
+                                                         "unitsSoldYear":  153529,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -639,7 +729,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.283 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$22.838 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$25 (+0.4%) em relação ao mês anterior (Receita: +$27). Destaque operacional: Boutique Gourmet Okafor gerou +$23.180 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
                            "year":  9,
@@ -647,14 +737,14 @@
                            "macroPhaseYearWithinCycle":  9,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  448795,
-                           "netWorth":  715396,
-                           "annualRevenue":  482564,
-                           "annualCOGS":  75222,
+                           "cash":  524112,
+                           "netWorth":  790717,
+                           "annualRevenue":  491923,
+                           "annualCOGS":  76734,
                            "annualFixedCosts":  339840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  36000,
-                           "annualNetProfit":  67502,
+                           "annualNetProfit":  75349,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Bio-Fazenda Okafor",
@@ -675,18 +765,18 @@
                                                        {
                                                            "name":  "Boutique Gourmet Okafor",
                                                            "type":  "store",
-                                                           "annualRevenue":  350146,
-                                                           "annualCogs":  53552,
+                                                           "annualRevenue":  349738,
+                                                           "annualCogs":  53489,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  277154
+                                                           "annualNetProfit":  276808
                                                        },
                                                        {
                                                            "name":  "Boutique Porto Real",
                                                            "type":  "store",
-                                                           "annualRevenue":  141257,
-                                                           "annualCogs":  22929,
+                                                           "annualRevenue":  141091,
+                                                           "annualCogs":  22902,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  99608
+                                                           "annualNetProfit":  99469
                                                        },
                                                        {
                                                            "name":  "Instituto Okafor de P\u0026D",
@@ -700,28 +790,28 @@
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  96513,
+                                                         "unitsSoldYear":  98385,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  281496,
+                                                         "unitsSoldYear":  286955,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  120641,
+                                                         "unitsSoldYear":  122981,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  153543,
+                                                         "unitsSoldYear":  156521,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -729,7 +819,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$75 (-1.2%) comparado ao mês anterior (Receita: -$88). Destaque operacional: Boutique Gourmet Okafor gerou +$23.096 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$70 (-1.1%) comparado ao mês anterior (Receita: -$84). Destaque operacional: Boutique Gourmet Okafor gerou +$23.067 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
                            "year":  10,
@@ -737,14 +827,14 @@
                            "macroPhaseYearWithinCycle":  10,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  524113,
-                           "netWorth":  790718,
-                           "annualRevenue":  491884,
-                           "annualCOGS":  76723,
+                           "cash":  599501,
+                           "netWorth":  866097,
+                           "annualRevenue":  491955,
+                           "annualCOGS":  76733,
                            "annualFixedCosts":  339840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  36000,
-                           "annualNetProfit":  75321,
+                           "annualNetProfit":  75382,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Bio-Fazenda Okafor",
@@ -765,18 +855,18 @@
                                                        {
                                                            "name":  "Boutique Gourmet Okafor",
                                                            "type":  "store",
-                                                           "annualRevenue":  353981,
-                                                           "annualCogs":  54138,
+                                                           "annualRevenue":  354797,
+                                                           "annualCogs":  54263,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  280403
+                                                           "annualNetProfit":  281094
                                                        },
                                                        {
                                                            "name":  "Boutique Porto Real",
                                                            "type":  "store",
-                                                           "annualRevenue":  137117,
-                                                           "annualCogs":  22257,
+                                                           "annualRevenue":  136951,
+                                                           "annualCogs":  22230,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  96140
+                                                           "annualNetProfit":  96001
                                                        },
                                                        {
                                                            "name":  "Instituto Okafor de P\u0026D",
@@ -790,28 +880,28 @@
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  98377,
+                                                         "unitsSoldYear":  98391,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  286932,
+                                                         "unitsSoldYear":  286974,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  122971,
+                                                         "unitsSoldYear":  122989,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  156509,
+                                                         "unitsSoldYear":  156531,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -819,7 +909,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$55 (-0.9%) comparado ao mês anterior (Receita: -$68). Destaque operacional: Boutique Gourmet Okafor gerou +$23.367 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$4 (+0.1%) em relação ao mês anterior (Receita: -$1). Destaque operacional: Boutique Gourmet Okafor gerou +$23.424 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
                            "year":  11,
@@ -827,104 +917,14 @@
                            "macroPhaseYearWithinCycle":  1,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  599529,
-                           "netWorth":  866120,
-                           "annualRevenue":  491991,
-                           "annualCOGS":  76746,
+                           "cash":  664865,
+                           "netWorth":  929701,
+                           "annualRevenue":  500604,
+                           "annualCOGS":  97160,
                            "annualFixedCosts":  339840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  36000,
-                           "annualNetProfit":  75404,
-                           "facilitiesBreakdown":  [
-                                                       {
-                                                           "name":  "Bio-Fazenda Okafor",
-                                                           "type":  "farm",
-                                                           "annualRevenue":  0,
-                                                           "annualCogs":  0,
-                                                           "annualOpex":  46080,
-                                                           "annualNetProfit":  -46080
-                                                       },
-                                                       {
-                                                           "name":  "Laboratorio de Alimentos Okafor",
-                                                           "type":  "factory",
-                                                           "annualRevenue":  0,
-                                                           "annualCogs":  0,
-                                                           "annualOpex":  147600,
-                                                           "annualNetProfit":  -147600
-                                                       },
-                                                       {
-                                                           "name":  "Boutique Gourmet Okafor",
-                                                           "type":  "store",
-                                                           "annualRevenue":  349697,
-                                                           "annualCogs":  53483,
-                                                           "annualOpex":  19440,
-                                                           "annualNetProfit":  276774
-                                                       },
-                                                       {
-                                                           "name":  "Boutique Porto Real",
-                                                           "type":  "store",
-                                                           "annualRevenue":  142126,
-                                                           "annualCogs":  23070,
-                                                           "annualOpex":  18720,
-                                                           "annualNetProfit":  100336
-                                                       },
-                                                       {
-                                                           "name":  "Instituto Okafor de P\u0026D",
-                                                           "type":  "rdCenter",
-                                                           "annualRevenue":  0,
-                                                           "annualCogs":  0,
-                                                           "annualOpex":  108000,
-                                                           "annualNetProfit":  -108000
-                                                       }
-                                                   ],
-                           "productsBreakdown":  [
-                                                     {
-                                                         "productId":  "bread",
-                                                         "unitsSoldYear":  98398,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "flour",
-                                                         "unitsSoldYear":  286995,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "milk",
-                                                         "unitsSoldYear":  122998,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "cola",
-                                                         "unitsSoldYear":  156543,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     }
-                                                 ],
-                           "consecutiveInsolventMonthsAtYearEnd":  0,
-                           "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$3 (-0.1%) comparado ao mês anterior (Receita: -$6). Destaque operacional: Boutique Gourmet Okafor gerou +$23.064 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
-                       },
-                       {
-                           "year":  12,
-                           "macroPhase":  "Retomada \u0026 Estabilidade",
-                           "macroPhaseYearWithinCycle":  2,
-                           "cycleNumber":  2,
-                           "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  664869,
-                           "netWorth":  929705,
-                           "annualRevenue":  500580,
-                           "annualCOGS":  97155,
-                           "annualFixedCosts":  339840,
-                           "annualMarketingSpend":  0,
-                           "annualRDInvestment":  36000,
-                           "annualNetProfit":  63585,
+                           "annualNetProfit":  63604,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Bio-Fazenda Okafor",
@@ -970,28 +970,28 @@
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  100116,
+                                                         "unitsSoldYear":  100121,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  292005,
+                                                         "unitsSoldYear":  292019,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  125145,
+                                                         "unitsSoldYear":  125151,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  159275,
+                                                         "unitsSoldYear":  159283,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1002,13 +1002,13 @@
                            "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.680 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$23.130 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
-                           "year":  13,
-                           "macroPhase":  "Expansão \u0026 Superaquecimento",
-                           "macroPhaseYearWithinCycle":  3,
+                           "year":  12,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  2,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  721029,
-                           "netWorth":  985865,
+                           "cash":  721025,
+                           "netWorth":  985861,
                            "annualRevenue":  491400,
                            "annualCOGS":  95400,
                            "annualFixedCosts":  339840,
@@ -1092,13 +1092,103 @@
                            "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.680 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$23.130 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
+                           "year":  13,
+                           "macroPhase":  "Expansão \u0026 Superaquecimento",
+                           "macroPhaseYearWithinCycle":  3,
+                           "cycleNumber":  2,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  762875,
+                           "netWorth":  1027711,
+                           "annualRevenue":  491400,
+                           "annualCOGS":  109710,
+                           "annualFixedCosts":  339840,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  36000,
+                           "annualNetProfit":  41850,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Bio-Fazenda Okafor",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Laboratorio de Alimentos Okafor",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "Boutique Gourmet Okafor",
+                                                           "type":  "store",
+                                                           "annualRevenue":  367200,
+                                                           "annualCogs":  80730,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  267030
+                                                       },
+                                                       {
+                                                           "name":  "Boutique Porto Real",
+                                                           "type":  "store",
+                                                           "annualRevenue":  124200,
+                                                           "annualCogs":  28980,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  76500
+                                                       },
+                                                       {
+                                                           "name":  "Instituto Okafor de P\u0026D",
+                                                           "type":  "rdCenter",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  108000,
+                                                           "annualNetProfit":  -108000
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  98280,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  286650,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  122850,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  156355,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $3.488 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$22.253 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
                            "year":  14,
                            "macroPhase":  "Expansão \u0026 Superaquecimento",
                            "macroPhaseYearWithinCycle":  4,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  762879,
-                           "netWorth":  1027715,
+                           "cash":  804725,
+                           "netWorth":  1069561,
                            "annualRevenue":  491400,
                            "annualCOGS":  109710,
                            "annualFixedCosts":  339840,
@@ -1187,8 +1277,8 @@
                            "macroPhaseYearWithinCycle":  5,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  804729,
-                           "netWorth":  1069565,
+                           "cash":  846575,
+                           "netWorth":  1111411,
                            "annualRevenue":  491400,
                            "annualCOGS":  109710,
                            "annualFixedCosts":  339840,
@@ -1277,14 +1367,14 @@
                            "macroPhaseYearWithinCycle":  6,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  846579,
-                           "netWorth":  1111415,
+                           "cash":  897965,
+                           "netWorth":  1162801,
                            "annualRevenue":  491400,
-                           "annualCOGS":  109710,
+                           "annualCOGS":  100170,
                            "annualFixedCosts":  339840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  36000,
-                           "annualNetProfit":  41850,
+                           "annualNetProfit":  51390,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Bio-Fazenda Okafor",
@@ -1306,17 +1396,17 @@
                                                            "name":  "Boutique Gourmet Okafor",
                                                            "type":  "store",
                                                            "annualRevenue":  367200,
-                                                           "annualCogs":  80730,
+                                                           "annualCogs":  73710,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  267030
+                                                           "annualNetProfit":  274050
                                                        },
                                                        {
                                                            "name":  "Boutique Porto Real",
                                                            "type":  "store",
                                                            "annualRevenue":  124200,
-                                                           "annualCogs":  28980,
+                                                           "annualCogs":  26460,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  76500
+                                                           "annualNetProfit":  79020
                                                        },
                                                        {
                                                            "name":  "Instituto Okafor de P\u0026D",
@@ -1359,7 +1449,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $3.488 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$22.253 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.283 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$22.838 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
                            "year":  17,
@@ -1367,8 +1457,8 @@
                            "macroPhaseYearWithinCycle":  7,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  897969,
-                           "netWorth":  1162805,
+                           "cash":  949355,
+                           "netWorth":  1214191,
                            "annualRevenue":  491400,
                            "annualCOGS":  100170,
                            "annualFixedCosts":  339840,
@@ -1457,14 +1547,14 @@
                            "macroPhaseYearWithinCycle":  8,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  949359,
-                           "netWorth":  1214195,
-                           "annualRevenue":  491400,
-                           "annualCOGS":  100170,
+                           "cash":  1015449,
+                           "netWorth":  1282049,
+                           "annualRevenue":  482568,
+                           "annualCOGS":  75223,
                            "annualFixedCosts":  339840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  36000,
-                           "annualNetProfit":  51390,
+                           "annualNetProfit":  67505,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Bio-Fazenda Okafor",
@@ -1485,18 +1575,18 @@
                                                        {
                                                            "name":  "Boutique Gourmet Okafor",
                                                            "type":  "store",
-                                                           "annualRevenue":  367200,
-                                                           "annualCogs":  73710,
+                                                           "annualRevenue":  352716,
+                                                           "annualCogs":  53945,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  274050
+                                                           "annualNetProfit":  279331
                                                        },
                                                        {
                                                            "name":  "Boutique Porto Real",
                                                            "type":  "store",
-                                                           "annualRevenue":  124200,
-                                                           "annualCogs":  26460,
+                                                           "annualRevenue":  138359,
+                                                           "annualCogs":  22458,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  79020
+                                                           "annualNetProfit":  97181
                                                        },
                                                        {
                                                            "name":  "Instituto Okafor de P\u0026D",
@@ -1510,28 +1600,28 @@
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  98280,
+                                                         "unitsSoldYear":  96514,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  286650,
+                                                         "unitsSoldYear":  281498,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  122850,
+                                                         "unitsSoldYear":  120642,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  156355,
+                                                         "unitsSoldYear":  153544,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1539,7 +1629,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "⚖️ Estabilidade Financeira: O Lucro Líquido manteve-se estável em $4.283 em relação ao mês anterior. Destaque operacional: Boutique Gourmet Okafor gerou +$22.838 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$119 (-1.9%) comparado ao mês anterior (Receita: -$142). Destaque operacional: Boutique Gourmet Okafor gerou +$23.278 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
                            "year":  19,
@@ -1547,14 +1637,14 @@
                            "macroPhaseYearWithinCycle":  9,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1015407,
-                           "netWorth":  1282016,
-                           "annualRevenue":  482521,
-                           "annualCOGS":  75214,
+                           "cash":  1090810,
+                           "netWorth":  1357406,
+                           "annualRevenue":  491935,
+                           "annualCOGS":  76737,
                            "annualFixedCosts":  339840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  36000,
-                           "annualNetProfit":  67467,
+                           "annualNetProfit":  75358,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Bio-Fazenda Okafor",
@@ -1575,18 +1665,18 @@
                                                        {
                                                            "name":  "Boutique Gourmet Okafor",
                                                            "type":  "store",
-                                                           "annualRevenue":  351125,
-                                                           "annualCogs":  53701,
+                                                           "annualRevenue":  346718,
+                                                           "annualCogs":  53028,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  277983
+                                                           "annualNetProfit":  274251
                                                        },
                                                        {
                                                            "name":  "Boutique Porto Real",
                                                            "type":  "store",
-                                                           "annualRevenue":  139477,
-                                                           "annualCogs":  22640,
+                                                           "annualRevenue":  145190,
+                                                           "annualCogs":  23567,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  98117
+                                                           "annualNetProfit":  102903
                                                        },
                                                        {
                                                            "name":  "Instituto Okafor de P\u0026D",
@@ -1600,28 +1690,28 @@
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  96504,
+                                                         "unitsSoldYear":  98387,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  281471,
+                                                         "unitsSoldYear":  286962,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  120630,
+                                                         "unitsSoldYear":  122984,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  153529,
+                                                         "unitsSoldYear":  156525,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1629,7 +1719,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$64 (-1.0%) comparado ao mês anterior (Receita: -$77). Destaque operacional: Boutique Gourmet Okafor gerou +$23.165 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$2 (estável) em relação ao mês anterior (Receita: +$10). Destaque operacional: Boutique Gourmet Okafor gerou +$22.854 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
                            "year":  20,
@@ -1637,14 +1727,14 @@
                            "macroPhaseYearWithinCycle":  10,
                            "cycleNumber":  2,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1090765,
-                           "netWorth":  1357371,
-                           "annualRevenue":  491932,
-                           "annualCOGS":  76737,
+                           "cash":  1166165,
+                           "netWorth":  1432759,
+                           "annualRevenue":  491919,
+                           "annualCOGS":  76727,
                            "annualFixedCosts":  339840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  36000,
-                           "annualNetProfit":  75355,
+                           "annualNetProfit":  75353,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Bio-Fazenda Okafor",
@@ -1665,18 +1755,18 @@
                                                        {
                                                            "name":  "Boutique Gourmet Okafor",
                                                            "type":  "store",
-                                                           "annualRevenue":  351002,
-                                                           "annualCogs":  53683,
+                                                           "annualRevenue":  355450,
+                                                           "annualCogs":  54363,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  277880
+                                                           "annualNetProfit":  281647
                                                        },
                                                        {
                                                            "name":  "Boutique Porto Real",
                                                            "type":  "store",
-                                                           "annualRevenue":  140719,
-                                                           "annualCogs":  22841,
+                                                           "annualRevenue":  136330,
+                                                           "annualCogs":  22129,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  99157
+                                                           "annualNetProfit":  95481
                                                        },
                                                        {
                                                            "name":  "Instituto Okafor de P\u0026D",
@@ -1690,28 +1780,28 @@
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  98386,
+                                                         "unitsSoldYear":  98384,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  286961,
+                                                         "unitsSoldYear":  286953,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  122983,
+                                                         "unitsSoldYear":  122980,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  156524,
+                                                         "unitsSoldYear":  156520,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -1719,97 +1809,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$69 (+1.1%) em relação ao mês anterior (Receita: +$82). Destaque operacional: Boutique Gourmet Okafor gerou +$23.157 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
-                       },
-                       {
-                           "year":  21,
-                           "macroPhase":  "Retomada \u0026 Estabilidade",
-                           "macroPhaseYearWithinCycle":  1,
-                           "cycleNumber":  3,
-                           "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  1166188,
-                           "netWorth":  1432778,
-                           "annualRevenue":  491998,
-                           "annualCOGS":  76748,
-                           "annualFixedCosts":  339840,
-                           "annualMarketingSpend":  0,
-                           "annualRDInvestment":  36000,
-                           "annualNetProfit":  75410,
-                           "facilitiesBreakdown":  [
-                                                       {
-                                                           "name":  "Bio-Fazenda Okafor",
-                                                           "type":  "farm",
-                                                           "annualRevenue":  0,
-                                                           "annualCogs":  0,
-                                                           "annualOpex":  46080,
-                                                           "annualNetProfit":  -46080
-                                                       },
-                                                       {
-                                                           "name":  "Laboratorio de Alimentos Okafor",
-                                                           "type":  "factory",
-                                                           "annualRevenue":  0,
-                                                           "annualCogs":  0,
-                                                           "annualOpex":  147600,
-                                                           "annualNetProfit":  -147600
-                                                       },
-                                                       {
-                                                           "name":  "Boutique Gourmet Okafor",
-                                                           "type":  "store",
-                                                           "annualRevenue":  354226,
-                                                           "annualCogs":  54176,
-                                                           "annualOpex":  19440,
-                                                           "annualNetProfit":  280610
-                                                       },
-                                                       {
-                                                           "name":  "Boutique Porto Real",
-                                                           "type":  "store",
-                                                           "annualRevenue":  138649,
-                                                           "annualCogs":  22505,
-                                                           "annualOpex":  18720,
-                                                           "annualNetProfit":  97423
-                                                       },
-                                                       {
-                                                           "name":  "Instituto Okafor de P\u0026D",
-                                                           "type":  "rdCenter",
-                                                           "annualRevenue":  0,
-                                                           "annualCogs":  0,
-                                                           "annualOpex":  108000,
-                                                           "annualNetProfit":  -108000
-                                                       }
-                                                   ],
-                           "productsBreakdown":  [
-                                                     {
-                                                         "productId":  "bread",
-                                                         "unitsSoldYear":  98400,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "flour",
-                                                         "unitsSoldYear":  286999,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "milk",
-                                                         "unitsSoldYear":  122999,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "cola",
-                                                         "unitsSoldYear":  156545,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     }
-                                                 ],
-                           "consecutiveInsolventMonthsAtYearEnd":  0,
-                           "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$133 (+2.1%) em relação ao mês anterior (Receita: +$158). Destaque operacional: Boutique Gourmet Okafor gerou +$23.384 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$24 (-0.4%) comparado ao mês anterior (Receita: -$34). Destaque operacional: Boutique Gourmet Okafor gerou +$23.471 de margem limpa. Centro de custo: Laboratorio de Alimentos Okafor absorveu -$12.300 em custos operacionais e salários."
                        }
                    ],
     "automatedSanityAlerts":  [

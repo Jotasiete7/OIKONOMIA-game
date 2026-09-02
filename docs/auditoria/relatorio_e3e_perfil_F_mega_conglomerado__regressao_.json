@@ -6,25 +6,25 @@
     "difficulty":  "standard",
     "startingCash":  15000000,
     "simulatedYears":  5,
-    "finalCash":  16793746,
-    "finalNetWorth":  17053902,
-    "totalRevenue":  3936320,
-    "totalNetProfit":  1796771,
+    "finalCash":  16792225,
+    "finalNetWorth":  17051326,
+    "totalRevenue":  3934282,
+    "totalNetProfit":  1795249,
     "yearlyData":  [
                        {
-                           "year":  2,
+                           "year":  1,
                            "macroPhase":  "Retomada \u0026 Estabilidade",
-                           "macroPhaseYearWithinCycle":  2,
+                           "macroPhaseYearWithinCycle":  1,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  15327552,
-                           "netWorth":  15591668,
-                           "annualRevenue":  728060,
-                           "annualCOGS":  165643,
+                           "cash":  15326088,
+                           "netWorth":  15590154,
+                           "annualRevenue":  726157,
+                           "annualCOGS":  165204,
                            "annualFixedCosts":  231840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  330577,
+                           "annualNetProfit":  329113,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Mega Agropecuaria Sterling",
@@ -45,45 +45,45 @@
                                                        {
                                                            "name":  "Sterling Mall Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  440057,
-                                                           "annualCogs":  96962,
+                                                           "annualRevenue":  440164,
+                                                           "annualCogs":  96985,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  323656
+                                                           "annualNetProfit":  323738
                                                        },
                                                        {
                                                            "name":  "Sterling Mall Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  323485,
-                                                           "annualCogs":  76759,
+                                                           "annualRevenue":  319308,
+                                                           "annualCogs":  75768,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  228006
+                                                           "annualNetProfit":  224820
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  145612,
+                                                         "unitsSoldYear":  145231,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  424702,
+                                                         "unitsSoldYear":  423592,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  182015,
+                                                         "unitsSoldYear":  181539,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  231655,
+                                                         "unitsSoldYear":  231050,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -91,7 +91,89 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$194 (-0.6%) comparado ao mês anterior (Receita: -$248). Destaque operacional: Sterling Mall Atenas gerou +$26.971 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$688 (-2.3%) comparado ao mês anterior (Receita: -$891). Destaque operacional: Sterling Mall Atenas gerou +$26.978 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários."
+                       },
+                       {
+                           "year":  2,
+                           "macroPhase":  "Retomada \u0026 Estabilidade",
+                           "macroPhaseYearWithinCycle":  2,
+                           "cycleNumber":  1,
+                           "activeQuarterAtYearEnd":  "Q1",
+                           "cash":  15654071,
+                           "netWorth":  15918149,
+                           "annualRevenue":  724703,
+                           "annualCOGS":  164879,
+                           "annualFixedCosts":  231840,
+                           "annualMarketingSpend":  0,
+                           "annualRDInvestment":  0,
+                           "annualNetProfit":  327983,
+                           "facilitiesBreakdown":  [
+                                                       {
+                                                           "name":  "Mega Agropecuaria Sterling",
+                                                           "type":  "farm",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  46080,
+                                                           "annualNetProfit":  -46080
+                                                       },
+                                                       {
+                                                           "name":  "Complexo Industrial Sterling",
+                                                           "type":  "factory",
+                                                           "annualRevenue":  0,
+                                                           "annualCogs":  0,
+                                                           "annualOpex":  147600,
+                                                           "annualNetProfit":  -147600
+                                                       },
+                                                       {
+                                                           "name":  "Sterling Mall Atenas",
+                                                           "type":  "store",
+                                                           "annualRevenue":  447881,
+                                                           "annualCogs":  98686,
+                                                           "annualOpex":  19440,
+                                                           "annualNetProfit":  329755
+                                                       },
+                                                       {
+                                                           "name":  "Sterling Mall Porto",
+                                                           "type":  "store",
+                                                           "annualRevenue":  323662,
+                                                           "annualCogs":  76801,
+                                                           "annualOpex":  18720,
+                                                           "annualNetProfit":  228141
+                                                       }
+                                                   ],
+                           "productsBreakdown":  [
+                                                     {
+                                                         "productId":  "bread",
+                                                         "unitsSoldYear":  144941,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "flour",
+                                                         "unitsSoldYear":  422743,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "milk",
+                                                         "unitsSoldYear":  181176,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     },
+                                                     {
+                                                         "productId":  "cola",
+                                                         "unitsSoldYear":  230587,
+                                                         "avgQR":  65,
+                                                         "brandRating":  10,
+                                                         "marketSharePct":  45
+                                                     }
+                                                 ],
+                           "consecutiveInsolventMonthsAtYearEnd":  0,
+                           "stockoutEventsThisYear":  0,
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$730 (+2.5%) em relação ao mês anterior (Receita: +$938). Destaque operacional: Sterling Mall Atenas gerou +$27.480 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
                            "year":  3,
@@ -99,14 +181,14 @@
                            "macroPhaseYearWithinCycle":  3,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  15654941,
-                           "netWorth":  15919073,
-                           "annualRevenue":  723933,
-                           "annualCOGS":  164704,
+                           "cash":  16032644,
+                           "netWorth":  16292231,
+                           "annualRevenue":  826720,
+                           "annualCOGS":  216308,
                            "annualFixedCosts":  231840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  327389,
+                           "annualNetProfit":  378572,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Mega Agropecuaria Sterling",
@@ -127,45 +209,45 @@
                                                        {
                                                            "name":  "Sterling Mall Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  443739,
-                                                           "annualCogs":  97773,
+                                                           "annualRevenue":  502007,
+                                                           "annualCogs":  127204,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  326526
+                                                           "annualNetProfit":  355364
                                                        },
                                                        {
                                                            "name":  "Sterling Mall Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  325149,
-                                                           "annualCogs":  77154,
+                                                           "annualRevenue":  366638,
+                                                           "annualCogs":  100049,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  229275
+                                                           "annualNetProfit":  247869
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  144787,
+                                                         "unitsSoldYear":  165344,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  422294,
+                                                         "unitsSoldYear":  482253,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  180983,
+                                                         "unitsSoldYear":  206680,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  230342,
+                                                         "unitsSoldYear":  263047,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -173,7 +255,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$196 (+0.7%) em relação ao mês anterior (Receita: +$257). Destaque operacional: Sterling Mall Atenas gerou +$27.211 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$433 (-1.3%) comparado ao mês anterior (Receita: -$587). Destaque operacional: Sterling Mall Atenas gerou +$29.614 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
                            "year":  4,
@@ -181,14 +263,14 @@
                            "macroPhaseYearWithinCycle":  4,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  16036198,
-                           "netWorth":  16295048,
-                           "annualRevenue":  830339,
-                           "annualCOGS":  217243,
+                           "cash":  16412727,
+                           "netWorth":  16671865,
+                           "annualRevenue":  828746,
+                           "annualCOGS":  216822,
                            "annualFixedCosts":  231840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  381257,
+                           "annualNetProfit":  380084,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Mega Agropecuaria Sterling",
@@ -209,45 +291,45 @@
                                                        {
                                                            "name":  "Sterling Mall Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  509264,
-                                                           "annualCogs":  129042,
+                                                           "annualRevenue":  506786,
+                                                           "annualCogs":  128415,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  360782
+                                                           "annualNetProfit":  358932
                                                        },
                                                        {
                                                            "name":  "Sterling Mall Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  370178,
-                                                           "annualCogs":  101015,
+                                                           "annualRevenue":  372019,
+                                                           "annualCogs":  101517,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  250443
+                                                           "annualNetProfit":  251782
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  166068,
+                                                         "unitsSoldYear":  165749,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  484365,
+                                                         "unitsSoldYear":  483435,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  207585,
+                                                         "unitsSoldYear":  207187,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  264199,
+                                                         "unitsSoldYear":  263692,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -255,7 +337,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$279 (-0.8%) comparado ao mês anterior (Receita: -$384). Destaque operacional: Sterling Mall Atenas gerou +$30.065 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$101 (+0.3%) em relação ao mês anterior (Receita: +$142). Destaque operacional: Sterling Mall Atenas gerou +$29.911 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários."
                        },
                        {
                            "year":  5,
@@ -263,14 +345,14 @@
                            "macroPhaseYearWithinCycle":  5,
                            "cycleNumber":  1,
                            "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  16415021,
-                           "netWorth":  16675225,
-                           "annualRevenue":  827065,
-                           "annualCOGS":  216402,
+                           "cash":  16792225,
+                           "netWorth":  17051326,
+                           "annualRevenue":  827956,
+                           "annualCOGS":  216619,
                            "annualFixedCosts":  231840,
                            "annualMarketingSpend":  0,
                            "annualRDInvestment":  0,
-                           "annualNetProfit":  378823,
+                           "annualNetProfit":  379497,
                            "facilitiesBreakdown":  [
                                                        {
                                                            "name":  "Mega Agropecuaria Sterling",
@@ -291,45 +373,45 @@
                                                        {
                                                            "name":  "Sterling Mall Atenas",
                                                            "type":  "store",
-                                                           "annualRevenue":  499069,
-                                                           "annualCogs":  126459,
+                                                           "annualRevenue":  505158,
+                                                           "annualCogs":  128002,
                                                            "annualOpex":  19440,
-                                                           "annualNetProfit":  353170
+                                                           "annualNetProfit":  357716
                                                        },
                                                        {
                                                            "name":  "Sterling Mall Porto",
                                                            "type":  "store",
-                                                           "annualRevenue":  369080,
-                                                           "annualCogs":  100715,
+                                                           "annualRevenue":  370496,
+                                                           "annualCogs":  101102,
                                                            "annualOpex":  18720,
-                                                           "annualNetProfit":  249645
+                                                           "annualNetProfit":  250675
                                                        }
                                                    ],
                            "productsBreakdown":  [
                                                      {
                                                          "productId":  "bread",
-                                                         "unitsSoldYear":  165413,
+                                                         "unitsSoldYear":  165591,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "flour",
-                                                         "unitsSoldYear":  482455,
+                                                         "unitsSoldYear":  482974,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "milk",
-                                                         "unitsSoldYear":  206766,
+                                                         "unitsSoldYear":  206989,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
                                                      },
                                                      {
                                                          "productId":  "cola",
-                                                         "unitsSoldYear":  263157,
+                                                         "unitsSoldYear":  263440,
                                                          "avgQR":  65,
                                                          "brandRating":  10,
                                                          "marketSharePct":  45
@@ -337,89 +419,7 @@
                                                  ],
                            "consecutiveInsolventMonthsAtYearEnd":  0,
                            "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$390 (-1.1%) comparado ao mês anterior (Receita: -$522). Destaque operacional: Sterling Mall Atenas gerou +$29.431 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários."
-                       },
-                       {
-                           "year":  6,
-                           "macroPhase":  "Saturação \u0026 Desaceleração",
-                           "macroPhaseYearWithinCycle":  6,
-                           "cycleNumber":  1,
-                           "activeQuarterAtYearEnd":  "Q1",
-                           "cash":  16793746,
-                           "netWorth":  17053902,
-                           "annualRevenue":  826923,
-                           "annualCOGS":  216358,
-                           "annualFixedCosts":  231840,
-                           "annualMarketingSpend":  0,
-                           "annualRDInvestment":  0,
-                           "annualNetProfit":  378725,
-                           "facilitiesBreakdown":  [
-                                                       {
-                                                           "name":  "Mega Agropecuaria Sterling",
-                                                           "type":  "farm",
-                                                           "annualRevenue":  0,
-                                                           "annualCogs":  0,
-                                                           "annualOpex":  46080,
-                                                           "annualNetProfit":  -46080
-                                                       },
-                                                       {
-                                                           "name":  "Complexo Industrial Sterling",
-                                                           "type":  "factory",
-                                                           "annualRevenue":  0,
-                                                           "annualCogs":  0,
-                                                           "annualOpex":  147600,
-                                                           "annualNetProfit":  -147600
-                                                       },
-                                                       {
-                                                           "name":  "Sterling Mall Atenas",
-                                                           "type":  "store",
-                                                           "annualRevenue":  503600,
-                                                           "annualCogs":  127607,
-                                                           "annualOpex":  19440,
-                                                           "annualNetProfit":  356553
-                                                       },
-                                                       {
-                                                           "name":  "Sterling Mall Porto",
-                                                           "type":  "store",
-                                                           "annualRevenue":  366355,
-                                                           "annualCogs":  99971,
-                                                           "annualOpex":  18720,
-                                                           "annualNetProfit":  247663
-                                                       }
-                                                   ],
-                           "productsBreakdown":  [
-                                                     {
-                                                         "productId":  "bread",
-                                                         "unitsSoldYear":  165385,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "flour",
-                                                         "unitsSoldYear":  482372,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "milk",
-                                                         "unitsSoldYear":  206731,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     },
-                                                     {
-                                                         "productId":  "cola",
-                                                         "unitsSoldYear":  263112,
-                                                         "avgQR":  65,
-                                                         "brandRating":  10,
-                                                         "marketSharePct":  45
-                                                     }
-                                                 ],
-                           "consecutiveInsolventMonthsAtYearEnd":  0,
-                           "stockoutEventsThisYear":  0,
-                           "corporateAnalystVerdictText":  "📉 Atenção Executiva: O Lucro Líquido recuou -$460 (-1.3%) comparado ao mês anterior (Receita: -$628). Destaque operacional: Sterling Mall Atenas gerou +$29.713 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários."
+                           "corporateAnalystVerdictText":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$210 (+0.6%) em relação ao mês anterior (Receita: +$283). Destaque operacional: Sterling Mall Atenas gerou +$29.810 de margem limpa. Centro de custo: Complexo Industrial Sterling absorveu -$12.300 em custos operacionais e salários."
                        }
                    ],
     "automatedSanityAlerts":  [

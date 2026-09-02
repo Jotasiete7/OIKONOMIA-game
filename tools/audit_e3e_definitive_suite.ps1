@@ -440,10 +440,12 @@ try {
     }
     else if (pId === 'E') {
         // Perfil E: Hardcore Puro ($20k capital - operacao enxuta de varejo inteligente)
+        // BUG 2 FIX: supplierId deve usar o formato 'port_default_<prodId>' que o engine
+        // do jogo reconhece para abastecimento via porto atacadista com custo dinamico.
         const st = worldGrid[40][37];
         st.district = { name: 'Distrito Residencial Nova Atenas', population: 22500, trafficIndex: 65, landRentDaily: 14 };
         st.store = { id: 'st_e_1', name: 'Kombini Drake', storeTypeId: 'kombini', shelves: {
-            'bread': { price: 2.80, stock: 1200, maxCapacity: 2000, dailyRestock: 220, quality: 65, supplierId: 'port_atenas_bay', landedCost: 0.70 }
+            'bread': { price: 2.80, stock: 1200, maxCapacity: 2000, dailyRestock: 220, quality: 65, supplierId: 'port_default_bread', landedCost: 0.70 }
         }};
         _indexTile(st);
 
@@ -503,6 +505,13 @@ try {
         let yearRevenue = 0, yearCogs = 0, yearFixed = 0, yearMkt = 0, yearRD = 0, yearNet = 0;
         let stockoutCount = 0;
 
+        // BUG 1 FIX: captura o ano/fase ANTES de simular os 360 dias deste ano,
+        // garantindo que o registro corresponda exatamente ao ano que esta sendo jogado.
+        const snapshotYear = year;
+        const macroInfoSnap = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getPhaseInfo(snapshotYear) : { name: 'STANDARD', code: 'STD' };
+        const cycleYrSnap = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getCycleYear(snapshotYear) : ((snapshotYear - 1) % 10) + 1;
+        const cycleNumSnap = Math.floor((snapshotYear - 1) / 10) + 1;
+
         for (let d = 0; d < 360; d++) {
             const oldM = month;
             simulateDay();
@@ -527,9 +536,6 @@ try {
             }
         }
 
-        const macroInfo = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getPhaseInfo(year) : { name: 'STANDARD', code: 'STD' };
-        const cycleYr = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getCycleYear(year) : ((year - 1) % 10) + 1;
-        const cycleNum = Math.floor((year - 1) / 10) + 1;
         const curQuarter = (typeof CoreMath !== 'undefined' && CoreMath.getQuarterInfo) ? CoreMath.getQuarterInfo(month).code : 'Q4';
 
         // Abre modal DRE para capturar veredito do analista corporativo
@@ -571,10 +577,10 @@ try {
         const nw = calculateCorporateNetWorth();
 
         return {
-            year: year,
-            macroPhase: macroInfo.name,
-            macroPhaseYearWithinCycle: cycleYr,
-            cycleNumber: cycleNum,
+            year: snapshotYear,
+            macroPhase: macroInfoSnap.name,
+            macroPhaseYearWithinCycle: cycleYrSnap,
+            cycleNumber: cycleNumSnap,
             activeQuarterAtYearEnd: curQuarter,
             cash: Math.round(cash),
             netWorth: Math.round(nw.netWorth),
