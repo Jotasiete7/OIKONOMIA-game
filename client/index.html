@@ -99,7 +99,7 @@
   <!-- 1. FULLSCREEN CANVAS LAYER -->
   <div id="canvas-container" class="absolute inset-0 w-full h-full z-0 overflow-hidden bg-slate-950">
     <canvas id="iso-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
-    <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-950/98 border border-slate-600 rounded-xl px-3.5 py-2.5 shadow-2xl text-[11px] font-mono z-20 backdrop-blur-md"></div>
+    <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-900 border-2 border-slate-600 rounded-xl px-4 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.9)] text-xs font-mono z-50 text-slate-100 ring-1 ring-white/15"></div>
   </div>
 
   <!-- 2. TOP FLOATING HUD BAR (UNIFICADA, ELEGANTE & LIMPA) -->
@@ -3225,34 +3225,46 @@
           const logo = generateCompanyLogo(playerProfile.companyName, playerProfile.logoRegenSeed || 0, false);
           const emoji = STORE_TYPES.find(s => s.id === tile.store.storeTypeId)?.emoji || '🛒';
           tooltip.innerHTML = `
-            <div class="flex items-center gap-2 mb-1">
-              ${getCompanyLogoSvg(logo, 20)}
+            <div class="flex items-center gap-2 mb-1.5">
+              ${getCompanyLogoSvg(logo, 22)}
               <div>
                 <div class="font-bold text-emerald-400 text-xs">${emoji} ${tile.store.name}</div>
-                <div class="text-[9px] text-slate-400">${playerProfile.companyName} · ${d.name}</div>
+                <div class="text-[11px] text-slate-300 font-medium">${playerProfile.companyName} · ${d.name}</div>
               </div>
             </div>
-            <div class="text-[10px] text-slate-300">Vendas: $${(tile.store.monthSales || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}/mês</div>
-            <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · 👥 ${d.population.toLocaleString()} hab · 🚶 Tráfego ${d.trafficIndex}/100</div>
+            <div class="text-xs text-white font-semibold">Vendas: <span class="text-emerald-300">$${(tile.store.monthSales || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}/mês</span></div>
+            <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-2 border-t border-slate-700/80 pt-1">
+              <span>📍 (${gx}, ${gy})</span>
+              <span>👥 ${d.population.toLocaleString()} hab</span>
+              <span>🚶 Tráfego ${d.trafficIndex}/100</span>
+            </div>
           `;
         } else if (tile.competitor) {
           const logo = generateCompanyLogo(tile.competitor.name, 0, true);
           tooltip.innerHTML = `
-            <div class="flex items-center gap-2 mb-1">
-              ${getCompanyLogoSvg(logo, 20)}
+            <div class="flex items-center gap-2 mb-1.5">
+              ${getCompanyLogoSvg(logo, 22)}
               <div>
                 <div class="font-bold text-rose-400 text-xs">🏪 ${tile.competitor.name}</div>
-                <div class="text-[9px] text-rose-300/80">IA Concorrente · ${d.name}</div>
+                <div class="text-[11px] text-rose-200 font-medium">IA Concorrente · ${d.name}</div>
               </div>
             </div>
-            <div class="text-[10px] text-slate-300">Preços Agressivos · Grande Escala</div>
-            <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · 👥 ${d.population.toLocaleString()} hab · 🚶 Tráfego ${d.trafficIndex}/100</div>
+            <div class="text-xs text-slate-200 font-medium">Preços Agressivos · Grande Escala</div>
+            <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-2 border-t border-slate-700/80 pt-1">
+              <span>📍 (${gx}, ${gy})</span>
+              <span>👥 ${d.population.toLocaleString()} hab</span>
+              <span>🚶 Tráfego ${d.trafficIndex}/100</span>
+            </div>
           `;
         } else {
           tooltip.innerHTML = `
             <div class="font-bold text-amber-300 text-xs">${d.name}</div>
-            <div class="text-[10px] text-slate-400">(${gx}, ${gy}) · ${d.type} · ${tile.city.cityName}</div>
-            <div class="text-[10px] text-slate-300 mt-0.5">🚶 ${d.trafficIndex}/100 · 👥 ${d.population.toLocaleString()} hab · 💰 $${d.landRentDaily}/dia</div>
+            <div class="text-[11px] text-slate-300">(${gx}, ${gy}) · ${d.type} · ${tile.city.cityName}</div>
+            <div class="text-[11px] text-slate-200 mt-1 flex items-center gap-2 border-t border-slate-700/80 pt-1">
+              <span>🚶 Tráfego ${d.trafficIndex}/100</span>
+              <span>👥 ${d.population.toLocaleString()} hab</span>
+              <span>💰 $${d.landRentDaily}/dia</span>
+            </div>
           `;
         }
       } else {

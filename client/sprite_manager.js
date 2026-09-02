@@ -298,26 +298,23 @@ class SpriteManager {
   }
 
   static getUrbanSprite(districtId, x, y) {
-    const hash = Math.abs((x * 73856093 ^ y * 19349663) % 6);
+    const hash = Math.abs((x * 73856093 ^ y * 19349663) % 5);
     if (districtId === 'downtown') {
       if (hash === 0) return 'residencial/commercial_tower';
       if (hash === 1) return 'residencial/commercial_tower_2';
       if (hash === 2) return 'residencial/commercial_midrise';
-      if (hash === 3) return 'residencial/apartment_eco';
-      if (hash === 4) return 'residencial/office_building';
+      if (hash === 3) return 'residencial/office_building';
       return 'residencial/apartment_classic';
     }
     if (districtId === 'northside') {
-      if (hash === 0 || hash === 1) return 'residencial/mansion';
-      if (hash === 2) return 'residencial/apartment_eco';
-      if (hash === 3) return 'residencial/apartment_building';
-      if (hash === 4) return 'residencial/commercial_midrise';
+      if (hash === 0 || hash === 1) return 'residencial/apartment_building';
+      if (hash === 2) return 'residencial/commercial_midrise';
+      if (hash === 3) return 'residencial/apartment_classic';
       return 'residencial/house_suburban';
     }
     if (districtId === 'west_suburbs') {
       if (hash === 0 || hash === 1 || hash === 2) return 'residencial/house_suburban';
-      if (hash === 3) return 'residencial/apartment_classic';
-      return 'residencial/house_suburban';
+      return 'residencial/apartment_classic';
     }
     return 'residencial/house_suburban';
   }
