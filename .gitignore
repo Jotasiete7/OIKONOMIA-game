@@ -1,4 +1,4 @@
-﻿# Dependencies
+# Dependencies
 node_modules/
 package-lock.json
 
@@ -25,3 +25,5 @@ archive_legacy/
 *.zip
 *.7z
 
+# Arquivos de áudio brutos que excedem o limite de 100MB do GitHub (substituído pelo MP3 equivalente)
+client/assets/audio/bgm/BGM (1).wav

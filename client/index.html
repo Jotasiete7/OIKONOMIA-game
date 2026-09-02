@@ -268,8 +268,22 @@
       <span id="telemetry-fps" class="text-amber-400 font-bold">⚡ 60 FPS</span>
     </div>
 
-    <!-- Direita: Carimbo Oficial de Versão & Botão Dev -->
+    <!-- Direita: Micro Rádio, Carimbo Oficial de Versão & Botão Dev -->
     <div class="flex items-center gap-2">
+      <!-- MICRO RÁDIO OIKOFM -->
+      <div id="hud-micro-radio" class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-700/80 px-2 py-0.5 rounded-lg text-[10px] font-mono shadow-sm">
+        <span class="text-amber-400 text-xs shrink-0 cursor-help" title="Rádio Corporativa OikoFM">📻</span>
+        <span id="radio-track-title" class="text-emerald-300 font-bold truncate max-w-[130px] sm:max-w-[190px] select-none" title="Faixa Atual">BGM 1 — Lounge Corporativo</span>
+        
+        <div class="flex items-center gap-0.5 ml-1 border-l border-slate-800 pl-1">
+          <button onclick="SoundEngine.playPrevTrack()" class="px-1 py-0.5 rounded hover:bg-slate-800 text-slate-300 hover:text-white cursor-pointer transition" title="Voltar Faixa (⏮)">⏮</button>
+          <button id="radio-btn-play-pause" onclick="SoundEngine.toggleBgm()" class="px-1 py-0.5 rounded hover:bg-slate-800 text-emerald-400 font-bold cursor-pointer transition" title="Tocar / Pausar (⏯)">⏸</button>
+          <button onclick="SoundEngine.playNextTrack()" class="px-1 py-0.5 rounded hover:bg-slate-800 text-slate-300 hover:text-white cursor-pointer transition" title="Pular Faixa (⏭)">⏭</button>
+          <button id="radio-btn-repeat" onclick="SoundEngine.toggleRepeatMode()" class="px-1 py-0.5 rounded hover:bg-slate-800 text-slate-400 cursor-pointer transition" title="Alternar Modo de Repetição">🔁</button>
+          <button id="radio-btn-mute" onclick="SoundEngine.toggleMusicMute()" class="px-1 py-0.5 rounded hover:bg-slate-800 text-slate-400 cursor-pointer transition" title="Mutar / Desmutar Música">🔊</button>
+        </div>
+      </div>
+
       <button onclick="toggleDevDashboard()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-300 px-1.5 py-0.5 rounded text-[9px] font-bold flex items-center gap-1 shadow transition cursor-pointer" title="Abrir Painel de Desenvolvimento & Logs de Debug (Atalho F3)">
         🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
       </button>
@@ -1457,9 +1471,49 @@
         </button>
 
         <button onclick="openSettingsModal()" class="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 flex items-center justify-between">
-          <span>⚙️ Configurações & Volume</span>
+          <span>⚙️ Todas as Configurações</span>
           <span>➔</span>
         </button>
+
+        <!-- Controles Diretos de Volume no Menu de Pausa -->
+        <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800/90 space-y-2.5 mt-2">
+          <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+            <span class="flex items-center gap-1">🎧 <span>Volumes de Áudio</span></span>
+            <span class="text-emerald-400 text-[9px]">Ajuste Imediato</span>
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px] text-slate-300 font-medium">
+              <span>🔊 Master Geral</span>
+              <span id="pause-master-label" class="text-emerald-400 font-mono">100%</span>
+            </div>
+            <input type="range" id="pause-master-volume" min="0" max="1" step="0.05" value="1.0" oninput="syncVolumeFromPause('master', this.value)" class="w-full accent-emerald-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px] text-slate-300 font-medium">
+              <span>🎵 Música (BGM)</span>
+              <span id="pause-music-label" class="text-emerald-400 font-mono">60%</span>
+            </div>
+            <input type="range" id="pause-music-volume" min="0" max="1" step="0.05" value="0.6" oninput="syncVolumeFromPause('music', this.value)" class="w-full accent-emerald-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px] text-slate-300 font-medium">
+              <span>🏙 Sons Ambiente (Cidade)</span>
+              <span id="pause-ambience-label" class="text-emerald-400 font-mono">50%</span>
+            </div>
+            <input type="range" id="pause-ambience-volume" min="0" max="1" step="0.05" value="0.5" oninput="syncVolumeFromPause('ambience', this.value)" class="w-full accent-emerald-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px] text-slate-300 font-medium">
+              <span>⚡ Efeitos (SFX)</span>
+              <span id="pause-sfx-label" class="text-emerald-400 font-mono">70%</span>
+            </div>
+            <input type="range" id="pause-sfx-volume" min="0" max="1" step="0.05" value="0.7" oninput="syncVolumeFromPause('sfx', this.value)" class="w-full accent-emerald-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+          </div>
+        </div>
 
         <button onclick="promptExitToMainMenu()" class="w-full py-3 px-4 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/80 text-rose-300 font-bold flex items-center justify-between transition mt-3">
           <span>🚪 Sair para o Menu Principal</span>
@@ -1550,13 +1604,56 @@
           </select>
         </div>
 
-        <!-- Volume de Efeitos Sonoros -->
-        <div class="space-y-1.5">
-          <div class="flex justify-between items-center">
-            <label class="text-slate-300 font-bold">🔊 Volume de Efeitos Sonoros (SFX):</label>
-            <span id="setting-sfx-label" class="text-emerald-400">70%</span>
+        <!-- Configurações de Áudio & Trilha Sonora -->
+        <div class="space-y-3 pt-2 border-t border-slate-800">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <span>🎧 Áudio e Trilha Sonora</span>
           </div>
-          <input type="range" id="setting-sfx-volume" min="0" max="1" step="0.05" value="0.7" oninput="saveGameSettings()" class="w-full accent-emerald-500">
+
+          <!-- Volume Geral (Master) -->
+          <div class="space-y-1">
+            <div class="flex justify-between items-center text-xs">
+              <label class="text-slate-300 font-semibold">🔊 Volume Geral (Master):</label>
+              <span id="setting-master-label" class="text-emerald-400 font-mono">100%</span>
+            </div>
+            <input type="range" id="setting-master-volume" min="0" max="1" step="0.05" value="1.0" oninput="saveGameSettings()" class="w-full accent-emerald-500 cursor-pointer">
+          </div>
+
+          <!-- Música de Fundo (BGM) -->
+          <div class="space-y-1 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+            <div class="flex justify-between items-center text-xs">
+              <label class="text-slate-300 font-semibold flex items-center gap-1.5">
+                <span>🎵 Música de Fundo (BGM):</span>
+              </label>
+              <span id="setting-music-label" class="text-emerald-400 font-mono">60%</span>
+            </div>
+            <input type="range" id="setting-music-volume" min="0" max="1" step="0.05" value="0.6" oninput="saveGameSettings()" class="w-full accent-emerald-500 cursor-pointer">
+            <div class="flex justify-between items-center pt-1 text-[11px]">
+              <span id="setting-bgm-status" class="text-slate-400 italic">Trilha Corporativa</span>
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="toggleBgmPlayPause()" id="btn-toggle-bgm" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium cursor-pointer">⏸ Pausar</button>
+                <button type="button" onclick="skipBgmTrack()" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium cursor-pointer">⏭ Pular</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sons Ambiente -->
+          <div class="space-y-1">
+            <div class="flex justify-between items-center text-xs">
+              <label class="text-slate-300 font-semibold">🏙 Sons Ambiente (Cidade & Zonas):</label>
+              <span id="setting-ambience-label" class="text-emerald-400 font-mono">50%</span>
+            </div>
+            <input type="range" id="setting-ambience-volume" min="0" max="1" step="0.05" value="0.5" oninput="saveGameSettings()" class="w-full accent-emerald-500 cursor-pointer">
+          </div>
+
+          <!-- Volume de Efeitos Sonoros (SFX) -->
+          <div class="space-y-1">
+            <div class="flex justify-between items-center text-xs">
+              <label class="text-slate-300 font-semibold">⚡ Efeitos Sonoros (SFX):</label>
+              <span id="setting-sfx-label" class="text-emerald-400 font-mono">70%</span>
+            </div>
+            <input type="range" id="setting-sfx-volume" min="0" max="1" step="0.05" value="0.7" oninput="saveGameSettings()" class="w-full accent-emerald-500 cursor-pointer">
+          </div>
         </div>
 
         <!-- Terminal de Notícias (Ticker Bar) -->
@@ -2116,6 +2213,9 @@
       lastSavedStateSnapshot: null,
       gameSettings: {
         autoSave: 'monthly',
+        masterVolume: 1.0,
+        musicVolume: 0.6,
+        ambienceVolume: 0.5,
         sfxVolume: 0.7
       },
       playerBrandRating: {},
@@ -3646,6 +3746,7 @@
         confirmClass: 'bg-rose-600 hover:bg-rose-500 shadow-rose-950/40',
         onConfirm: () => {
           cash += val.salvageValue;
+          if (typeof SoundEngine !== 'undefined') SoundEngine.playDemolish();
           addGameLog('🗑️ ' + val.facilityName + ' demolida. Recuperado +$' + val.salvageValue.toLocaleString() + ' em sucata.', 'text-rose-400 font-bold');
           tile.store = null;
           tile.mine = null;
@@ -3672,7 +3773,10 @@
       activeManagedTile = tile;
       renderFacilityPanel(tile);
       const win = document.getElementById('floating-facility-window');
-      if (win) win.classList.remove('hidden');
+      if (win) {
+        win.classList.remove('hidden');
+        if (typeof SoundEngine !== 'undefined') SoundEngine.playModalOpen();
+      }
     }
 
     function closeFloatingFacilityWindow() {
@@ -4936,6 +5040,7 @@
       _indexTile(pendingTile);
 
       addLog(`⛏️ ${m.name} inaugurada por $${m.cost.toLocaleString()}!`, 'text-sky-400 font-bold');
+      if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
       closeMineModal();
       activeManagedTile = pendingTile;
       renderFacilityPanel(pendingTile);
@@ -5011,6 +5116,7 @@
       _indexTile(pendingTile);
 
       addLog(`🌾 ${ft.name} construída com sucesso por $${ft.cost.toLocaleString()}!`, 'text-amber-400 font-bold');
+      if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
       closeFarmModal();
       activeManagedTile = pendingTile;
       renderFacilityPanel(pendingTile);
@@ -5044,6 +5150,7 @@
       _indexTile(pendingTile);
 
       addLog(`🏭 Fábrica de Manufatura construída por $48.000!`, 'text-orange-400 font-bold');
+      if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
       closeFactoryModal();
       activeManagedTile = pendingTile;
       renderFacilityPanel(pendingTile);
@@ -7769,6 +7876,7 @@
       _indexTile(pendingTile);
 
       addLog(`🏗️ ${storeName} inaugurada por $${totalCost.toLocaleString()}!`, 'text-emerald-400 font-bold');
+      if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
 
       closeModal();
       activeManagedTile = pendingTile;
@@ -9943,11 +10051,21 @@
       if (btnContinue) {
         btnContinue.disabled = (saves.length === 0);
       }
+
+      if (typeof SoundEngine !== 'undefined') {
+        SoundEngine.playBgm('menu');
+        SoundEngine.stopAmbience();
+      }
     }
 
     function hideMainMenu() {
       const menu = document.getElementById('main-menu-screen');
       if (menu) menu.classList.add('hidden');
+
+      if (typeof SoundEngine !== 'undefined') {
+        SoundEngine.playBgm('daytime_01');
+        SoundEngine.playAmbience('city', 0.4);
+      }
     }
 
     function continueLastGame() {
@@ -10394,6 +10512,70 @@
       const modal = document.getElementById('pause-menu-modal');
       if (modal) modal.classList.remove('hidden');
       updatePlayerProfileHUD();
+      syncPauseMenuVolumes();
+    }
+
+    function syncPauseMenuVolumes() {
+      const s = (typeof gameSettings !== 'undefined') ? gameSettings : {};
+      const mVol = s.masterVolume !== undefined ? s.masterVolume : 1.0;
+      const musVol = s.musicVolume !== undefined ? s.musicVolume : 0.6;
+      const ambVol = s.ambienceVolume !== undefined ? s.ambienceVolume : 0.5;
+      const sfxVol = s.sfxVolume !== undefined ? s.sfxVolume : 0.7;
+
+      const mEl = document.getElementById('pause-master-volume');
+      const mLbl = document.getElementById('pause-master-label');
+      if (mEl) mEl.value = mVol;
+      if (mLbl) mLbl.textContent = `${Math.round(mVol * 100)}%`;
+
+      const musEl = document.getElementById('pause-music-volume');
+      const musLbl = document.getElementById('pause-music-label');
+      if (musEl) musEl.value = musVol;
+      if (musLbl) musLbl.textContent = `${Math.round(musVol * 100)}%`;
+
+      const ambEl = document.getElementById('pause-ambience-volume');
+      const ambLbl = document.getElementById('pause-ambience-label');
+      if (ambEl) ambEl.value = ambVol;
+      if (ambLbl) ambLbl.textContent = `${Math.round(ambVol * 100)}%`;
+
+      const sfxEl = document.getElementById('pause-sfx-volume');
+      const sfxLbl = document.getElementById('pause-sfx-label');
+      if (sfxEl) sfxEl.value = sfxVol;
+      if (sfxLbl) sfxLbl.textContent = `${Math.round(sfxVol * 100)}%`;
+    }
+
+    function syncVolumeFromPause(channel, value) {
+      const val = parseFloat(value);
+      if (channel === 'master') {
+        gameSettings.masterVolume = val;
+        const el = document.getElementById('pause-master-label');
+        if (el) el.textContent = `${Math.round(val * 100)}%`;
+      } else if (channel === 'music') {
+        gameSettings.musicVolume = val;
+        const el = document.getElementById('pause-music-label');
+        if (el) el.textContent = `${Math.round(val * 100)}%`;
+      } else if (channel === 'ambience') {
+        gameSettings.ambienceVolume = val;
+        const el = document.getElementById('pause-ambience-label');
+        if (el) el.textContent = `${Math.round(val * 100)}%`;
+      } else if (channel === 'sfx') {
+        gameSettings.sfxVolume = val;
+        const el = document.getElementById('pause-sfx-label');
+        if (el) el.textContent = `${Math.round(val * 100)}%`;
+      }
+
+      if (typeof SoundEngine !== 'undefined') {
+        SoundEngine.syncVolumesFromSettings();
+      }
+
+      try {
+        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(gameSettings));
+      } catch (e) {}
+
+      // Reflete também no modal de configurações gerais se estiver presente
+      const setEl = document.getElementById(`setting-${channel === 'sfx' ? 'sfx' : channel}-volume`);
+      const setLbl = document.getElementById(`setting-${channel === 'sfx' ? 'sfx' : channel}-label`);
+      if (setEl) setEl.value = val;
+      if (setLbl) setLbl.textContent = `${Math.round(val * 100)}%`;
     }
 
     function resumeGame() {
@@ -10605,12 +10787,38 @@
       } catch (e) {}
 
       const autoEl = document.getElementById('setting-autosave');
+      const masterEl = document.getElementById('setting-master-volume');
+      const masterLbl = document.getElementById('setting-master-label');
+      const musicEl = document.getElementById('setting-music-volume');
+      const musicLbl = document.getElementById('setting-music-label');
+      const ambEl = document.getElementById('setting-ambience-volume');
+      const ambLbl = document.getElementById('setting-ambience-label');
       const sfxEl = document.getElementById('setting-sfx-volume');
       const lbl = document.getElementById('setting-sfx-label');
 
       if (autoEl) autoEl.value = gameSettings.autoSave || 'monthly';
-      if (sfxEl) sfxEl.value = gameSettings.sfxVolume !== undefined ? gameSettings.sfxVolume : 0.7;
-      if (lbl) lbl.textContent = `${Math.round((gameSettings.sfxVolume !== undefined ? gameSettings.sfxVolume : 0.7) * 100)}%`;
+
+      const masterVol = gameSettings.masterVolume !== undefined ? gameSettings.masterVolume : 1.0;
+      if (masterEl) masterEl.value = masterVol;
+      if (masterLbl) masterLbl.textContent = `${Math.round(masterVol * 100)}%`;
+
+      const musicVol = gameSettings.musicVolume !== undefined ? gameSettings.musicVolume : 0.6;
+      if (musicEl) musicEl.value = musicVol;
+      if (musicLbl) musicLbl.textContent = `${Math.round(musicVol * 100)}%`;
+
+      const ambVol = gameSettings.ambienceVolume !== undefined ? gameSettings.ambienceVolume : 0.5;
+      if (ambEl) ambEl.value = ambVol;
+      if (ambLbl) ambLbl.textContent = `${Math.round(ambVol * 100)}%`;
+
+      const sfxVol = gameSettings.sfxVolume !== undefined ? gameSettings.sfxVolume : 0.7;
+      if (sfxEl) sfxEl.value = sfxVol;
+      if (lbl) lbl.textContent = `${Math.round(sfxVol * 100)}%`;
+
+      updateBgmStatusUI();
+
+      if (typeof SoundEngine !== 'undefined') {
+        SoundEngine.syncVolumesFromSettings();
+      }
 
       const tickEl = document.getElementById('setting-ticker-enabled');
       if (tickEl && typeof TickerSystem !== 'undefined') {
@@ -10633,18 +10841,77 @@
 
     function saveGameSettings() {
       const autoEl = document.getElementById('setting-autosave');
+      const masterEl = document.getElementById('setting-master-volume');
+      const masterLbl = document.getElementById('setting-master-label');
+      const musicEl = document.getElementById('setting-music-volume');
+      const musicLbl = document.getElementById('setting-music-label');
+      const ambEl = document.getElementById('setting-ambience-volume');
+      const ambLbl = document.getElementById('setting-ambience-label');
       const sfxEl = document.getElementById('setting-sfx-volume');
       const lbl = document.getElementById('setting-sfx-label');
 
       if (autoEl) gameSettings.autoSave = autoEl.value;
+
+      if (masterEl) {
+        gameSettings.masterVolume = parseFloat(masterEl.value);
+        if (masterLbl) masterLbl.textContent = `${Math.round(gameSettings.masterVolume * 100)}%`;
+      }
+      if (musicEl) {
+        gameSettings.musicVolume = parseFloat(musicEl.value);
+        if (musicLbl) musicLbl.textContent = `${Math.round(gameSettings.musicVolume * 100)}%`;
+      }
+      if (ambEl) {
+        gameSettings.ambienceVolume = parseFloat(ambEl.value);
+        if (ambLbl) ambLbl.textContent = `${Math.round(gameSettings.ambienceVolume * 100)}%`;
+      }
       if (sfxEl) {
         gameSettings.sfxVolume = parseFloat(sfxEl.value);
         if (lbl) lbl.textContent = `${Math.round(gameSettings.sfxVolume * 100)}%`;
       }
 
+      if (typeof SoundEngine !== 'undefined') {
+        SoundEngine.syncVolumesFromSettings();
+      }
+
       try {
         localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(gameSettings));
       } catch (e) {}
+    }
+
+    function toggleBgmPlayPause() {
+      if (typeof SoundEngine !== 'undefined') {
+        const isPlaying = SoundEngine.toggleBgm();
+        const btn = document.getElementById('btn-toggle-bgm');
+        if (btn) btn.textContent = isPlaying ? '⏸ Pausar' : '▶ Tocar';
+      }
+    }
+
+    function skipBgmTrack() {
+      if (typeof SoundEngine !== 'undefined') {
+        SoundEngine.playNextPlaylistTrack();
+        updateBgmStatusUI();
+      }
+    }
+
+    function updateBgmStatusUI() {
+      const statusEl = document.getElementById('setting-bgm-status');
+      const btn = document.getElementById('btn-toggle-bgm');
+      if (typeof SoundEngine !== 'undefined') {
+        if (statusEl) {
+          const key = SoundEngine.currentBgmKey || 'daytime_01';
+          const labels = {
+            menu: 'Tema do Menu',
+            daytime_01: 'Trilha Corporativa 1',
+            daytime_02: 'Trilha Corporativa 2',
+            prosperity: 'Trilha Prosperidade',
+            crisis: 'Trilha Tensa / Crise'
+          };
+          statusEl.textContent = labels[key] || key;
+        }
+        if (btn) {
+          btn.textContent = SoundEngine.isBgmPaused ? '▶ Tocar' : '⏸ Pausar';
+        }
+      }
     }
 
     function openSettingsModal() {
@@ -10656,6 +10923,58 @@
     function closeSettingsModal() {
       const modal = document.getElementById('settings-modal');
       if (modal) modal.classList.add('hidden');
+    }
+
+    // ===========================================================================
+    // 19.1 MICRO RÁDIO OIKOFM (CONTROLE & SINCRONIZAÇÃO REATIVA)
+    // ===========================================================================
+    function initMicroRadio() {
+      if (typeof SoundEngine === 'undefined') return;
+      SoundEngine.onRadioChange(state => {
+        updateRadioUI(state);
+      });
+      updateRadioUI(SoundEngine.getRadioState());
+    }
+
+    function updateRadioUI(state) {
+      if (!state) return;
+      const titleEl = document.getElementById('radio-track-title');
+      const btnPlay = document.getElementById('radio-btn-play-pause');
+      const btnRepeat = document.getElementById('radio-btn-repeat');
+      const btnMute = document.getElementById('radio-btn-mute');
+
+      if (titleEl) {
+        titleEl.textContent = state.title || 'OikoFM';
+        titleEl.title = `${state.title} (${state.isPlaying ? 'Tocando' : (state.isPaused ? 'Pausado' : 'Aguardando')})`;
+      }
+
+      if (btnPlay) {
+        btnPlay.textContent = state.isPlaying ? '⏸' : '▶';
+        btnPlay.title = state.isPlaying ? 'Pausar Música (⏯)' : 'Tocar Música (⏯)';
+        btnPlay.className = state.isPlaying
+          ? 'px-1 py-0.5 rounded hover:bg-slate-800 text-emerald-400 font-bold cursor-pointer transition'
+          : 'px-1 py-0.5 rounded hover:bg-slate-800 text-amber-400 font-bold cursor-pointer transition';
+      }
+
+      if (btnRepeat) {
+        btnRepeat.textContent = (state.repeatMode === 'track') ? '🔂' : '🔁';
+        btnRepeat.title = (state.repeatMode === 'track')
+          ? 'Repetindo Faixa Atual (Clique para alternar para Playlist Contínua)'
+          : 'Playlist Contínua (Clique para repetir faixa atual)';
+        btnRepeat.className = (state.repeatMode === 'track')
+          ? 'px-1 py-0.5 rounded hover:bg-slate-800 text-amber-300 font-bold cursor-pointer transition'
+          : 'px-1 py-0.5 rounded hover:bg-slate-800 text-slate-400 cursor-pointer transition';
+      }
+
+      if (btnMute) {
+        btnMute.textContent = state.isMuted ? '🔇' : '🔊';
+        btnMute.title = state.isMuted ? 'Música Mutada (Clique para Restaurar Áudio)' : 'Música Ativa (Clique para Mutar)';
+        btnMute.className = state.isMuted
+          ? 'px-1 py-0.5 rounded hover:bg-slate-800 text-rose-400 font-bold animate-pulse cursor-pointer transition'
+          : 'px-1 py-0.5 rounded hover:bg-slate-800 text-slate-400 cursor-pointer transition';
+      }
+
+      updateBgmStatusUI();
     }
 
     // ===========================================================================
@@ -10822,6 +11141,7 @@
       updatePlayerProfileHUD();
       updateUI();
       initAllDraggableWindows();
+      initMicroRadio();
       if (typeof TickerSystem !== 'undefined') {
         TickerSystem.init('ticker-track');
       }
