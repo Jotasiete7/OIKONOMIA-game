@@ -3972,10 +3972,12 @@
           }
 
           let diagSummary = '';
-          if (diffNet >= 0) {
+          if (diffNet > 0) {
             diagSummary = `📈 <strong class="text-emerald-400">Desempenho em Alta:</strong> O Lucro Líquido aumentou <strong>+$${diffNet.toLocaleString()}</strong> (${pctNet >= 0 ? '+' : ''}${pctNet}%) em relação ao mês anterior (Receita: ${diffRev >= 0 ? '+$' : '-$'}${Math.abs(diffRev).toLocaleString()}). `;
+          } else if (diffNet < 0) {
+            diagSummary = `📉 <strong class="text-rose-400">Atenção Executiva:</strong> O Lucro Líquido recuou <strong>-$${Math.abs(diffNet).toLocaleString()}</strong> (${pctNet}%) comparado ao mês anterior (Receita: ${diffRev >= 0 ? '+$' : '-$'}${Math.abs(diffRev).toLocaleString()}). `;
           } else {
-            diagSummary = `📉 <strong class="text-rose-400">Atenção Executiva:</strong> O Lucro Líquido recuou <strong>-$${Math.abs(diffNet).toLocaleString()}</strong> (${pctNet}%) comparado ao mês anterior. `;
+            diagSummary = `⚖️ <strong class="text-slate-300">Estabilidade Financeira:</strong> O Lucro Líquido manteve-se estável em <strong>$${curr.netProfit.toLocaleString()}</strong> em relação ao mês anterior. `;
           }
 
           if (bestFac && bestFac.netProfit > 0) {

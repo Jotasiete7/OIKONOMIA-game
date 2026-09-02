@@ -526,6 +526,31 @@ try {
         const avgMargin10Years = total10YearsRev > 0 ? ((total10YearsNet / total10YearsRev) * 100).toFixed(1) : '0';
         const hud = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getHUDLabel(year) : { text: 'Ciclo 10 Anos' };
 
+        // Abre o modal de DRE para renderizar o diagnóstico inteligente do Analista Corporativo
+        if (typeof openFacilityDREModal === 'function') openFacilityDREModal();
+        const diagEl = document.getElementById('fdre-diag-text');
+        const badgeEl = document.getElementById('fdre-diag-badge');
+        const analystVerdict = diagEl ? diagEl.textContent.trim() : '';
+        const analystBadge = badgeEl ? badgeEl.textContent.trim() : '';
+
+        // Detalhamento de instalações ativas e seus desempenhos
+        const facilitiesBreakdown = [];
+        for (const tile of activeFacilitySet.values()) {
+            if (!tile.store && !tile.factory && !tile.farm && !tile.mine && !tile.rdCenter) continue;
+            const name = tile.store?.name || tile.factory?.name || tile.farm?.name || tile.mine?.name || tile.rdCenter?.name || 'Instalação';
+            const type = tile.store ? 'Varejo' : (tile.factory ? 'Fábrica' : (tile.farm ? 'Fazenda' : (tile.mine ? 'Mina' : 'P&D')));
+            const lm = tile.lastMonthMetrics || tile.monthlyMetrics || { revenue: 0, cogs: 0, opex: 0, netProfit: 0 };
+            facilitiesBreakdown.push({
+                name,
+                type,
+                location: `${tile.district?.name || 'Interior'} (${tile.x}, ${tile.y})`,
+                monthlyRevenue: Math.round(lm.revenue || 0),
+                monthlyCogs: Math.round(lm.cogs || 0),
+                monthlyOpex: Math.round(lm.opex || 0),
+                monthlyNetProfit: Math.round(lm.netProfit || 0)
+            });
+        }
+
         return {
             discountApplied: (discount * 100).toFixed(0) + '%',
             discountedBuyout: Math.round(discountedBuyout),
@@ -536,7 +561,21 @@ try {
             totalRevenue10Years: Math.round(total10YearsRev),
             totalNetProfit10Years: Math.round(total10YearsNet),
             avgMargin10Years: avgMargin10Years,
-            macroStatus: hud ? hud.text : 'Ciclo Decenal Concluido'
+            macroStatus: hud ? hud.text : 'Ciclo Decenal Concluido',
+            corporateAnalyst: {
+                badge: analystBadge,
+                verdict: analystVerdict
+            },
+            facilitiesBreakdown: facilitiesBreakdown,
+            recentHistoricalLedger: historicalLedger.slice(-12).map(h => ({
+                year: h.year,
+                month: h.month,
+                revenue: Math.round(h.revenue),
+                cogs: Math.round(h.cogs),
+                totalOpex: Math.round(h.totalOpex),
+                netProfit: Math.round(h.netProfit),
+                cash: Math.round(h.cash)
+            }))
         };
     } catch (err) {
         return { error: err.stack || err.message };
@@ -549,6 +588,7 @@ try {
     }
     Write-Host "  [PASS] Desconto de Value Investing Aplicado: $($simFinal.discountApplied)" -ForegroundColor Green
     Write-Host "  [PASS] Patente Adquirida por: $($simFinal.discountedBuyout)" -ForegroundColor Green
+    Write-Host "  [PASS] Veredito do Analista Corporativo: $($simFinal.corporateAnalyst.verdict)" -ForegroundColor Cyan
     Save-Screenshot "e3e_10years_05_conclusao_ciclo_decenal.png"
 
     Write-Host "`n================================================================" -ForegroundColor Green

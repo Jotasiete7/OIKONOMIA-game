@@ -1,5 +1,5 @@
 {
-    "timestamp":  "2026-09-02T08:54:17.0247540-03:00",
+    "timestamp":  "2026-09-02T11:04:14.7909583-03:00",
     "version":  "v0.8.3",
     "simulatedYears":  10,
     "passedAll":  true,
@@ -8,11 +8,190 @@
                    "discountedBuyout":  29250,
                    "finalYear":  11,
                    "finalMonth":  1,
-                   "finalCash":  1266369,
+                   "finalCash":  1265032,
                    "totalFacilities":  8,
-                   "totalRevenue10Years":  7705428,
-                   "totalNetProfit10Years":  1246179,
+                   "totalRevenue10Years":  7703732,
+                   "totalNetProfit10Years":  1244843,
                    "avgMargin10Years":  "16.2",
-                   "macroStatus":  "🌱 Ano 1/10 · Retomada \u0026 Estabilidade"
+                   "macroStatus":  "🌱 Ano 1/10 · Retomada \u0026 Estabilidade",
+                   "corporateAnalyst":  {
+                                            "badge":  "Mês 12 vs Mês 11",
+                                            "verdict":  "📉 Atenção Executiva: O Lucro Líquido recuou -$5,42 (0%) comparado ao mês anterior (Receita: -$4,3). Destaque operacional: Supermercado Nova Atenas gerou +$32.420,86 de margem limpa. Ponto de atenção: Complexo Alimenticio Montargis teve prejuízo de -$18.300 (verifique custos de solo ou reposição)."
+                                        },
+                   "facilitiesBreakdown":  [
+                                               {
+                                                   "name":  "Fazenda de Trigo Santa Maria",
+                                                   "type":  "Fazenda",
+                                                   "location":  "Cinturao Agricola Varzea (44, 37)",
+                                                   "monthlyRevenue":  0,
+                                                   "monthlyCogs":  0,
+                                                   "monthlyOpex":  3840,
+                                                   "monthlyNetProfit":  -3840
+                                               },
+                                               {
+                                                   "name":  "Complexo Alimenticio Montargis",
+                                                   "type":  "FÃ¡brica",
+                                                   "location":  "Polo Industrial Montargis (38, 88)",
+                                                   "monthlyRevenue":  0,
+                                                   "monthlyCogs":  0,
+                                                   "monthlyOpex":  18300,
+                                                   "monthlyNetProfit":  -18300
+                                               },
+                                               {
+                                                   "name":  "Supermercado Nova Atenas",
+                                                   "type":  "Varejo",
+                                                   "location":  "Distrito Residencial Nova Atenas (40, 37)",
+                                                   "monthlyRevenue":  44932,
+                                                   "monthlyCogs":  8491,
+                                                   "monthlyOpex":  4020,
+                                                   "monthlyNetProfit":  32421
+                                               },
+                                               {
+                                                   "name":  "Mercado Regional Varzea",
+                                                   "type":  "Varejo",
+                                                   "location":  "Distrito Comercial Varzea (88, 84)",
+                                                   "monthlyRevenue":  12566,
+                                                   "monthlyCogs":  2293,
+                                                   "monthlyOpex":  1470,
+                                                   "monthlyNetProfit":  8803
+                                               },
+                                               {
+                                                   "name":  "Pecuaria Leiteira Bela Vista",
+                                                   "type":  "Fazenda",
+                                                   "location":  "Cinturao Agricola Varzea (47, 37)",
+                                                   "monthlyRevenue":  0,
+                                                   "monthlyCogs":  0,
+                                                   "monthlyOpex":  3840,
+                                                   "monthlyNetProfit":  -3840
+                                               },
+                                               {
+                                                   "name":  "Hipermercado Porto Real",
+                                                   "type":  "Varejo",
+                                                   "location":  "Distrito Comercial Porto Real (86, 38)",
+                                                   "monthlyRevenue":  12749,
+                                                   "monthlyCogs":  2604,
+                                                   "monthlyOpex":  2760,
+                                                   "monthlyNetProfit":  7385
+                                               },
+                                               {
+                                                   "name":  "Instituto Vance de P\u0026D",
+                                                   "type":  "P\u0026D",
+                                                   "location":  "Distrito Tecnologico Nova Atenas (38, 39)",
+                                                   "monthlyRevenue":  0,
+                                                   "monthlyCogs":  0,
+                                                   "monthlyOpex":  9000,
+                                                   "monthlyNetProfit":  -9000
+                                               }
+                                           ],
+                   "recentHistoricalLedger":  [
+                                                  {
+                                                      "year":  10,
+                                                      "month":  1,
+                                                      "revenue":  65324,
+                                                      "cogs":  12497,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  9596,
+                                                      "cash":  1115501
+                                                  },
+                                                  {
+                                                      "year":  10,
+                                                      "month":  2,
+                                                      "revenue":  69049,
+                                                      "cogs":  13208,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  12612,
+                                                      "cash":  1128103
+                                                  },
+                                                  {
+                                                      "year":  10,
+                                                      "month":  3,
+                                                      "revenue":  69000,
+                                                      "cogs":  13201,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  12569,
+                                                      "cash":  1140680
+                                                  },
+                                                  {
+                                                      "year":  10,
+                                                      "month":  4,
+                                                      "revenue":  74910,
+                                                      "cogs":  14297,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  17383,
+                                                      "cash":  1158609
+                                                  },
+                                                  {
+                                                      "year":  10,
+                                                      "month":  5,
+                                                      "revenue":  75171,
+                                                      "cogs":  14351,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  17590,
+                                                      "cash":  1176727
+                                                  },
+                                                  {
+                                                      "year":  10,
+                                                      "month":  6,
+                                                      "revenue":  74500,
+                                                      "cogs":  14223,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  17046,
+                                                      "cash":  1194224
+                                                  },
+                                                  {
+                                                      "year":  10,
+                                                      "month":  7,
+                                                      "revenue":  64880,
+                                                      "cogs":  12423,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  9227,
+                                                      "cash":  1202671
+                                                  },
+                                                  {
+                                                      "year":  10,
+                                                      "month":  8,
+                                                      "revenue":  65104,
+                                                      "cogs":  12462,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  9413,
+                                                      "cash":  1211358
+                                                  },
+                                                  {
+                                                      "year":  10,
+                                                      "month":  9,
+                                                      "revenue":  68899,
+                                                      "cogs":  13181,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  12488,
+                                                      "cash":  1223824
+                                                  },
+                                                  {
+                                                      "year":  10,
+                                                      "month":  10,
+                                                      "revenue":  69892,
+                                                      "cogs":  13321,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  13340,
+                                                      "cash":  1237342
+                                                  },
+                                                  {
+                                                      "year":  10,
+                                                      "month":  11,
+                                                      "revenue":  70251,
+                                                      "cogs":  13387,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  13634,
+                                                      "cash":  1251198
+                                                  },
+                                                  {
+                                                      "year":  10,
+                                                      "month":  12,
+                                                      "revenue":  70247,
+                                                      "cogs":  13388,
+                                                      "totalOpex":  43230,
+                                                      "netProfit":  13629,
+                                                      "cash":  1265032
+                                                  }
+                                              ]
                }
 }
