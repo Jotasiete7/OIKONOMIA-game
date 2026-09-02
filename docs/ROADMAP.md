@@ -1,7 +1,7 @@
 # 🗺️ Roadmap de Desenvolvimento — OIKONOMIA
 
-**Versão Atual**: `v0.8.3 (Build 20260831.02)`  
-**Status da Infraestrutura**: 100% Validada com Séries Temporais (TimeSeriesBuffer 24 meses), Diagnóstico Executivo de Variância e Simulador "E se?".
+**Versão Atual**: `v0.8.4 (Build 20260902.01)`  
+**Status da Infraestrutura**: 100% Validada com Subsistema de Áudio (Micro Rádio OikoFM, BGM 1-7, 14 SFX, Síntese PCM WAV e Top HUD Otimizado).
 
 ---
 
@@ -17,7 +17,7 @@
 | **Fase 4** | **Contratos Públicos, Editais & Sistema Bancário** | Editais governamentais de suprimento municipal (merenda escolar, obras públicas, frota municipal). Linhas de crédito bancário com taxas de juros mensais, debêntures e dívida de longo prazo. | ⏳ **Planejada (Próxima)** |
 | **Fase 5** | **Mercado Financeiro, Bolsa de Valores & M&A** | Ações corporativas, IPO do jogador e de rivais, dividendos trimestrais, participações cruzadas, aquisições hostis de concorrentes (*Hostile Takeovers*) e holdings empresariais. | ⏳ **Planejada** |
 | **Fase 6** | **Dinâmica Macroeconômica, Clima & Sazonalidade** | Geadas, secas e safras recordes impactando rendimento agropecuário; greves portuárias e flutuação de frete internacional; picos sazonais de consumo (Black Friday, Natal, Festivais). | ⏳ **Planejada** |
-| **Fase 7** | **Polimento Audiovisual, Sprites & Sound FX** | Expansão do catálogo de sprites isométricos, efeitos de fumaça fabril/tráfego, trilha sonora dinâmica por estação/cidade e áudio de feedback contábil. | ⏳ **Planejada** |
+| **Fase 7** | **Polimento Audiovisual, Sprites & Sound FX** | Micro Rádio OikoFM no HUD, BGM 1 a 7, loops de ambiência, síntese de 8 SFX WAV nativos, menu de som ESC e otimização do Top HUD. | 🟢 **Subsistema de Áudio Entregue** |
 
 ---
 

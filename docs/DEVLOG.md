@@ -1,43 +1,72 @@
-﻿# ðŸ“” OIKONOMIA â€” DiÃ¡rio dos Desenvolvedores (DevLog & Agenda TÃ©cnica)
+# ðŸ“” OIKONOMIA â€” DiÃ¡rio dos Desenvolvedores (DevLog & Agenda TÃ©cnica)
 
-> **Documento Oficial de Rastreabilidade, Versionamento e EvoluÃ§Ã£o do Projeto**  
-> **RepositÃ³rio:** `Jotasiete7/OIKONOMIA-game`  
-> **Ãšltima AtualizaÃ§Ã£o:** 28 de Agosto de 2026  
-> **VersÃ£o Oficial Corrente:** `v0.8.0 (bld.20260828.02)`  
-> **Save Schema:** `v0.8.0` (Compatibilidade Retroativa Total)
+> **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
+> **Repositório:** `Jotasiete7/OIKONOMIA-game`  
+> **Última Atualização:** 02 de Setembro de 2026  
+> **Versão Oficial Corrente:** `v0.8.4 (bld.20260902.01)`  
+> **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total)
 
 ---
 
-## ðŸ›ï¸ PadrÃ£o Oficial de Versionamento da Equipe (SemVer 2.0 + Build Stamp)
+## 🧬 Padrão Oficial de Versionamento da Equipe (SemVer 2.0 + Build Stamp)
 
-Todo o projeto segue estritamente a convenÃ§Ã£o:
+Todo o projeto segue estritamente a convenção:
 $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
-- **MAJOR (v1.0.0, v2.0.0)**: Marcos definitivos de lanÃ§amento comercial / saÃ­da de Beta.
-- **MINOR (v0.7.x -> v0.8.0)**: Grandes mÃ³dulos ou mecÃ¢nicas novas (ex: P&D, frotas visuais, bolsa).
-- **PATCH (v0.7.3 -> v0.7.4)**: Novas telas, melhorias de UI/UX, janelas arrastÃ¡veis, correÃ§Ãµes de bugs.
-- **BUILD STAMP (`bld.YYYYMMDD.XX`)**: Carimbo diÃ¡rio com a data e o nÃºmero da entrega daquele dia.
-- **SAVE SCHEMA (`0.8.0`)**: Controla a compatibilidade dos saves `.oiko` e do `localStorage`.
+- **MAJOR (v1.0.0, v2.0.0)**: Marcos definitivos de lançamento comercial / saída de Beta.
+- **MINOR (v0.7.x -> v0.8.0)**: Grandes módulos ou mecânicas novas (ex: P&D, frotas visuais, bolsa).
+- **PATCH (v0.8.3 -> v0.8.4)**: Novas telas, melhorias de UI/UX, áudio, correções de bugs e layout.
+- **BUILD STAMP (`bld.YYYYMMDD.XX`)**: Carimbo diário com a data e o número da entrega daquele dia.
+- **SAVE SCHEMA (`0.8.2`)**: Controla a compatibilidade dos saves `.oiko` e do `localStorage`.
 
 ---
 
-## ðŸ§­ Agenda de Desenvolvimento (PrÃ³ximos Passos Priorizados)
+## 🧭 Agenda de Desenvolvimento (Próximos Passos Priorizados)
 
-- [ ] **QG Corporativo & Diretoria Executiva (v0.9.0)**: Sede global Ãºnica com contrataÃ§Ã£o de CEO, COO, CMO, CTO e CFO com bÃ´nus setoriais.
-- [ ] **IA Concorrente com P&D DinÃ¢mico**: Concorrentes evoluindo tecnologia mensalmente e disputando patentes de ponta.
-- [ ] **MÃ³dulo de LogÃ­stica Visual**: Adicionar caminhÃµes/frotas navegando pelas avenidas entre metrÃ³poles e fÃ¡bricas.
-- [ ] **Bolsa de Valores & EmprÃ©stimos BancÃ¡rios**: Sistema financeiro para emissÃ£o de aÃ§Ãµes e debÃªntures.
-- [ ] **Polimento GrÃ¡fico & Efeitos IsomÃ©tricos**: Sombras dinÃ¢micas nos edifÃ­cios e ciclo dia/noite.
-
----
-
-## ðŸ“œ HistÃ³rico de SessÃµes & Registros de EvoluÃ§Ã£o
+- [ ] **Contratos Públicos & Editais Municipais (v0.9.0 / Fase 4)**: Fornecimento contínuo para prefeituras das 4 cidades com bônus e multas.
+- [ ] **Sistema Bancário & Linhas de Crédito**: Empréstimos corporativos de giro e Capex amortizados na DRE mensal.
+- [ ] **QG Corporativo & Diretoria Executiva**: Sede global única com contratação de CEO, COO, CMO, CTO e CFO com bônus setoriais.
+- [ ] **Módulo de Logística Visual**: Adicionar caminhões/frotas navegando pelas avenidas entre metrópoles e fábricas.
+- [ ] **Mercado de Ações & M&A (Fase 5)**: Sistema financeiro para emissão de ações, dividendos e aquisições hostis.
 
 ---
 
-### ðŸ“… SessÃ£o 06: MÃ³dulo EstratÃ©gico de P&D (Pesquisa & Desenvolvimento), ConstruÃ§Ã£o FÃ­sica no Mapa, Mercado de Patentes & Zoom no Cursor
-- **Data:** 28/08/2026 â€” 07:45
-- **VersÃ£o Oficial:** `v0.8.0 (bld.20260828.02)` | **Save Schema:** `v0.8.0`
+## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 07: Sistema de Áudio Completo, Micro Rádio HUD, Síntese WAV e Otimização do Top HUD
+- **Data:** 02/09/2026 — 20:30
+- **Versão Oficial:** `v0.8.4 (bld.20260902.01)` | **Save Schema:** `v0.8.2`
+- **Desenvolvedor:** Antigravity AI + Jotasiete7
+
+#### 🎯 Objetivos & Entregas Realizadas:
+1. **Micro Rádio OikoFM no HUD Permanente (`#bottom-telemetry-bar`):**
+   - Implementado widget interativo de rádio com botões `⏮ Volta`, `⏯ Tocar/Pausar`, `⏭ Pula`, `🔁/🔂 Loop de Faixa / Playlist Contínua` e `🔊/🔇 Mute Rápido`.
+   - Display LCD com nome da faixa ativa e status de áudio.
+2. **Controles de Volume Integrados no Menu de Pausa (ESC):**
+   - Sliders diretos de Volume Geral (Master), Música (BGM), Ambiente (Cidade) e Efeitos Sonoros (SFX) integrados no `#pause-menu-modal` com sincronização reativa e persistência imediata em `localStorage`.
+3. **Catálogo Oficial & Gestão de Memória de Áudio:**
+   - Criado [`docs/CATALOGO_DE_AUDIO.md`](CATALOGO_DE_AUDIO.md) documentando 22 ativos de áudio.
+   - Organizadas pastas em `client/assets/audio/` (BGM 1 a 7, Ambiente, SFX UI, Economia, Obras e Eventos).
+   - Otimizado carregamento: priorizados arquivos `.mp3` para as faixas mais longas de BGM para evitar carregar arquivos `.wav` de 123MB/22MB na memória do navegador.
+4. **Síntese de Efeitos Sonoros Nativos via PowerShell (.NET):**
+   - Desenvolvido [`tools/generate_sfx.ps1`](../tools/generate_sfx.ps1) utilizando síntese PCM direta em 16-bit 44.1kHz.
+   - Gerados 8 arquivos WAV nativos reais: abertura de modais (`modal_open.wav`), carimbo contratual (`stamp_contract.wav`), tilintar de moedas (`coin_clink.wav`), crédito bancário (`loan_payout.wav`), demolição (`demolish.wav`), upgrade (`upgrade.wav`), alerta de perigo (`warning_alert.wav`) e notícia urgente (`news_flash.wav`).
+5. **Otimização da Barra Superior (Top HUD) & Correção de Corte:**
+   - Diagnosticado e corrigido o estouro horizontal que empurrava o botão **⚙️ Menu** e **⋯ Mais** para fora da viewport em telas < 1650px.
+   - Removidos botões redundantes de zoom `- / Centro / +` do topo (zoom mantido via scroll do mouse, teclado Q/E e minimap).
+   - Compactado o relógio para `04/09 · Ano 7` e o trimestre para `☀️ Q3 · Saturação` com tooltips ricos.
+   - Adicionada classe prioritária `shrink-0` no botão **⚙️ Menu**.
+6. **Silenciamento das Transições Mensais:**
+   - Identificado que o auto-save mensal executava `saveGame()` com `playSuccessChime()` ativo a cada 30 dias.
+   - Adicionado parâmetro `isSilent` em `saveGame()` e silenciadas as transições automáticas para manter o ritmo de simulação fluido e sem ruídos repetitivos.
+
+---
+
+### 📅 Sessão 06: Módulo Estratégico de P&D (Pesquisa & Desenvolvimento), Construção Física no Mapa, Mercado de Patentes & Zoom no Cursor
+- **Data:** 28/08/2026 — 07:45
+- **Versão Oficial:** `v0.8.0 (bld.20260828.02)` | **Save Schema:** `v0.8.0`
 - **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
 
 #### ðŸŽ¯ Objetivos:

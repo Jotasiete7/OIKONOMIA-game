@@ -61,16 +61,14 @@
       flex-shrink: 0 !important;
     }
 
-    @media (max-width: 1536px) {
-      .hud-btn-text { display: none; }
-      .city-btn-name { display: none; }
-      #hud-company-name, #hud-player-name { max-width: 75px; }
-      #floating-lenses-bar { top: 4.75rem; }
+    @media (max-width: 1680px) {
+      .city-btn-name { display: none !important; }
+      .hud-btn-text { display: none !important; }
+      #hud-company-name, #hud-player-name { max-width: 80px; }
     }
-    @media (max-width: 1280px) {
-      #hud-corp-badge { display: none; }
-      #floating-lenses-bar { top: 4.75rem; transform: translateX(-50%) scale(0.92); }
-      #month-profit-box { display: none; }
+    @media (max-width: 1366px) {
+      #hud-corp-badge { display: none !important; }
+      #month-profit-box { display: none !important; }
     }
     @media (max-width: 1024px) {
       .lenses-text-label { display: none; }
@@ -103,28 +101,28 @@
   </div>
 
   <!-- 2. TOP FLOATING HUD BAR (UNIFICADA, ELEGANTE & LIMPA) -->
-  <header class="absolute top-8 left-2 right-2 z-30 flex items-center justify-between gap-2 pointer-events-none max-w-[calc(100vw-16px)]">
+  <header class="absolute top-8 left-2 right-2 z-30 flex items-center justify-between gap-1.5 pointer-events-none w-[calc(100vw-16px)] max-w-[calc(100vw-16px)]">
     
     <!-- Top Left: Logo, Empresa, Identicon & Cidades -->
-    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2.5 py-1 shadow-2xl shrink-0">
+    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2 py-1 shadow-2xl shrink-0">
       <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/40 flex items-center justify-center text-xs shrink-0">🏛️</div>
       <div class="shrink-0 hidden sm:block">
         <div class="flex items-center gap-1">
           <h1 class="text-xs font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">OIKONOMIA</h1>
-          <span id="hud-version-tag" class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.8.3</span>
+          <span id="hud-version-tag" class="text-[8px] bg-emerald-950 text-emerald-300 font-mono px-1 rounded border border-emerald-800">v0.8.4</span>
         </div>
       </div>
       <!-- EMPRESA / AVATAR / LOGO BADGE -->
-      <div id="hud-corp-badge" class="flex items-center gap-1.5 bg-slate-950/80 px-2 py-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1 shrink-0">
+      <div id="hud-corp-badge" class="flex items-center gap-1.5 bg-slate-950/80 px-2 py-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-0.5 shrink-0">
         <span id="hud-corp-logo-badge" class="flex items-center justify-center shrink-0"></span>
         <span id="hud-player-avatar" class="text-xs">👨‍💼</span>
         <div class="leading-tight">
-          <span id="hud-company-name" class="font-bold text-emerald-400 block truncate max-w-[100px]">OikoCorp Holding</span>
-          <span id="hud-player-name" class="text-[7px] text-slate-400 block truncate max-w-[100px]">Arthur Vance</span>
+          <span id="hud-company-name" class="font-bold text-emerald-400 block truncate max-w-[90px]">OikoCorp</span>
+          <span id="hud-player-name" class="text-[7px] text-slate-400 hidden 2xl:block truncate max-w-[80px]">Arthur Vance</span>
         </div>
       </div>
       <!-- BADGE SAÚDE DA CADEIA INTEGRADA (UPSTREAM VS VAREJO) -->
-      <div id="hud-chain-health-badge" onclick="openFacilityDREModal()" class="hidden items-center gap-1.5 bg-slate-950/80 px-2 py-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1 shrink-0 cursor-pointer hover:border-slate-700 transition" title="Saúde da Cadeia Integrada: Balanço entre a margem bruta do varejo e os custos upstream de fazendas, fábricas e P&D (Clique para abrir DRE)">
+      <div id="hud-chain-health-badge" onclick="openFacilityDREModal()" class="hidden items-center gap-1.5 bg-slate-950/80 px-2 py-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-0.5 shrink-0 cursor-pointer hover:border-slate-700 transition" title="Saúde da Cadeia Integrada: Balanço entre a margem bruta do varejo e os custos upstream de fazendas, fábricas e P&D (Clique para abrir DRE)">
         <span id="hud-chain-icon" class="text-xs">⛓️</span>
         <div class="leading-tight">
           <span class="text-[7px] text-slate-400 block uppercase">Cadeia</span>
@@ -132,19 +130,19 @@
         </div>
       </div>
       <!-- CIDADES / ATALHOS -->
-      <div class="flex items-center gap-0.5 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-1 shrink-0">
-        <button onclick="jumpToCity('nova_atenas')" class="px-1.5 py-0.5 rounded text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ <span class="city-btn-name hidden md:inline">Atenas</span></button>
-        <button onclick="jumpToCity('porto_real')" class="px-1.5 py-0.5 rounded text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real (Porto)">🚢 <span class="city-btn-name hidden md:inline">P. Real</span></button>
-        <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Polo Industrial">🏭 <span class="city-btn-name hidden md:inline">Montargis</span> <span id="lock-montargis">🔒</span></button>
-        <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Cinturão Agrícola">🌾 <span class="city-btn-name hidden md:inline">Várzea</span> <span id="lock-varzea">🔒</span></button>
+      <div class="flex items-center gap-0.5 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono ml-0.5 shrink-0">
+        <button onclick="jumpToCity('nova_atenas')" class="px-1.5 py-0.5 rounded text-amber-300 hover:bg-slate-800 font-bold" title="Ir para Nova Atenas (Capital)">🏛️ <span class="city-btn-name hidden 2xl:inline">Atenas</span></button>
+        <button onclick="jumpToCity('porto_real')" class="px-1.5 py-0.5 rounded text-sky-300 hover:bg-slate-800 font-bold" title="Ir para Porto Real (Porto)">🚢 <span class="city-btn-name hidden 2xl:inline">P. Real</span></button>
+        <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Polo Industrial">🏭 <span class="city-btn-name hidden 2xl:inline">Montargis</span> <span id="lock-montargis">🔒</span></button>
+        <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Cinturão Agrícola">🌾 <span class="city-btn-name hidden 2xl:inline">Várzea</span> <span id="lock-varzea">🔒</span></button>
       </div>
     </div>
 
-    <!-- Top Center: Lentes Compactas & Zoom -->
-    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2 py-1 shadow-2xl shrink-0 font-mono text-[10px]">
+    <!-- Top Center: Lentes Compactas (Sem poluição de zoom redundante) -->
+    <div class="pointer-events-auto flex items-center bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-1.5 py-1 shadow-2xl shrink-0 font-mono text-[10px]">
       <!-- Dropdown de Lentes -->
       <div class="relative" id="lenses-dropdown-container">
-        <button id="btn-lenses-dropdown" onclick="toggleLensesDropdown()" class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold transition shadow-sm" title="Alternar Lente de Dados no Mapa">
+        <button id="btn-lenses-dropdown" onclick="toggleLensesDropdown()" class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold transition shadow-sm cursor-pointer" title="Alternar Lente de Dados no Mapa">
           <span id="current-lens-icon">🌐</span>
           <span id="current-lens-label" class="hidden sm:inline">Terreno</span>
           <span class="text-[8px] text-slate-400">▾</span>
@@ -160,33 +158,26 @@
           <button id="hm-media"   onclick="setHeatmap('media')"   class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-slate-800 text-slate-300 text-[10px]">📡 <span>Mídia</span></button>
         </div>
       </div>
-
-      <div class="h-3.5 w-px bg-slate-800 mx-0.5"></div>
-
-      <!-- Zoom -->
-      <button onclick="changeZoom(-0.2)" class="w-5 h-5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 font-bold flex items-center justify-center text-xs" title="Zoom Out (Q / -)">−</button>
-      <button onclick="resetCamera()"    class="px-1.5 h-5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-400 text-[9px] flex items-center justify-center" title="Centralizar Mapa">Centro</button>
-      <button onclick="changeZoom(0.2)"  class="w-5 h-5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 font-bold flex items-center justify-center text-xs" title="Zoom In (E / +)">+</button>
     </div>
 
     <!-- Top Right: Relógio, Finanças & Ações Hierarquizadas -->
-    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2.5 py-1 shadow-2xl shrink-0 flex-nowrap">
+    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl px-2 py-1 shadow-2xl shrink-0 flex-nowrap">
       <!-- Relógio & Velocidades (1x..5x + Espaço) -->
       <div class="flex items-center gap-1 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-[10px] font-mono whitespace-nowrap shrink-0">
-        <span id="clock-date" class="px-1.5 font-bold text-amber-400 whitespace-nowrap inline-block">Dia 01 / Mês 01</span>
-        <span id="hud-quarter-badge" class="px-1.5 py-0.2 rounded text-[8px] bg-slate-800 text-amber-300 border border-slate-700 font-mono font-bold shrink-0 cursor-help" title="Trimestre Macroeconômico Ativo">☀️ Q1 Verão</span>
+        <span id="clock-date" class="px-1 font-bold text-amber-400 whitespace-nowrap inline-block" title="Data da Simulação">01/01 · Ano 1</span>
+        <span id="hud-quarter-badge" class="px-1.5 py-0.2 rounded text-[8px] bg-slate-800 text-amber-300 border border-slate-700 font-mono font-bold shrink-0 cursor-help" title="Trimestre Macroeconômico Ativo">☀️ Q1</span>
         <button id="btn-p"  onclick="setSpeed(0)" class="px-1.5 py-0.5 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40" title="Pausar / Retomar [Espaço]">⏸</button>
-        <button id="btn-1x" onclick="setSpeed(1)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 1x [Tecla 1]">1x</button>
-        <button id="btn-2x" onclick="setSpeed(2)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 2x [Tecla 2]">2x</button>
-        <button id="btn-3x" onclick="setSpeed(3)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 3x [Tecla 3]">3x</button>
-        <button id="btn-4x" onclick="setSpeed(4)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 4x [Tecla 4]">4x</button>
-        <button id="btn-5x" onclick="setSpeed(5)" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 5x [Tecla 5]">5x</button>
+        <button id="btn-1x" onclick="setSpeed(1)" class="px-1 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 1x [Tecla 1]">1x</button>
+        <button id="btn-2x" onclick="setSpeed(2)" class="px-1 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 2x [Tecla 2]">2x</button>
+        <button id="btn-3x" onclick="setSpeed(3)" class="px-1 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 3x [Tecla 3]">3x</button>
+        <button id="btn-4x" onclick="setSpeed(4)" class="px-1 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 4x [Tecla 4]">4x</button>
+        <button id="btn-5x" onclick="setSpeed(5)" class="px-1 py-0.5 rounded text-slate-400 hover:bg-slate-800" title="Velocidade 5x [Tecla 5]">5x</button>
       </div>
 
       <!-- Finanças -->
       <div class="border-l border-slate-800 pl-1.5 font-mono text-right shrink-0">
         <span class="text-[8px] text-slate-400 block uppercase leading-none">Caixa</span>
-        <span id="corp-cash" class="text-xs font-black text-emerald-400 leading-tight whitespace-nowrap block cursor-help" title="$100,000.00">$100,000.00</span>
+        <span id="corp-cash" class="text-xs font-black text-emerald-400 leading-tight whitespace-nowrap block cursor-help" title="$100,000.00">$100k</span>
       </div>
       <div id="month-profit-box" class="border-l border-slate-800 pl-1.5 font-mono text-right shrink-0">
         <span class="text-[8px] text-slate-400 block uppercase leading-none">Lucro Mês</span>
@@ -195,7 +186,7 @@
 
       <!-- Ações Primárias -->
       <button onclick="toggleDREModal()" class="bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Demonstrativo de Resultados do Exercício">
-        📊 <span class="hud-btn-text">DRE</span>
+        📊 <span class="hud-btn-text hidden xl:inline">DRE</span>
       </button>
       <button onclick="openMarketingCentralModal()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Central de Publicidade">
         📢 <span id="active-campaigns-badge" class="bg-indigo-700 px-1 rounded text-[8px] text-white">0</span>
@@ -207,7 +198,7 @@
       <!-- Dropdown de Ações Secundárias (Mais Opções ...) -->
       <div class="relative" id="hud-more-options-container">
         <button id="btn-more-options" onclick="toggleMoreOptionsMenu()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Mais Opções & Guias">
-          ⋯ <span class="hidden xl:inline">Mais</span>
+          ⋯ <span class="hidden 2xl:inline">Mais</span>
           <span id="more-menu-badge" class="hidden w-1.5 h-1.5 rounded-full bg-amber-400"></span>
         </button>
         <div id="hud-more-options-menu" class="hidden absolute right-0 top-full mt-1.5 w-48 bg-slate-900/98 backdrop-blur-md border border-slate-700/80 rounded-xl shadow-2xl p-1 z-50 flex flex-col gap-0.5 font-mono text-[10px]">
@@ -227,9 +218,9 @@
         </div>
       </div>
 
-      <!-- Menu Principal / Pausa -->
-      <button onclick="togglePauseMenu()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Menu Principal & Configurações (ESC)">
-        ⚙️ <span class="hud-btn-text">Menu</span>
+      <!-- Menu Principal / Pausa (Protegido à direita) -->
+      <button onclick="togglePauseMenu()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap shrink-0 ml-0.5" title="Menu Principal & Configurações (ESC)">
+        ⚙️ <span>Menu</span>
       </button>
     </div>
   </header>
@@ -8931,16 +8922,13 @@
           const oldYear = year;
           month = 1;
           year++;
-          playYearCelebration();
+          // playYearCelebration(); // Desativado temporariamente
           addLog(`🎆 FELIZ ANO NOVO! Início do Exercício Fiscal do Ano ${year}!`, 'text-amber-300 font-bold', { isAlert: true });
           if (typeof MacroCycleSystem !== 'undefined') {
             MacroCycleSystem.onYearChange(oldYear, year);
           }
         } else {
           month++;
-          if (gameSpeed < 5) {
-            playSuccessChime();
-          }
         }
 
         // Anúncio de Início de Novo Trimestre Macroeconômico (Meses 1, 4, 7, 10 no Dia 1)
@@ -9119,7 +9107,7 @@
         if (!btn) continue;
         btn.className = parseInt(spd) === s
           ? 'px-1.5 py-0.5 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40'
-          : 'px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800';
+          : 'px-1 py-0.5 rounded text-slate-400 hover:bg-slate-800';
       }
       if (s === 0) return;
       const speedIntervals = { 1: 650, 2: 300, 3: 170, 4: 100, 5: 55 };
@@ -9413,13 +9401,17 @@
 
     function updateUI() {
       const clockEl = document.getElementById('clock-date');
-      if (clockEl) clockEl.textContent = `Dia ${String(day).padStart(2,'0')} / Mês ${String(month).padStart(2,'0')} / Ano ${year}`;
+      if (clockEl) {
+        clockEl.textContent = `${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')} · Ano ${year}`;
+        clockEl.title = `Data da Simulação: Dia ${day} / Mês ${month} / Ano ${year}`;
+      }
 
       const qBadge = document.getElementById('hud-quarter-badge');
       if (qBadge && typeof CoreMath !== 'undefined' && CoreMath.getQuarterInfo) {
         const qInfo = CoreMath.getQuarterInfo(month);
         const macroInfo = typeof MacroCycleSystem !== 'undefined' ? MacroCycleSystem.getHUDLabel(year) : null;
-        qBadge.textContent = `${qInfo.emoji} ${qInfo.code} · ${macroInfo ? macroInfo.shortText : qInfo.season}`;
+        const phaseName = (macroInfo && macroInfo.phase) ? macroInfo.phase.name : (macroInfo ? macroInfo.shortText : qInfo.season);
+        qBadge.textContent = `${qInfo.emoji} ${qInfo.code} · ${phaseName}`;
         qBadge.title = `Trimestre: ${qInfo.code} — ${qInfo.name} (Meses ${qInfo.months.join(', ')})\nCiclo Decenal: ${macroInfo ? macroInfo.text + ' — ' + macroInfo.desc : ''}`;
       }
 
@@ -9574,8 +9566,8 @@
     const GAME_VERSION_INFO = {
       major: 0,
       minor: 8,
-      patch: 3,
-      build: '20260831.02',
+      patch: 4,
+      build: '20260902.01',
       saveSchema: '0.8.2',
       get version() { return `${this.major}.${this.minor}.${this.patch}`; },
       get fullString() { return `v${this.version} (bld.${this.build})`; }
@@ -9759,7 +9751,7 @@
       };
     }
 
-    function saveGame(customSlotId = null) {
+    function saveGame(customSlotId = null, isSilent = false) {
       const state = serializeCurrentGame();
       const slotId = customSlotId || currentSaveSlotId || (`slot_${Date.now()}`);
       currentSaveSlotId = slotId;
@@ -9771,7 +9763,7 @@
         avatarId: playerProfile.avatarId,
         themeColor: playerProfile.themeColor,
         cash: cash,
-        gameDate: `Dia ${day} / Mês ${month} / Ano ${year}`,
+        gameDate: `${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')} · Ano ${year}`,
         dateISO: state.timestamp,
         builtCount: state.builtTiles.length
       };
@@ -9784,7 +9776,9 @@
         saveSavesIndex(index);
         
         lastSavedStateSnapshot = state;
-        playSuccessChime();
+        if (!isSilent) {
+          playSuccessChime();
+        }
         addLog(`💾 JOGO SALVO: [${metadata.companyName}] registrado com sucesso.`, 'text-emerald-400 font-bold', { category: 'system' });
         renderSavesCountInMenu();
         return true;
@@ -9966,7 +9960,7 @@
     function checkAutoSave() {
       if (gameSettings.autoSave === 'disabled') return;
       if (gameSettings.autoSave === 'yearly' && month !== 12) return;
-      saveGame();
+      saveGame(null, true);
     }
 
     // ===========================================================================
