@@ -83,6 +83,30 @@ graph LR
 
 ---
 
+### 📰 5. Diário Corporativo & Ticker de Notícias em Tempo Real (Estilo Nasdaq / TortaApp)
+* **Barra Fixa Superior com Aceleração por GPU**: Marquee contínuo com `translate3d` e velocidade linear configurável (30 a 90 px/s).
+* **🖱️ Drag-to-Scroll Interativo**: Arraste a fita horizontalmente com o mouse para ler manchetes anteriores.
+* **🎯 Jump to Latest**: Clique no badge do Diário para reiniciar o fluxo instantaneamente nas notícias mais recentes.
+* **🔥 Smart Alert Pills**: Alertas de alta prioridade (marcos históricos, quebra de safras, choques de mercado e falências) com molduras iluminadas e ícones pulsantes.
+
+---
+
+### 🌐 6. Motor Macroeconômico & Sazonalidade dos 4 Trimestres (Estilo *Capitalism II*)
+* **☀️ Sazonalidade Intra-ano (4 Trimestres de 90 dias)**:
+  - **Q1 (Verão)**: +35% em bebidas e vestuário leve.
+  - **Q2 (Outono)**: +25% de safra nas fazendas e panificação em alta.
+  - **Q3 (Inverno)**: -20% de colheita no campo (entressafra), +40% em sopas, café, fármacos e agasalhos.
+  - **Q4 (Festas)**: O Grande Trimestre de Compras (+45% em chocolates, carnes nobres e vestuário geral).
+* **🏛️ Ciclos Macroeconômicos Decenais (10 Anos)**:
+  - **🌱 Anos 1-2 (Retomada)**: PIB +5%, insumos estáveis.
+  - **🔥 Anos 3-5 (Superaquecimento / Boom)**: Consumo +20%, insumos +15% (pressão de procura).
+  - **⚠️ Anos 6-7 (Saturação)**: Desaceleração de vendas (-5%) e queima de estoques pela IA.
+  - **📉 Anos 8-10 (Recessão & Liquidação / Value Investing)**: Consumo -20%, insumos no porto com -20% de desconto e patentes de concorrentes com **35% de desconto**!
+* **📺 Central de Mídia & IBOPE Analytics**:
+  - Pontos de IBOPE (0 a 100), alcance real em número de habitantes, CPRP (*Cost per Rating Point*) e barra de *Share of Voice* contra a concorrência.
+
+---
+
 ## 🎮 Controles & Atalhos de Teclado
 
 | Tecla / Comando | Ação |
@@ -93,7 +117,7 @@ graph LR
 | **`Clique no Lote / Prédio`** | Abrir janela flutuante de gestão ou wizard de construção. |
 | **`Clique no Minimapa`** | Teletransportar a câmera diretamente para o ponto clicado. |
 | **`Espaço`** | Pausar / Despausar o relógio da simulação. |
-| **`Esc`** | Fechar janelas flutuantes, gavetas de DRE/Diário e modais. |
+| **`Esc`** | Fechar janelas flutuantes, gavetas de DRE/Diário e abrir Configurações. |
 | **`F`** | Ocultar/Restaurar painéis (Modo Teatro). |
 
 ---
@@ -107,33 +131,26 @@ JOGAR.bat
 ```
 *O jogo abrirá diretamente no seu navegador padrão com motor gráfico e mapas carregados.*
 
-### 2. Regeneração do Mapa (Opcional via Tiled ou Script)
-Caso queira recompilar os dados do mapa procedural para o cliente:
-```powershell
-# Executar a ferramenta de exportação TMX -> JS
-powershell -ExecutionPolicy Bypass -File tools/export_map_to_js.ps1
-```
-
 ---
 
-## 📂 Estrutura do Projeto
+## 📂 Estrutura Modular do Projeto
 
 ```
 OIKONOMIA/
-├── data/
-│   ├── maps/
-│   │   ├── oikonomia_map.tmx      # Mapa isométrico 128x128 no formato padrão Tiled
-│   │   └── tileset.png            # Tileset isométrico 2:1 (64x32) com elevações e texturas
-│   ├── cities/
-│   │   └── city-profiles.json     # Demografia, curvas de renda, elasticidade e desbloqueio
-│   └── products/                  # Catálogo de produtos, matérias-primas e receitas
 ├── client/
-│   ├── index.html                 # Cliente completo com motor canvas 2D e UI em tela cheia
-│   └── map_data.js                # Camadas TMX e matrizes compiladas para acesso ultra-rápido
-├── docs/
-│   ├── GDD.md                     # Game Design Document completo
-│   ├── ECONOMY_SPECS.md           # Fórmulas microeconômicas e curvas de atratividade
-│   └── ROADMAP.md                 # Histórico de versões e marcos futuros
+│   ├── index.html                 # Cliente completo com motor canvas 2D, HUD e modais
+│   ├── core_math.js               # Motor matemático puro (elasticidade, ratings, P&D e trimestres)
+│   ├── data_catalogs.js           # Catálogos estáticos de produtos, receitas, lojas e mídias
+│   ├── ticker_system.js           # Módulo do Diário Corporativo / Ticker superior interativo
+│   ├── macro_cycle_system.js      # Módulo macroeconômico de ciclos decenais de 10 anos
+│   ├── sprite_manager.js          # Gerenciador e cache de texturas e sprites isométricos
+│   ├── audio.js                   # Sistema de efeitos sonoros procedurais (Web Audio API)
+│   └── map_data.js                # Camadas TMX e matrizes compiladas do continente
+├── data/
+│   ├── maps/                      # Mapas isométricos no formato Tiled
+│   ├── cities/                    # Demografia e perfis socioeconômicos dos distritos
+│   └── products/                  # Especificações técnicas e cadeias de insumos
+├── docs/                          # Documentação, GDD e auditorias
 └── JOGAR.bat                      # Inicializador de um clique
 ```
 
