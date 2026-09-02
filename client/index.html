@@ -6346,13 +6346,16 @@
       }
     }
 
-    function openMarketingCentralModal(filterOutletId = null) {
+    function openMarketingCentralModal(filterOutletId) {
       if (filterOutletId !== undefined) currentMarketingFilterOutletId = filterOutletId;
       const list = document.getElementById('media-outlets-list');
       const products = Object.values(PRODUCT_CATALOG);
 
       const totalMonthlyMkt = getTotalMonthlyMarketingBudget();
       const totalDailyMkt = totalMonthlyMkt / 30;
+
+      // População Metropolitana Total
+      const totalMetropolisPop = Object.values(CITY_DISTRICTS).reduce((acc, d) => acc + (d.population || 0), 0);
 
       document.getElementById('mkt-summary-contracts').textContent = `${activeMarketingContracts.size} campanha(s) ativa(s)`;
       document.getElementById('mkt-summary-monthly-cost').textContent = `-$${totalMonthlyMkt.toLocaleString('en-US', { minimumFractionDigits: 2 })}/mês`;
@@ -6365,45 +6368,103 @@
       if (currentMarketingFilterOutletId && outletsToShow.length > 0) {
         const outlet = outletsToShow[0];
         document.getElementById('marketing-modal-title').innerHTML = `
-          <span>${outlet.emoji} ${outlet.name} — Contratação de Anúncios</span>
+          <span>${outlet.emoji} ${outlet.name} — Contratação de Mídia & IBOPE</span>
           <button onclick="openMarketingCentralModal(null)" class="ml-auto text-[11px] text-indigo-300 hover:text-white bg-indigo-900/60 px-2.5 py-1 rounded-lg border border-indigo-700 font-mono">
             ← Ver Todas as Emissoras
           </button>
         `;
-        document.getElementById('marketing-modal-subtitle').textContent = `Tipo: ${outlet.type} · Alcance: ${outlet.reachDescription}`;
+        document.getElementById('marketing-modal-subtitle').textContent = `Tipo: ${outlet.type} · IBOPE: ${outlet.ibopeRating} pts · Alcance: ${outlet.reachDescription}`;
       } else {
-        document.getElementById('marketing-modal-title').innerHTML = `<span>📢 Central de Mídia & Publicidade Corporativa</span>`;
-        document.getElementById('marketing-modal-subtitle').textContent = `Contrate campanhas institucionais da rede ou publicidade individual para cada produto do catálogo.`;
+        document.getElementById('marketing-modal-title').innerHTML = `<span>📢 Central de Mídia, IBOPE & Publicidade Corporativa</span>`;
+        document.getElementById('marketing-modal-subtitle').textContent = `Contrate campanhas institucionais ou individuais analisando pontos de IBOPE, CPRP e Share of Voice.`;
       }
 
       list.innerHTML = outletsToShow.map(outlet => {
         const instKey = `${outlet.id}::__institutional__`;
         const isInstActive = activeMarketingContracts.has(instKey);
 
+        // Métricas Analíticas Estilo Capitalism II
+        const reachPop = Math.round(totalMetropolisPop * (outlet.reachPct / 100) * (outlet.ibopeRating / 100));
+        const cprpProd = (outlet.monthlyCost / outlet.ibopeRating).toFixed(2);
+        const cprpInst = (outlet.institutionalMonthlyCost / outlet.ibopeRating).toFixed(2);
+
+        // Share of Voice (Presença Publicitária)
+        const prodContractsCount = products.filter(p => activeMarketingContracts.has(`${outlet.id}::${p.id}`)).length;
+        const myShare = isInstActive ? Math.min(85, 45 + prodContractsCount * 6) : (prodContractsCount > 0 ? Math.min(60, prodContractsCount * 12) : 10);
+        const compShare = 100 - myShare;
+
         return `
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-            <div class="flex items-center justify-between pb-2 border-b border-slate-800/80">
-              <div>
-                <div class="flex items-center gap-2">
-                  <span class="text-base">${outlet.emoji}</span>
-                  <span class="text-sm font-bold text-slate-100">${outlet.name}</span>
-                  <span class="text-[10px] bg-indigo-950 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-800 font-mono">${outlet.type}</span>
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3.5 font-mono">
+            <!-- Header do Veículo de Mídia -->
+            <div class="flex flex-wrap items-center justify-between pb-3 border-b border-slate-800/80 gap-2">
+              <div class="flex items-center gap-2.5">
+                <span class="text-2xl">${outlet.emoji}</span>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm font-bold text-slate-100">${outlet.name}</span>
+                    <span class="text-[9px] bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded-full border border-indigo-800 font-bold">${outlet.type}</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">
+                    Cobertura: <strong class="text-slate-300">${outlet.reachDescription}</strong>
+                  </div>
                 </div>
-                <div class="text-[11px] text-slate-400 mt-1 font-mono">
-                  Alcance: <strong class="text-slate-300">${outlet.reachDescription}</strong> · Impulso: <strong class="text-emerald-400">+${outlet.brandBoostMonthly} pts/mês</strong> (Teto: ${outlet.brandCap})
+              </div>
+
+              <!-- Badges de IBOPE e Eficiência -->
+              <div class="flex items-center gap-2">
+                <div class="bg-emerald-950/80 border border-emerald-700/60 px-2.5 py-1 rounded-lg text-right">
+                  <span class="text-[8px] text-emerald-400 uppercase block leading-none font-bold">IBOPE / Rating</span>
+                  <span class="text-xs font-black text-emerald-300">⭐ ${outlet.ibopeRating} pts</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 px-2 py-1 rounded-lg text-right">
+                  <span class="text-[8px] text-slate-500 uppercase block leading-none">Perfil de Mídia</span>
+                  <span class="text-[10px] font-bold text-indigo-300">${outlet.efficiencyLabel}</span>
                 </div>
               </div>
             </div>
 
-            <!-- Campanha Institucional da Rede -->
-            <div class="p-3 rounded-xl border ${isInstActive ? 'border-amber-500 bg-amber-950/30' : 'border-slate-800 bg-slate-900/80'} flex items-center justify-between font-mono text-xs">
+            <!-- Painel Analítico de 3 Pilares (Capitalism Style) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[10px] bg-slate-900/90 p-2.5 rounded-xl border border-slate-800/80">
+              <div>
+                <span class="text-slate-400 block text-[9px]">👥 Audiência Real Estimada:</span>
+                <span class="text-slate-100 font-bold text-[11px]">${reachPop.toLocaleString('pt-BR')} pessoas</span>
+                <span class="text-slate-500 text-[8px] block">(${outlet.reachPct}% de penetração)</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[9px]">💲 Custo por Ponto de IBOPE (CPRP):</span>
+                <span class="text-amber-300 font-bold text-[11px]">$${cprpProd}/pt (Prod)</span>
+                <span class="text-slate-500 text-[8px] block">Rede: $${cprpInst}/pt</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[9px]">📈 Impulso de Brand Rating:</span>
+                <span class="text-emerald-400 font-bold text-[11px]">+${outlet.brandBoostMonthly} pts/mês</span>
+                <span class="text-slate-500 text-[8px] block">Teto de Eficácia: ${outlet.brandCap} pts</span>
+              </div>
+            </div>
+
+            <!-- Barra de Share of Voice (Presença Publicitária no Canal) -->
+            <div class="space-y-1 bg-slate-900/40 p-2 rounded-lg border border-slate-900">
+              <div class="flex justify-between text-[9px]">
+                <span class="text-slate-400 flex items-center gap-1">
+                  📢 <span>Share of Voice: <strong class="text-indigo-300">${playerProfile.companyName} (${myShare}%)</strong></span>
+                </span>
+                <span class="text-slate-500">Concorrência IA (${compShare}%)</span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden flex">
+                <div class="bg-gradient-to-r from-indigo-500 to-teal-400 h-full transition-all duration-300" style="width: ${myShare}%"></div>
+                <div class="bg-slate-700 h-full transition-all duration-300" style="width: ${compShare}%"></div>
+              </div>
+            </div>
+
+            <!-- Campanha Institucional da Rede (Marca Corporativa) -->
+            <div class="p-3 rounded-xl border ${isInstActive ? 'border-amber-500 bg-amber-950/40 shadow-[0_0_15px_rgba(245,158,11,0.1)]' : 'border-slate-800 bg-slate-900/70'} flex items-center justify-between font-mono text-xs">
               <div>
                 <div class="font-bold text-amber-300 flex items-center gap-1.5">
-                  <span>🏢 Campanha Institucional da Rede OIKONOMIA</span>
-                  <span class="text-[9px] bg-amber-950 text-amber-300 px-1.5 py-0.2 rounded border border-amber-800">Marca Corporativa</span>
+                  <span>🏢 Marca Corporativa Guarda-Chuva (Toda a Rede)</span>
+                  <span class="text-[9px] bg-amber-950 text-amber-300 px-1.5 py-0.2 rounded border border-amber-800">Institucional</span>
                 </div>
-                <div class="text-[10px] text-slate-400 mt-0.5">Eleva a marca de TODAS as gôndolas de todas as suas lojas simultaneamente!</div>
-                <div class="text-[11px] text-slate-300 mt-1">Custo: <strong class="text-rose-400 font-bold">$${outlet.institutionalMonthlyCost.toLocaleString()}/mês</strong></div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Impulsiona simultaneamente todas as lojas e gôndolas da sua holding.</div>
+                <div class="text-[11px] text-slate-300 mt-1">Custo: <strong class="text-rose-400 font-bold">$${outlet.institutionalMonthlyCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}/mês</strong></div>
               </div>
               <button onclick="toggleMarketingContract('${outlet.id}', '__institutional__')"
                 class="px-3.5 py-1.5 rounded-xl font-bold text-xs transition ${isInstActive ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
@@ -6411,9 +6472,9 @@
               </button>
             </div>
 
-            <!-- Campanhas de Produto Único -->
+            <!-- Campanhas de Produto Individual -->
             <div>
-              <span class="text-[10px] text-slate-400 uppercase font-mono block mb-2">Ou Anunciar Produtos Individuais ($${outlet.monthlyCost.toLocaleString()}/mês cada):</span>
+              <span class="text-[10px] text-slate-400 uppercase font-mono block mb-1.5 font-bold">Ou Anunciar Produtos Individuais ($${outlet.monthlyCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}/mês cada):</span>
               <div class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto custom-scrollbar pr-1">
                 ${products.map(prod => {
                   const contractKey = `${outlet.id}::${prod.id}`;
@@ -6421,13 +6482,21 @@
                   const brand = playerBrandRating[prod.id] || 20;
                   return `
                     <div onclick="toggleMarketingContract('${outlet.id}', '${prod.id}')"
-                      class="cursor-pointer p-2 rounded-lg border text-[11px] font-mono flex items-center justify-between transition
-                        ${isActive ? 'border-indigo-500 bg-indigo-950/40 text-indigo-200 ring-1 ring-indigo-500' : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700'}">
-                      <div class="truncate pr-1">
-                        <div class="font-bold truncate">${prod.name}</div>
-                        <div class="text-[9px] text-slate-500">Marca: ${brand}/100</div>
+                      class="cursor-pointer p-2.5 rounded-xl border text-[11px] font-mono flex flex-col justify-between transition gap-1.5 select-none
+                        ${isActive ? 'border-indigo-500 bg-indigo-950/60 text-indigo-100 ring-1 ring-indigo-500 shadow-md shadow-indigo-950/40' : 'border-slate-800 bg-slate-900/70 text-slate-300 hover:border-slate-700 hover:bg-slate-900'}">
+                      <div class="flex items-center justify-between">
+                        <span class="font-bold truncate pr-1 text-slate-100 text-[11px]">${prod.name}</span>
+                        <span class="text-[10px] px-1.5 py-0.2 rounded font-bold ${isActive ? 'bg-indigo-500 text-slate-950' : 'bg-slate-800 text-slate-400'}">${isActive ? '📢 ON' : 'OFF'}</span>
                       </div>
-                      <span class="text-xs ${isActive ? 'text-indigo-300 font-bold' : 'text-slate-600'}">${isActive ? '📢 ON' : 'OFF'}</span>
+                      <div class="space-y-1">
+                        <div class="flex justify-between text-[9px] text-slate-400">
+                          <span>Brand Rating</span>
+                          <span class="font-bold ${brand > 50 ? 'text-emerald-400' : 'text-slate-300'}">${brand}/100</span>
+                        </div>
+                        <div class="w-full h-1 bg-slate-800 rounded-full overflow-hidden">
+                          <div class="h-full ${brand > 50 ? 'bg-emerald-500' : 'bg-indigo-500'} transition-all duration-300" style="width: ${brand}%"></div>
+                        </div>
+                      </div>
                     </div>
                   `;
                 }).join('')}

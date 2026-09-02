@@ -2243,9 +2243,54 @@
 ];
 
     const MEDIA_OUTLETS = [
-      { id:'media_tv', name:'Rede Capital TV', type:'Televisão', emoji:'📺', tile:{x:14,y:8}, district:'uptown', monthlyCost:2500.00, institutionalMonthlyCost:3500.00, brandBoostMonthly:15, brandCap:95, reachPct:100, reachDescription:'Toda a Região Metropolitana (100% da População)' },
-      { id:'media_radio', name:'Rádio Central FM 104.5', type:'Rádio', emoji:'📻', tile:{x:17,y:13}, district:'downtown', monthlyCost:850.00, institutionalMonthlyCost:1200.00, brandBoostMonthly:8, brandCap:75, reachPct:65, reachDescription:'Downtown, Cais e Polos Comerciais Centrais' },
-      { id:'media_news', name:'Jornal da Metrópole', type:'Jornal', emoji:'📰', tile:{x:23,y:14}, district:'northside', monthlyCost:350.00, institutionalMonthlyCost:450.00, brandBoostMonthly:4, brandCap:60, reachPct:45, reachDescription:'Distrito Residencial Norte e Subúrbios' }
+      {
+        id: 'media_tv',
+        name: 'Rede Capital TV',
+        type: 'Televisão Aberta',
+        emoji: '📺',
+        tile: { x: 14, y: 8 },
+        district: 'uptown',
+        ibopeRating: 78,
+        reachPct: 100,
+        monthlyCost: 2500.00,
+        institutionalMonthlyCost: 3500.00,
+        brandBoostMonthly: 15,
+        brandCap: 95,
+        efficiencyLabel: 'Massa & Alto Impacto',
+        reachDescription: 'Toda a Região Metropolitana (100% dos Distritos)'
+      },
+      {
+        id: 'media_radio',
+        name: 'Rádio Central FM 104.5',
+        type: 'Rádio Comercial',
+        emoji: '📻',
+        tile: { x: 17, y: 13 },
+        district: 'downtown',
+        ibopeRating: 42,
+        reachPct: 65,
+        monthlyCost: 850.00,
+        institutionalMonthlyCost: 1200.00,
+        brandBoostMonthly: 8,
+        brandCap: 75,
+        efficiencyLabel: 'Comércio Regional',
+        reachDescription: 'Downtown, Portos e Polos Comerciais Centrais'
+      },
+      {
+        id: 'media_news',
+        name: 'Jornal da Metrópole',
+        type: 'Jornal Impresso & Digital',
+        emoji: '📰',
+        tile: { x: 23, y: 14 },
+        district: 'northside',
+        ibopeRating: 22,
+        reachPct: 45,
+        monthlyCost: 350.00,
+        institutionalMonthlyCost: 450.00,
+        brandBoostMonthly: 4,
+        brandCap: 60,
+        efficiencyLabel: 'Segmentado & B2B',
+        reachDescription: 'Distrito Norte, Subúrbios e Executivos'
+      }
     ];
 
     const PORT_SUPPLIES_FOOD_CONSUMER = {
