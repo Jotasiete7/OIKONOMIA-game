@@ -83,14 +83,14 @@
 
 <body class="bg-slate-950 text-slate-100 font-sans h-screen w-screen overflow-hidden select-none relative m-0 p-0">
 
-  <!-- 0. TOP FINANCIAL & NEWS TICKER BAR (MARQUEE GPU-ACCELERATED) -->
+  <!-- 0. TOP FINANCIAL & NEWS TICKER BAR (MARQUEE GPU-ACCELERATED + INTERACTIVE) -->
   <div id="financial-news-ticker" class="fixed top-0 left-0 right-0 h-7 bg-slate-950/95 border-b border-slate-800/90 flex items-center z-50 overflow-hidden font-mono text-[10px] select-none shadow-md">
-    <div class="flex items-center gap-1.5 px-3 h-full bg-emerald-950/90 border-r border-slate-800 text-emerald-400 font-bold shrink-0">
+    <div onclick="TickerSystem.jumpToLatest()" class="flex items-center gap-1.5 px-3 h-full bg-emerald-950/90 hover:bg-emerald-900/90 active:scale-95 border-r border-slate-800 text-emerald-400 font-bold shrink-0 cursor-pointer transition-all" title="Clique para reiniciar e pular para as notícias mais recentes (Jump to Latest)">
       <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
       <span class="tracking-wider uppercase text-[9px] hidden sm:inline">DIÁRIO CORPORATIVO</span>
       <span class="sm:hidden">📰</span>
     </div>
-    <div class="flex-1 overflow-hidden relative h-full flex items-center">
+    <div id="ticker-viewport" class="flex-1 overflow-hidden relative h-full flex items-center cursor-grab active:cursor-grabbing" title="Arraste com o mouse para rolar manualmente">
       <div id="ticker-track" class="ticker-scroll-track flex items-center whitespace-nowrap h-full"></div>
     </div>
   </div>
@@ -1548,14 +1548,28 @@
         </div>
 
         <!-- Terminal de Notícias (Ticker Bar) -->
-        <div class="space-y-1.5 pt-2 border-t border-slate-800">
+        <div class="space-y-3 pt-2 border-t border-slate-800">
           <div class="flex justify-between items-center">
             <label class="text-slate-300 font-bold flex items-center gap-1.5">
               <span>📰 Diário Corporativo / Ticker Superior:</span>
             </label>
             <input type="checkbox" id="setting-ticker-enabled" onchange="TickerSystem.toggleEnabled(this.checked)" class="accent-emerald-500 w-4 h-4 cursor-pointer">
           </div>
-          <p class="text-[10px] text-slate-400">Exibe a barra rolante de notícias e eventos no topo da tela.</p>
+
+          <!-- Velocidade do Ticker -->
+          <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+            <div class="flex justify-between items-center">
+              <label class="text-slate-300 text-[11px] font-bold">⚡ Velocidade da Fita:</label>
+              <span id="setting-ticker-speed-label" class="text-emerald-400 font-bold text-[11px]">Normal (55 px/s)</span>
+            </div>
+            <input type="range" id="setting-ticker-speed" min="30" max="90" step="5" value="55" oninput="TickerSystem.setSpeed(Number(this.value))" class="w-full accent-emerald-500 cursor-pointer">
+            <div class="flex justify-between text-[9px] text-slate-500 font-mono">
+              <span>Lento (30 px/s)</span>
+              <span>Normal (55 px/s)</span>
+              <span>Rápido (90 px/s)</span>
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-400">💡 Dica: Você pode <strong>arrastar com o mouse</strong> a fita para ler notícias passadas ou clicar no badge para reiniciar no presente.</p>
         </div>
 
         <!-- Guia de Teclado e Acessibilidade -->
@@ -10319,6 +10333,19 @@
       const tickEl = document.getElementById('setting-ticker-enabled');
       if (tickEl && typeof TickerSystem !== 'undefined') {
         tickEl.checked = TickerSystem.isEnabled();
+      }
+
+      const speedEl = document.getElementById('setting-ticker-speed');
+      const speedLbl = document.getElementById('setting-ticker-speed-label');
+      if (speedEl && typeof TickerSystem !== 'undefined') {
+        const curSpeed = TickerSystem.getSpeed();
+        speedEl.value = curSpeed;
+        if (speedLbl) {
+          let text = 'Normal';
+          if (curSpeed < 45) text = 'Lento';
+          else if (curSpeed > 65) text = 'Rápido';
+          speedLbl.textContent = `${text} (${curSpeed} px/s)`;
+        }
       }
     }
 
