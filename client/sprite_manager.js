@@ -120,11 +120,15 @@ class SpriteManager {
     'agro/farm_dairy': 'assets/agro/farm_dairy.png',
     'agro/farm_default': 'assets/agro/farm_default.png',
 
-    // 6. PORTUÃRIO & LOGÃSTICA
+    // 6. PORTUÃ RIO & LOGÃ STICA
     'portuario/seaport': 'assets/portuario/seaport.png',
+    'portuario/seaport_1': 'assets/portuario/seaport_1.png',
+    'portuario/seaport_2': 'assets/portuario/seaport_2.png',
     'logistica_midia/seaport': 'assets/logistica_midia/seaport.png',
+    'logistica_midia/seaport_1': 'assets/logistica_midia/seaport_1.png',
+    'logistica_midia/seaport_2': 'assets/logistica_midia/seaport_2.png',
 
-    // 7. UTILIDADE PÃšBLICA & MÃDIA
+    // 7. UTILIDADE PÃšBLICA & MÃ DIA
     'utilidade_publica/media_tv': 'assets/utilidade_publica/media_tv.png',
     'utilidade_publica/media_radio': 'assets/utilidade_publica/media_radio.png',
     'logistica_midia/media_tv': 'assets/logistica_midia/media_tv.png',

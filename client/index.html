@@ -3069,7 +3069,7 @@
               spriteKey = 'lojas/competitor';
             } else if (tile.isPort) {
               topC='#fbbf24'; leftC='#d97706'; rightC='#b45309';
-              spriteKey = 'logistica_midia/seaport';
+              spriteKey = (gx + gy) % 2 === 0 ? 'portuario/seaport_1' : 'portuario/seaport_2';
             } else if (tile.isMedia) {
               topC='#c084fc'; leftC='#9333ea'; rightC='#7e22ce';
               spriteKey = tile.mediaData && tile.mediaData.type === 'Televisão' ? 'logistica_midia/media_tv' : 'logistica_midia/media_radio';
