@@ -141,11 +141,17 @@ class SpriteManager {
     'minas/mine_gold': 'assets/minas/mine_gold.png',
     'minas/mine_timber': 'assets/minas/mine_timber.png',
     'minas/mine_silica': 'assets/minas/mine_silica.png',
+    'minas/mine_chemicals': 'assets/minas/mine_chemicals.png',
 
-    // 9. TERRENOS BASE & FLORESTAS
+    // 9. TERRENOS BASE & RECURSOS MINERAIS
     'terrenos/grass': 'assets/terrenos/grass.png',
     'terrenos/forest': 'assets/terrenos/forest.png',
     'terrenos/silica': 'assets/terrenos/silica.png',
+    'terrenos/iron_ore': 'assets/terrenos/iron_ore.png',
+    'terrenos/bauxite': 'assets/terrenos/bauxite.png',
+    'terrenos/gold_ore': 'assets/terrenos/gold_ore.png',
+    'terrenos/chemicals': 'assets/terrenos/chemicals.png',
+    'terrenos/oil_field': 'assets/terrenos/oil_field.png',
     'terrenos/fertile_soil': 'assets/terrenos/fertile_soil.png',
     'terrenos/sand': 'assets/terrenos/sand.png',
     'terrenos/water_shallow': 'assets/terrenos/water_shallow.png',
@@ -275,7 +281,8 @@ class SpriteManager {
     if (mineTypeId.includes('iron')) return 'minas/mine_iron';
     if (mineTypeId.includes('oil')) return 'minas/mine_oil';
     if (mineTypeId.includes('silica')) return 'minas/mine_silica';
-    if (mineTypeId.includes('bauxite') || mineTypeId.includes('chemicals')) return 'minas/mine_bauxite';
+    if (mineTypeId.includes('bauxite')) return 'minas/mine_bauxite';
+    if (mineTypeId.includes('chemicals')) return 'minas/mine_chemicals';
     if (mineTypeId.includes('gold')) return 'minas/mine_gold';
     if (mineTypeId.includes('timber')) return 'minas/mine_timber';
     return 'minas/mine_iron';
@@ -343,6 +350,11 @@ class SpriteManager {
       return tile.gidWater === 1 ? 'terrenos/water_deep' : 'terrenos/water_shallow';
     }
     if (tile.hasSilicaDeposit) return 'terrenos/silica';
+    if (tile.hasIronDeposit) return 'terrenos/iron_ore';
+    if (tile.hasBauxiteDeposit) return 'terrenos/bauxite';
+    if (tile.hasGoldDeposit) return 'terrenos/gold_ore';
+    if (tile.hasChemicalDeposit) return 'terrenos/chemicals';
+    if (tile.hasOilDeposit) return 'terrenos/oil_field';
     if (tile.gidTerrain === 8 || tile.hasTimberDeposit || tile.gidRes === 8) return 'terrenos/forest';
     if (tile.gidTerrain === 3) return 'terrenos/sand';
     if (tile.gidTerrain === 5) return 'terrenos/fertile_soil';

@@ -2453,16 +2453,46 @@
       }
     ];
 
-    // 4 Depósitos Continentais Estratégicos de Sílica & Quartzo Industrial (IRL: bacias sedimentares longe do mar)
+    // ===========================================================================
+    // MATRIZES GEOLÓGICAS DE RECURSOS NATURAIS (7 Recursos Estratégicos)
+    // ===========================================================================
+    const IRON_DEPOSITS_LIST = [
+      { x: 45, y: 52 }, { x: 46, y: 52 }, // Nova Atenas (Sopé Sul das Montanhas - Acessível Dia 1)
+      { x: 58, y: 55 }, { x: 59, y: 55 }, // Montanhas Centrais
+      { x: 34, y: 83 }, { x: 34, y: 84 }  // Montargis Norte (fora de rodovia)
+    ];
+    const OIL_DEPOSITS_LIST = [
+      { x: 96, y: 42 }, { x: 97, y: 42 }, // Porto Real (Bacia Costeira em Terra Firme)
+      { x: 88, y: 52 }, { x: 89, y: 52 }, // Interior de Porto Real (Terra Firme)
+      { x: 42, y: 65 }, { x: 43, y: 65 }  // Bacia Sul de Nova Atenas (Terra Firme)
+    ];
     const SILICA_DEPOSITS_LIST = [
       { x: 50, y: 50 }, { x: 51, y: 50 }, // Nova Atenas (Sopé das Colinas Brancas)
       { x: 56, y: 64 }, { x: 57, y: 64 }, // Montargis (Formação Continental de Quartzo)
       { x: 65, y: 45 }, { x: 66, y: 45 }, // Corredor Central (Arenito Continental de Alta Pureza)
       { x: 64, y: 63 }, { x: 64, y: 64 }  // Várzea (Serra de Quartzo Puro)
     ];
-    function isSilicaTile(x, y) {
-      return SILICA_DEPOSITS_LIST.some(d => d.x === x && d.y === y);
-    }
+    const BAUXITE_DEPOSITS_LIST = [
+      { x: 48, y: 48 }, { x: 49, y: 48 }, // Nova Atenas Leste (Colinas de Bauxita)
+      { x: 72, y: 60 }, { x: 73, y: 60 }, // Vale Central
+      { x: 80, y: 78 }, { x: 81, y: 78 }  // Várzea Noroeste
+    ];
+    const GOLD_DEPOSITS_LIST = [
+      { x: 55, y: 58 },                   // Montanhas Altas Centrais
+      { x: 62, y: 62 }                    // Cume Rochoso de Várzea
+    ];
+    const CHEMICAL_DEPOSITS_LIST = [
+      { x: 68, y: 42 }, { x: 69, y: 42 }, // Bacia Seca Nova Atenas - Porto
+      { x: 82, y: 48 }, { x: 83, y: 48 }, // Planície Continental de Porto Real
+      { x: 78, y: 86 }, { x: 79, y: 86 }  // Depressão Sul
+    ];
+
+    function isIronTile(x, y) { return IRON_DEPOSITS_LIST.some(d => d.x === x && d.y === y); }
+    function isOilTile(x, y) { return OIL_DEPOSITS_LIST.some(d => d.x === x && d.y === y); }
+    function isSilicaTile(x, y) { return SILICA_DEPOSITS_LIST.some(d => d.x === x && d.y === y); }
+    function isBauxiteTile(x, y) { return BAUXITE_DEPOSITS_LIST.some(d => d.x === x && d.y === y); }
+    function isGoldTile(x, y) { return GOLD_DEPOSITS_LIST.some(d => d.x === x && d.y === y); }
+    function isChemicalTile(x, y) { return CHEMICAL_DEPOSITS_LIST.some(d => d.x === x && d.y === y); }
 
     // Identificador de Cidade por Proximidade
     function getCityForTile(x, y) {
@@ -2569,10 +2599,30 @@
           dType = 'Rodovia Principal';
           dName = 'Eixo Rodoviário Logístico';
           traffic = 75; pop = 0; rent = 0;
+        } else if (isIronTile(x, y)) {
+          dType = 'Jazida Mineral de Ferro';
+          dName = 'Jazida de Minério de Ferro';
+          traffic = 5; pop = 200; rent = 5.00;
+        } else if (isOilTile(x, y)) {
+          dType = 'Bacia Petrolífera Continental';
+          dName = 'Campo Petrolífero Terrestre';
+          traffic = 6; pop = 150; rent = 6.50;
         } else if (isSilicaTile(x, y)) {
           dType = 'Jazida Continental de Sílica';
           dName = 'Jazida de Sílica & Quartzo Industrial';
           traffic = 6; pop = 250; rent = 5.50;
+        } else if (isBauxiteTile(x, y)) {
+          dType = 'Jazida Mineral de Bauxita';
+          dName = 'Jazida de Bauxita (Alumínio)';
+          traffic = 6; pop = 200; rent = 5.50;
+        } else if (isGoldTile(x, y)) {
+          dType = 'Veio Mineral de Ouro';
+          dName = 'Veio de Minério de Ouro Nobre';
+          traffic = 4; pop = 100; rent = 8.00;
+        } else if (isChemicalTile(x, y)) {
+          dType = 'Bacia de Minerais Químicos';
+          dName = 'Depósito de Minerais Químicos';
+          traffic = 6; pop = 200; rent = 5.50;
         } else if (gidTerrain === 8 || gidRes === 8) {
           dType = 'Floresta / Bosque';
           dName = 'Reserva Florestal (Madeira)';
@@ -2642,10 +2692,13 @@
           portData,
           isMedia: !!mediaData,
           mediaData,
-          hasIronDeposit: gidRes === 9,
-          hasOilDeposit: gidRes === 10,
+          hasIronDeposit: isIronTile(x, y),
+          hasOilDeposit: isOilTile(x, y),
           hasTimberDeposit: gidRes === 8 || gidTerrain === 8,
           hasSilicaDeposit: isSilicaTile(x, y),
+          hasBauxiteDeposit: isBauxiteTile(x, y),
+          hasGoldDeposit: isGoldTile(x, y),
+          hasChemicalDeposit: isChemicalTile(x, y),
           isFertile: gidTerrain === 5 || gidBuild === 17,
           buildingHeight: isWater || isRoad ? 0 : (portData ? 16 : (isCommercialCenter ? 22 : (isResidential ? 14 : 0))),
           store: null,
@@ -2900,7 +2953,17 @@
           if (tile.isWater) {
             fill = tile.gidWater === 1 ? '#031e33' : '#073252';
           } else if (tile.hasSilicaDeposit) {
-            fill = '#f1f5f9'; // Quartzo cristalino puro / Areia de Sílica (branco níveo em alto contraste)
+            fill = '#827d6d'; // Arenito de quartzo bege-mineral suave
+          } else if (tile.hasIronDeposit) {
+            fill = '#413732'; // Rocha ferruginosa escura
+          } else if (tile.hasBauxiteDeposit) {
+            fill = '#8c4b32'; // Argila laterítica avermelhada (Bauxita)
+          } else if (tile.hasGoldDeposit) {
+            fill = '#37373e'; // Rocha escura montanhosa com veios auríferos
+          } else if (tile.hasChemicalDeposit) {
+            fill = '#586964'; // Bacia evaporítica de sais minerais
+          } else if (tile.hasOilDeposit) {
+            fill = '#2d3034'; // Solo sedimentar petrolífero
           } else if (tTerrain === 3) {
             fill = '#8c7847'; // Praia
           } else if (tTerrain === 5) {
@@ -3004,7 +3067,7 @@
             } else if (currentHeatmap === 'ports') {
               if (tile.isPort) heatFill = 'rgba(245, 158, 11, 0.65)';
             } else if (currentHeatmap === 'ind') {
-              if (tile.mine || tile.hasIronDeposit || tile.hasOilDeposit || tile.hasSilicaDeposit) heatFill = 'rgba(2, 132, 199, 0.65)';
+              if (tile.mine || tile.hasIronDeposit || tile.hasOilDeposit || tile.hasSilicaDeposit || tile.hasBauxiteDeposit || tile.hasGoldDeposit || tile.hasChemicalDeposit) heatFill = 'rgba(2, 132, 199, 0.65)';
               else if (tile.farm || tile.isFertile) heatFill = 'rgba(234, 179, 8, 0.65)';
               else if (tile.factory) heatFill = 'rgba(234, 88, 12, 0.65)';
             } else if (currentHeatmap === 'media') {
@@ -3012,23 +3075,6 @@
             }
             if (heatFill) {
               drawDiamond(sx, sy, w, h, heatFill, null);
-            }
-          }
-
-          // Recursos Naturais Brutos desenhados no terreno
-          if (!tile.city.isLocked && !tile.mine) {
-            if (tile.hasIronDeposit) {
-              ctx.fillStyle = '#f87171';
-              ctx.font = `bold ${Math.max(8, 9 * camera.zoom)}px monospace`;
-              ctx.fillText('⛏️', sx - 6 * camera.zoom, sy + 18 * camera.zoom);
-            } else if (tile.hasOilDeposit) {
-              ctx.fillStyle = '#38bdf8';
-              ctx.font = `bold ${Math.max(8, 9 * camera.zoom)}px monospace`;
-              ctx.fillText('🛢️', sx - 6 * camera.zoom, sy + 18 * camera.zoom);
-            } else if (tile.hasSilicaDeposit) {
-              ctx.fillStyle = '#0284c7';
-              ctx.font = `bold ${Math.max(8, 9 * camera.zoom)}px monospace`;
-              ctx.fillText('🏖️', sx - 6 * camera.zoom, sy + 18 * camera.zoom);
             }
           }
 
@@ -3493,10 +3539,15 @@
         } else if (tile.store) {
           buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-teal-700 hover:bg-teal-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🛒 Gerir Loja</button>`;
         } else if (tile.mine) {
-          const isTimber = tile.mine.resourceId === 'timber' || (tile.mine.mineTypeId && tile.mine.mineTypeId.includes('timber'));
-          const isSilica = tile.mine.resourceId === 'silica' || (tile.mine.mineTypeId && tile.mine.mineTypeId.includes('silica'));
-          const mineLabel = isTimber ? '🪵 Gerir Serraria' : (isSilica ? '🏖️ Gerir Jazida' : '⛏️ Gerir Mina');
-          const mineClass = isTimber ? 'bg-amber-800 hover:bg-amber-700' : (isSilica ? 'bg-slate-700 hover:bg-slate-600' : 'bg-sky-700 hover:bg-sky-600');
+          const res = tile.mine.resourceId || '';
+          const isTimber = res === 'timber';
+          const isSilica = res === 'silica';
+          const isOil = res === 'crude_oil';
+          const isBauxite = res === 'bauxite';
+          const isGold = res === 'gold_ore';
+          const isChem = res === 'chemical_minerals';
+          const mineLabel = isTimber ? '🪵 Gerir Serraria' : (isSilica ? '🏖️ Gerir Jazida' : (isOil ? '🛢️ Gerir Poço' : (isBauxite ? '🪨 Gerir Bauxita' : (isGold ? '🥇 Gerir Ouro' : (isChem ? '🧪 Gerir Químicos' : '⛏️ Gerir Mina')))));
+          const mineClass = isTimber ? 'bg-amber-800 hover:bg-amber-700' : (isSilica ? 'bg-stone-700 hover:bg-stone-600' : (isOil ? 'bg-slate-800 hover:bg-slate-700' : (isGold ? 'bg-yellow-800 hover:bg-yellow-700' : (isBauxite ? 'bg-orange-800 hover:bg-orange-700' : (isChem ? 'bg-teal-800 hover:bg-teal-700' : 'bg-sky-700 hover:bg-sky-600')))));
           buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="${mineClass} text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">${mineLabel}</button>`;
         } else if (tile.farm) {
           buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🌾 Gerir Fazenda</button>`;
@@ -3514,9 +3565,12 @@
             <div class="inline-flex items-center gap-1">
               <span class="text-[9px] text-slate-400 font-bold hidden sm:inline">Construir:</span>
               ${tile.hasTimberDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_timber')" class="bg-amber-800 hover:bg-amber-700 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Serraria e Silvicultura Florestal ($28.000)">🪵 +Serraria</button>` : ''}
-              ${tile.hasSilicaDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_silica')" class="bg-slate-700 hover:bg-slate-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Jazida de Sílica & Quartzo Industrial ($30.000)">🏖️ +Jazida Sílica</button>` : ''}
+              ${tile.hasSilicaDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_silica')" class="bg-stone-700 hover:bg-stone-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Jazida de Sílica & Quartzo Industrial ($30.000)">🏖️ +Jazida Sílica</button>` : ''}
               ${tile.hasIronDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_iron')" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Mina de Ferro ($40.000)">⛏️ +Mina Ferro</button>` : ''}
-              ${tile.hasOilDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_oil')" class="bg-slate-700 hover:bg-slate-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Poço de Petróleo ($65.000)">🛢️ +Poço Petróleo</button>` : ''}
+              ${tile.hasBauxiteDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_bauxite')" class="bg-orange-800 hover:bg-orange-700 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Mina de Bauxita / Alumínio ($42.000)">🪨 +Mina Bauxita</button>` : ''}
+              ${tile.hasChemicalDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_chemicals')" class="bg-teal-800 hover:bg-teal-700 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Depósito de Minerais Químicos ($38.000)">🧪 +Depósito Químico</button>` : ''}
+              ${tile.hasOilDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_oil')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Campo Petrolífero / Poço ($65.000)">🛢️ +Poço Petróleo</button>` : ''}
+              ${tile.hasGoldDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_gold')" class="bg-yellow-700 hover:bg-yellow-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Mina de Ouro Nobre ($90.000)">🥇 +Mina Ouro</button>` : ''}
               <button onclick="openStoreModal(worldGrid[${tile.x}][${tile.y}])" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Inaugurar Estabelecimento Comercial">🏪 +Loja</button>
               <button onclick="openFactoryModal(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-700 hover:bg-orange-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Construir Parque Fabril">🏭 +Fábrica</button>
               <button onclick="openFarmModal(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Iniciar Fazenda Agropecuária">🌾 +Fazenda</button>
@@ -4261,11 +4315,19 @@
       const hasTimber = !!tile.hasTimberDeposit;
       const hasSilica = !!tile.hasSilicaDeposit;
       const hasIron = !!tile.hasIronDeposit;
+      const hasBauxite = !!tile.hasBauxiteDeposit;
+      const hasChemical = !!tile.hasChemicalDeposit;
       const hasOil = !!tile.hasOilDeposit;
-      const hasResource = hasTimber || hasSilica || hasIron || hasOil;
+      const hasGold = !!tile.hasGoldDeposit;
+      const hasResource = hasTimber || hasSilica || hasIron || hasBauxite || hasChemical || hasOil || hasGold;
       const depositName = hasTimber 
         ? 'Reserva Florestal (Madeira / Toras)' 
-        : (hasSilica ? 'Jazida de Sílica & Quartzo Industrial' : (hasIron ? 'Minério de Ferro' : (hasOil ? 'Petróleo Bruto' : null)));
+        : (hasSilica ? 'Jazida de Sílica & Quartzo Industrial' 
+        : (hasIron ? 'Minério de Ferro' 
+        : (hasBauxite ? 'Jazida de Bauxita (Alumínio)'
+        : (hasChemical ? 'Depósito de Minerais Químicos'
+        : (hasOil ? 'Campo Petrolífero / Petróleo Bruto'
+        : (hasGold ? 'Veio de Minério de Ouro Nobre' : null))))));
 
       let naturalResourceCard = '';
       if (hasTimber) {
@@ -4299,17 +4361,17 @@
         `;
       } else if (hasSilica) {
         naturalResourceCard = `
-          <div class="bg-gradient-to-r from-slate-900 to-sky-950 p-3.5 rounded-xl border-2 border-slate-300 space-y-2.5 shadow-xl">
+          <div class="bg-gradient-to-r from-stone-950 to-slate-900 p-3.5 rounded-xl border-2 border-stone-500 space-y-2.5 shadow-xl">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-lg bg-slate-950 border border-slate-400 p-1 flex items-center justify-center shrink-0 shadow-inner">
+                <div class="w-11 h-11 rounded-lg bg-stone-900 border border-stone-400 p-1 flex items-center justify-center shrink-0 shadow-inner">
                   <img src="assets/minas/mine_silica.png" class="w-full h-full object-contain" onerror="this.outerHTML='🏖️'">
                 </div>
                 <div>
-                  <div class="font-bold text-slate-100 text-sm flex items-center gap-1.5">
+                  <div class="font-bold text-stone-100 text-sm flex items-center gap-1.5">
                     <span>🏖️</span> Instalar Jazida de Sílica & Areia
                   </div>
-                  <div class="text-[11px] text-slate-300 mt-0.5">Extração & Lavagem de Quartzo Continental</div>
+                  <div class="text-[11px] text-stone-300 mt-0.5">Extração & Lavagem de Quartzo Continental</div>
                 </div>
               </div>
               <div class="text-right shrink-0">
@@ -4317,10 +4379,10 @@
                 <div class="text-[10px] text-emerald-400 font-bold">800 un/dia</div>
               </div>
             </div>
-            <div class="text-[11px] text-slate-300 bg-slate-950/70 p-2 rounded-lg border border-slate-700 font-mono">
-              💎 <strong>Bacia Continental de Quartzo:</strong> Areia de sílica pura (SiO₂ > 99%), isenta de sal marinho e calcita, essencial para fundição de Vidro Plano (<code class="text-sky-300">glass</code>) e chips semicondutores (<code class="text-sky-300">chips</code>).
+            <div class="text-[11px] text-slate-300 bg-slate-950/70 p-2 rounded-lg border border-stone-700 font-mono">
+              💎 <strong>Bacia Continental de Quartzo:</strong> Areia de sílica de alta pureza (SiO₂ > 99%), isenta de sal marinho e conchas, essencial para fundição de Vidro Plano (<code class="text-sky-300">glass</code>) e chips semicondutores (<code class="text-sky-300">chips</code>).
             </div>
-            <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_silica')" ${cash < 30000 ? 'disabled' : ''} class="w-full bg-gradient-to-r from-slate-600 to-sky-600 hover:from-slate-500 hover:to-sky-500 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
+            <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_silica')" ${cash < 30000 ? 'disabled' : ''} class="w-full bg-gradient-to-r from-stone-600 to-slate-600 hover:from-stone-500 hover:to-slate-500 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
               <span>🏖️</span>
               <span>Construir Jazida de Sílica & Areia ($30.000)</span>
             </button>
@@ -4346,15 +4408,76 @@
                 <div class="text-[10px] text-emerald-400 font-bold">600 un/dia</div>
               </div>
             </div>
+            <div class="text-[11px] text-slate-300 bg-slate-950/70 p-2 rounded-lg border border-sky-800/40 font-mono">
+              ⛏️ <strong>Minério de Ferro Bruto:</strong> Minério de alta densidade (hematita e magnetita), essencial para usinas de chapas de aço (<code class="text-sky-300">steel_sheets</code>), vigas estruturais e máquinas pesadas.
+            </div>
             <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_iron')" ${cash < 40000 ? 'disabled' : ''} class="w-full bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
               <span>⛏️</span>
               <span>Construir Mina de Ferro ($40.000)</span>
             </button>
           </div>
         `;
+      } else if (hasBauxite) {
+        naturalResourceCard = `
+          <div class="bg-gradient-to-r from-orange-950/90 to-amber-950/80 p-3.5 rounded-xl border-2 border-orange-600/90 space-y-2.5 shadow-xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-orange-950 border border-orange-500/80 p-1 flex items-center justify-center shrink-0 shadow-inner">
+                  <img src="assets/minas/mine_bauxite.png" class="w-full h-full object-contain" onerror="this.outerHTML='🪨'">
+                </div>
+                <div>
+                  <div class="font-bold text-orange-200 text-sm flex items-center gap-1.5">
+                    <span>🪨</span> Instalar Mina de Bauxita
+                  </div>
+                  <div class="text-[11px] text-orange-300/80 mt-0.5">Extração de Minério de Alumínio</div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-sm font-bold text-rose-300">$42.000</div>
+                <div class="text-[10px] text-emerald-400 font-bold">500 un/dia</div>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-300 bg-slate-950/70 p-2 rounded-lg border border-orange-800/40 font-mono">
+              🪨 <strong>Jazida de Bauxita:</strong> Solo laterítico rico em óxido de alumínio (Al₂O₃), refinado em chapas de alumínio estrutural leve (<code class="text-orange-300">aluminum_sheets</code>) para latinhas, eletrônicos e fuselagem.
+            </div>
+            <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_bauxite')" ${cash < 42000 ? 'disabled' : ''} class="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
+              <span>🪨</span>
+              <span>Construir Mina de Bauxita ($42.000)</span>
+            </button>
+          </div>
+        `;
+      } else if (hasChemical) {
+        naturalResourceCard = `
+          <div class="bg-gradient-to-r from-teal-950/90 to-cyan-950/80 p-3.5 rounded-xl border-2 border-teal-600/90 space-y-2.5 shadow-xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-teal-950 border border-teal-500/80 p-1 flex items-center justify-center shrink-0 shadow-inner">
+                  <img src="assets/minas/mine_chemicals.png" class="w-full h-full object-contain" onerror="this.outerHTML='🧪'">
+                </div>
+                <div>
+                  <div class="font-bold text-teal-200 text-sm flex items-center gap-1.5">
+                    <span>🧪</span> Instalar Depósito de Minerais Químicos
+                  </div>
+                  <div class="text-[11px] text-teal-300/80 mt-0.5">Extração & Refino de Sais Minerais</div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-sm font-bold text-rose-300">$38.000</div>
+                <div class="text-[10px] text-emerald-400 font-bold">550 un/dia</div>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-300 bg-slate-950/70 p-2 rounded-lg border border-teal-800/40 font-mono">
+              🧪 <strong>Bacia de Sais Químicos:</strong> Minerais e compostos inorgânicos de alta pureza, indispensáveis para remédios, fertilizantes agrícolas, tintas industriais e reagentes poliméricos.
+            </div>
+            <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_chemicals')" ${cash < 38000 ? 'disabled' : ''} class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
+              <span>🧪</span>
+              <span>Construir Depósito de Minerais Químicos ($38.000)</span>
+            </button>
+          </div>
+        `;
       } else if (hasOil) {
         naturalResourceCard = `
-          <div class="bg-gradient-to-r from-slate-950/90 to-amber-950/80 p-3.5 rounded-xl border-2 border-slate-600/90 space-y-2.5 shadow-xl">
+          <div class="bg-gradient-to-r from-slate-950/90 to-zinc-950/80 p-3.5 rounded-xl border-2 border-slate-600/90 space-y-2.5 shadow-xl">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-lg bg-slate-900 border border-slate-500/80 p-1 flex items-center justify-center shrink-0 shadow-inner">
@@ -4372,9 +4495,41 @@
                 <div class="text-[10px] text-emerald-400 font-bold">700 un/dia</div>
               </div>
             </div>
+            <div class="text-[11px] text-slate-300 bg-slate-950/70 p-2 rounded-lg border border-slate-800 font-mono">
+              🛢️ <strong>Bacia Petrolífera Continental:</strong> Poços e bombas de cavidades em terra firme para extração de óleo cru, alimentando refinarias de plástico (<code class="text-sky-300">plastic</code>) e polímeros industriais.
+            </div>
             <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_oil')" ${cash < 65000 ? 'disabled' : ''} class="w-full bg-slate-700 hover:bg-slate-600 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
               <span>🛢️</span>
               <span>Construir Poço de Petróleo ($65.000)</span>
+            </button>
+          </div>
+        `;
+      } else if (hasGold) {
+        naturalResourceCard = `
+          <div class="bg-gradient-to-r from-yellow-950/90 to-amber-950/80 p-3.5 rounded-xl border-2 border-yellow-500/90 space-y-2.5 shadow-xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-yellow-950 border border-yellow-400/80 p-1 flex items-center justify-center shrink-0 shadow-inner">
+                  <img src="assets/minas/mine_gold.png" class="w-full h-full object-contain" onerror="this.outerHTML='🥇'">
+                </div>
+                <div>
+                  <div class="font-bold text-yellow-200 text-sm flex items-center gap-1.5">
+                    <span>🥇</span> Instalar Mina de Ouro Nobre
+                  </div>
+                  <div class="text-[11px] text-yellow-300/80 mt-0.5">Lavra de Minério Aurífero de Alto Teor</div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-sm font-bold text-rose-300">$90.000</div>
+                <div class="text-[10px] text-emerald-400 font-bold">150 un/dia</div>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-300 bg-slate-950/70 p-2 rounded-lg border border-yellow-800/40 font-mono">
+              🥇 <strong>Veio Nobre de Montanha:</strong> Minério de ouro de alta pureza incrustado em rochas profundas, indispensável para alta joalheria de luxo e componentes eletrônicos finos.
+            </div>
+            <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_gold')" ${cash < 90000 ? 'disabled' : ''} class="w-full bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
+              <span>🥇</span>
+              <span>Construir Mina de Ouro Nobre ($90.000)</span>
             </button>
           </div>
         `;
@@ -4782,41 +4937,89 @@
 
     function renderMinePanel(tile) {
       const m = tile.mine;
-      const isTimber = m.resourceId === 'timber' || (m.mineTypeId && m.mineTypeId.includes('timber'));
-      const isSilica = m.resourceId === 'silica' || (m.mineTypeId && m.mineTypeId.includes('silica'));
+      const res = m.resourceId || '';
+      const isTimber = res === 'timber';
+      const isSilica = res === 'silica';
+      const isOil = res === 'crude_oil';
+      const isBauxite = res === 'bauxite';
+      const isGold = res === 'gold_ore';
+      const isChem = res === 'chemical_minerals';
+
       const iconEl = document.getElementById('facility-icon');
-      const defaultSprite = isTimber ? 'minas/mine_timber' : (isSilica ? 'minas/mine_silica' : 'minas/mine_iron');
-      const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getMineSpriteKey) ? SpriteManager.getMineSpriteKey(m.mineTypeId || defaultSprite) : defaultSprite;
-      const defaultIcon = isTimber ? '🪵' : (isSilica ? '🏖️' : '⛏️');
+      const defaultSprite = isTimber ? 'minas/mine_timber' 
+        : (isSilica ? 'minas/mine_silica' 
+        : (isOil ? 'minas/mine_oil'
+        : (isBauxite ? 'minas/mine_bauxite'
+        : (isGold ? 'minas/mine_gold'
+        : (isChem ? 'minas/mine_chemicals' : 'minas/mine_iron')))));
+
+      const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getMineSpriteKey) 
+        ? SpriteManager.getMineSpriteKey(m.mineTypeId || defaultSprite) 
+        : defaultSprite;
+      const defaultIcon = isTimber ? '🪵' : (isSilica ? '🏖️' : (isOil ? '🛢️' : (isBauxite ? '🪨' : (isGold ? '🥇' : (isChem ? '🧪' : '⛏️')))));
       if (iconEl) iconEl.innerHTML = `<img src="assets/${spriteKey}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='${defaultIcon}'">`;
       
-      const title = isTimber ? '🪵 Serraria & Silvicultura Florestal' : (isSilica ? '🏖️ Jazida de Sílica & Quartzo Industrial' : m.name);
+      const title = isTimber ? '🪵 Serraria & Silvicultura Florestal' 
+        : (isSilica ? '🏖️ Jazida de Sílica & Quartzo Industrial' 
+        : (isOil ? '🛢️ Campo Petrolífero Terrestre'
+        : (isBauxite ? '🪨 Mina de Bauxita (Alumínio)'
+        : (isGold ? '🥇 Mina de Ouro Nobre'
+        : (isChem ? '🧪 Depósito de Minerais Químicos' : m.name)))));
+
       const subtitle = isTimber 
         ? `${tile.district.name} · Unidade de Manejo & Extração Florestal`
-        : (isSilica ? `${tile.district.name} · Bacia Geológica de Sílica Continental` : `${tile.district.name} · Instalação Extrativista de Recursos`);
+        : (isSilica ? `${tile.district.name} · Bacia Geológica de Sílica Continental` 
+        : (isOil ? `${tile.district.name} · Bacia Sedimentar de Óleo Bruto`
+        : (isBauxite ? `${tile.district.name} · Formação Laterítica de Bauxita`
+        : (isGold ? `${tile.district.name} · Veio Aurífero de Alta Montanha`
+        : (isChem ? `${tile.district.name} · Bacia Evaporítica de Sais Minerais`
+        : `${tile.district.name} · Instalação Extrativista de Recursos`)))));
+
       document.getElementById('facility-title').textContent = title;
       document.getElementById('facility-subtitle').textContent = subtitle;
 
       const badge = document.getElementById('facility-rent-badge');
-      const mineDailyOpex = isTimber ? 140 : (isSilica ? 150 : 180);
+      const mineDailyOpex = isTimber ? 140 : (isSilica ? 150 : (isOil ? 220 : (isBauxite ? 160 : (isGold ? 350 : (isChem ? 160 : 180)))));
       const totalMineDaily = tile.district.landRentDaily + mineDailyOpex;
-      const opexLabel = isTimber ? 'Manejo $140' : (isSilica ? 'Lavagem $150' : 'Extração $180');
+      const opexLabel = isTimber ? 'Manejo $140' : (isSilica ? 'Lavagem $150' : (isOil ? 'Bombeamento $220' : (isBauxite ? 'Lavra $160' : (isGold ? 'Beneficiamento $350' : (isChem ? 'Refino $160' : 'Extração $180')))));
       badge.textContent = `-$${totalMineDaily}/dia (Solo $${tile.district.landRentDaily} + ${opexLabel})`;
       badge.classList.remove('hidden');
 
-      const borderClass = isTimber ? 'border-amber-800' : (isSilica ? 'border-slate-400' : 'border-sky-800');
-      const textClass = isTimber ? 'text-amber-300' : (isSilica ? 'text-slate-100' : 'text-sky-300');
-      const storageLabel = isTimber ? 'Pátio de Toras / Madeira' : (isSilica ? 'Silo de Areia de Sílica' : 'Armazém de Minério');
+      const borderClass = isTimber ? 'border-amber-800' : (isSilica ? 'border-stone-500' : (isOil ? 'border-slate-600' : (isBauxite ? 'border-orange-800' : (isGold ? 'border-yellow-600' : (isChem ? 'border-teal-800' : 'border-sky-800')))));
+      const textClass = isTimber ? 'text-amber-300' : (isSilica ? 'text-stone-200' : (isOil ? 'text-slate-200' : (isBauxite ? 'text-orange-300' : (isGold ? 'text-yellow-300' : (isChem ? 'text-teal-300' : 'text-sky-300')))));
+      const storageLabel = isTimber ? 'Pátio de Toras / Madeira' 
+        : (isSilica ? 'Silo de Areia de Sílica' 
+        : (isOil ? 'Parque de Tanques de Petróleo'
+        : (isBauxite ? 'Pátio de Minério de Bauxita'
+        : (isGold ? 'Cofre de Minério de Ouro'
+        : (isChem ? 'Silos & Reatores Químicos' : 'Armazém de Minério')))));
+
       const tipText = isTimber
-        ? '💡 Fornece toras brutas para serrarias de chapas estruturais (lumber), indústrias de papel/celulose e marcenarias de móveis nobres.'
+        ? '💡 Fornece toras nativas para serrarias de chapas estruturais (lumber), celulose e marcenarias.'
         : (isSilica 
-            ? '💡 Fornece sílica pura de alta pureza (SiO₂ > 99%) para fundição de vidro plano (janelas, telas e garrafas) e fábricas de semicondutores.'
-            : '💡 Fornece matérias-primas pesadas diretamente para usinas siderúrgicas, refinarias e indústrias petroquímicas.');
+            ? '💡 Fornece sílica pura (SiO₂ > 99%) para fundição de vidro plano (glass) e fábricas de semicondutores (chips).'
+            : (isOil
+                ? '💡 Fornece petróleo bruto pesado diretamente para refinarias de plástico sintético e petroquímica.'
+                : (isBauxite
+                    ? '💡 Fornece bauxita para fornos de laminação de alumínio leve (aluminum_sheets), latinhas e fuselagens.'
+                    : (isGold
+                        ? '💡 Fornece ouro bruto nobre para alta joalheria de luxo e componentes eletrônicos finos.'
+                        : (isChem
+                            ? '💡 Fornece sais e compostos para indústrias farmacêuticas, fertilizantes e reagentes industriais.'
+                            : '💡 Fornece matérias-primas pesadas diretamente para usinas siderúrgicas e indústria pesada.')))));
+
+      let resEmoji = '⛏️ ';
+      if (isTimber) resEmoji = '🪵 ';
+      else if (isSilica) resEmoji = '🏖️ ';
+      else if (isOil) resEmoji = '🛢️ ';
+      else if (isBauxite) resEmoji = '🪨 ';
+      else if (isGold) resEmoji = '🥇 ';
+      else if (isChem) resEmoji = '🧪 ';
 
       document.getElementById('facility-content-panel').innerHTML = `
         <div class="bg-slate-950 p-4 rounded-xl border ${borderClass} space-y-3 font-mono text-xs">
           <div class="flex items-center justify-between">
-            <span class="font-bold ${textClass} text-sm">${isTimber ? '🪵 ' : (isSilica ? '🏖️ ' : '')}${m.resourceName}</span>
+            <span class="font-bold ${textClass} text-sm">${resEmoji}${m.resourceName}</span>
             <span class="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded border border-cyan-800">QR: ${m.quality}/100</span>
           </div>
           <div class="space-y-1 text-slate-300 text-[11px]">
@@ -5192,12 +5395,25 @@
       if (!m || cash < m.cost) return;
 
       cash -= m.cost;
-      const isTimber = m.resourceId === 'timber' || m.id === 'mine_timber';
-      const isSilica = m.resourceId === 'silica' || m.id === 'mine_silica';
+      const res = m.resourceId || '';
+      const isTimber = res === 'timber' || m.id === 'mine_timber';
+      const isSilica = res === 'silica' || m.id === 'mine_silica';
+      const isOil = res === 'crude_oil' || m.id === 'mine_oil';
+      const isBauxite = res === 'bauxite' || m.id === 'mine_bauxite';
+      const isGold = res === 'gold_ore' || m.id === 'mine_gold';
+      const isChem = res === 'chemical_minerals' || m.id === 'mine_chemicals';
+
+      const customName = isTimber ? '🪵 Serraria & Silvicultura' 
+        : (isSilica ? '🏖️ Jazida de Sílica & Quartzo' 
+        : (isOil ? '🛢️ Campo Petrolífero'
+        : (isBauxite ? '🪨 Mina de Bauxita'
+        : (isGold ? '🥇 Mina de Ouro Nobre'
+        : (isChem ? '🧪 Depósito de Minerais Químicos' : `${m.emoji} ${m.name}`)))));
+
       pendingTile.mine = {
         id: `mine_${pendingTile.x}_${pendingTile.y}`,
         mineTypeId: m.id,
-        name: isTimber ? `🪵 Serraria & Silvicultura` : (isSilica ? `🏖️ Jazida de Sílica & Quartzo` : `${m.emoji} ${m.name}`),
+        name: customName,
         resourceId: m.resourceId,
         resourceName: m.resourceName,
         quality: m.quality,
@@ -5209,9 +5425,15 @@
       pendingTile.buildingHeight = 18;
       _indexTile(pendingTile);
 
-      const logEmoji = isTimber ? '🪵' : (isSilica ? '🏖️' : '⛏️');
-      const logName = isTimber ? 'Serraria & Silvicultura Florestal' : (isSilica ? 'Jazida de Sílica & Quartzo Industrial' : m.name);
-      addLog(`${logEmoji} ${logName} inaugurada por $${m.cost.toLocaleString()}!`, isTimber ? 'text-amber-400 font-bold' : (isSilica ? 'text-slate-200 font-bold' : 'text-sky-400 font-bold'));
+      const logEmoji = isTimber ? '🪵' : (isSilica ? '🏖️' : (isOil ? '🛢️' : (isBauxite ? '🪨' : (isGold ? '🥇' : (isChem ? '🧪' : '⛏️')))));
+      const logClass = isTimber ? 'text-amber-400 font-bold' 
+        : (isSilica ? 'text-stone-300 font-bold' 
+        : (isOil ? 'text-slate-300 font-bold' 
+        : (isBauxite ? 'text-orange-400 font-bold' 
+        : (isGold ? 'text-yellow-400 font-bold' 
+        : (isChem ? 'text-teal-400 font-bold' : 'text-sky-400 font-bold')))));
+
+      addLog(`${logEmoji} ${customName} inaugurada por $${m.cost.toLocaleString()}!`, logClass);
       if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
       closeMineModal();
       activeManagedTile = pendingTile;
