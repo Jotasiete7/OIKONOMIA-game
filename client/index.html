@@ -2453,6 +2453,17 @@
       }
     ];
 
+    // 4 Depósitos Continentais Estratégicos de Sílica & Quartzo Industrial (IRL: bacias sedimentares longe do mar)
+    const SILICA_DEPOSITS_LIST = [
+      { x: 50, y: 50 }, { x: 51, y: 50 }, // Nova Atenas (Sopé das Colinas Brancas)
+      { x: 56, y: 64 }, { x: 57, y: 64 }, // Montargis (Formação Continental de Quartzo)
+      { x: 65, y: 45 }, { x: 66, y: 45 }, // Corredor Central (Arenito Continental de Alta Pureza)
+      { x: 64, y: 63 }, { x: 64, y: 64 }  // Várzea (Serra de Quartzo Puro)
+    ];
+    function isSilicaTile(x, y) {
+      return SILICA_DEPOSITS_LIST.some(d => d.x === x && d.y === y);
+    }
+
     // Identificador de Cidade por Proximidade
     function getCityForTile(x, y) {
       const defaultProfile = {
@@ -2558,6 +2569,10 @@
           dType = 'Rodovia Principal';
           dName = 'Eixo Rodoviário Logístico';
           traffic = 75; pop = 0; rent = 0;
+        } else if (isSilicaTile(x, y)) {
+          dType = 'Jazida Continental de Sílica';
+          dName = 'Jazida de Sílica & Quartzo Industrial';
+          traffic = 6; pop = 250; rent = 5.50;
         } else if (gidTerrain === 8 || gidRes === 8) {
           dType = 'Floresta / Bosque';
           dName = 'Reserva Florestal (Madeira)';
@@ -2630,6 +2645,7 @@
           hasIronDeposit: gidRes === 9,
           hasOilDeposit: gidRes === 10,
           hasTimberDeposit: gidRes === 8 || gidTerrain === 8,
+          hasSilicaDeposit: isSilicaTile(x, y),
           isFertile: gidTerrain === 5 || gidBuild === 17,
           buildingHeight: isWater || isRoad ? 0 : (portData ? 16 : (isCommercialCenter ? 22 : (isResidential ? 14 : 0))),
           store: null,
@@ -2883,6 +2899,8 @@
 
           if (tile.isWater) {
             fill = tile.gidWater === 1 ? '#031e33' : '#073252';
+          } else if (tile.hasSilicaDeposit) {
+            fill = '#f1f5f9'; // Quartzo cristalino puro / Areia de Sílica (branco níveo em alto contraste)
           } else if (tTerrain === 3) {
             fill = '#8c7847'; // Praia
           } else if (tTerrain === 5) {
@@ -2986,7 +3004,7 @@
             } else if (currentHeatmap === 'ports') {
               if (tile.isPort) heatFill = 'rgba(245, 158, 11, 0.65)';
             } else if (currentHeatmap === 'ind') {
-              if (tile.mine || tile.hasIronDeposit || tile.hasOilDeposit) heatFill = 'rgba(2, 132, 199, 0.65)';
+              if (tile.mine || tile.hasIronDeposit || tile.hasOilDeposit || tile.hasSilicaDeposit) heatFill = 'rgba(2, 132, 199, 0.65)';
               else if (tile.farm || tile.isFertile) heatFill = 'rgba(234, 179, 8, 0.65)';
               else if (tile.factory) heatFill = 'rgba(234, 88, 12, 0.65)';
             } else if (currentHeatmap === 'media') {
@@ -3007,6 +3025,10 @@
               ctx.fillStyle = '#38bdf8';
               ctx.font = `bold ${Math.max(8, 9 * camera.zoom)}px monospace`;
               ctx.fillText('🛢️', sx - 6 * camera.zoom, sy + 18 * camera.zoom);
+            } else if (tile.hasSilicaDeposit) {
+              ctx.fillStyle = '#0284c7';
+              ctx.font = `bold ${Math.max(8, 9 * camera.zoom)}px monospace`;
+              ctx.fillText('🏖️', sx - 6 * camera.zoom, sy + 18 * camera.zoom);
             }
           }
 
@@ -3472,7 +3494,10 @@
           buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-teal-700 hover:bg-teal-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🛒 Gerir Loja</button>`;
         } else if (tile.mine) {
           const isTimber = tile.mine.resourceId === 'timber' || (tile.mine.mineTypeId && tile.mine.mineTypeId.includes('timber'));
-          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="${isTimber ? 'bg-amber-800 hover:bg-amber-700' : 'bg-sky-700 hover:bg-sky-600'} text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">${isTimber ? '🪵 Gerir Serraria' : '⛏️ Gerir Mina'}</button>`;
+          const isSilica = tile.mine.resourceId === 'silica' || (tile.mine.mineTypeId && tile.mine.mineTypeId.includes('silica'));
+          const mineLabel = isTimber ? '🪵 Gerir Serraria' : (isSilica ? '🏖️ Gerir Jazida' : '⛏️ Gerir Mina');
+          const mineClass = isTimber ? 'bg-amber-800 hover:bg-amber-700' : (isSilica ? 'bg-slate-700 hover:bg-slate-600' : 'bg-sky-700 hover:bg-sky-600');
+          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="${mineClass} text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">${mineLabel}</button>`;
         } else if (tile.farm) {
           buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🌾 Gerir Fazenda</button>`;
         } else if (tile.factory) {
@@ -3489,6 +3514,7 @@
             <div class="inline-flex items-center gap-1">
               <span class="text-[9px] text-slate-400 font-bold hidden sm:inline">Construir:</span>
               ${tile.hasTimberDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_timber')" class="bg-amber-800 hover:bg-amber-700 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Serraria e Silvicultura Florestal ($28.000)">🪵 +Serraria</button>` : ''}
+              ${tile.hasSilicaDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_silica')" class="bg-slate-700 hover:bg-slate-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Jazida de Sílica & Quartzo Industrial ($30.000)">🏖️ +Jazida Sílica</button>` : ''}
               ${tile.hasIronDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_iron')" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Mina de Ferro ($40.000)">⛏️ +Mina Ferro</button>` : ''}
               ${tile.hasOilDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_oil')" class="bg-slate-700 hover:bg-slate-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Poço de Petróleo ($65.000)">🛢️ +Poço Petróleo</button>` : ''}
               <button onclick="openStoreModal(worldGrid[${tile.x}][${tile.y}])" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Inaugurar Estabelecimento Comercial">🏪 +Loja</button>
@@ -4233,10 +4259,13 @@
       document.getElementById('facility-action-row').classList.add('hidden');
       
       const hasTimber = !!tile.hasTimberDeposit;
+      const hasSilica = !!tile.hasSilicaDeposit;
       const hasIron = !!tile.hasIronDeposit;
       const hasOil = !!tile.hasOilDeposit;
-      const hasResource = hasTimber || hasIron || hasOil;
-      const depositName = hasTimber ? 'Reserva Florestal (Madeira / Toras)' : (hasIron ? 'Minério de Ferro' : (hasOil ? 'Petróleo Bruto' : null));
+      const hasResource = hasTimber || hasSilica || hasIron || hasOil;
+      const depositName = hasTimber 
+        ? 'Reserva Florestal (Madeira / Toras)' 
+        : (hasSilica ? 'Jazida de Sílica & Quartzo Industrial' : (hasIron ? 'Minério de Ferro' : (hasOil ? 'Petróleo Bruto' : null)));
 
       let naturalResourceCard = '';
       if (hasTimber) {
@@ -4265,6 +4294,35 @@
             <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_timber')" ${cash < 28000 ? 'disabled' : ''} class="w-full bg-gradient-to-r from-amber-600 to-emerald-600 hover:from-amber-500 hover:to-emerald-500 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
               <span>🪵</span>
               <span>Construir Serraria & Silvicultura ($28.000)</span>
+            </button>
+          </div>
+        `;
+      } else if (hasSilica) {
+        naturalResourceCard = `
+          <div class="bg-gradient-to-r from-slate-900 to-sky-950 p-3.5 rounded-xl border-2 border-slate-300 space-y-2.5 shadow-xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-slate-950 border border-slate-400 p-1 flex items-center justify-center shrink-0 shadow-inner">
+                  <img src="assets/minas/mine_silica.png" class="w-full h-full object-contain" onerror="this.outerHTML='🏖️'">
+                </div>
+                <div>
+                  <div class="font-bold text-slate-100 text-sm flex items-center gap-1.5">
+                    <span>🏖️</span> Instalar Jazida de Sílica & Areia
+                  </div>
+                  <div class="text-[11px] text-slate-300 mt-0.5">Extração & Lavagem de Quartzo Continental</div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-sm font-bold text-rose-300">$30.000</div>
+                <div class="text-[10px] text-emerald-400 font-bold">800 un/dia</div>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-300 bg-slate-950/70 p-2 rounded-lg border border-slate-700 font-mono">
+              💎 <strong>Bacia Continental de Quartzo:</strong> Areia de sílica pura (SiO₂ > 99%), isenta de sal marinho e calcita, essencial para fundição de Vidro Plano (<code class="text-sky-300">glass</code>) e chips semicondutores (<code class="text-sky-300">chips</code>).
+            </div>
+            <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_silica')" ${cash < 30000 ? 'disabled' : ''} class="w-full bg-gradient-to-r from-slate-600 to-sky-600 hover:from-slate-500 hover:to-sky-500 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
+              <span>🏖️</span>
+              <span>Construir Jazida de Sílica & Areia ($30.000)</span>
             </button>
           </div>
         `;
@@ -4725,31 +4783,40 @@
     function renderMinePanel(tile) {
       const m = tile.mine;
       const isTimber = m.resourceId === 'timber' || (m.mineTypeId && m.mineTypeId.includes('timber'));
+      const isSilica = m.resourceId === 'silica' || (m.mineTypeId && m.mineTypeId.includes('silica'));
       const iconEl = document.getElementById('facility-icon');
-      const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getMineSpriteKey) ? SpriteManager.getMineSpriteKey(m.mineTypeId || (isTimber ? 'mine_timber' : 'mine_iron')) : (isTimber ? 'minas/mine_timber' : 'minas/mine_iron');
-      const defaultIcon = isTimber ? '🪵' : '⛏️';
+      const defaultSprite = isTimber ? 'minas/mine_timber' : (isSilica ? 'minas/mine_silica' : 'minas/mine_iron');
+      const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getMineSpriteKey) ? SpriteManager.getMineSpriteKey(m.mineTypeId || defaultSprite) : defaultSprite;
+      const defaultIcon = isTimber ? '🪵' : (isSilica ? '🏖️' : '⛏️');
       if (iconEl) iconEl.innerHTML = `<img src="assets/${spriteKey}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='${defaultIcon}'">`;
-      document.getElementById('facility-title').textContent = isTimber ? '🪵 Serraria & Silvicultura Florestal' : m.name;
-      document.getElementById('facility-subtitle').textContent = isTimber 
+      
+      const title = isTimber ? '🪵 Serraria & Silvicultura Florestal' : (isSilica ? '🏖️ Jazida de Sílica & Quartzo Industrial' : m.name);
+      const subtitle = isTimber 
         ? `${tile.district.name} · Unidade de Manejo & Extração Florestal`
-        : `${tile.district.name} · Instalação Extrativista de Recursos`;
+        : (isSilica ? `${tile.district.name} · Bacia Geológica de Sílica Continental` : `${tile.district.name} · Instalação Extrativista de Recursos`);
+      document.getElementById('facility-title').textContent = title;
+      document.getElementById('facility-subtitle').textContent = subtitle;
+
       const badge = document.getElementById('facility-rent-badge');
-      const mineDailyOpex = isTimber ? 140 : 180;
+      const mineDailyOpex = isTimber ? 140 : (isSilica ? 150 : 180);
       const totalMineDaily = tile.district.landRentDaily + mineDailyOpex;
-      badge.textContent = `-$${totalMineDaily}/dia (Solo $${tile.district.landRentDaily} + ${isTimber ? 'Manejo $140' : 'Extração $180'})`;
+      const opexLabel = isTimber ? 'Manejo $140' : (isSilica ? 'Lavagem $150' : 'Extração $180');
+      badge.textContent = `-$${totalMineDaily}/dia (Solo $${tile.district.landRentDaily} + ${opexLabel})`;
       badge.classList.remove('hidden');
 
-      const borderClass = isTimber ? 'border-amber-800' : 'border-sky-800';
-      const textClass = isTimber ? 'text-amber-300' : 'text-sky-300';
-      const storageLabel = isTimber ? 'Pátio de Toras / Madeira' : 'Armazém de Minério';
+      const borderClass = isTimber ? 'border-amber-800' : (isSilica ? 'border-slate-400' : 'border-sky-800');
+      const textClass = isTimber ? 'text-amber-300' : (isSilica ? 'text-slate-100' : 'text-sky-300');
+      const storageLabel = isTimber ? 'Pátio de Toras / Madeira' : (isSilica ? 'Silo de Areia de Sílica' : 'Armazém de Minério');
       const tipText = isTimber
         ? '💡 Fornece toras brutas para serrarias de chapas estruturais (lumber), indústrias de papel/celulose e marcenarias de móveis nobres.'
-        : '💡 Fornece matérias-primas pesadas diretamente para usinas siderúrgicas, refinarias e indústrias petroquímicas.';
+        : (isSilica 
+            ? '💡 Fornece sílica pura de alta pureza (SiO₂ > 99%) para fundição de vidro plano (janelas, telas e garrafas) e fábricas de semicondutores.'
+            : '💡 Fornece matérias-primas pesadas diretamente para usinas siderúrgicas, refinarias e indústrias petroquímicas.');
 
       document.getElementById('facility-content-panel').innerHTML = `
         <div class="bg-slate-950 p-4 rounded-xl border ${borderClass} space-y-3 font-mono text-xs">
           <div class="flex items-center justify-between">
-            <span class="font-bold ${textClass} text-sm">${isTimber ? '🪵 ' : ''}${m.resourceName}</span>
+            <span class="font-bold ${textClass} text-sm">${isTimber ? '🪵 ' : (isSilica ? '🏖️ ' : '')}${m.resourceName}</span>
             <span class="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded border border-cyan-800">QR: ${m.quality}/100</span>
           </div>
           <div class="space-y-1 text-slate-300 text-[11px]">
@@ -5126,10 +5193,11 @@
 
       cash -= m.cost;
       const isTimber = m.resourceId === 'timber' || m.id === 'mine_timber';
+      const isSilica = m.resourceId === 'silica' || m.id === 'mine_silica';
       pendingTile.mine = {
         id: `mine_${pendingTile.x}_${pendingTile.y}`,
         mineTypeId: m.id,
-        name: isTimber ? `🪵 Serraria & Silvicultura` : `${m.emoji} ${m.name}`,
+        name: isTimber ? `🪵 Serraria & Silvicultura` : (isSilica ? `🏖️ Jazida de Sílica & Quartzo` : `${m.emoji} ${m.name}`),
         resourceId: m.resourceId,
         resourceName: m.resourceName,
         quality: m.quality,
@@ -5141,9 +5209,9 @@
       pendingTile.buildingHeight = 18;
       _indexTile(pendingTile);
 
-      const logEmoji = isTimber ? '🪵' : '⛏️';
-      const logName = isTimber ? 'Serraria & Silvicultura Florestal' : m.name;
-      addLog(`${logEmoji} ${logName} inaugurada por $${m.cost.toLocaleString()}!`, isTimber ? 'text-amber-400 font-bold' : 'text-sky-400 font-bold');
+      const logEmoji = isTimber ? '🪵' : (isSilica ? '🏖️' : '⛏️');
+      const logName = isTimber ? 'Serraria & Silvicultura Florestal' : (isSilica ? 'Jazida de Sílica & Quartzo Industrial' : m.name);
+      addLog(`${logEmoji} ${logName} inaugurada por $${m.cost.toLocaleString()}!`, isTimber ? 'text-amber-400 font-bold' : (isSilica ? 'text-slate-200 font-bold' : 'text-sky-400 font-bold'));
       if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
       closeMineModal();
       activeManagedTile = pendingTile;

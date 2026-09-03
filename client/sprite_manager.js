@@ -130,16 +130,18 @@ class SpriteManager {
     'logistica_midia/media_tv': 'assets/logistica_midia/media_tv.png',
     'logistica_midia/media_radio': 'assets/logistica_midia/media_radio.png',
 
-    // 8. MINAS & EXTRAÃ‡ÃƒO
+    // 8. MINAS & EXTRAÇÃO
     'minas/mine_iron': 'assets/minas/mine_iron.png',
     'minas/mine_oil': 'assets/minas/mine_oil.png',
     'minas/mine_bauxite': 'assets/minas/mine_bauxite.png',
     'minas/mine_gold': 'assets/minas/mine_gold.png',
     'minas/mine_timber': 'assets/minas/mine_timber.png',
+    'minas/mine_silica': 'assets/minas/mine_silica.png',
 
     // 9. TERRENOS BASE & FLORESTAS
     'terrenos/grass': 'assets/terrenos/grass.png',
     'terrenos/forest': 'assets/terrenos/forest.png',
+    'terrenos/silica': 'assets/terrenos/silica.png',
     'terrenos/fertile_soil': 'assets/terrenos/fertile_soil.png',
     'terrenos/sand': 'assets/terrenos/sand.png',
     'terrenos/water_shallow': 'assets/terrenos/water_shallow.png',
@@ -268,7 +270,8 @@ class SpriteManager {
     if (!mineTypeId) return 'minas/mine_iron';
     if (mineTypeId.includes('iron')) return 'minas/mine_iron';
     if (mineTypeId.includes('oil')) return 'minas/mine_oil';
-    if (mineTypeId.includes('bauxite') || mineTypeId.includes('silica') || mineTypeId.includes('chemicals')) return 'minas/mine_bauxite';
+    if (mineTypeId.includes('silica')) return 'minas/mine_silica';
+    if (mineTypeId.includes('bauxite') || mineTypeId.includes('chemicals')) return 'minas/mine_bauxite';
     if (mineTypeId.includes('gold')) return 'minas/mine_gold';
     if (mineTypeId.includes('timber')) return 'minas/mine_timber';
     return 'minas/mine_iron';
@@ -335,6 +338,7 @@ class SpriteManager {
     if (tile.isWater) {
       return tile.gidWater === 1 ? 'terrenos/water_deep' : 'terrenos/water_shallow';
     }
+    if (tile.hasSilicaDeposit) return 'terrenos/silica';
     if (tile.gidTerrain === 8 || tile.hasTimberDeposit || tile.gidRes === 8) return 'terrenos/forest';
     if (tile.gidTerrain === 3) return 'terrenos/sand';
     if (tile.gidTerrain === 5) return 'terrenos/fertile_soil';
