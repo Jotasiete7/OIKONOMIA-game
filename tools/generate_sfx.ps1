@@ -44,7 +44,18 @@ function Save-Wav {
 
     $writer.Close()
     $stream.Close()
-    Write-Output "[OK] Gerado: $Path ($([Math]::Round($dataSize / 1024, 1)) KB)"
+
+    $mp3Path = [System.IO.Path]::ChangeExtension($Path, ".mp3")
+    $hasFfmpeg = (Get-Command ffmpeg -ErrorAction SilentlyContinue)
+    if ($hasFfmpeg) {
+        $p = Start-Process -FilePath "ffmpeg" -ArgumentList "-y -i `"$Path`" -b:a 96k `"$mp3Path`"" -NoNewWindow -PassThru -Wait
+        if ($p.ExitCode -eq 0 -and (Test-Path $mp3Path)) {
+            Remove-Item $Path -Force
+            Write-Output "[OK] Gerado e Comprimido MP3 (96k): $mp3Path"
+            return
+        }
+    }
+    Write-Output "[OK] Gerado WAV: $Path ($([Math]::Round($dataSize / 1024, 1)) KB)"
 }
 
 # 1. modal_open.wav (0.16s)
@@ -59,7 +70,7 @@ for ($i = 0; $i -lt $total; $i++) {
     $wave = [Math]::Sin($phase) * 0.7 + [Math]::Sin(2.0 * $phase) * 0.2 + [Math]::Sin(3.0 * $phase) * 0.1
     $samples[$i] = [float]($wave * $env * 0.75)
 }
-Save-Wav -Path "client/assets/audio/sfx/ui/modal_open.wav" -Samples $samples
+Save-Wav -Path "client/assets/audio/sfx/ui/modal-open.wav" -Samples $samples
 
 # 2. stamp_contract.wav (0.24s)
 $dur = 0.24
@@ -74,7 +85,7 @@ for ($i = 0; $i -lt $total; $i++) {
     $body = [Math]::Sin(2.0 * [Math]::PI * 110.0 * $t) * [Math]::Exp(-$t * 15.0) * 0.35
     $samples[$i] = [float](($thud * 0.65 + $noise + $body) * 0.9)
 }
-Save-Wav -Path "client/assets/audio/sfx/ui/stamp_contract.wav" -Samples $samples
+Save-Wav -Path "client/assets/audio/sfx/ui/stamp-contract.wav" -Samples $samples
 
 # 3. coin_clink.wav (0.28s)
 $dur = 0.28
@@ -97,7 +108,7 @@ for ($i = 0; $i -lt $total; $i++) {
     }
     $samples[$i] = [float]($s * 0.65)
 }
-Save-Wav -Path "client/assets/audio/sfx/economy/coin_clink.wav" -Samples $samples
+Save-Wav -Path "client/assets/audio/sfx/economy/coin-clink.wav" -Samples $samples
 
 # 4. loan_payout.wav (0.55s)
 $dur = 0.55
@@ -121,7 +132,7 @@ for ($i = 0; $i -lt $total; $i++) {
     }
     $samples[$i] = [float]($sum * 0.9)
 }
-Save-Wav -Path "client/assets/audio/sfx/economy/loan_payout.wav" -Samples $samples
+Save-Wav -Path "client/assets/audio/sfx/economy/loan-payout.wav" -Samples $samples
 
 # 5. demolish.wav (0.42s)
 $dur = 0.42
@@ -181,7 +192,7 @@ for ($i = 0; $i -lt $total; $i++) {
     }
     $samples[$i] = [float]($s * 0.8)
 }
-Save-Wav -Path "client/assets/audio/sfx/events/warning_alert.wav" -Samples $samples
+Save-Wav -Path "client/assets/audio/sfx/events/warning-alert.wav" -Samples $samples
 
 # 8. news_flash.wav (0.22s)
 $dur = 0.22
@@ -201,6 +212,6 @@ for ($i = 0; $i -lt $total; $i++) {
     }
     $samples[$i] = [float]($s * 0.85)
 }
-Save-Wav -Path "client/assets/audio/sfx/events/news_flash.wav" -Samples $samples
+Save-Wav -Path "client/assets/audio/sfx/events/news-flash.wav" -Samples $samples
 
-Write-Output "Todos os 8 arquivos WAV foram gerados com sucesso!"
+Write-Output "Todos os 8 efeitos sonoros foram sintetizados e comprimidos para MP3 com sucesso!"

@@ -25,5 +25,6 @@ archive_legacy/
 *.zip
 *.7z
 
-# Arquivos de áudio brutos que excedem o limite de 100MB do GitHub (substituído pelo MP3 equivalente)
-client/assets/audio/bgm/BGM (1).wav
+# Proibir arquivos de áudio WAV não comprimidos no repositório (usar exclusivamente MP3 comprimido em kebab-case)
+client/assets/audio/**/*.wav
+

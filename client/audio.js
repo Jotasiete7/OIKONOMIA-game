@@ -20,19 +20,19 @@ const SoundEngine = {
 
   // Registros de Faixas BGM
   bgmTracks: {
-    bgm_1: 'assets/audio/bgm/BGM (1).mp3',
-    bgm_2: 'assets/audio/bgm/BGM (2).mp3',
-    bgm_3: 'assets/audio/bgm/BGM (3).wav',
-    bgm_4: 'assets/audio/bgm/BGM (4).wav',
-    bgm_5: 'assets/audio/bgm/BGM (5).wav',
-    bgm_6: 'assets/audio/bgm/BGM (6).wav',
-    bgm_7: 'assets/audio/bgm/BGM (7).wav',
+    bgm_1: 'assets/audio/bgm/bgm-01.mp3',
+    bgm_2: 'assets/audio/bgm/bgm-02.mp3',
+    bgm_3: 'assets/audio/bgm/bgm-03.mp3',
+    bgm_4: 'assets/audio/bgm/bgm-04.mp3',
+    bgm_5: 'assets/audio/bgm/bgm-05.mp3',
+    bgm_6: 'assets/audio/bgm/bgm-06.mp3',
+    bgm_7: 'assets/audio/bgm/bgm-07.mp3',
     // Aliases semânticos
-    menu: 'assets/audio/bgm/BGM (1).mp3',
-    daytime_01: 'assets/audio/bgm/BGM (1).mp3',
-    daytime_02: 'assets/audio/bgm/BGM (2).mp3',
-    prosperity: 'assets/audio/bgm/BGM (4).wav',
-    crisis: 'assets/audio/bgm/BGM (6).wav'
+    menu: 'assets/audio/bgm/bgm-01.mp3',
+    daytime_01: 'assets/audio/bgm/bgm-01.mp3',
+    daytime_02: 'assets/audio/bgm/bgm-02.mp3',
+    prosperity: 'assets/audio/bgm/bgm-04.mp3',
+    crisis: 'assets/audio/bgm/bgm-06.mp3'
   },
 
   trackTitles: {
@@ -60,11 +60,11 @@ const SoundEngine = {
 
   // Registros de Ambience
   ambienceTracks: {
-    city: 'assets/audio/ambience/low traffic.mp3',
-    commercial: 'assets/audio/ambience/commercial_hub_loop.mp3',
-    industrial: 'assets/audio/ambience/industrial_zone_loop.mp3',
-    rural: 'assets/audio/ambience/rural_farm_loop.mp3',
-    seaport: 'assets/audio/ambience/seaport_loop.mp3'
+    city: 'assets/audio/ambience/ambience-low-traffic.mp3',
+    commercial: 'assets/audio/ambience/commercial-hub-loop.mp3',
+    industrial: 'assets/audio/ambience/industrial-zone-loop.mp3',
+    rural: 'assets/audio/ambience/rural-farm-loop.mp3',
+    seaport: 'assets/audio/ambience/seaport-loop.mp3'
   },
   activeAmbienceLoops: {},
 
@@ -505,59 +505,59 @@ const SoundEngine = {
   },
 
   playModalOpen() {
-    this.playSfxFile('assets/audio/sfx/ui/modal_open.wav', () => {
+    this.playSfxFile('assets/audio/sfx/ui/modal-open.mp3', () => {
       this.playBeep(520, 'sine', 0.06, 0.04);
     });
   },
 
   playStampContract() {
-    this.playSfxFile('assets/audio/sfx/ui/stamp_contract.wav', () => {
+    this.playSfxFile('assets/audio/sfx/ui/stamp-contract.mp3', () => {
       this.playBeep(180, 'triangle', 0.12, 0.08);
     });
   },
 
   playCashRegister() {
-    this.playSfxFile('assets/audio/sfx/economy/caixa registradora low.wav', () => {
+    this.playSfxFile('assets/audio/sfx/economy/cash-register-low.mp3', () => {
       this.playBeep(880, 'triangle', 0.06, 0.07);
       setTimeout(() => this.playBeep(1174.66, 'triangle', 0.10, 0.09), 50);
     });
   },
 
   playCoinClink() {
-    this.playSfxFile('assets/audio/sfx/economy/coin_clink.wav', () => {
+    this.playSfxFile('assets/audio/sfx/economy/coin-clink.mp3', () => {
       this.playBeep(1200, 'sine', 0.04, 0.05);
       setTimeout(() => this.playBeep(1400, 'sine', 0.05, 0.05), 35);
     });
   },
 
   playLoanPayout() {
-    this.playSfxFile('assets/audio/sfx/economy/loan_payout.wav', () => {
+    this.playSfxFile('assets/audio/sfx/economy/loan-payout.mp3', () => {
       this.playSuccessChime();
     });
   },
 
   playBuild() {
-    this.playSfxFile('assets/audio/sfx/building/hammer1.wav', () => {
+    this.playSfxFile('assets/audio/sfx/building/hammer1.mp3', () => {
       this.playBeep(320, 'square', 0.06, 0.06);
       setTimeout(() => this.playBeep(480, 'square', 0.09, 0.07), 60);
     });
   },
 
   playDemolish() {
-    this.playSfxFile('assets/audio/sfx/building/demolish.wav', () => {
+    this.playSfxFile('assets/audio/sfx/building/demolish.mp3', () => {
       this.playBeep(180, 'sawtooth', 0.15, 0.08);
     });
   },
 
   playUpgrade() {
-    this.playSfxFile('assets/audio/sfx/building/upgrade.wav', () => {
+    this.playSfxFile('assets/audio/sfx/building/upgrade.mp3', () => {
       this.playBeep(600, 'triangle', 0.08, 0.06);
       setTimeout(() => this.playBeep(800, 'triangle', 0.1, 0.07), 60);
     });
   },
 
   playYearCelebration() {
-    this.playSfxFile('assets/audio/sfx/events/great win.wav', () => {
+    this.playSfxFile('assets/audio/sfx/events/great-win.mp3', () => {
       this.playBeep(440, 'triangle', 0.1, 0.08);
       setTimeout(() => this.playBeep(554.37, 'triangle', 0.1, 0.09), 80);
       setTimeout(() => this.playBeep(659.25, 'triangle', 0.12, 0.1), 160);
@@ -566,7 +566,7 @@ const SoundEngine = {
   },
 
   playSuccessChime() {
-    this.playSfxFile('assets/audio/sfx/events/win (1).wav', () => {
+    this.playSfxFile('assets/audio/sfx/events/win-01.mp3', () => {
       this.playBeep(523.25, 'triangle', 0.08, 0.08);
       setTimeout(() => this.playBeep(659.25, 'triangle', 0.08, 0.08), 70);
       setTimeout(() => this.playBeep(783.99, 'triangle', 0.12, 0.1), 140);
@@ -574,20 +574,20 @@ const SoundEngine = {
   },
 
   playCrisisBlues() {
-    this.playSfxFile('assets/audio/sfx/apreensivo blues sfx.wav', () => {
+    this.playSfxFile('assets/audio/sfx/apreensivo-blues-sfx.mp3', () => {
       this.playWarning();
     });
   },
 
   playWarning() {
-    this.playSfxFile('assets/audio/sfx/events/warning_alert.wav', () => {
+    this.playSfxFile('assets/audio/sfx/events/warning-alert.mp3', () => {
       this.playBeep(330, 'sawtooth', 0.15, 0.08);
       setTimeout(() => this.playBeep(290, 'sawtooth', 0.2, 0.09), 140);
     });
   },
 
   playNewsFlash() {
-    this.playSfxFile('assets/audio/sfx/events/news_flash.wav', () => {
+    this.playSfxFile('assets/audio/sfx/events/news-flash.mp3', () => {
       this.playBeep(880, 'sine', 0.03, 0.04);
       setTimeout(() => this.playBeep(1100, 'sine', 0.04, 0.04), 40);
     });
