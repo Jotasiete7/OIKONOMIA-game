@@ -260,6 +260,7 @@ class SpriteManager {
     if (farmTypeId.includes('coffee') || farmTypeId.includes('cocoa') || farmTypeId.includes('sugar') || farmTypeId.includes('grapes') || farmTypeId.includes('tobacco') || farmTypeId.includes('rubber')) return 'agricultura/farm_plantation';
     if (farmTypeId.includes('cattle') || farmTypeId.includes('pigs') || farmTypeId.includes('sheep') || farmTypeId.includes('poultry')) return 'agricultura/farm_cattle';
     if (farmTypeId.includes('dairy')) return 'agricultura/farm_dairy';
+    if (farmTypeId.includes('timber')) return 'minas/mine_timber';
     return 'agricultura/farm_default';
   }
 

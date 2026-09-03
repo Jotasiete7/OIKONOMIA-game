@@ -3471,7 +3471,8 @@
         } else if (tile.store) {
           buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-teal-700 hover:bg-teal-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🛒 Gerir Loja</button>`;
         } else if (tile.mine) {
-          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">⛏️ Gerir Mina</button>`;
+          const isTimber = tile.mine.resourceId === 'timber' || (tile.mine.mineTypeId && tile.mine.mineTypeId.includes('timber'));
+          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="${isTimber ? 'bg-amber-800 hover:bg-amber-700' : 'bg-sky-700 hover:bg-sky-600'} text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">${isTimber ? '🪵 Gerir Serraria' : '⛏️ Gerir Mina'}</button>`;
         } else if (tile.farm) {
           buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🌾 Gerir Fazenda</button>`;
         } else if (tile.factory) {
@@ -3487,11 +3488,13 @@
             <span class="text-slate-600">|</span>
             <div class="inline-flex items-center gap-1">
               <span class="text-[9px] text-slate-400 font-bold hidden sm:inline">Construir:</span>
+              ${tile.hasTimberDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_timber')" class="bg-amber-800 hover:bg-amber-700 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Serraria e Silvicultura Florestal ($28.000)">🪵 +Serraria</button>` : ''}
+              ${tile.hasIronDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_iron')" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Mina de Ferro ($40.000)">⛏️ +Mina Ferro</button>` : ''}
+              ${tile.hasOilDeposit ? `<button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_oil')" class="bg-slate-700 hover:bg-slate-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Poço de Petróleo ($65.000)">🛢️ +Poço Petróleo</button>` : ''}
               <button onclick="openStoreModal(worldGrid[${tile.x}][${tile.y}])" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Inaugurar Estabelecimento Comercial">🏪 +Loja</button>
               <button onclick="openFactoryModal(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-700 hover:bg-orange-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Construir Parque Fabril">🏭 +Fábrica</button>
               <button onclick="openFarmModal(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Iniciar Fazenda Agropecuária">🌾 +Fazenda</button>
               <button onclick="confirmBuildRDCenter(${tile.x}, ${tile.y})" class="bg-purple-700 hover:bg-purple-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Construir Centro de Pesquisa & Desenvolvimento ($80.000)">🔬 +P&D</button>
-              ${tile.hasIronDeposit || tile.hasOilDeposit ? `<button onclick="openMineModal(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Instalar Mina de Extração">⛏️ +Mina</button>` : ''}
             </div>
           `;
         }
@@ -4229,8 +4232,151 @@
       
       document.getElementById('facility-action-row').classList.add('hidden');
       
-      const hasMineDeposit = tile.hasIronDeposit || tile.hasOilDeposit;
-      const depositName = tile.hasIronDeposit ? 'Minério de Ferro' : (tile.hasOilDeposit ? 'Petróleo Bruto' : null);
+      const hasTimber = !!tile.hasTimberDeposit;
+      const hasIron = !!tile.hasIronDeposit;
+      const hasOil = !!tile.hasOilDeposit;
+      const hasResource = hasTimber || hasIron || hasOil;
+      const depositName = hasTimber ? 'Reserva Florestal (Madeira / Toras)' : (hasIron ? 'Minério de Ferro' : (hasOil ? 'Petróleo Bruto' : null));
+
+      let naturalResourceCard = '';
+      if (hasTimber) {
+        naturalResourceCard = `
+          <div class="bg-gradient-to-r from-amber-950/90 to-emerald-950/80 p-3.5 rounded-xl border-2 border-amber-600/90 space-y-2.5 shadow-xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-amber-950 border border-amber-500/80 p-1 flex items-center justify-center shrink-0 shadow-inner">
+                  <img src="assets/minas/mine_timber.png" class="w-full h-full object-contain" onerror="this.outerHTML='🪵'">
+                </div>
+                <div>
+                  <div class="font-bold text-amber-200 text-sm flex items-center gap-1.5">
+                    <span>🪵</span> Instalar Serraria & Silvicultura
+                  </div>
+                  <div class="text-[11px] text-amber-300/80 mt-0.5">Manejo & Extração de Madeira / Toras</div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-sm font-bold text-rose-300">$28.000</div>
+                <div class="text-[10px] text-emerald-400 font-bold">650 un/dia</div>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-300 bg-slate-950/70 p-2 rounded-lg border border-amber-800/40 font-mono">
+              🌲 <strong>Reserva Florestal:</strong> Extraia toras nativas brutas para abastecer indústrias de chapas estruturais (<code class="text-amber-300">lumber</code>), celulose/papel e marcenarias de móveis nobres.
+            </div>
+            <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_timber')" ${cash < 28000 ? 'disabled' : ''} class="w-full bg-gradient-to-r from-amber-600 to-emerald-600 hover:from-amber-500 hover:to-emerald-500 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
+              <span>🪵</span>
+              <span>Construir Serraria & Silvicultura ($28.000)</span>
+            </button>
+          </div>
+        `;
+      } else if (hasIron) {
+        naturalResourceCard = `
+          <div class="bg-gradient-to-r from-sky-950/90 to-slate-900/80 p-3.5 rounded-xl border-2 border-sky-600/90 space-y-2.5 shadow-xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-slate-900 border border-sky-500/80 p-1 flex items-center justify-center shrink-0 shadow-inner">
+                  <img src="assets/minas/mine_iron.png" class="w-full h-full object-contain" onerror="this.outerHTML='⛏️'">
+                </div>
+                <div>
+                  <div class="font-bold text-sky-200 text-sm flex items-center gap-1.5">
+                    <span>⛏️</span> Instalar Mina de Minério de Ferro
+                  </div>
+                  <div class="text-[11px] text-sky-300/80 mt-0.5">Extração Contínua de Ferro Siderúrgico</div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-sm font-bold text-rose-300">$40.000</div>
+                <div class="text-[10px] text-emerald-400 font-bold">600 un/dia</div>
+              </div>
+            </div>
+            <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_iron')" ${cash < 40000 ? 'disabled' : ''} class="w-full bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
+              <span>⛏️</span>
+              <span>Construir Mina de Ferro ($40.000)</span>
+            </button>
+          </div>
+        `;
+      } else if (hasOil) {
+        naturalResourceCard = `
+          <div class="bg-gradient-to-r from-slate-950/90 to-amber-950/80 p-3.5 rounded-xl border-2 border-slate-600/90 space-y-2.5 shadow-xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-slate-900 border border-slate-500/80 p-1 flex items-center justify-center shrink-0 shadow-inner">
+                  <img src="assets/minas/mine_oil.png" class="w-full h-full object-contain" onerror="this.outerHTML='🛢️'">
+                </div>
+                <div>
+                  <div class="font-bold text-slate-200 text-sm flex items-center gap-1.5">
+                    <span>🛢️</span> Instalar Campo Petrolífero / Poço
+                  </div>
+                  <div class="text-[11px] text-slate-300/80 mt-0.5">Extração Contínua de Petróleo Bruto</div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-sm font-bold text-rose-300">$65.000</div>
+                <div class="text-[10px] text-emerald-400 font-bold">700 un/dia</div>
+              </div>
+            </div>
+            <button onclick="confirmBuildMineDirect(${tile.x}, ${tile.y}, 'mine_oil')" ${cash < 65000 ? 'disabled' : ''} class="w-full bg-slate-700 hover:bg-slate-600 disabled:opacity-40 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg cursor-pointer flex items-center justify-center gap-2">
+              <span>🛢️</span>
+              <span>Construir Poço de Petróleo ($65.000)</span>
+            </button>
+          </div>
+        `;
+      }
+
+      const standardActionsHtml = `
+        <div class="grid grid-cols-1 gap-2">
+          <button onclick="openStoreModal(worldGrid[${tile.x}][${tile.y}])" class="bg-emerald-950/70 hover:bg-emerald-900/90 border border-emerald-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-slate-900 border border-emerald-700/60 p-0.5 flex items-center justify-center shrink-0">
+                <img src="assets/lojas/supermarket.png" class="w-full h-full object-contain" onerror="this.outerHTML='🏪'">
+              </div>
+              <div>
+                <div class="font-bold text-emerald-300 flex items-center gap-1 text-xs">Inaugurar Estabelecimento Comercial</div>
+                <div class="text-[10px] text-slate-400">Venda no varejo (alimentos, eletrônicos, vestuário, conveniência...)</div>
+              </div>
+            </div>
+            <span class="text-emerald-400 group-hover:translate-x-1 transition font-bold shrink-0 ml-1">➔</span>
+          </button>
+
+          <button onclick="openFactoryModal(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-950/70 hover:bg-orange-900/90 border border-orange-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-slate-900 border border-orange-700/60 p-0.5 flex items-center justify-center shrink-0">
+                <img src="assets/empresas/factory_default.png" class="w-full h-full object-contain" onerror="this.outerHTML='🏭'">
+              </div>
+              <div>
+                <div class="font-bold text-orange-300 flex items-center gap-1 text-xs">Construir Parque Fabril</div>
+                <div class="text-[10px] text-slate-400">Transformação de insumos em produtos acabados de alto valor</div>
+              </div>
+            </div>
+            <span class="text-orange-400 group-hover:translate-x-1 transition font-bold shrink-0 ml-1">➔</span>
+          </button>
+
+          <button onclick="openFarmModal(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-950/70 hover:bg-amber-900/90 border border-amber-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-slate-900 border border-amber-700/60 p-0.5 flex items-center justify-center shrink-0">
+                <img src="assets/agro/farm_default.png" class="w-full h-full object-contain" onerror="this.outerHTML='🌾'">
+              </div>
+              <div>
+                <div class="font-bold text-amber-300 flex items-center gap-1 text-xs">Iniciar Fazenda / Agropecuária</div>
+                <div class="text-[10px] text-slate-400">Cultivo de grãos, café, algodão, cana e criação de gado</div>
+              </div>
+            </div>
+            <span class="text-amber-400 group-hover:translate-x-1 transition font-bold shrink-0 ml-1">➔</span>
+          </button>
+
+          <button onclick="confirmBuildRDCenter(${tile.x}, ${tile.y})" class="bg-purple-950/70 hover:bg-purple-900/90 border border-purple-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-slate-900 border border-purple-700/60 p-0.5 flex items-center justify-center shrink-0 text-base">
+                🔬
+              </div>
+              <div>
+                <div class="font-bold text-purple-300 flex items-center gap-1 text-xs">Construir Centro de P&D (Laboratório)</div>
+                <div class="text-[10px] text-slate-400">Pesquisa e desenvolvimento tecnológico para superar a qualidade do mercado</div>
+              </div>
+            </div>
+            <span class="text-purple-400 group-hover:translate-x-1 transition font-bold shrink-0 ml-1">➔</span>
+          </button>
+        </div>
+      `;
 
       document.getElementById('facility-content-panel').innerHTML = `
         <div class="space-y-3 font-mono text-xs">
@@ -4238,79 +4384,30 @@
             <div class="flex justify-between"><span>Tráfego Urbano:</span> <strong class="text-amber-400">🚦 ${d.trafficIndex}/100</strong></div>
             <div class="flex justify-between"><span>População Local:</span> <strong class="text-sky-400">👥 ${d.population.toLocaleString()} hab</strong></div>
             <div class="flex justify-between"><span>Custo de Ocupação:</span> <strong class="text-rose-400">-$${d.landRentDaily}/dia</strong></div>
-            ${depositName ? `<div class="flex justify-between text-emerald-400 font-bold"><span>Depósito Natural:</span> <span>⛏️ ${depositName}</span></div>` : ''}
+            ${depositName ? `<div class="flex justify-between text-emerald-400 font-bold"><span>Depósito Natural:</span> <span>${hasTimber ? '🪵' : '⛏️'} ${depositName}</span></div>` : ''}
           </div>
 
-          <div class="text-[11px] font-bold text-slate-300">Escolha o empreendimento para inaugurar:</div>
-
-          <div class="grid grid-cols-1 gap-2">
-            <button onclick="openStoreModal(worldGrid[${tile.x}][${tile.y}])" class="bg-emerald-950/70 hover:bg-emerald-900/90 border border-emerald-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-slate-900 border border-emerald-700/60 p-0.5 flex items-center justify-center shrink-0">
-                  <img src="assets/lojas/supermarket.png" class="w-full h-full object-contain" onerror="this.outerHTML='🏪'">
-                </div>
-                <div>
-                  <div class="font-bold text-emerald-300 flex items-center gap-1 text-xs">Inaugurar Estabelecimento Comercial</div>
-                  <div class="text-[10px] text-slate-400">Venda no varejo (alimentos, eletrônicos, vestuário, conveniência...)</div>
-                </div>
+          ${hasResource ? `
+            <div class="space-y-2">
+              <div class="text-[11px] font-bold text-amber-300 flex items-center gap-1.5">
+                <span>⚡</span> <span>Vocação Natural do Terreno:</span>
               </div>
-              <span class="text-emerald-400 group-hover:translate-x-1 transition font-bold shrink-0 ml-1">➔</span>
-            </button>
-
-            <button onclick="openFactoryModal(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-950/70 hover:bg-orange-900/90 border border-orange-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-slate-900 border border-orange-700/60 p-0.5 flex items-center justify-center shrink-0">
-                  <img src="assets/empresas/factory_default.png" class="w-full h-full object-contain" onerror="this.outerHTML='🏭'">
+              ${naturalResourceCard}
+              
+              <details class="group mt-2">
+                <summary class="cursor-pointer text-[10px] text-slate-400 hover:text-slate-200 font-bold py-1.5 px-2.5 bg-slate-900/80 rounded-lg border border-slate-800 flex items-center justify-between select-none transition">
+                  <span class="flex items-center gap-1.5"><span>⚙️</span> Outras opções de zoneamento (desmate / empreendimentos)</span>
+                  <span class="group-open:rotate-90 transition text-xs">▸</span>
+                </summary>
+                <div class="pt-2">
+                  ${standardActionsHtml}
                 </div>
-                <div>
-                  <div class="font-bold text-orange-300 flex items-center gap-1 text-xs">Construir Parque Fabril</div>
-                  <div class="text-[10px] text-slate-400">Transformação de insumos em produtos acabados de alto valor</div>
-                </div>
-              </div>
-              <span class="text-orange-400 group-hover:translate-x-1 transition font-bold shrink-0 ml-1">➔</span>
-            </button>
-
-            <button onclick="openFarmModal(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-950/70 hover:bg-amber-900/90 border border-amber-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-slate-900 border border-amber-700/60 p-0.5 flex items-center justify-center shrink-0">
-                  <img src="assets/agro/farm_default.png" class="w-full h-full object-contain" onerror="this.outerHTML='🌾'">
-                </div>
-                <div>
-                  <div class="font-bold text-amber-300 flex items-center gap-1 text-xs">Iniciar Fazenda / Agropecuária</div>
-                  <div class="text-[10px] text-slate-400">Cultivo de grãos, café, algodão, cana e criação de gado</div>
-                </div>
-              </div>
-              <span class="text-amber-400 group-hover:translate-x-1 transition font-bold shrink-0 ml-1">➔</span>
-            </button>
-
-            <button onclick="confirmBuildRDCenter(${tile.x}, ${tile.y})" class="bg-purple-950/70 hover:bg-purple-900/90 border border-purple-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-slate-900 border border-purple-700/60 p-0.5 flex items-center justify-center shrink-0 text-base">
-                  🔬
-                </div>
-                <div>
-                  <div class="font-bold text-purple-300 flex items-center gap-1 text-xs">Construir Centro de P&D (Laboratório)</div>
-                  <div class="text-[10px] text-slate-400">Pesquisa e desenvolvimento tecnológico para superar a qualidade do mercado</div>
-                </div>
-              </div>
-              <span class="text-purple-400 group-hover:translate-x-1 transition font-bold shrink-0 ml-1">➔</span>
-            </button>
-
-            ${hasMineDeposit ? `
-            <button onclick="openMineModal(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-950/70 hover:bg-sky-900/90 border border-sky-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-slate-900 border border-sky-700/60 p-0.5 flex items-center justify-center shrink-0">
-                  <img src="assets/minas/mine_iron.png" class="w-full h-full object-contain" onerror="this.outerHTML='⛏️'">
-                </div>
-                <div>
-                  <div class="font-bold text-sky-300 flex items-center gap-1 text-xs">Instalar Mina de Extração (${depositName})</div>
-                  <div class="text-[10px] text-slate-400">Extração contínua de matérias-primas minerais pesadas</div>
-                </div>
-              </div>
-              <span class="text-sky-400 group-hover:translate-x-1 transition font-bold shrink-0 ml-1">➔</span>
-            </button>
-            ` : ''}
-          </div>
+              </details>
+            </div>
+          ` : `
+            <div class="text-[11px] font-bold text-slate-300">Escolha o empreendimento para inaugurar:</div>
+            ${standardActionsHtml}
+          `}
         </div>
       `;
       const win = document.getElementById('floating-facility-window');
@@ -4627,29 +4724,41 @@
 
     function renderMinePanel(tile) {
       const m = tile.mine;
+      const isTimber = m.resourceId === 'timber' || (m.mineTypeId && m.mineTypeId.includes('timber'));
       const iconEl = document.getElementById('facility-icon');
-      const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getMineSpriteKey) ? SpriteManager.getMineSpriteKey(m.mineTypeId) : 'minas/mine_iron';
-      if (iconEl) iconEl.innerHTML = `<img src="assets/${spriteKey}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='⛏️'">`;
-      document.getElementById('facility-title').textContent = m.name;
-      document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Instalação Extrativista de Recursos`;
+      const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getMineSpriteKey) ? SpriteManager.getMineSpriteKey(m.mineTypeId || (isTimber ? 'mine_timber' : 'mine_iron')) : (isTimber ? 'minas/mine_timber' : 'minas/mine_iron');
+      const defaultIcon = isTimber ? '🪵' : '⛏️';
+      if (iconEl) iconEl.innerHTML = `<img src="assets/${spriteKey}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='${defaultIcon}'">`;
+      document.getElementById('facility-title').textContent = isTimber ? '🪵 Serraria & Silvicultura Florestal' : m.name;
+      document.getElementById('facility-subtitle').textContent = isTimber 
+        ? `${tile.district.name} · Unidade de Manejo & Extração Florestal`
+        : `${tile.district.name} · Instalação Extrativista de Recursos`;
       const badge = document.getElementById('facility-rent-badge');
-      const totalMineDaily = tile.district.landRentDaily + 180;
-      badge.textContent = `-$${totalMineDaily}/dia (Solo $${tile.district.landRentDaily} + Extração $180)`;
+      const mineDailyOpex = isTimber ? 140 : 180;
+      const totalMineDaily = tile.district.landRentDaily + mineDailyOpex;
+      badge.textContent = `-$${totalMineDaily}/dia (Solo $${tile.district.landRentDaily} + ${isTimber ? 'Manejo $140' : 'Extração $180'})`;
       badge.classList.remove('hidden');
 
+      const borderClass = isTimber ? 'border-amber-800' : 'border-sky-800';
+      const textClass = isTimber ? 'text-amber-300' : 'text-sky-300';
+      const storageLabel = isTimber ? 'Pátio de Toras / Madeira' : 'Armazém de Minério';
+      const tipText = isTimber
+        ? '💡 Fornece toras brutas para serrarias de chapas estruturais (lumber), indústrias de papel/celulose e marcenarias de móveis nobres.'
+        : '💡 Fornece matérias-primas pesadas diretamente para usinas siderúrgicas, refinarias e indústrias petroquímicas.';
+
       document.getElementById('facility-content-panel').innerHTML = `
-        <div class="bg-slate-950 p-4 rounded-xl border border-sky-800 space-y-3 font-mono text-xs">
+        <div class="bg-slate-950 p-4 rounded-xl border ${borderClass} space-y-3 font-mono text-xs">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-sky-300 text-sm">${m.resourceName}</span>
+            <span class="font-bold ${textClass} text-sm">${isTimber ? '🪵 ' : ''}${m.resourceName}</span>
             <span class="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded border border-cyan-800">QR: ${m.quality}/100</span>
           </div>
           <div class="space-y-1 text-slate-300 text-[11px]">
             <div>Extração Diária: <strong class="text-emerald-400">${m.dailyYield} un/dia</strong></div>
             <div>Custo Unitário de Extração: <strong class="text-rose-400">$${m.unitCost.toFixed(2)}/un</strong></div>
-            <div>Armazém de Minério: <strong class="text-slate-100">${m.stock} / ${m.maxCapacity} un</strong></div>
+            <div>${storageLabel}: <strong class="text-slate-100">${m.stock} / ${m.maxCapacity} un</strong></div>
           </div>
           <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-[10px] text-slate-400">
-            💡 Fornece matérias-primas pesadas diretamente para usinas siderúrgicas, refinarias e indústrias petroquímicas.
+            ${tipText}
           </div>
         </div>
       `;
@@ -5016,9 +5125,11 @@
       if (!m || cash < m.cost) return;
 
       cash -= m.cost;
+      const isTimber = m.resourceId === 'timber' || m.id === 'mine_timber';
       pendingTile.mine = {
         id: `mine_${pendingTile.x}_${pendingTile.y}`,
-        name: `${m.emoji} ${m.name}`,
+        mineTypeId: m.id,
+        name: isTimber ? `🪵 Serraria & Silvicultura` : `${m.emoji} ${m.name}`,
         resourceId: m.resourceId,
         resourceName: m.resourceName,
         quality: m.quality,
@@ -5030,7 +5141,9 @@
       pendingTile.buildingHeight = 18;
       _indexTile(pendingTile);
 
-      addLog(`⛏️ ${m.name} inaugurada por $${m.cost.toLocaleString()}!`, 'text-sky-400 font-bold');
+      const logEmoji = isTimber ? '🪵' : '⛏️';
+      const logName = isTimber ? 'Serraria & Silvicultura Florestal' : m.name;
+      addLog(`${logEmoji} ${logName} inaugurada por $${m.cost.toLocaleString()}!`, isTimber ? 'text-amber-400 font-bold' : 'text-sky-400 font-bold');
       if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
       closeMineModal();
       activeManagedTile = pendingTile;
@@ -5038,6 +5151,11 @@
       renderTileInspector(pendingTile);
       scheduleRender();
       updateUI();
+    }
+
+    function confirmBuildMineDirect(x, y, mineId) {
+      pendingTile = worldGrid[x][y];
+      confirmBuildMine(mineId);
     }
 
     function closeMineModal() {
