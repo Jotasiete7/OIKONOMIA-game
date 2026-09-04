@@ -1,6 +1,6 @@
-﻿/**
+/**
  * save_system.js — Sistema de Persistência, Versionamento e Migração de Saves
- * OIKONOMIA v0.8.3
+ * OIKONOMIA v0.8.4
  */
 
 import { AVATAR_CATALOG, COLOR_PALETTES, DIFFICULTY_PRESETS } from './game_config.js';
@@ -10,7 +10,7 @@ export const GAME_VERSION_INFO = {
   major: 0,
   minor: 8,
   patch: 4,
-  build: '20260902.01',
+  build: '20260904.01',
   saveSchema: '0.8.2',
   get version() { return `${this.major}.${this.minor}.${this.patch}`; },
   get fullString() { return `v${this.version} (bld.${this.build})`; }

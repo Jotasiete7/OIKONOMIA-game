@@ -1,6 +1,6 @@
-﻿/**
- * logo_generator.js — Sistema Procedural de Identicons & Brasões Corporativos
- * OIKONOMIA v0.8.3
+/**
+ * logo_generator.js — Gerador Procedural Determinístico de Logotipos & Identicons
+ * OIKONOMIA v0.8.4
  */
 
 export function hashStringToSeed(str) {

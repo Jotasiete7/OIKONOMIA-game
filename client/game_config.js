@@ -1,6 +1,6 @@
-﻿/**
+/**
  * game_config.js — Catálogos de Configuração Estática & UI
- * OIKONOMIA v0.8.3
+ * OIKONOMIA v0.8.4
  */
 
 // Catálogo dos 24 Avatares Oficiais (6 Executivos, 6 Especialistas Industriais, 6 Animais de Mercado, 6 Robôs & IA)

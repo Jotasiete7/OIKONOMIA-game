@@ -2,8 +2,8 @@
 
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
-> **Última Atualização:** 31 de Agosto de 2026  
-> **Versão Oficial Corrente:** `v0.8.3 (bld.20260831.02)`  
+> **Última Atualização:** 04 de Setembro de 2026  
+> **Versão Oficial Corrente:** `v0.8.4 (bld.20260904.01)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -15,25 +15,91 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 - **MAJOR (v1.0.0, v2.0.0)**: Marcos definitivos de lançamento comercial / saída de Beta.
 - **MINOR (v0.7.x -> v0.8.0 -> v0.9.0)**: Grandes módulos ou mecânicas novas (ex: P&D, QG Corporativo, frotas visuais).
-- **PATCH (v0.8.1 -> v0.8.2 -> v0.8.3)**: Pacotes de usabilidade, balanceamento, sprites, tutorial, IA e refinamentos de UI.
+- **PATCH (v0.8.3 -> v0.8.4)**: Pacotes de usabilidade, modularização, áudio, balanceamento e refinamentos de UI.
 - **BUILD STAMP (`bld.YYYYMMDD.XX`)**: Carimbo diário com a data e o número da entrega daquele dia.
 - **SAVE SCHEMA (`0.8.2`)**: Controla a compatibilidade dos saves `.oiko` e do `localStorage`.
 
 ---
 
-## 🧭 Agenda de Desenvolvimento (Ideias & Backlog em Standby)
+## 🧭 Agenda de Desenvolvimento (Próximos Passos & Backlog Priorizado)
 
-- [ ] **Fase 3 Causalidade — Botão "Por quê?" & DRE Drill-Down**: Decomposição em árvore dos fatores de preço, atratividade e custos.
-- [ ] **Fase 4 Narrativa — Diário Econômico Procedural**: Manchetes de jornal geradas dinamicamente pelo TimeSeriesBuffer.
-- [ ] **QG Corporativo & Diretoria Executiva (v0.9.0)**: Sede global única com contratação de executivos (CEO, COO, CMO, CTO, CFO) com bônus setoriais de margem e pesquisa.
-- [ ] **IA Concorrente com P&D Dinâmico**: Concorrentes evoluindo tecnologia mensalmente, solicitando patentes exclusivas e reagindo ao avanço do jogador.
+- [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
+- [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
+- [ ] **Fase 5 Mercado Financeiro, Ações & M&A**: Ações corporativas, IPO, distribuição de dividendos, participações cruzadas e aquisições hostis (*Hostile Takeovers*).
+- [ ] **QG Corporativo & Diretoria Executiva**: Sede global única com contratação de executivos (CEO, COO, CMO, CTO, CFO) provendo bônus setoriais de margem e pesquisa.
 - [ ] **Módulo de Logística Visual**: Frotas de caminhões e navios com animação isométrica navegando pelas rodovias e rotas marítimas entre portos e cidades.
-- [ ] **Bolsa de Valores & Empréstimos Bancários**: Sistema financeiro para emissão de debêntures, IPO corporativo, empréstimos e recompra de ações.
-- [ ] **Polimento Gráfico & Efeitos Isométricos**: Sombras dinâmicas calculadas por altura de edifício e transições de iluminação.
+- [ ] **Fase 6 Dinâmica Macroeconômica & Clima**: Geadas, secas e safras recordes impactando o rendimento agropecuário; greves portuárias e flutuação de frete internacional.
 
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 12: A Grande Modularização da Engine (Vite 8, ES Modules, Tailwind CSS v4 Local Offline & Dev Server com HMR)
+- **Data:** 04/09/2026 — 11:00
+- **Versão Oficial:** `v0.8.4 (bld.20260904.01)` | **Save Schema:** `v0.8.2`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão (Fases 1 a 5 da Modularização):
+1. **Fase 1 — Infraestrutura Vite 8 & Tailwind CSS v4 Local:**
+   - Configuração do `vite.config.mjs` com `@tailwindcss/vite` e bundler Rollup gerando saída em formato IIFE autônomo (`inlineDynamicImports: true`).
+   - Garantia de suporte universal duplo: execução direta pelo protocolo `file:///` para jogadores offline e dev server HTTP com HMR para desenvolvimento.
+2. **Fase 2 — Modularização dos Dados Estáticos (`map_data.js` & `data_catalogs.js`):**
+   - Extração de matrizes do mapa continental 128×128 (`MAP_WIDTH`, `MAP_HEIGHT`, `MAP_DATA`) e catálogos econômicos (`PRODUCT_CATALOG`, `RECIPES`, `STORE_TYPES`, `MEDIA_CHANNELS`, `RD_CATEGORIES`).
+   - Exportações nativas ESM com retrocompatibilidade global em `window.*` para evitar quebras em scripts dependentes.
+3. **Fase 3 — Modularização dos Subsistemas Procedurais (`sprite_manager.js` & `audio.js`):**
+   - Conversão de `SpriteManager` e `SoundSystem` para classes/módulos ES Module com instâncias únicas (Singletons).
+   - Auto-inicialização assíncrona tolerante a erros de carregamento e gestão centralizada de memória sonora.
+4. **Fase 4A — Extração de Utilitários e Catálogos de UI (`logo_generator.js` & `game_config.js`):**
+   - `logo_generator.js`: Funções puras de hashing determinístico (`hashStringToSeed`, `generateCompanyLogo`) para brasões e identicons corporativos em SVG.
+   - `game_config.js`: Catálogos dos 24 avatares oficiais (`AVATAR_CATALOG`), predefinições de dificuldade (`DIFFICULTY_PRESETS`), paletas de cores (`COLOR_PALETTES`) e dicas econômicas.
+5. **Fase 4B — Centralização do Estado Global & Persistência (`game_state.js` & `save_system.js`):**
+   - `game_state.js`: Container `createInitialGameState()` atuando como Single Source of Truth do estado do jogo.
+   - `save_system.js`: Pipeline de serialização e migração retroativa de saves (.oiko e localStorage), isolando `GAME_VERSION_INFO`, `migrateSaveData`, `getSavesIndex` e `saveSavesIndex`.
+6. **Fase 5 & Integração — Desacoplamento de CDN & Novo Workflow de Execução:**
+   - Criação de `client/style.css` com `@import "tailwindcss";`, compilando todas as classes utilitárias localmente sem depender do CDN do Tailwind.
+   - Criação do script `JOGAR_DEV.bat` para iniciar o Vite Dev Server com recarregamento instantâneo em `http://localhost:5173/`.
+   - Consolidação do `JOGAR.bat` apontando para o bundle autônomo compilado em `dist/index.html`.
+   - Sincronização de boot do client via evento de ciclo de vida `oiko:ready` e tratamento de TDZ (Temporal Dead Zone) para `GAME_VERSION_INFO`.
+7. **Validação & Testes E2E Automatizados:**
+   - Suite automatizada via Chromium/Edge CDP headless testando os 6 pilares fundamentais da engine:
+     1. Carregamento do canvas 128×128 e motor isométrico.
+     2. Validação da cadeia produtiva e árvore de 77 receitas industriais.
+     3. Inicialização e controle do subsistema de áudio (OikoFM).
+     4. Janelas flutuantes arrastáveis e responsividade de modais.
+     5. Pipeline de persistência, salvamento e migração de saves.
+     6. Navegação de câmera WASD, zoom e minimapa radar.
+   - 100% de aprovação em ambos os ambientes (`localhost:5173` e `dist/index.html`).
+
+---
+
+### 📅 Sessão 11: Sistema de Áudio Completo, Micro Rádio HUD, Síntese WAV e Otimização do Top HUD
+- **Data:** 02/09/2026 — 20:30
+- **Versão Oficial:** `v0.8.4 (bld.20260902.01)` | **Save Schema:** `v0.8.2`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Objetivos & Entregas Realizadas:
+1. **Micro Rádio OikoFM no HUD Permanente (`#bottom-telemetry-bar`):**
+   - Implementado widget interativo de rádio com botões `⏮ Volta`, `⏯ Tocar/Pausar`, `⏭ Pula`, `🔁/🔂 Loop de Faixa / Playlist Contínua` e `🔊/🔇 Mute Rápido`.
+   - Display LCD com nome da faixa ativa e status de áudio.
+2. **Controles de Volume Integrados no Menu de Pausa (ESC):**
+   - Sliders diretos de Volume Geral (Master), Música (BGM), Ambiente (Cidade) e Efeitos Sonoros (SFX) integrados no `#pause-menu-modal` com sincronização reativa e persistência imediata em `localStorage`.
+3. **Catálogo Oficial & Gestão de Memória de Áudio:**
+   - Criado `docs/CATALOGO_DE_AUDIO.md` documentando 22 ativos de áudio.
+   - Organizadas pastas em `client/assets/audio/` (BGM 1 a 7, Ambiente, SFX UI, Economia, Obras e Eventos).
+   - Otimizado carregamento: priorizados arquivos `.mp3` para as faixas mais longas de BGM para evitar carregar arquivos `.wav` de 123MB/22MB na memória do navegador.
+4. **Síntese de Efeitos Sonoros Nativos via PowerShell (.NET):**
+   - Desenvolvido `tools/generate_sfx.ps1` utilizando síntese PCM direta em 16-bit 44.1kHz.
+   - Gerados 8 arquivos WAV nativos reais: abertura de modais (`modal_open.wav`), carimbo contratual (`stamp_contract.wav`), tilintar de moedas (`coin_clink.wav`), crédito bancário (`loan_payout.wav`), demolição (`demolish.wav`), upgrade (`upgrade.wav`), alerta de perigo (`warning_alert.wav`) e notícia urgente (`news_flash.wav`).
+5. **Otimização da Barra Superior (Top HUD) & Correção de Corte:**
+   - Diagnosticado e corrigido o estouro horizontal que empurrava o botão **⚙️ Menu** e **⋯ Mais** para fora da viewport em telas < 1650px.
+   - Removidos botões redundantes de zoom `- / Centro / +` do topo (zoom mantido via scroll do mouse, teclado Q/E e minimap).
+   - Compactado o relógio para `04/09 · Ano 7` e o trimestre para `☀️ Q3 · Saturação` com tooltips ricos.
+   - Adicionada classe prioritária `shrink-0` no botão **⚙️ Menu**.
+6. **Silenciamento das Transições Mensais:**
+   - Silenciado o auto-save mensal para evitar `playSuccessChime()` repetitivo a cada 30 dias.
+   - Adicionado parâmetro `isSilent` em `saveGame()` mantendo o fluxo contínuo.
 
 ---
 
@@ -138,69 +204,69 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 ---
 
-### 📅 Sessão 06: Módulo Estratégico de P&D (Pesquisa & Desenvolvimento), Construção Física no Mapa, Mercado de Patentes & Zoom no Cursor
+#### 📅 Sessão 06: Módulo Estratégico de P&D (Pesquisa & Desenvolvimento), Construção Física no Mapa, Mercado de Patentes & Zoom no Cursor
 - **Data:** 28/08/2026 — 07:45
 - **Versão Oficial:** `v0.8.0 (bld.20260828.02)` | **Save Schema:** `v0.8.0`
 
-#### ðŸ› ï¸ O Que Foi Implementado:
-1. **Motor MatemÃ¡tico de P&D (`core_math.js`)**:
+#### 🛠️ O Que Foi Implementado:
+1. **Motor Matemático de P&D (`core_math.js`)**:
    - `CoreMath.calculateRDMonthlyCost(currentQR, categoryBaseCost)`: Custo mensal exponencial $C = C_{base} \times e^{2.5 \cdot (QR/100)}$.
-   - `CoreMath.calculateRDQualityGain(currentQR, targetQR, monthlyBudget, baseMonthlyRequired)`: Ganho de QR com aceleraÃ§Ã£o de verba (atÃ© 2.5x) e atenuaÃ§Ã£o por rendimentos decrescentes $(1 - QR/120)$.
-   - `CoreMath.propagateQualityToShelf(shelfQR, factoryQR, soldToday, shelfCapacity)`: PropagaÃ§Ã£o gradual do QR da fÃ¡brica para a gÃ´ndola conforme o estoque antigo Ã© consumido e reposto.
-2. **CatÃ¡logos & Estruturas de Dados (`data_catalogs.js`)**:
-   - Adicionado catÃ¡logo `RD_CATEGORIES` com custos base e Ã­cones para 11 categorias de produtos.
-   - Auto-populaÃ§Ã£o de `rdBaseCost` em todos os produtos do `PRODUCT_CATALOG`.
-3. **Estado Global & PersistÃªncia (`index.html`)**:
+   - `CoreMath.calculateRDQualityGain(currentQR, targetQR, monthlyBudget, baseMonthlyRequired)`: Ganho de QR com aceleração de verba (até 2.5x) e atenuação por rendimentos decrescentes $(1 - QR/120)$.
+   - `CoreMath.propagateQualityToShelf(shelfQR, factoryQR, soldToday, shelfCapacity)`: Propagação gradual do QR da fábrica para a gôndola conforme o estoque antigo é consumido e reposto.
+2. **Catálogos & Estruturas de Dados (`data_catalogs.js`)**:
+   - Adicionado catálogo `RD_CATEGORIES` com custos base e ícones para 11 categorias de produtos.
+   - Auto-população de `rdBaseCost` em todos os produtos do `PRODUCT_CATALOG`.
+3. **Estado Global & Persistência (`index.html`)**:
    - Adicionado `rdLabs: {}` ao `GameState` e alias global.
-   - SanitizaÃ§Ã£o e migraÃ§Ã£o retroativa em `migrateSaveData` e persistÃªncia total em `serializeCurrentGame` / `loadGameFromData`.
+   - Sanitização e migração retroativa em `migrateSaveData` e persistência total em `serializeCurrentGame` / `loadGameFromData`.
 4. **Interface do Centro de P&D & Mercado de Patentes**:
-   - `#rd-center-modal`: Janela arrastÃ¡vel com barra de orÃ§amento mensal, status em tempo real e alternÃ¢ncia entre abas de Projetos Ativos e Mercado de Patentes.
-   - `#rd-new-project-modal`: Wizard com seleÃ§Ã£o de qualquer produto do catÃ¡logo, slider de QR alvo (60-100), input de verba mensal e estimativa de ETA/Custo Total em tempo real.
-   - `buyCompetitorTech`: AquisiÃ§Ã£o direta de patentes de concorrentes com atualizaÃ§Ã£o imediata de linhas de produÃ§Ã£o.
-5. **IntegraÃ§Ã£o com o Loop de SimulaÃ§Ã£o & HUD**:
+   - `#rd-center-modal`: Janela arrastável com barra de orçamento mensal, status em tempo real e alternância entre abas de Projetos Ativos e Mercado de Patentes.
+   - `#rd-new-project-modal`: Wizard com seleção de qualquer produto do catálogo, slider de QR alvo (60-100), input de verba mensal e estimativa de ETA/Custo Total em tempo real.
+   - `buyCompetitorTech`: Aquisição direta de patentes de concorrentes com atualização imediata de linhas de produção.
+5. **Integração com o Loop de Simulação & HUD**:
    - `propagateQualityRD()` executado diariamente dentro de `simulateDay()`.
    - `processRDProgress()` executado na virada mensal dentro de `closeMonthEnd()`.
-   - BotÃ£o `ðŸ”¬ P&D` com badge no Top HUD e chip na barra de telemetria.
-   - Indicadores de P&D nos cards de linhas de montagem das fÃ¡bricas e prateleiras das lojas.
+   - Botão `🔬 P&D` com badge no Top HUD e chip na barra de telemetria.
+   - Indicadores de P&D nos cards de linhas de montagem das fábricas e prateleiras das lojas.
 6. **Zoom Ancorado no Cursor**:
-   - `changeZoom` recalculando `camera.panX/panY` com pivÃ´ sob o ponteiro do mouse.
+   - `changeZoom` recalculando `camera.panX/panY` com pivô sob o ponteiro do mouse.
 
 ---
 
-### ðŸ“… SessÃ£o 05: Sistema Universal de Janelas ArrastÃ¡veis, HUD Multi-ResoluÃ§Ã£o & GestÃ£o ImobiliÃ¡ria
-- **Data:** 27/08/2026 â€” 19:20
-- **VersÃ£o Oficial:** `v0.7.4 (bld.20260827.07)` | **Save Schema:** `v0.7.2`
-- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant) *(InovaÃ§Ã£o de janelas mÃ³veis originada por Kaligola)*
+### 📅 Sessão 05: Sistema Universal de Janelas Arrastáveis, HUD Multi-Resolução & Gestão Imobiliária
+- **Data:** 27/08/2026 — 19:20
+- **Versão Oficial:** `v0.7.4 (bld.20260827.07)` | **Save Schema:** `v0.7.2`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant) *(Inovação de janelas móveis originada por Kaligola)*
 
-#### ðŸŽ¯ Objetivos:
-- Assimilar a funcionalidade de janelas arrastÃ¡veis trazida pelo Kaligola, modernizando-a e integrando-a com foco dinÃ¢mico.
-- Integrar a interface de **Venda e DemoliÃ§Ã£o de InstalaÃ§Ãµes** no rodapÃ© dos painÃ©is de gestÃ£o e telemetria rÃ¡pida.
+#### 🎯 Objetivos:
+- Assimilar a funcionalidade de janelas arrastáveis trazida pelo Kaligola, modernizando-a e integrando-a com foco dinâmico.
+- Integrar a interface de **Venda e Demolição de Instalações** no rodapé dos painéis de gestão e telemetria rápida.
 - Eliminar o erro vermelho do console (`Uncaught ReferenceError: pill is not defined`).
 - Corrigir o problema de layout onde o topo colidia em laptops (1366x768 / 1280x720 / 125% DPI).
-- Restabelecer o menu de construÃ§Ã£o interativo ao clicar em terrenos livres e atalhos rÃ¡pidos na telemetria.
+- Restabelecer o menu de construção interativo ao clicar em terrenos livres e atalhos rápidos na telemetria.
 - Eliminar a duplicidade de minimapas sobrepostos.
 - Estabelecer a regra oficial de versionamento `GAME_VERSION_INFO` SemVer 2.0 + Build Stamp.
 
 ---
 
-### ðŸ“… SessÃ£o 04: Motor de Ãudio Web Audio API SintÃ©tico
+### 📅 Sessão 04: Motor de Áudio Web Audio API Sintético
 - **Data:** 27/08/2026
-- **VersÃ£o:** `v0.7.3 (bld.20260827.04)`
+- **Versão:** `v0.7.3 (bld.20260827.04)`
 
 ---
 
-### ðŸ“… SessÃ£o 03: Sparse Indexing O(k) & OtimizaÃ§Ã£o de Performance
+### 📅 Sessão 03: Sparse Indexing O(k) & Otimização de Performance
 - **Data:** 27/08/2026
-- **VersÃ£o:** `v0.7.2 (bld.20260827.03)`
+- **Versão:** `v0.7.2 (bld.20260827.03)`
 
 ---
 
-### ðŸ“… SessÃ£o 02: Pipeline de Saves e MigraÃ§Ãµes Retroativas
+### 📅 Sessão 02: Pipeline de Saves e Migrações Retroativas
 - **Data:** 27/08/2026
-- **VersÃ£o:** `v0.7.1 (bld.20260827.02)`
+- **Versão:** `v0.7.1 (bld.20260827.02)`
 
 ---
 
-### ðŸ“… SessÃ£o 01: RefatoraÃ§Ã£o da Arquitetura EconÃ´mica & Cadeias Produtivas
+### 📅 Sessão 01: Refatoração da Arquitetura Econômica & Cadeias Produtivas
 - **Data:** 27/08/2026
-- **VersÃ£o:** `v0.7.0 (bld.20260827.01)`
+- **Versão:** `v0.7.0 (bld.20260827.01)`

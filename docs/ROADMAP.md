@@ -1,7 +1,7 @@
 # 🗺️ Roadmap de Desenvolvimento — OIKONOMIA
 
-**Versão Atual**: `v0.8.4 (Build 20260902.01)`  
-**Status da Infraestrutura**: 100% Validada com Subsistema de Áudio (Micro Rádio OikoFM, BGM 1-7, 14 SFX, Síntese PCM WAV e Top HUD Otimizado).
+**Versão Atual**: `v0.8.4 (Build 20260904.01)`  
+**Status da Infraestrutura**: 100% Validada com Arquitetura Vite + ES Modules, Tailwind CSS v4 Local Offline, Micro Rádio OikoFM e Suíte E2E Headless.
 
 ---
 
@@ -14,6 +14,7 @@
 | **Fase 2.5** | **Diagnóstico Econômico, Séries Temporais & Causalidade** | `TimeSeriesBuffer` de 24 meses, Analista Corporativo com diagnóstico de variância, Gráficos históricos Sparklines na DRE, Lente de Oportunidade (`🎯`), Simulador "E se?", métricas de cobertura em dias e payback em wizards. | ✅ **Concluída** |
 | **Fase 3** | **Macro-Mundo 128×128 & Interface Capitalism Lab** | Mapa continental isométrico 128×128 com 4 metrópoles (Nova Atenas, Porto Real, Montargis, Várzea), portos mercantes, janelas flutuantes com arrasto, minimapa radar, câmera WASD e zoom suave. | ✅ **Concluída** |
 | **Fase 3.5** | **Balanceamento de Nicho & Enciclopédia In-Game** | Payback corrigido para todos os 9 formatos comerciais (4 a 18 meses) via Licenças de Nicho. Enciclopédia Corporativa in-game (`F1` e botões `📖 Wiki`) com 7 abas funcionais e calculadora industrial de insumos. | ✅ **Concluída** |
+| **Modernização Técnica** | **Vite, ES Modules & Tailwind v4 Offline** | Transição completa para ES Modules (`main.js`, `game_state.js`, `save_system.js`, etc.), bundler Vite 8 com IIFE autônomo (`file:///`), Tailwind CSS v4 local offline, `JOGAR_DEV.bat` (HMR) e `JOGAR.bat`. | ✅ **Concluída (v0.8.4)** |
 | **Fase 4** | **Contratos Públicos, Editais & Sistema Bancário** | Editais governamentais de suprimento municipal (merenda escolar, obras públicas, frota municipal). Linhas de crédito bancário com taxas de juros mensais, debêntures e dívida de longo prazo. | ⏳ **Planejada (Próxima)** |
 | **Fase 5** | **Mercado Financeiro, Bolsa de Valores & M&A** | Ações corporativas, IPO do jogador e de rivais, dividendos trimestrais, participações cruzadas, aquisições hostis de concorrentes (*Hostile Takeovers*) e holdings empresariais. | ⏳ **Planejada** |
 | **Fase 6** | **Dinâmica Macroeconômica, Clima & Sazonalidade** | Geadas, secas e safras recordes impactando rendimento agropecuário; greves portuárias e flutuação de frete internacional; picos sazonais de consumo (Black Friday, Natal, Festivais). | ⏳ **Planejada** |
@@ -35,6 +36,9 @@
 ---
 
 ## 🛡️ Ferramental de Confiabilidade & Auditoria Contínua
+- `npm run dev` (`JOGAR_DEV.bat`): Servidor de desenvolvimento Vite com Hot Module Replacement (HMR) e live reload instantâneo na porta 5173.
+- `npm run build` (`JOGAR.bat`): Gera a distribuição de produção na pasta `dist/` compatível com execução 100% offline via duplo clique.
+- `npm run preview`: Inicia servidor local para validação fiel do bundle de produção gerado.
 - `npm run audit-browser`: Executa o Microsoft Edge headless via DevTools Protocol testando os modais, a whitelist de produtos, a árvore de tecnologia, o licenciamento de nicho e a enciclopédia interativa.
 - `npm run audit-deep`: Executa 365 ticks de simulação contínua com verificação de DRE, tráfego intermunicipal, campanhas de mídia, IA de concorrência com guerra de preços e integridade de Save/Load.
 - `npm run audit-graph`: Valida matematicamente a árvore de 77 receitas industriais, garantindo ausência de nós órfãos ou loops recursivos.

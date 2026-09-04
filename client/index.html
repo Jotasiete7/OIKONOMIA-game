@@ -4,7 +4,7 @@
   <script type="module" src="./main.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.8.3)</title>
+  <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.8.4)</title>
   <style>
     canvas { image-rendering: auto; }
     .custom-scrollbar::-webkit-scrollbar { width: 5px; }
@@ -272,7 +272,7 @@
         🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
       </button>
       <span id="telemetry-version-badge" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-bold text-[9px]" title="Versão Oficial do Jogo & Build">
-        🏛️ OIKONOMIA <span class="text-emerald-400">v0.8.3</span> <span class="text-slate-500 text-[8px]">bld.20260831.02</span>
+        🏛️ OIKONOMIA <span class="text-emerald-400">v0.8.4</span> <span class="text-slate-500 text-[8px]">bld.20260904.01</span>
       </span>
     </div>
   </footer>
@@ -843,7 +843,7 @@
       </div>
       <div class="p-4">
         <div id="game-log-floating" class="space-y-1.5 font-mono text-[11px] max-h-96 overflow-y-auto custom-scrollbar pr-1">
-          <div class="text-slate-500">OIKONOMIA v0.8.3 inicializado em modo tela cheia com motor de cadeia produtiva e P&D completos.</div>
+          <div class="text-slate-500">OIKONOMIA v0.8.4 inicializado em modo tela cheia com motor de cadeia produtiva e P&D completos.</div>
         </div>
       </div>
     </div>
@@ -1295,7 +1295,7 @@
     <div class="flex justify-between items-center text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-4">
       <div class="flex items-center gap-2">
         <span class="text-slate-400 font-bold">OIKONOMIA PROJECT © 2026</span>
-        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.8.3 Oficial (bld.20260831.02)</span>
+        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.8.4 Oficial (bld.20260904.01)</span>
       </div>
       <div class="flex gap-4">
         <span>Atalho: <strong>F3</strong> (Dev Dashboard)</span>
@@ -1506,7 +1506,7 @@
       </div>
 
       <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-slate-800 pt-3">
-        <span>OIKONOMIA <strong id="pause-version-tag" class="text-emerald-400">v0.8.3</strong></span>
+        <span>OIKONOMIA <strong id="pause-version-tag" class="text-emerald-400">v0.8.4</strong></span>
         <button onclick="openDevDashboard()" class="text-indigo-400 hover:text-indigo-300 font-bold">🛠️ Dev Dashboard [F3]</button>
       </div>
     </div>
@@ -1695,7 +1695,7 @@
           <div class="w-8 h-8 rounded-xl bg-indigo-950 border border-indigo-700/60 flex items-center justify-center text-sm">🛠️</div>
           <div>
             <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">Painel de Desenvolvimento & Diagnóstico</h3>
-            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.8.3 · Build 20260831.02 (Oficial)</span>
+            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.8.4 · Build 20260904.01 (Oficial)</span>
           </div>
         </div>
         <button onclick="closeDevDashboard()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
@@ -1716,7 +1716,7 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Versão Oficial</span>
-              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.8.3 (bld.20260831.02)</span>
+              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.8.4 (bld.20260904.01)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Schema de Saves</span>
@@ -9770,7 +9770,7 @@
     // (Modularizado em client/save_system.js e exposto em window)
     // ===========================================================================
     var GAME_VERSION_INFO = (typeof window !== 'undefined' && window.GAME_VERSION_INFO) || {
-      major: 0, minor: 8, patch: 4, build: '20260902.01', saveSchema: '0.8.2',
+      major: 0, minor: 8, patch: 4, build: '20260904.01', saveSchema: '0.8.2',
       get version() { return `${this.major}.${this.minor}.${this.patch}`; },
       get fullString() { return `v${this.version} (bld.${this.build})`; }
     };

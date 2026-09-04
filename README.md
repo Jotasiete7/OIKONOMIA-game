@@ -1,12 +1,14 @@
 # 🏛️ OIKONOMIA — Simulador de Estratégia Econômica & Cadeia Produtiva
 
-[![Engine](https://img.shields.io/badge/Engine-HTML5%20Canvas%20Isométrico-emerald.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
+[![Version](https://img.shields.io/badge/Versão-v0.8.4-emerald.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
+[![Engine](https://img.shields.io/badge/Engine-HTML5%20Canvas%20Isométrico-10b981.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
+[![Bundler](https://img.shields.io/badge/Bundler-Vite%208%20%7C%20ES%20Modules-646CFF.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
+[![Styling](https://img.shields.io/badge/CSS-Tailwind%20v4%20Local%20(100%25%20Offline)-38BDF8.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
 [![Map Scale](https://img.shields.io/badge/Escala%20do%20Mundo-128×128%20(16.384%20Tiles)-sky.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
-[![Supply Chain](https://img.shields.io/badge/Cadeia%20Produtiva-63%2B%20Produtos%20%7C%2035%2B%20Receitas-amber.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
-[![Architecture](https://img.shields.io/badge/UI-Tela%20Cheia%20%7C%20HUD%20Capitalism%20Lab-purple.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
+[![Supply Chain](https://img.shields.io/badge/Cadeia%20Produtiva-99%20Produtos%20%7C%2077%20Receitas-amber.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
 [![License: Dual (MIT + Proprietary Assets)](https://img.shields.io/badge/License-Dual%20(MIT%20%2B%20Assets)-blue.svg)](LICENSE.md)
 
-**OIKONOMIA** é um simulador econômico e empresarial profundo inspirado em clássicos como *Capitalism Lab*, *SimCity* e *Industry Giant*. O jogo combina um motor microeconômico de tempo contínuo com um vasto continente isométrico 2.5D de 128×128 blocos, integrando extração mineral, agropecuária, manufatura industrial, logística marítima e 8 redes especializadas de varejo.
+**OIKONOMIA** é um simulador econômico e empresarial profundo inspirado em clássicos como *Capitalism Lab*, *SimCity* e *Industry Giant*. O jogo combina um motor microeconômico de tempo contínuo com um vasto continente isométrico 2.5D de 128×128 blocos, integrando extração mineral, agropecuária, manufatura industrial, logística marítima, P&D com patentes e 8 redes especializadas de varejo.
 
 ---
 
@@ -25,7 +27,9 @@
 
 ### 🖥️ 2. Interface em Tela Cheia & Janelas Flutuantes (Estilo *Capitalism Lab*)
 * **Canvas Edge-to-Edge**: O mapa ocupa 100% da janela do navegador sem barras de rolagem.
-* **HUD Superior & Inferior Translúcido**: Controle fino com relógio contínuo, velocidades (`⏸ Pausa`, `1x`, `2x`, `5x`), saldo de caixa, lucro mensal, atalhos de cidades e lentes de calor (*Terreno, Tráfego, População, Varejo, Portos, Indústria, Mídia*).
+* **HUD Superior & Inferior Translúcido**: Controle fino com relógio contínuo, velocidades (`⏸ Pausa`, `1x`, `2x`, `5x`), saldo de caixa, lucro mensal, atalhos de cidades e lentes de calor (*Terreno, Tráfego, População, Varejo, Portos, Indústria, Mídia, Oportunidade*).
+* **📻 Micro Rádio OikoFM no HUD**: Tocador permanente integrado à barra inferior com 7 faixas dinâmicas de BGM, ambiência urbana e controles de loop/playlist.
+* **🔊 Paisagem Sonora & Síntese Nativa**: Áudio imersivo com efeitos sonoros em WAV nativo (moedas, obras, contratos, alertas), amortecimento de volume e mixagem configurável no menu de pausa (`ESC`).
 * **🪟 Card Flutuante de Gestão**: Ao clicar em qualquer prédio (loja, fábrica, fazenda ou mina), uma janela flutuante elegante abre diretamente no canto direito sobre o mapa, sem rolagem.
 * **📡 Radar Minimapa Interativo**: Renderização dedicada em tempo real com retângulo de visão da câmera e **teletransporte instantâneo por clique**.
 
@@ -124,34 +128,72 @@ graph LR
 
 ## 🚀 Como Executar o Jogo
 
-### 1. Execução Imediata (Windows)
-Basta dar um duplo clique no inicializador:
+O **OIKONOMIA** oferece dois ambientes de execução independentes: um modo 100% offline para jogadores (sem qualquer dependência ou instalação) e um modo interativo para desenvolvedores com compilação em tempo real (HMR).
+
+### 1. Modo Jogador (Execução Imediata / Standalone 100% Offline)
+Não necessita de Node.js, internet ou dependências instaladas. Basta dar um duplo clique:
 ```cmd
 JOGAR.bat
 ```
-*O jogo abrirá diretamente no seu navegador padrão com motor gráfico e mapas carregados.*
+*O jogo abrirá instantaneamente a versão compilada e otimizada (`dist/index.html`) no seu navegador padrão com motor gráfico, texturas, áudio sintetizado e estilos Tailwind v4 processados localmente.*
 
 ---
 
-## 📂 Estrutura Modular do Projeto
+### 2. Modo Desenvolvedor (Vite Dev Server com Live Reload / HMR)
+Para programar, testar mudanças de código em tempo real e debugar:
+1. Certifique-se de ter o [Node.js](https://nodejs.org/) instalado na máquina.
+2. Dê um duplo clique no script:
+```cmd
+JOGAR_DEV.bat
+```
+*(Ou execute manualmente no terminal: `npm run dev`)*
+*O servidor de desenvolvimento do Vite iniciará em `http://localhost:5173/` e abrirá a janela do navegador automaticamente com suporte a Hot Module Replacement (HMR).*
+
+### 🛠️ Scripts de Desenvolvimento (`package.json`)
+```bash
+npm run dev               # Inicia o servidor Vite de desenvolvimento com HMR (porta 5173)
+npm run build             # Compila o bundle IIFE autônomo na pasta dist/ para distribuição offline
+npm run preview           # Pré-visualiza localmente o build da pasta dist/ via HTTP local
+npm run audit-browser     # Executa bateria E2E no Chromium/Edge headless via Chrome DevTools Protocol
+npm run audit-deep        # Executa simulação contínua de 365 ticks validando DRE, IA e Saves
+npm run audit-graph       # Valida matematicamente as 77 receitas industriais e cadeias de insumos
+```
+
+---
+
+## 📂 Arquitetura & Estrutura Modular do Projeto
+
+O código foi inteiramente refatorado e desacoplado em módulos padronizados **ES Modules (ESM)**, estilizado com **Tailwind CSS v4 local** (eliminando dependências externas de CDN) e empacotado pelo **Vite 8**:
 
 ```
 OIKONOMIA/
-├── client/
-│   ├── index.html                 # Cliente completo com motor canvas 2D, HUD e modais
-│   ├── core_math.js               # Motor matemático puro (elasticidade, ratings, P&D e trimestres)
-│   ├── data_catalogs.js           # Catálogos estáticos de produtos, receitas, lojas e mídias
+├── client/                        # Código-fonte da aplicação cliente (ES Modules)
+│   ├── index.html                 # Shell HTML com Canvas 2D, HUD e modais de gestão
+│   ├── main.js                    # Entry point Vite (orquestra imports e expõe compatibilidade global)
+│   ├── style.css                  # Folha de estilos local com Tailwind CSS v4 (@import "tailwindcss";)
+│   ├── game_state.js              # Container reativo do estado global (Single Source of Truth)
+│   ├── save_system.js             # Pipeline de persistência (.oiko/localStorage), schemas e migrações
+│   ├── game_config.js             # Catálogos de configuração (24 avatares, dificuldades, paletas de cor)
+│   ├── logo_generator.js          # Gerador procedural determinístico de brasões corporativos (SVG)
+│   ├── core_math.js               # Motor matemático puro (elasticidade, ratings, P&D e sazonalidade)
+│   ├── data_catalogs.js           # Catálogos estáticos de 99 produtos, 77 receitas, lojas e mídias
+│   ├── map_data.js                # Camadas compiladas TMX e matrizes do continente 128×128
+│   ├── sprite_manager.js          # Gerenciador e cache assíncrono de texturas e sprites isométricos
+│   ├── audio.js                   # Sistema de áudio procedural e sintetizador Web Audio API
 │   ├── ticker_system.js           # Módulo do Diário Corporativo / Ticker superior interativo
 │   ├── macro_cycle_system.js      # Módulo macroeconômico de ciclos decenais de 10 anos
-│   ├── sprite_manager.js          # Gerenciador e cache de texturas e sprites isométricos
-│   ├── audio.js                   # Sistema de efeitos sonoros procedurais (Web Audio API)
-│   └── map_data.js                # Camadas TMX e matrizes compiladas do continente
-├── data/
-│   ├── maps/                      # Mapas isométricos no formato Tiled
+│   └── assets/                    # Texturas, spritesheets e efeitos de áudio WAV/MP3
+├── data/                          # Especificações e dados estáticos de suporte
+│   ├── maps/                      # Mapas isométricos no formato Tiled (.tmx)
 │   ├── cities/                    # Demografia e perfis socioeconômicos dos distritos
 │   └── products/                  # Especificações técnicas e cadeias de insumos
-├── docs/                          # Documentação, GDD e auditorias
-└── JOGAR.bat                      # Inicializador de um clique
+├── dist/                          # Build de produção final (bundle IIFE 100% autônomo e offline)
+├── docs/                          # Documentação, GDD, DevLog e relatórios de auditoria
+├── tools/                         # Suítes de testes automatizados E2E via CDP Headless
+├── JOGAR.bat                      # Inicializador do jogador (execução standalone via dist/index.html)
+├── JOGAR_DEV.bat                  # Inicializador de desenvolvimento (Vite Dev Server com HMR)
+├── package.json                   # Dependências do projeto (Vite 8, Tailwind CSS v4)
+└── vite.config.mjs                # Configuração do Vite com suporte duplo (dev server e file:///)
 ```
 
 ---
