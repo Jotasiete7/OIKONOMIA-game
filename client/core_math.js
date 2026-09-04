@@ -522,9 +522,4 @@ const CoreMath = {
 };
 
 // Exporta para ambiente de módulos e navegador global
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = CoreMath;
-}
-if (typeof window !== 'undefined') {
-  window.CoreMath = CoreMath;
-}
+export default CoreMath;

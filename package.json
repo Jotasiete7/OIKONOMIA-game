@@ -4,6 +4,9 @@
   "description": "OIKONOMIA — Economic Simulation & Business Tycoon Game",
   "main": "client/index.html",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "audit-graph": "node tools/audit_production_graph.js",
     "generate-wiki": "node tools/generate_production_wiki.js",
     "validate-balance": "node tools/validate_market_balance.js",
@@ -21,5 +24,10 @@
     "canvas-game"
   ],
   "author": "Oikonomia Team",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.2.2"
+  }
 }

@@ -1,14 +1,23 @@
-﻿/**
+/**
  * tools/test_real_facility_links.js
  * Teste funcional e determinístico dos vínculos Comércio ↔ Indústria ↔ P&D.
  * Simula a máquina de estados do OIKONOMIA e valida as 4 janelas críticas.
  */
 
-const path = require('path');
-const fs = require('fs');
+import { createRequire } from 'module';
+import { resolve, dirname } from 'path';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
 
-const CoreMath = require(path.resolve(__dirname, '../client/core_math.js'));
-const catalogs = require(path.resolve(__dirname, '../client/data_catalogs.js'));
+const require = createRequire(import.meta.url);
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// core_math.js é ES Module — importar via dynamic import
+const { default: CoreMath } = await import(resolve(__dirname, '../client/core_math.js'));
+
+// data_catalogs.js ainda é CommonJS (via bloco module.exports legado)
+// Será atualizado para ES Module na Fase 2C; por ora mantém require()
+const catalogs = require(resolve(__dirname, '../client/data_catalogs.js'));
 
 const {
   CITY_DISTRICTS,

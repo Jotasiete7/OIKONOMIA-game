@@ -15,7 +15,7 @@ const fs = require('fs');
 const path = require('path');
 
 const EDGE_PATH = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
-const HTML_FILE_URL = "file:///D:/OIKONOMIA%20PROJETO/client/index.html";
+const HTML_FILE_URL = "file:///D:/OIKONOMIA%20PROJETO/dist/index.html";
 const SCREENSHOT_DIR = path.resolve(__dirname, '../docs/auditoria/screenshots');
 
 function sleep(ms) {

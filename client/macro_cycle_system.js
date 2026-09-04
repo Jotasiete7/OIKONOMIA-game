@@ -118,10 +118,4 @@ const MacroCycleSystem = (() => {
   };
 })();
 
-// Suporte a módulos Node e Navegador
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = MacroCycleSystem;
-}
-if (typeof window !== 'undefined') {
-  window.MacroCycleSystem = MacroCycleSystem;
-}
+export default MacroCycleSystem;
