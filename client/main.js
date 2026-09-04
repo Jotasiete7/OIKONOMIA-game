@@ -42,6 +42,22 @@ import SoundEngine, {
   playCashRegister
 } from './audio.js';
 
+// --- Fase 4A: Logo Generator & Game Config ---
+import {
+  hashStringToSeed,
+  LOGO_ICONS,
+  generateCompanyLogo,
+  getCompanyLogoSvg,
+  drawCanvasCompanyLogoBadge
+} from './logo_generator.js';
+
+import {
+  AVATAR_CATALOG,
+  COLOR_PALETTES,
+  DIFFICULTY_PRESETS,
+  ECONOMIC_TIPS
+} from './game_config.js';
+
 // Re-exposição global (Fase 1)
 window.CoreMath = CoreMath;
 window.TickerSystem = TickerSystem;
@@ -83,3 +99,16 @@ window.playSuccessChime = playSuccessChime;
 window.playYearCelebration = playYearCelebration;
 window.playClick = playClick;
 window.playCashRegister = playCashRegister;
+
+// Re-exposição global (Fase 4A: Logo Generator)
+window.hashStringToSeed = hashStringToSeed;
+window.LOGO_ICONS = LOGO_ICONS;
+window.generateCompanyLogo = generateCompanyLogo;
+window.getCompanyLogoSvg = getCompanyLogoSvg;
+window.drawCanvasCompanyLogoBadge = drawCanvasCompanyLogoBadge;
+
+// Re-exposição global (Fase 4A: Game Config)
+window.AVATAR_CATALOG = AVATAR_CATALOG;
+window.COLOR_PALETTES = COLOR_PALETTES;
+window.DIFFICULTY_PRESETS = DIFFICULTY_PRESETS;
+window.ECONOMIC_TIPS = ECONOMIC_TIPS;
