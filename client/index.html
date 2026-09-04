@@ -1821,6 +1821,14 @@
   <!-- SCRIPT PRINCIPAL: MOTOR COMPLETO DE OIKONOMIA (100% CATÁLOGO)           -->
   <!-- ======================================================================= -->
   <script>
+    // Render loop global dirty flag & function (disponíveis imediatamente no topo do script)
+    var _needsRender = true;
+    function scheduleRender() { _needsRender = true; if (typeof window !== 'undefined') window._needsRender = true; }
+    if (typeof window !== 'undefined') {
+      window.scheduleRender = scheduleRender;
+      window._needsRender = true;
+    }
+
     // ===========================================================================
     // 0. SISTEMA DE IDENTICONS & LOGOS PROCEDURAIS POR EMPRESA
     // (Modularizado em client/logo_generator.js e exposto em window)
@@ -2033,7 +2041,59 @@
     // 3. ESTADO CENTRALIZADO DO JOGO (GAME STATE CONTAINER)
     // (Modularizado em client/game_state.js e exposto em window.GameState)
     // ===========================================================================
-    const GameState = window.GameState;
+    const GameState = (typeof window !== 'undefined' && window.GameState) || (typeof window !== 'undefined' && window.createInitialGameState && window.createInitialGameState()) || {
+      currentAppScreen: 'BOOT',
+      day: 1, month: 1, year: 1,
+      cash: 100000.00,
+      monthRevenue: 0, monthCogs: 0, monthFixedExpenses: 0, monthMarketingExpenses: 0, monthFinancialExpenses: 0,
+      consecutiveInsolventMonths: 0,
+      insolvencyLevel2Triggered: false,
+      insolvencyCountdownMonths: 6,
+      gameSpeed: 0, timerInterval: null,
+      previousSpeedBeforePause: 1,
+      playtimeSeconds: 0,
+      playerProfile: {
+        playerName: 'Arthur Vance',
+        companyName: 'OikoCorp Holding',
+        avatarId: 'human_ceo',
+        themeColor: 'emerald',
+        difficulty: 'standard',
+        logoRegenSeed: 0
+      },
+      currentSaveSlotId: null,
+      lastSavedStateSnapshot: null,
+      gameSettings: {
+        autoSave: 'monthly',
+        masterVolume: 1.0,
+        musicVolume: 0.6,
+        ambienceVolume: 0.5,
+        sfxVolume: 0.7
+      },
+      playerBrandRating: {},
+      activeMarketingContracts: new Set(),
+      rdLabs: {},
+      unlockedProducts: new Set([
+        'wheat', 'corn', 'cotton', 'sugar_cane', 'cocoa', 'coffee_beans', 'grapes', 'tobacco', 'rubber',
+        'cattle', 'raw_milk', 'poultry', 'pigs', 'wool', 'iron_ore', 'bauxite', 'crude_oil', 'silica',
+        'timber', 'gold_ore', 'chemical_minerals', 'eggs',
+        'bread', 'milk'
+      ]),
+      unlockedCities: {
+        nova_atenas: true,
+        porto_real: true,
+        montargis: false,
+        varzea: false
+      },
+      acquiredLicenses: new Set(['kombini']),
+      historicalLedger: [],
+      tutorialState: {
+        completedSteps: {},
+        rewardClaimed: false
+      }
+    };
+    if (typeof window !== 'undefined') {
+      window.GameState = GameState;
+    }
 
     // Aliases globais de interoperabilidade direta
     let currentAppScreen = GameState.currentAppScreen;
@@ -2052,6 +2112,9 @@
     let currentSaveSlotId = GameState.currentSaveSlotId;
     let lastSavedStateSnapshot = GameState.lastSavedStateSnapshot;
     let gameSettings = GameState.gameSettings;
+    if (typeof window !== 'undefined') {
+      window.gameSettings = gameSettings;
+    }
     const playerBrandRating = GameState.playerBrandRating;
     const historicalLedger = GameState.historicalLedger;
     const activeMarketingContracts = GameState.activeMarketingContracts;
@@ -2071,11 +2134,6 @@
         ? STORE_NICHE_LICENSES[typeId].cost
         : 0;
     }
-
-    // Render loop global dirty flag & function (disponíveis imediatamente no boot)
-    let _needsRender = true;
-    function scheduleRender() { _needsRender = true; }
-    window.scheduleRender = scheduleRender;
 
     // Catálogos Oficiais (Modularizados em client/game_config.js e expostos em window)
     // (AVATAR_CATALOG, COLOR_PALETTES, DIFFICULTY_PRESETS, ECONOMIC_TIPS)

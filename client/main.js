@@ -2,6 +2,14 @@
 // Os window.X são temporários e serão removidos conforme cada sistema migrar
 // para import direto. Não remover até o index.html ser modularizado.
 
+// Pre-inicialização defensiva do loop de renderização (evita TDZ)
+if (typeof window !== 'undefined') {
+  window._needsRender = true;
+  if (typeof window.scheduleRender !== 'function') {
+    window.scheduleRender = function() { window._needsRender = true; };
+  }
+}
+
 // --- Fase 5: Estilos Globais & Tailwind CSS Local ---
 import './style.css';
 
@@ -132,7 +140,7 @@ window.DIFFICULTY_PRESETS = DIFFICULTY_PRESETS;
 window.ECONOMIC_TIPS = ECONOMIC_TIPS;
 
 // Re-exposição global (Fase 4B: Game State & Save System)
-window.GameState = GameState;
+window.GameState = window.GameState || GameState;
 window.createInitialGameState = createInitialGameState;
 window.GAME_VERSION_INFO = GAME_VERSION_INFO;
 window.SAVES_STORAGE_KEY = SAVES_STORAGE_KEY;

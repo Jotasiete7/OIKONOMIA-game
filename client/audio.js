@@ -162,8 +162,9 @@ const SoundEngine = {
 
   // Controles de Volume
   getSettings() {
-    if (typeof gameSettings !== 'undefined' && gameSettings) {
-      return gameSettings;
+    if (typeof window !== 'undefined') {
+      if (window.gameSettings) return window.gameSettings;
+      if (window.GameState && window.GameState.gameSettings) return window.GameState.gameSettings;
     }
     return {
       masterVolume: 1.0,

@@ -179,7 +179,9 @@ class SpriteManager {
         }
         if (this.loadedCount >= this.totalCount) {
           this.hasLoadedAll = true;
-          if (typeof scheduleRender === 'function') scheduleRender();
+          if (typeof window !== 'undefined' && typeof window.scheduleRender === 'function') {
+            window.scheduleRender();
+          }
         }
       };
       img.onerror = () => {
