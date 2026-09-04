@@ -1,6 +1,9 @@
-// client/main.js — Ponto de entrada Vite (Fase 1 + 2A + 2C + 3A + 3B + 4A + 4B de Transição)
+// client/main.js — Ponto de entrada Vite (Fases 1 a 5 de Modularização)
 // Os window.X são temporários e serão removidos conforme cada sistema migrar
 // para import direto. Não remover até o index.html ser modularizado.
+
+// --- Fase 5: Estilos Globais & Tailwind CSS Local ---
+import './style.css';
 
 // --- Fase 1: Sistemas de simulação ---
 import CoreMath from './core_math.js';

@@ -1,5 +1,6 @@
 // vite.config.mjs
 import { defineConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
 import fs from 'fs';
 import path from 'path';
 
@@ -28,7 +29,7 @@ function copyStaticAssetsPlugin() {
 export default defineConfig({
   root: 'client',        // onde está o index.html
   base: './',            // caminhos relativos para funcionar sem servidor web
-  plugins: [copyStaticAssetsPlugin(), makeClassicScriptPlugin()],
+  plugins: [tailwindcss(), copyStaticAssetsPlugin(), makeClassicScriptPlugin()],
   build: {
     outDir: '../dist',   // saída fora da pasta client
     emptyOutDir: true,
