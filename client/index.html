@@ -2032,54 +2032,9 @@
 
     // ===========================================================================
     // 3. ESTADO CENTRALIZADO DO JOGO (GAME STATE CONTAINER)
+    // (Modularizado em client/game_state.js e exposto em window.GameState)
     // ===========================================================================
-    const GameState = {
-      currentAppScreen: 'BOOT', // 'BOOT', 'MAIN_MENU', 'PLAYING', 'PAUSED'
-      day: 1, month: 1, year: 1,
-      cash: 100000.00,
-      monthRevenue: 0, monthCogs: 0, monthFixedExpenses: 0, monthMarketingExpenses: 0, monthFinancialExpenses: 0,
-      consecutiveInsolventMonths: 0,
-      insolvencyLevel2Triggered: false,
-      insolvencyCountdownMonths: 6,
-      gameSpeed: 0, timerInterval: null,
-      previousSpeedBeforePause: 1,
-      playtimeSeconds: 0,
-      playerProfile: {
-        playerName: 'Arthur Vance',
-        companyName: 'OikoCorp Holding',
-        avatarId: 'human_ceo',
-        themeColor: 'emerald',
-        difficulty: 'standard'
-      },
-      currentSaveSlotId: null,
-      lastSavedStateSnapshot: null,
-      gameSettings: {
-        autoSave: 'monthly',
-        masterVolume: 1.0,
-        musicVolume: 0.6,
-        ambienceVolume: 0.5,
-        sfxVolume: 0.7
-      },
-      playerBrandRating: {},
-      activeMarketingContracts: new Set(),
-      rdLabs: {},
-      unlockedProducts: new Set([
-        // Matérias-Primas e Agropecuária (Tier 0 - Acesso irrestrito por fazendas/minas)
-        'wheat', 'corn', 'cotton', 'sugar_cane', 'cocoa', 'coffee_beans', 'grapes', 'tobacco', 'rubber',
-        'cattle', 'raw_milk', 'poultry', 'pigs', 'wool', 'iron_ore', 'bauxite', 'crude_oil', 'silica',
-        'timber', 'gold_ore', 'chemical_minerals', 'eggs',
-        // Bens Básicos de Início (Starter Pack)
-        'bread', 'milk'
-      ]),
-      unlockedCities: {
-        nova_atenas: true,
-        porto_real: true,
-        montargis: false,
-        varzea: false
-      },
-      acquiredLicenses: new Set(['kombini']),
-      historicalLedger: []
-    };
+    const GameState = window.GameState;
 
     // Aliases globais de interoperabilidade direta
     let currentAppScreen = GameState.currentAppScreen;
@@ -9755,129 +9710,14 @@
 
     // ===========================================================================
     // 14. SISTEMA DE PERSISTÊNCIA, VERSIONAMENTO & MIGRAÇÕES DE SAVES
+    // (Modularizado em client/save_system.js e exposto em window)
     // ===========================================================================
-    const GAME_VERSION_INFO = {
-      major: 0,
-      minor: 8,
-      patch: 4,
-      build: '20260902.01',
-      saveSchema: '0.8.2',
-      get version() { return `${this.major}.${this.minor}.${this.patch}`; },
-      get fullString() { return `v${this.version} (bld.${this.build})`; }
-    };
-
-    const SAVES_STORAGE_KEY = 'oikonomia_save_slots_v1';
-    const CURRENT_SAVE_VERSION = GAME_VERSION_INFO.saveSchema;
-
-    // Pipeline de Migração e Sanitização de Saves
-    function migrateSaveData(rawSave) {
-      if (!rawSave || typeof rawSave !== 'object') return null;
-
-      const migrated = { ...rawSave };
-      const rawVer = String(migrated.saveVersion || '0.1.0');
-
-      // 1. Sanitização do Perfil da Empresa
-      const prof = migrated.playerProfile || {};
-      const validAvatar = AVATAR_CATALOG.some(a => a.id === prof.avatarId) ? prof.avatarId : 'human_ceo';
-      const validColor = COLOR_PALETTES.some(c => c.id === prof.themeColor) ? prof.themeColor : 'emerald';
-      const validDiff = DIFFICULTY_PRESETS.some(d => d.id === prof.difficulty) ? prof.difficulty : 'standard';
-
-      migrated.playerProfile = {
-        playerName: (typeof prof.playerName === 'string' && prof.playerName.trim()) ? prof.playerName.trim().slice(0, 30) : 'Arthur Vance',
-        companyName: (typeof prof.companyName === 'string' && prof.companyName.trim()) ? prof.companyName.trim().slice(0, 35) : 'OikoCorp Holding',
-        avatarId: validAvatar,
-        themeColor: validColor,
-        difficulty: validDiff,
-        logoRegenSeed: Number.isInteger(prof.logoRegenSeed) ? prof.logoRegenSeed : 0
-      };
-
-      // 2. Sanitização Numérica de Finanças e Tempo
-      const numCash = Number(migrated.cash);
-      migrated.cash = (!isNaN(numCash) && isFinite(numCash)) ? Number(numCash.toFixed(2)) : 100000.00;
-
-      const numDay = parseInt(migrated.day, 10);
-      migrated.day = (!isNaN(numDay) && numDay >= 1 && numDay <= 30) ? numDay : 1;
-
-      const numMonth = parseInt(migrated.month, 10);
-      migrated.month = (!isNaN(numMonth) && numMonth >= 1 && numMonth <= 12) ? numMonth : 1;
-
-      const numYear = parseInt(migrated.year, 10);
-      migrated.year = (!isNaN(numYear) && numYear >= 1) ? numYear : 1;
-
-      const numPlaytime = parseInt(migrated.playtimeSeconds, 10);
-      migrated.playtimeSeconds = (!isNaN(numPlaytime) && numPlaytime >= 0) ? numPlaytime : 0;
-
-      // 3. Sanitização de Cidades Desbloqueadas
-      const rawCities = migrated.unlockedCities || {};
-      migrated.unlockedCities = {
-        nova_atenas: true,
-        porto_real: true,
-        montargis: Boolean(rawCities.montargis),
-        varzea: Boolean(rawCities.varzea)
-      };
-
-      // 4. Sanitização de Marca e Marketing
-      migrated.playerBrandRating = (migrated.playerBrandRating && typeof migrated.playerBrandRating === 'object')
-        ? { ...migrated.playerBrandRating }
-        : {};
-      
-      migrated.activeMarketingContracts = Array.isArray(migrated.activeMarketingContracts)
-        ? migrated.activeMarketingContracts.filter(c => typeof c === 'string' && c.includes('::'))
-        : [];
-
-      // 5. Migração de P&D — rdLabs (novo em v0.8.0; saves antigos recebem {} vazio)
-      if (!migrated.rdLabs || typeof migrated.rdLabs !== 'object' || Array.isArray(migrated.rdLabs)) {
-        migrated.rdLabs = {};
-      } else {
-        // Sanitizar projetos existentes: apenas manter os que têm estrutura válida
-        const sanitized = {};
-        for (const [key, proj] of Object.entries(migrated.rdLabs)) {
-          if (proj && typeof proj.productId === 'string' && typeof proj.currentQR === 'number') {
-            proj.status = proj.status || 'active';
-            proj.monthsInvested = proj.monthsInvested || 0;
-            proj.totalSpent = proj.totalSpent || 0;
-            sanitized[key] = proj;
-          }
-        }
-        migrated.rdLabs = sanitized;
-      }
-
-      // 6. Sanitização de Séries Temporais — historicalLedger
-      if (Array.isArray(migrated.historicalLedger)) {
-        migrated.historicalLedger = migrated.historicalLedger.slice(-24);
-      } else {
-        migrated.historicalLedger = [];
-      }
-
-      const rawTiles = Array.isArray(migrated.builtTiles) ? migrated.builtTiles : [];
-      migrated.builtTiles = rawTiles.filter(t => {
-        return t && typeof t.x === 'number' && t.x >= 0 && t.x < GRID_SIZE &&
-               typeof t.y === 'number' && t.y >= 0 && t.y < GRID_SIZE &&
-               (t.store || t.mine || t.farm || t.factory || t.rdCenter || t.competitor);
-      });
-
-      migrated.saveVersion = CURRENT_SAVE_VERSION;
-      migrated.migratedFromVersion = rawVer;
-      return migrated;
-    }
-
-    function getSavesIndex() {
-      try {
-        const raw = localStorage.getItem(SAVES_STORAGE_KEY);
-        return raw ? JSON.parse(raw) : [];
-      } catch (e) {
-        console.error('Erro ao ler índice de saves:', e);
-        return [];
-      }
-    }
-
-    function saveSavesIndex(index) {
-      try {
-        localStorage.setItem(SAVES_STORAGE_KEY, JSON.stringify(index));
-      } catch (e) {
-        console.error('Erro ao salvar índice de saves:', e);
-      }
-    }
+    const GAME_VERSION_INFO = window.GAME_VERSION_INFO;
+    const SAVES_STORAGE_KEY = window.SAVES_STORAGE_KEY;
+    const CURRENT_SAVE_VERSION = window.CURRENT_SAVE_VERSION;
+    const migrateSaveData = window.migrateSaveData;
+    const getSavesIndex = window.getSavesIndex;
+    const saveSavesIndex = window.saveSavesIndex;
 
     // Extrai apenas os lotes construídos para otimizar payload (saves com ~15-30 KB via Sparse Index)
     function extractBuiltTiles() {

@@ -1,4 +1,4 @@
-// client/main.js — Ponto de entrada Vite (Fase 1 + 2A + 2C + 3A + 3B de Transição)
+// client/main.js — Ponto de entrada Vite (Fase 1 + 2A + 2C + 3A + 3B + 4A + 4B de Transição)
 // Os window.X são temporários e serão removidos conforme cada sistema migrar
 // para import direto. Não remover até o index.html ser modularizado.
 
@@ -58,6 +58,21 @@ import {
   ECONOMIC_TIPS
 } from './game_config.js';
 
+// --- Fase 4B: Game State & Save System ---
+import GameState, { createInitialGameState } from './game_state.js';
+import {
+  GAME_VERSION_INFO,
+  SAVES_STORAGE_KEY,
+  CURRENT_SAVE_VERSION,
+  migrateSaveData,
+  getSavesIndex,
+  saveSavesIndex,
+  serializeGameState,
+  createSaveMetadata,
+  deleteSaveSlot,
+  generateExportDataUri
+} from './save_system.js';
+
 // Re-exposição global (Fase 1)
 window.CoreMath = CoreMath;
 window.TickerSystem = TickerSystem;
@@ -112,3 +127,17 @@ window.AVATAR_CATALOG = AVATAR_CATALOG;
 window.COLOR_PALETTES = COLOR_PALETTES;
 window.DIFFICULTY_PRESETS = DIFFICULTY_PRESETS;
 window.ECONOMIC_TIPS = ECONOMIC_TIPS;
+
+// Re-exposição global (Fase 4B: Game State & Save System)
+window.GameState = GameState;
+window.createInitialGameState = createInitialGameState;
+window.GAME_VERSION_INFO = GAME_VERSION_INFO;
+window.SAVES_STORAGE_KEY = SAVES_STORAGE_KEY;
+window.CURRENT_SAVE_VERSION = CURRENT_SAVE_VERSION;
+window.migrateSaveData = migrateSaveData;
+window.getSavesIndex = getSavesIndex;
+window.saveSavesIndex = saveSavesIndex;
+window.serializeGameState = serializeGameState;
+window.createSaveMetadata = createSaveMetadata;
+window.deleteSaveSlot = deleteSaveSlot;
+window.generateExportDataUri = generateExportDataUri;
