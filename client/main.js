@@ -1,4 +1,4 @@
-// client/main.js — Ponto de entrada Vite (Fase 1 + 2A + 2C + 3A de Transição)
+// client/main.js — Ponto de entrada Vite (Fase 1 + 2A + 2C + 3A + 3B de Transição)
 // Os window.X são temporários e serão removidos conforme cada sistema migrar
 // para import direto. Não remover até o index.html ser modularizado.
 
@@ -32,6 +32,16 @@ import {
 // --- Fase 3A: SpriteManager ---
 import SpriteManager from './sprite_manager.js';
 
+// --- Fase 3B: Audio & SoundEngine ---
+import SoundEngine, {
+  getAudioContext,
+  playBeep,
+  playSuccessChime,
+  playYearCelebration,
+  playClick,
+  playCashRegister
+} from './audio.js';
+
 // Re-exposição global (Fase 1)
 window.CoreMath = CoreMath;
 window.TickerSystem = TickerSystem;
@@ -64,3 +74,12 @@ window.RD_CATEGORIES = RD_CATEGORIES;
 
 // Re-exposição global (Fase 3A)
 window.SpriteManager = SpriteManager;
+
+// Re-exposição global (Fase 3B)
+window.SoundEngine = SoundEngine;
+window.getAudioContext = getAudioContext;
+window.playBeep = playBeep;
+window.playSuccessChime = playSuccessChime;
+window.playYearCelebration = playYearCelebration;
+window.playClick = playClick;
+window.playCashRegister = playCashRegister;

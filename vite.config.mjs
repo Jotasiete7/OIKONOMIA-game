@@ -16,14 +16,6 @@ function copyStaticAssetsPlugin() {
   return {
     name: 'copy-static-assets',
     closeBundle() {
-      const files = ['audio.js'];
-      for (const file of files) {
-        const src = path.resolve('client', file);
-        const dest = path.resolve('dist', file);
-        if (fs.existsSync(src)) {
-          fs.copyFileSync(src, dest);
-        }
-      }
       const assetsSrc = path.resolve('client', 'assets');
       const assetsDest = path.resolve('dist', 'assets');
       if (fs.existsSync(assetsSrc)) {

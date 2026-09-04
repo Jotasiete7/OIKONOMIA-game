@@ -638,6 +638,16 @@ function playClick() { SoundEngine.playClick(); }
 function playCashRegister() { SoundEngine.playCashRegister(); }
 
 if (typeof window !== 'undefined') {
-  window.SoundEngine = SoundEngine;
   SoundEngine.init();
 }
+
+export default SoundEngine;
+export {
+  SoundEngine,
+  getAudioContext,
+  playBeep,
+  playSuccessChime,
+  playYearCelebration,
+  playClick,
+  playCashRegister
+};
