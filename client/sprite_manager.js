@@ -364,11 +364,7 @@ class SpriteManager {
   }
 }
 
-// InicializaÃ§Ã£o automÃ¡tica ao carregar o script
-if (typeof window !== 'undefined') {
-  window.SpriteManager = SpriteManager;
-  SpriteManager.init();
-}
+// Inicialização automática ao carregar o módulo
+SpriteManager.init();
 
-
-
+export default SpriteManager;

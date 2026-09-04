@@ -1,4 +1,4 @@
-// client/main.js — Ponto de entrada Vite (Fase 1 + 2A + 2C de Transição)
+// client/main.js — Ponto de entrada Vite (Fase 1 + 2A + 2C + 3A de Transição)
 // Os window.X são temporários e serão removidos conforme cada sistema migrar
 // para import direto. Não remover até o index.html ser modularizado.
 
@@ -29,6 +29,9 @@ import {
   RD_CATEGORIES
 } from './data_catalogs.js';
 
+// --- Fase 3A: SpriteManager ---
+import SpriteManager from './sprite_manager.js';
+
 // Re-exposição global (Fase 1)
 window.CoreMath = CoreMath;
 window.TickerSystem = TickerSystem;
@@ -58,3 +61,6 @@ window.PORT_SUPPLIES_FOOD_CONSUMER = PORT_SUPPLIES_FOOD_CONSUMER;
 window.PORT_SUPPLIES_COMMODITIES = PORT_SUPPLIES_COMMODITIES;
 window.PORT_SUPPLIES_TECH_PARTS = PORT_SUPPLIES_TECH_PARTS;
 window.RD_CATEGORIES = RD_CATEGORIES;
+
+// Re-exposição global (Fase 3A)
+window.SpriteManager = SpriteManager;
