@@ -16,7 +16,7 @@ function copyStaticAssetsPlugin() {
   return {
     name: 'copy-static-assets',
     closeBundle() {
-      const files = ['map_data.js', 'data_catalogs.js', 'sprite_manager.js', 'audio.js'];
+      const files = ['sprite_manager.js', 'audio.js'];
       for (const file of files) {
         const src = path.resolve('client', file);
         const dest = path.resolve('dist', file);

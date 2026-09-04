@@ -1,4 +1,4 @@
-﻿/**
+/**
  * OIKONOMIA - Matriz de Dados do Mapa Oficial (TMX Layers 128x128)
  * Exportado automaticamente do data/maps/oikonomia_map.tmx
  * GIDs: 1=Ãgua Profunda, 2=Ãgua Rasa, 3=Areia, 4=Grama, 5=Terra FÃ©rtil, 6=Colina, 7=Montanha, 8=Floresta, 9=Ferro, 10=PetrÃ³leo, 11=Estrada, 13=Porto, 14=ComÃ©rcio, 15=ResidÃªncia
@@ -1049,6 +1049,4 @@ const TMX_LAYERS = {
   ]
 };
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { MAP_WIDTH, MAP_HEIGHT, TILE_WIDTH, TILE_HEIGHT, CITY_PROFILES_DATA, TMX_LAYERS };
-}
+export { MAP_WIDTH, MAP_HEIGHT, TILE_WIDTH, TILE_HEIGHT, CITY_PROFILES_DATA, TMX_LAYERS };
