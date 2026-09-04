@@ -5,5 +5,5 @@ echo ===========================================================================
 echo                 OIKONOMIA -- INICIANDO O JOGO NO NAVEGADOR
 echo ==============================================================================
 echo.
-start "" "%~dp0client\index.html"
+start "" "%~dp0dist\index.html"
 exit

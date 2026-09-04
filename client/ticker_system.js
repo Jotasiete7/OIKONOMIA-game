@@ -275,3 +275,5 @@ const TickerSystem = (() => {
     handleClick
   };
 })();
+
+export default TickerSystem;
