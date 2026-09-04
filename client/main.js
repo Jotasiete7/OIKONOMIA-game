@@ -152,3 +152,9 @@ window.serializeGameState = serializeGameState;
 window.createSaveMetadata = createSaveMetadata;
 window.deleteSaveSlot = deleteSaveSlot;
 window.generateExportDataUri = generateExportDataUri;
+
+// Notifica que todos os módulos foram carregados e vinculados com sucesso
+if (typeof window !== 'undefined') {
+  window.__OIKO_MODULES_READY__ = true;
+  window.dispatchEvent(new CustomEvent('oiko:ready'));
+}
