@@ -105,7 +105,7 @@ export function migrateSaveData(rawSave) {
   migrated.builtTiles = rawTiles.filter(t => {
     return t && typeof t.x === 'number' && t.x >= 0 && t.x < gridSize &&
            typeof t.y === 'number' && t.y >= 0 && t.y < gridSize &&
-           (t.store || t.mine || t.farm || t.factory || t.rdCenter || t.competitor);
+           (t.store || t.mine || t.farm || t.factory || t.rdCenter || t.warehouse || t.competitor);
   });
 
   // 7. Migração do Sistema Bancário (novo em v0.8.5; saves antigos recebem estado vazio)

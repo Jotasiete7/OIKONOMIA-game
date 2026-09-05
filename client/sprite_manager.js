@@ -127,7 +127,11 @@ class SpriteManager {
     // 5.1 PESQUISA & DESENVOLVIMENTO (P&D)
     'pesquisa/rd_center': 'assets/pesquisa/rd_center.png',
 
-    // 6. PORTUÃ RIO & LOGÃ STICA
+    // 6. PORTUÁRIO & LOGÍSTICA
+    'logistica/warehouse': 'assets/logistica/warehouse_lvl1.png',
+    'logistica/warehouse_lvl1': 'assets/logistica/warehouse_lvl1.png',
+    'logistica/warehouse_lvl2': 'assets/logistica/warehouse_lvl2.png',
+    'logistica/warehouse_lvl3': 'assets/logistica/warehouse_lvl3.png',
     'portuario/seaport': 'assets/portuario/seaport.png',
     'portuario/seaport_1': 'assets/portuario/seaport_1.png',
     'portuario/seaport_2': 'assets/portuario/seaport_2.png',
@@ -369,6 +373,12 @@ class SpriteManager {
 
   static getMineSpriteKey(mineTypeId) {
     return this.getMineSprite(mineTypeId);
+  }
+
+  static getWarehouseSprite(level = 1) {
+    if (level === 2) return 'logistica/warehouse_lvl2';
+    if (level >= 3) return 'logistica/warehouse_lvl3';
+    return 'logistica/warehouse_lvl1';
   }
 
   static getRoadSprite(x, y, grid, isWater) {

@@ -982,6 +982,25 @@
   </div>
 
   <!-- ======================================================================= -->
+  <!-- MODAL: ALOCAR PRODUTO AO CENTRO DE DISTRIBUIÇÃO / ARMAZÉM               -->
+  <!-- ======================================================================= -->
+  <div id="warehouse-add-product-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden">
+      <div class="bg-slate-800/80 border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-sky-400 flex items-center gap-2">📦 Alocar Produto no Armazém</h2>
+          <p id="warehouse-add-subtitle" class="text-xs text-slate-400 font-mono mt-0.5">Selecione o produto ou matéria-prima para estocar nesta instalação</p>
+        </div>
+        <button onclick="closeAddWarehouseProductModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center cursor-pointer">✕</button>
+      </div>
+      <div class="p-5 space-y-3">
+        <input type="text" id="warehouse-add-search-input" oninput="renderWarehouseAddProductList(this.value)" placeholder="🔍 Buscar insumo, grão, minério ou mercadoria (ex: Trigo, Frango, Aço, Chips)..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-sky-500 placeholder:text-slate-500 shadow-inner">
+        <div id="warehouse-add-products-list" class="space-y-1.5 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
   <!-- MODAL 5: INSPEÇÃO DO TERMINAL PORTUÁRIO                                 -->
   <!-- ======================================================================= -->
   <div id="port-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
@@ -2048,6 +2067,34 @@
             landedCost: landed
           });
         }
+        if (tile.warehouse && tile.warehouse.inventory && tile.warehouse.inventory[prodId]) {
+          const inv = tile.warehouse.inventory[prodId];
+          if (inv.stock > 0 || inv.safetyStock > 0) {
+            const dist = CoreMath.calculateManhattanDistance(tile, storeTile);
+            const freight = CoreMath.calculateUnitFreight(dist, 0.008, 0.01);
+            const unitPrice = typeof inv.avgUnitCost === 'number' ? inv.avgUnitCost : 1.0;
+            const landed = CoreMath.calculateLandedCost(unitPrice, freight);
+            const pNameStr = PRODUCT_CATALOG[prodId]?.name || prodId;
+            offers.push({
+              type: 'internal_warehouse',
+              supplierId: `warehouse_${tile.x}_${tile.y}`,
+              supplierName: `🏢 ${tile.warehouse.name}`,
+              facilityName: `${tile.warehouse.name} — Hub Logístico`,
+              ownerName: pName,
+              ownerLogo: playerLogo,
+              ownerTag: '📦 Armazém Central',
+              activitySummary: `Estoque consolidado e buffer estratégico de ${pNameStr} no lote (${tile.x}, ${tile.y})`,
+              stockLabel: `Armazém: ${inv.stock.toLocaleString()} un (Custo Médio: $${unitPrice.toFixed(2)})`,
+              wholesalePrice: unitPrice,
+              quality: inv.quality || 60,
+              quota: inv.stock || 5000,
+              origin: `Armazém Central (${tile.x}, ${tile.y})`,
+              distance: dist,
+              freight,
+              landedCost: landed
+            });
+          }
+        }
       }
 
       return offers.sort((a, b) => a.landedCost - b.landedCost);
@@ -2193,7 +2240,7 @@
     if (typeof window !== 'undefined') window.activeFacilitySet = activeFacilitySet;
     function _tileKey(x, y) { return `${x},${y}`; }
     function _indexTile(tile) {
-      if (tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter || tile.competitor) {
+      if (tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter || tile.warehouse || tile.competitor) {
         activeFacilitySet.set(_tileKey(tile.x, tile.y), tile);
       } else {
         activeFacilitySet.delete(_tileKey(tile.x, tile.y));
@@ -2679,6 +2726,7 @@
           if (tile.farm) c = '#eab308';
           if (tile.mine) c = '#0284c7';
           if (tile.rdCenter) c = '#a855f7';
+          if (tile.warehouse) c = '#38bdf8';
           if (tile.city && tile.city.isLocked) c = '#0f172a';
           else if (tile.districtId === 'downtown') c = '#ef4444';
 
@@ -2916,6 +2964,7 @@
           else if (tile.farm) heightVal = 18;
           else if (tile.store) heightVal = 16;
           else if (tile.rdCenter) heightVal = 24;
+          else if (tile.warehouse) heightVal = 20;
           else if (tile.competitor) heightVal = 18;
           else if (tile.isPort) heightVal = 16;
           else if (tile.isMedia) heightVal = 20;
@@ -2940,6 +2989,9 @@
             } else if (tile.rdCenter) {
               topC='#c084fc'; leftC='#9333ea'; rightC='#7e22ce';
               spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getRDSprite() : 'pesquisa/rd_center';
+            } else if (tile.warehouse) {
+              topC='#38bdf8'; leftC='#0284c7'; rightC='#0369a1';
+              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getWarehouseSprite(tile.warehouse.level) : 'logistica/warehouse_lvl1';
             } else if (tile.competitor) {
               topC='#f43f5e'; leftC='#e11d48'; rightC='#be123c';
               spriteKey = 'lojas/competitor';
@@ -2964,7 +3016,7 @@
             let facilityLogo = null;
             if (tile.competitor) {
               facilityLogo = generateCompanyLogo(tile.competitor.name || 'Megamart Varejo', 0, true);
-            } else if (tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter) {
+            } else if (tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter || tile.warehouse) {
               facilityLogo = generateCompanyLogo(playerProfile.companyName || 'OikoCorp Holding', playerProfile.logoRegenSeed || 0, false, playerProfile?.themeColor);
             } else if (tile.isPort) {
               facilityLogo = { shape: 'hexagon', color: '#38bdf8', iconDef: LOGO_ICONS.anchor };
@@ -2973,7 +3025,7 @@
             }
 
             if (facilityLogo) {
-              const isPlayer = !!(tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter);
+              const isPlayer = !!(tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter || tile.warehouse);
               const badgeRadius = isPlayer ? 9.5 : 7.5;
               const badgeY = sy - (hPx || 16 * camera.zoom) - (isPlayer ? 10 : 8) * camera.zoom;
               drawCanvasCompanyLogoBadge(ctx, facilityLogo, sx, badgeY, badgeRadius, camera.zoom);
@@ -3218,6 +3270,20 @@
             <div class="text-[10px] text-slate-300">Centro de Pesquisa & Desenvolvimento</div>
             <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · ${tile.city.cityName}</div>
           `;
+        } else if (tile.warehouse) {
+          const logo = generateCompanyLogo(playerProfile.companyName, playerProfile.logoRegenSeed || 0, false);
+          const totalStock = Object.values(tile.warehouse.inventory || {}).reduce((s, i) => s + (i.stock || 0), 0);
+          tooltip.innerHTML = `
+            <div class="flex items-center gap-2 mb-1">
+              ${getCompanyLogoSvg(logo, 20)}
+              <div>
+                <div class="font-bold text-sky-400 text-xs">🏢 ${tile.warehouse.name}</div>
+                <div class="text-[9px] text-slate-400">${playerProfile.companyName} · ${d.name}</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-300">Estoque: <strong>${totalStock.toLocaleString()} / ${(tile.warehouse.maxCapacity || 25000).toLocaleString()} un</strong> (Nível ${tile.warehouse.level || 1})</div>
+            <div class="text-[9px] text-slate-400 mt-0.5">(${gx}, ${gy}) · 💰 Aluguel + Manutenção $${(tile.warehouse.dailyRent || 10) + (tile.warehouse.dailyMaintenance || 60)}/dia</div>
+          `;
         } else if (tile.store) {
           const logo = generateCompanyLogo(playerProfile.companyName, playerProfile.logoRegenSeed || 0, false);
           const emoji = STORE_TYPES.find(s => s.id === tile.store.storeTypeId)?.emoji || '🛒';
@@ -3355,7 +3421,7 @@
       const cityName = tile.city ? (tile.city.cityName || tile.city.name || 'Metrópole') : 'Zona Rural';
 
       if (tileInfoEl) {
-        const typeName = tile.store?.name || tile.mine?.name || tile.farm?.name || tile.factory?.name || tile.rdCenter?.name || (tile.isPort ? 'Porto Marítimo' : (tile.isWater ? 'Oceano' : (isLocked ? '🔒 Bloqueado' : (tile.isRoad ? 'Rodovia' : 'Terreno Livre'))));
+        const typeName = tile.store?.name || tile.mine?.name || tile.farm?.name || tile.factory?.name || tile.rdCenter?.name || tile.warehouse?.name || (tile.isPort ? 'Porto Marítimo' : (tile.isWater ? 'Oceano' : (isLocked ? '🔒 Bloqueado' : (tile.isRoad ? 'Rodovia' : 'Terreno Livre'))));
         tileInfoEl.innerHTML = `📍 <span class="text-amber-300">Lote (${tile.x}, ${tile.y})</span> <span class="text-slate-300">· ${typeName}</span>`;
       }
       if (distInfoEl) {
@@ -3385,6 +3451,8 @@
           buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-700 hover:bg-orange-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🏭 Gerir Fábrica</button>`;
         } else if (tile.rdCenter) {
           buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-purple-700 hover:bg-purple-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🔬 Gerir P&D</button>`;
+        } else if (tile.warehouse) {
+          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🏢 Gerir Armazém</button>`;
         } else if (tile.isPort) {
           buttonsHtml = `<button onclick="openPortModal(worldGrid[${tile.x}][${tile.y}].portData)" class="bg-yellow-700 hover:bg-yellow-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">⚓ Ver Cargas</button>`;
         } else if (tile.isMedia) {
@@ -3404,6 +3472,7 @@
               <button onclick="openStoreModal(worldGrid[${tile.x}][${tile.y}])" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Inaugurar Estabelecimento Comercial">🏪 +Loja</button>
               <button onclick="openFactoryModal(worldGrid[${tile.x}][${tile.y}])" class="bg-orange-700 hover:bg-orange-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Construir Parque Fabril">🏭 +Fábrica</button>
               <button onclick="openFarmModal(worldGrid[${tile.x}][${tile.y}])" class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Iniciar Fazenda Agropecuária">🌾 +Fazenda</button>
+              <button onclick="confirmBuildWarehouse(${tile.x}, ${tile.y})" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Construir Centro de Distribuição & Armazém ($35.000)">🏢 +Armazém</button>
               <button onclick="confirmBuildRDCenter(${tile.x}, ${tile.y})" class="bg-purple-700 hover:bg-purple-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer flex items-center gap-0.5" title="Construir Centro de Pesquisa & Desenvolvimento ($80.000)">🔬 +P&D</button>
             </div>
           `;
@@ -3453,6 +3522,14 @@
         baseCost = tile.rdCenter.constructionCost || 80000;
         facilityName = tile.rdCenter.name;
         stockValue = 0;
+      } else if (tile.warehouse) {
+        baseCost = tile.warehouse.cost || 35000;
+        facilityName = tile.warehouse.name;
+        if (tile.warehouse.inventory) {
+          for (const item of Object.values(tile.warehouse.inventory)) {
+            stockValue += (item.stock || 0) * (item.avgUnitCost || 1);
+          }
+        }
       }
 
       const sellValue = Math.round(baseCost * 0.70 + stockValue);
@@ -3463,7 +3540,7 @@
     function renderFacilityFooterActions(tile, extraBtn = '') {
       const actionRow = document.getElementById('facility-action-row');
       if (!actionRow) return;
-      if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter)) {
+      if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter && !tile.warehouse)) {
         actionRow.classList.add('hidden');
         return;
       }
@@ -3521,7 +3598,7 @@
 
     function sellFacility(x, y) {
       const tile = worldGrid[x] && worldGrid[x][y];
-      if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter)) return;
+      if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter && !tile.warehouse)) return;
 
       const val = calculateFacilityValue(tile);
       const isStore = !!tile.store;
@@ -3533,8 +3610,8 @@
         const finalCash = Math.round(val.baseCost * 0.80 + val.stockValue);
         openFacilityConfirmModal({
           icon: '🤝',
-          title: 'PROPOSTA DE COMPRA DE CONCORRENTE',
-          subtitle: `A rede rival <strong class="text-purple-400 font-bold">${competitorName}</strong> tem interesse estratégico neste ponto comercial em ${cityName}!`,
+          title: 'PROPOSTA DE AQUISIÇÃO CORPORATIVA',
+          subtitle: `Comprador Interessado: <strong class="text-amber-300">${competitorName}</strong>`,
           name: val.facilityName,
           detailsHtml: `
             <div class="space-y-1.5">
@@ -3608,6 +3685,7 @@
             tile.farm = null;
             tile.factory = null;
             tile.rdCenter = null;
+            tile.warehouse = null;
             tile.buildingHeight = 0;
             playSuccessChime();
             _indexTile(tile);
@@ -3623,7 +3701,7 @@
 
     function demolishFacility(x, y) {
       const tile = worldGrid[x] && worldGrid[x][y];
-      if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter)) return;
+      if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter && !tile.warehouse)) return;
 
       const val = calculateFacilityValue(tile);
       openFacilityConfirmModal({
@@ -3657,6 +3735,7 @@
           tile.farm = null;
           tile.factory = null;
           tile.rdCenter = null;
+          tile.warehouse = null;
           tile.buildingHeight = 0;
           _indexTile(tile);
           activeManagedTile = null;
@@ -3737,6 +3816,14 @@
         }
         if (tile.rdCenter) {
           facilitiesTotal += 40000;
+        }
+        if (tile.warehouse) {
+          facilitiesTotal += tile.warehouse.cost || 35000;
+          if (tile.warehouse.inventory) {
+            for (const item of Object.values(tile.warehouse.inventory)) {
+              inventoryTotal += (item.stock || 0) * (item.avgUnitCost || 1.0);
+            }
+          }
         }
       }
 
@@ -3905,7 +3992,7 @@
 
       for (const tile of activeFacilitySet.values()) {
         // Ignora instalações de concorrentes de IA na DRE corporativa do jogador
-        if (!tile.store && !tile.factory && !tile.farm && !tile.mine && !tile.rdCenter) {
+        if (!tile.store && !tile.factory && !tile.farm && !tile.mine && !tile.rdCenter && !tile.warehouse) {
           continue;
         }
 
@@ -3933,6 +4020,10 @@
           typeName = 'P&D';
           facName = tile.rdCenter.name;
           emoji = '🔬';
+        } else if (tile.warehouse) {
+          typeName = 'Logística';
+          facName = tile.warehouse.name;
+          emoji = '📦';
         }
 
         const metrics = tile.lastMonthMetrics || tile.monthlyMetrics || { revenue: 0, cogs: 0, opex: 0, netProfit: 0 };
@@ -4514,6 +4605,19 @@
             <span class="text-amber-400 group-hover:translate-x-1 transition font-bold shrink-0 ml-1">➔</span>
           </button>
 
+          <button onclick="confirmBuildWarehouse(${tile.x}, ${tile.y})" class="bg-sky-950/70 hover:bg-sky-900/90 border border-sky-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-slate-900 border border-sky-700/60 p-0.5 flex items-center justify-center shrink-0 text-base">
+                🏢
+              </div>
+              <div>
+                <div class="font-bold text-sky-300 flex items-center gap-1 text-xs">Construir Centro de Distribuição & Armazém</div>
+                <div class="text-[10px] text-slate-400">Hub logístico: unifica safras de múltiplas fazendas, supre indústrias e estoca insumos</div>
+              </div>
+            </div>
+            <span class="text-sky-400 group-hover:translate-x-1 transition font-bold shrink-0 ml-1">➔</span>
+          </button>
+
           <button onclick="confirmBuildRDCenter(${tile.x}, ${tile.y})" class="bg-purple-950/70 hover:bg-purple-900/90 border border-purple-700/80 p-2.5 rounded-xl text-left flex items-center justify-between group transition cursor-pointer">
             <div class="flex items-center gap-2.5">
               <div class="w-8 h-8 rounded-lg bg-slate-900 border border-purple-700/60 p-0.5 flex items-center justify-center shrink-0 text-base">
@@ -4572,6 +4676,7 @@
       else if (tile.farm) renderFarmPanel(tile);
       else if (tile.factory) renderFactoryPanel(tile);
       else if (tile.rdCenter) renderRDCenterPanel(tile);
+      else if (tile.warehouse) renderWarehousePanel(tile);
       else if (!tile.isWater && !tile.isRoad) renderEmptyLotPanel(tile);
       else renderIdlePanel();
     }
@@ -4873,6 +4978,11 @@
       });
     }
     if (typeof window !== 'undefined') window.renderFacilityPanel = renderFacilityPanel;
+
+    // ===========================================================================
+    // CENTRO DE DISTRIBUIÇÃO & ARMAZÉM LOGÍSTICO (HUB MULTIMODAL)
+    // Modularizado em client/warehouse_system.js e exposto via window.* em client/main.js
+    // ===========================================================================
 
     function renderMinePanel(tile) {
       const m = tile.mine;
@@ -8738,6 +8848,18 @@
           internalSourceName = `${facTile.factory.name} (${line.productName || 'Fábrica'})`;
         }
       }
+      // 3. Se for um armazém logístico próprio, drena do estoque consolidado
+      else if (shelf.supplierId?.startsWith('warehouse_')) {
+        const parts = shelf.supplierId.split('_');
+        const wx = Number(parts[1]), wy = Number(parts[2]);
+        const whTile = worldGrid[wx]?.[wy];
+        const whItem = whTile?.warehouse?.inventory?.[prodId];
+        if (whItem && whItem.stock > 0) {
+          transferredInternal = Math.min(whItem.stock, actualQty);
+          whItem.stock = Math.max(0, whItem.stock - transferredInternal);
+          internalSourceName = `${whTile.warehouse.name} (Armazém)`;
+        }
+      }
 
       const neededFromMarket = actualQty - transferredInternal;
       let costMarket = 0;
@@ -11064,7 +11186,8 @@
         { id: 'rd-new-project-modal', key: 'oiko_pos_rd_new_project' },
         { id: 'dev-dashboard-modal', key: 'oiko_pos_dev_dashboard' },
         { id: 'save-load-modal', key: 'oiko_pos_save_load' },
-        { id: 'settings-modal', key: 'oiko_pos_settings' }
+        { id: 'settings-modal', key: 'oiko_pos_settings' },
+        { id: 'warehouse-add-product-modal', key: 'oiko_pos_warehouse_add' }
       ];
 
       modalList.forEach(({ id, key }) => {

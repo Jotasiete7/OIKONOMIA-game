@@ -93,6 +93,9 @@ import {
   generateExportDataUri
 } from './save_system.js';
 
+// --- Sistema de Armazém Logístico & CDs ---
+import * as WarehouseSystem from './warehouse_system.js';
+
 // Re-exposição global (Fase 1)
 window.CoreMath = CoreMath;
 window.TickerSystem = TickerSystem;
@@ -170,6 +173,21 @@ window.serializeGameState = serializeGameState;
 window.createSaveMetadata = createSaveMetadata;
 window.deleteSaveSlot = deleteSaveSlot;
 window.generateExportDataUri = generateExportDataUri;
+
+// Re-exposição global (Warehouse System)
+window.WarehouseSystem = WarehouseSystem;
+window.renderWarehousePanel = WarehouseSystem.renderWarehousePanel;
+window.upgradeWarehouse = WarehouseSystem.upgradeWarehouse;
+window.confirmBuildWarehouse = WarehouseSystem.confirmBuildWarehouse;
+window.openAddWarehouseProductModal = WarehouseSystem.openAddWarehouseProductModal;
+window.closeAddWarehouseProductModal = WarehouseSystem.closeAddWarehouseProductModal;
+window.renderWarehouseAddProductList = WarehouseSystem.renderWarehouseAddProductList;
+window.addWarehouseProduct = WarehouseSystem.addWarehouseProduct;
+window.removeWarehouseProduct = WarehouseSystem.removeWarehouseProduct;
+window.toggleWarehouseCollect = WarehouseSystem.toggleWarehouseCollect;
+window.setWarehouseSafetyStock = WarehouseSystem.setWarehouseSafetyStock;
+window.toggleWarehousePortRestock = WarehouseSystem.toggleWarehousePortRestock;
+window.toggleWarehouseRecessionOnly = WarehouseSystem.toggleWarehouseRecessionOnly;
 
 // Proxies reativos globais vinculados a GameState (Single Source of Truth)
 const stateProxyProps = [

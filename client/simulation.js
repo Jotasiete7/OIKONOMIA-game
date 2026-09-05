@@ -132,7 +132,128 @@ export function simulateDay(customContext = {}) {
       dailyFixed += op;
       tileDailyOpex += op;
     }
+    if (tile.warehouse) {
+      const whMaintenance = tile.warehouse.dailyMaintenance || 60; // $60/dia de manutenção logística
+      const op = (tile.warehouse.dailyRent || Math.round(d.landRentDaily * 1.1)) + whMaintenance;
+      dailyFixed += op;
+      tileDailyOpex += op;
+    }
     tile.monthlyMetrics.opex += tileDailyOpex;
+
+    // Centro de Distribuição & Armazém Logístico (Inbound Pooling & Safety Stock)
+    if (tile.warehouse) {
+      const wh = tile.warehouse;
+      wh.inventory = wh.inventory || {};
+      let totalCurrentStock = Object.values(wh.inventory).reduce((sum, item) => sum + (item.stock || 0), 0);
+      const freeCapacity = Math.max(0, (wh.maxCapacity || 25000) - totalCurrentStock);
+
+      const macroPhase = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getCurrentCycle(state.year).phase : 'boom';
+      const isDiscountCycle = (macroPhase === 'recession' || macroPhase === 'depression');
+
+      for (const [prodId, item] of Object.entries(wh.inventory)) {
+        if (!item) continue;
+        item.stock = item.stock || 0;
+        item.avgUnitCost = item.avgUnitCost || 1.0;
+        item.quality = item.quality || 60;
+
+        // 1. Coleta Inbound Diária das fontes próprias (Fazendas, Minas, Fábricas)
+        if (item.collectMode === 'all_own' && freeCapacity > 0) {
+          if (typeof activeFacilitySet !== 'undefined') {
+            for (const srcTile of activeFacilitySet.values()) {
+              if (freeCapacity <= 0) break;
+
+              // Fazenda própria produzindo este item
+              if (srcTile.farm && (srcTile.farm.cropId === prodId || (prodId === 'eggs' && srcTile.farm.cropId === 'poultry'))) {
+                const avail = srcTile.farm.stock || 0;
+                if (avail > 0) {
+                  const toCollect = Math.min(avail, freeCapacity);
+                  srcTile.farm.stock -= toCollect;
+
+                  const oldStock = item.stock;
+                  const newStock = oldStock + toCollect;
+                  const srcCost = srcTile.farm.dailyOperatingCost || 0.45;
+                  const srcQR = srcTile.farm.effectiveQuality || srcTile.farm.quality || 60;
+
+                  item.avgUnitCost = newStock > 0 ? Number((((oldStock * item.avgUnitCost) + (toCollect * srcCost)) / newStock).toFixed(2)) : srcCost;
+                  item.quality = newStock > 0 ? Math.round(((oldStock * item.quality) + (toCollect * srcQR)) / newStock) : srcQR;
+                  item.stock = newStock;
+                  totalCurrentStock += toCollect;
+                }
+              }
+
+              // Mina própria produzindo este item
+              if (srcTile.mine && srcTile.mine.resourceId === prodId) {
+                const avail = srcTile.mine.stock || 0;
+                if (avail > 0) {
+                  const toCollect = Math.min(avail, freeCapacity);
+                  srcTile.mine.stock -= toCollect;
+
+                  const oldStock = item.stock;
+                  const newStock = oldStock + toCollect;
+                  const srcCost = srcTile.mine.unitCost || 10.0;
+                  const srcQR = srcTile.mine.quality || 60;
+
+                  item.avgUnitCost = newStock > 0 ? Number((((oldStock * item.avgUnitCost) + (toCollect * srcCost)) / newStock).toFixed(2)) : srcCost;
+                  item.quality = newStock > 0 ? Math.round(((oldStock * item.quality) + (toCollect * srcQR)) / newStock) : srcQR;
+                  item.stock = newStock;
+                  totalCurrentStock += toCollect;
+                }
+              }
+
+              // Fábrica própria produzindo este item
+              if (srcTile.factory && srcTile.factory.lines) {
+                for (const line of Object.values(srcTile.factory.lines)) {
+                  if (line.outputProductId === prodId && line.finishedStock > 0) {
+                    const toCollect = Math.min(line.finishedStock, freeCapacity);
+                    line.finishedStock -= toCollect;
+
+                    const oldStock = item.stock;
+                    const newStock = oldStock + toCollect;
+                    const srcCost = line.unitCost || 2.0;
+                    const srcQR = line.outputQuality || 65;
+
+                    item.avgUnitCost = newStock > 0 ? Number((((oldStock * item.avgUnitCost) + (toCollect * srcCost)) / newStock).toFixed(2)) : srcCost;
+                    item.quality = newStock > 0 ? Math.round(((oldStock * item.quality) + (toCollect * srcQR)) / newStock) : srcQR;
+                    item.stock = newStock;
+                    totalCurrentStock += toCollect;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // 2. Reabastecimento Automático Portuário (Safety Stock) & Modo Anticíclico
+        if (item.autoRestockPort && item.safetyStock > 0 && item.stock < item.safetyStock && freeCapacity > 0) {
+          const canBuy = !item.buyOnRecessionOnly || isDiscountCycle;
+          if (canBuy) {
+            const neededUnits = Math.min(item.safetyStock - item.stock, freeCapacity, 1500);
+            const macroMult = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getWholesaleCostMultiplier(state.year) : 1.0;
+            const baseProdCost = (typeof PRODUCT_CATALOG !== 'undefined' && PRODUCT_CATALOG[prodId]?.baseCost) ? PRODUCT_CATALOG[prodId].baseCost : 1.0;
+            const unitPrice = Number((baseProdCost * 1.15 * macroMult).toFixed(2));
+            const totalCost = Math.round(neededUnits * unitPrice);
+
+            if (state.cash >= totalCost) {
+              state.cash -= totalCost;
+              dailyFixed += totalCost;
+
+              const oldStock = item.stock;
+              const newStock = oldStock + neededUnits;
+              item.avgUnitCost = newStock > 0 ? Number((((oldStock * item.avgUnitCost) + (neededUnits * unitPrice)) / newStock).toFixed(2)) : unitPrice;
+              item.quality = newStock > 0 ? Math.round(((oldStock * item.quality) + (neededUnits * 50)) / newStock) : 50;
+              item.stock = newStock;
+              totalCurrentStock += neededUnits;
+
+              if (Math.random() < 0.08) {
+                const discountText = macroMult < 1.0 ? ` (${Math.round((1 - macroMult)*100)}% desc. recessão)` : '';
+                const pName = (typeof PRODUCT_CATALOG !== 'undefined' && PRODUCT_CATALOG[prodId]?.name) ? PRODUCT_CATALOG[prodId].name : prodId;
+                addLog(`📦 ${wh.name}: Reabastecidas ${neededUnits} un de ${pName} via Porto alfandegado${discountText}.`, 'text-sky-300 font-bold');
+              }
+            }
+          }
+        }
+      }
+    }
 
     // Produção de Minas
     if (tile.mine) {
@@ -159,6 +280,16 @@ export function simulateDay(customContext = {}) {
           const feedFarmTile = worldGrid[fx]?.[fy];
           if (feedFarmTile?.farm && feedFarmTile.farm.stock >= feedNeeded) {
             feedFarmTile.farm.stock = Math.max(0, feedFarmTile.farm.stock - feedNeeded);
+            feedSupplied = true;
+          }
+        } else if (farm.feedConfig.supplierId?.startsWith('warehouse_')) {
+          const parts = farm.feedConfig.supplierId.split('_');
+          const wx = Number(parts[1]), wy = Number(parts[2]);
+          const whTile = worldGrid[wx]?.[wy];
+          const grainId = farm.feedConfig.grainProdId || 'wheat';
+          const whItem = whTile?.warehouse?.inventory?.[grainId];
+          if (whItem && whItem.stock >= feedNeeded) {
+            whItem.stock -= feedNeeded;
             feedSupplied = true;
           }
         } else if (farm.feedConfig.supplierId?.startsWith('port_') || farm.feedConfig.supplierId?.startsWith('primary_') || farm.feedConfig.supplierId?.startsWith('port')) {
@@ -235,6 +366,18 @@ export function simulateDay(customContext = {}) {
                   const consumed = Math.min(sourceLine.finishedStock, Math.floor(neededUnits * productionRatio));
                   sourceLine.finishedStock = Math.max(0, sourceLine.finishedStock - consumed);
                 }
+              } else if (cfg.supplierId.startsWith('warehouse_')) {
+                const parts = cfg.supplierId.split('_');
+                const wx = Number(parts[1]), wy = Number(parts[2]);
+                const whTile = worldGrid[wx]?.[wy];
+                const whItem = whTile?.warehouse?.inventory?.[inpId];
+                if (whItem) {
+                  if (whItem.stock < neededUnits) {
+                    productionRatio = Math.min(productionRatio, whItem.stock / Math.max(1, neededUnits));
+                  }
+                  const consumed = Math.min(whItem.stock, Math.floor(neededUnits * productionRatio));
+                  whItem.stock = Math.max(0, whItem.stock - consumed);
+                }
               }
             }
           }
@@ -309,6 +452,15 @@ export function simulateDay(customContext = {}) {
             if (sourceLine) {
               deliverUnits = Math.min(sourceLine.finishedStock, restock);
               sourceLine.finishedStock = Math.max(0, sourceLine.finishedStock - deliverUnits);
+            }
+          } else if (shelf.supplierId?.startsWith('warehouse_')) {
+            const parts = shelf.supplierId.split('_');
+            const wx = Number(parts[1]), wy = Number(parts[2]);
+            const whTile = worldGrid[wx]?.[wy];
+            const whItem = whTile?.warehouse?.inventory?.[prodId];
+            if (whItem) {
+              deliverUnits = Math.min(whItem.stock, restock);
+              whItem.stock = Math.max(0, whItem.stock - deliverUnits);
             }
           }
 
@@ -562,10 +714,10 @@ export function closeMonthEnd(customContext = {}) {
   // Registra Snapshot Mensal Granular no TimeSeriesBuffer (Buffer circular de 24 meses)
   const facilitiesSnapshot = {};
   for (const tile of activeFacilitySet.values()) {
-    if (!tile.store && !tile.factory && !tile.farm && !tile.mine && !tile.rdCenter) continue;
+    if (!tile.store && !tile.factory && !tile.farm && !tile.mine && !tile.rdCenter && !tile.warehouse) continue;
     const key = `${tile.x}_${tile.y}`;
-    const name = tile.store?.name || tile.factory?.name || tile.farm?.name || tile.mine?.name || tile.rdCenter?.name || 'Instalação';
-    const type = tile.store ? 'store' : (tile.factory ? 'factory' : (tile.farm ? 'farm' : (tile.mine ? 'mine' : 'rdCenter')));
+    const name = tile.store?.name || tile.factory?.name || tile.farm?.name || tile.mine?.name || tile.rdCenter?.name || tile.warehouse?.name || 'Instalação';
+    const type = tile.store ? 'store' : (tile.factory ? 'factory' : (tile.farm ? 'farm' : (tile.mine ? 'mine' : (tile.rdCenter ? 'rdCenter' : 'warehouse'))));
     const lm = tile.lastMonthMetrics || { revenue: 0, cogs: 0, opex: 0, netProfit: 0 };
     facilitiesSnapshot[key] = {
       x: tile.x,
