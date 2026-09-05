@@ -5,12 +5,13 @@
 
 import { AVATAR_CATALOG, COLOR_PALETTES, DIFFICULTY_PRESETS } from './game_config.js';
 import { MAP_WIDTH } from './map_data.js';
+import { seedRecoveredSavesIfMissing } from './recovered_saves_seed.js';
 
 export const GAME_VERSION_INFO = {
   major: 0,
   minor: 8,
   patch: 4,
-  build: '20260905.01',
+  build: '20260905.02',
   saveSchema: '0.8.2',
   get version() { return `${this.major}.${this.minor}.${this.patch}`; },
   get fullString() { return `v${this.version} (bld.${this.build})`; }
@@ -122,9 +123,74 @@ export function migrateSaveData(rawSave) {
     migrated.banking.totalDebt = migrated.banking.activeLoans.reduce((s, l) => s + (l.remainingBalance || 0), 0);
   }
 
+  // 8. Sanitização de Configurações e Áudio (novo em v0.8.4; preserva volume, mute e rádio)
+  const rawSet = migrated.settings || {};
+  migrated.settings = {
+    autoSave: ['monthly', 'yearly', 'disabled'].includes(rawSet.autoSave) ? rawSet.autoSave : 'monthly',
+    masterVolume: typeof rawSet.masterVolume === 'number' && !isNaN(rawSet.masterVolume) ? Math.max(0, Math.min(1, rawSet.masterVolume)) : 1.0,
+    musicVolume: typeof rawSet.musicVolume === 'number' && !isNaN(rawSet.musicVolume) ? Math.max(0, Math.min(1, rawSet.musicVolume)) : 0.6,
+    ambienceVolume: typeof rawSet.ambienceVolume === 'number' && !isNaN(rawSet.ambienceVolume) ? Math.max(0, Math.min(1, rawSet.ambienceVolume)) : 0.5,
+    sfxVolume: typeof rawSet.sfxVolume === 'number' && !isNaN(rawSet.sfxVolume) ? Math.max(0, Math.min(1, rawSet.sfxVolume)) : 0.7,
+    isMusicMuted: Boolean(rawSet.isMusicMuted),
+    repeatMode: (rawSet.repeatMode === 'track') ? 'track' : 'playlist',
+    currentBgmKey: (typeof rawSet.currentBgmKey === 'string' && rawSet.currentBgmKey) ? rawSet.currentBgmKey : 'bgm_1'
+  };
+
   migrated.saveVersion = CURRENT_SAVE_VERSION;
   migrated.migratedFromVersion = rawVer;
   return migrated;
+}
+
+/**
+ * Reconcilia o índice de saves com quaisquer chaves oiko_save_ presentes no localStorage
+ */
+export function reconcileSavesIndex() {
+  if (typeof window === 'undefined' || typeof localStorage === 'undefined') return [];
+  try {
+    const rawIndex = localStorage.getItem(SAVES_STORAGE_KEY);
+    let index = rawIndex ? JSON.parse(rawIndex) : [];
+    if (!Array.isArray(index)) index = [];
+
+    const existingIds = new Set(index.map(s => s.id));
+    let modified = false;
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('oiko_save_')) {
+        const slotId = key.replace('oiko_save_', '');
+        if (!existingIds.has(slotId)) {
+          try {
+            const rawSave = localStorage.getItem(key);
+            const data = JSON.parse(rawSave);
+            if (data && data.playerProfile) {
+              index.push({
+                id: slotId,
+                companyName: data.playerProfile.companyName || 'Empresa',
+                playerName: data.playerProfile.playerName || 'Jogador',
+                avatarId: data.playerProfile.avatarId || 'human_ceo',
+                themeColor: data.playerProfile.themeColor || 'emerald',
+                cash: typeof data.cash === 'number' ? data.cash : 100000,
+                gameDate: `${String(data.day || 1).padStart(2,'0')}/${String(data.month || 1).padStart(2,'0')} · Ano ${data.year || 1}`,
+                dateISO: data.timestamp || new Date().toISOString(),
+                builtCount: Array.isArray(data.builtTiles) ? data.builtTiles.length : 0
+              });
+              existingIds.add(slotId);
+              modified = true;
+            }
+          } catch (err) {}
+        }
+      }
+    }
+
+    if (modified) {
+      index.sort((a, b) => new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime());
+      localStorage.setItem(SAVES_STORAGE_KEY, JSON.stringify(index));
+    }
+    return index;
+  } catch (e) {
+    console.error('Erro ao reconciliar índice de saves:', e);
+    return [];
+  }
 }
 
 /**
@@ -132,8 +198,10 @@ export function migrateSaveData(rawSave) {
  */
 export function getSavesIndex() {
   try {
-    const raw = localStorage.getItem(SAVES_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (typeof seedRecoveredSavesIfMissing === 'function') {
+      seedRecoveredSavesIfMissing();
+    }
+    return reconcileSavesIndex();
   } catch (e) {
     console.error('Erro ao ler índice de saves:', e);
     return [];
@@ -179,7 +247,17 @@ export function serializeGameState(state, builtTiles = []) {
           totalDebt:   state.banking.totalDebt || 0,
           loanHistory: (state.banking.loanHistory || []).map(l => ({ ...l })),
         }
-      : { activeLoans: [], totalDebt: 0, loanHistory: [] }
+      : { activeLoans: [], totalDebt: 0, loanHistory: [] },
+    settings: {
+      autoSave: state.gameSettings?.autoSave || 'monthly',
+      masterVolume: state.gameSettings?.masterVolume !== undefined ? state.gameSettings.masterVolume : 1.0,
+      musicVolume: state.gameSettings?.musicVolume !== undefined ? state.gameSettings.musicVolume : 0.6,
+      ambienceVolume: state.gameSettings?.ambienceVolume !== undefined ? state.gameSettings.ambienceVolume : 0.5,
+      sfxVolume: state.gameSettings?.sfxVolume !== undefined ? state.gameSettings.sfxVolume : 0.7,
+      isMusicMuted: Boolean(state.gameSettings?.isMusicMuted),
+      repeatMode: state.gameSettings?.repeatMode || 'playlist',
+      currentBgmKey: state.gameSettings?.currentBgmKey || 'bgm_1'
+    }
   };
 }
 

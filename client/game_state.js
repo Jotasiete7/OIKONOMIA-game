@@ -37,7 +37,12 @@ export function createInitialGameState() {
       masterVolume: 1.0,
       musicVolume: 0.6,
       ambienceVolume: 0.5,
-      sfxVolume: 0.7
+      sfxVolume: 0.7,
+      isMusicMuted: false,
+      repeatMode: 'playlist',
+      currentBgmKey: 'bgm_1',
+      tickerEnabled: true,
+      tickerSpeed: 55
     },
     playerBrandRating: {},
     activeMarketingContracts: new Set(),

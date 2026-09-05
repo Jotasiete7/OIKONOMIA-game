@@ -87,6 +87,7 @@ import {
   migrateSaveData,
   getSavesIndex,
   saveSavesIndex,
+  reconcileSavesIndex,
   serializeGameState,
   createSaveMetadata,
   deleteSaveSlot,
@@ -169,6 +170,8 @@ window.CURRENT_SAVE_VERSION = CURRENT_SAVE_VERSION;
 window.migrateSaveData = migrateSaveData;
 window.getSavesIndex = getSavesIndex;
 window.saveSavesIndex = saveSavesIndex;
+window.reconcileSavesIndex = reconcileSavesIndex;
+window._saveSystem = { getSavesIndex, saveSavesIndex, reconcileSavesIndex, migrateSaveData };
 window.serializeGameState = serializeGameState;
 window.createSaveMetadata = createSaveMetadata;
 window.deleteSaveSlot = deleteSaveSlot;

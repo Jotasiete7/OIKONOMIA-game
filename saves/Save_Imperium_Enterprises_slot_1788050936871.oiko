@@ -1,0 +1,239 @@
+{
+  "saveVersion": "0.8.1",
+  "timestamp": "2026-08-30T14:35:49.547Z",
+  "playerProfile": {
+    "playerName": "jota7",
+    "companyName": "Imperium Enterprises",
+    "avatarId": "human_diplomat",
+    "themeColor": "emerald",
+    "difficulty": "standard"
+  },
+  "cash": 68816.9749999999,
+  "day": 4,
+  "month": 2,
+  "year": 1,
+  "unlockedCities": {
+    "nova_atenas": true,
+    "porto_real": true,
+    "montargis": false,
+    "varzea": false
+  },
+  "playerBrandRating": {
+    "bread": 19,
+    "milk": 19,
+    "eggs": 19,
+    "frozen_beef": 19,
+    "poultry_meat": 19,
+    "pork_meat": 19,
+    "cookies": 19,
+    "chocolate_bar": 19,
+    "ground_coffee": 19,
+    "beer": 19,
+    "wine": 19,
+    "cola": 19,
+    "mineral_water": 19,
+    "fruit_juice": 19,
+    "cigarettes": 19,
+    "corn_flakes": 19,
+    "canned_soup": 19,
+    "cooking_oil": 19,
+    "yogurt": 19,
+    "cheese": 19,
+    "jeans": 19,
+    "t_shirt": 19,
+    "business_suit": 19,
+    "wool_sweater": 19,
+    "leather_jacket": 19,
+    "leather_shoes": 19,
+    "athletic_shoes": 19,
+    "leather_bag": 19,
+    "gala_dress": 19,
+    "underwear": 19,
+    "mobile_phone": 19,
+    "laptop_pc": 19,
+    "desktop_pc": 19,
+    "television": 19,
+    "digital_camera": 19,
+    "game_console": 19,
+    "microwave": 19,
+    "refrigerator": 19,
+    "air_conditioner": 19,
+    "washing_machine": 19,
+    "compact_car": 19,
+    "sedan_car": 19,
+    "suv_car": 19,
+    "motorcycle": 19,
+    "heavy_truck": 19,
+    "cold_pills": 19,
+    "pain_reliever": 19,
+    "cough_syrup": 19,
+    "shampoo": 19,
+    "soap": 19,
+    "toothpaste": 19,
+    "luxury_perfume": 19,
+    "sunscreen": 19,
+    "king_bed": 19,
+    "sofa": 19,
+    "dining_table": 19,
+    "wardrobe": 19,
+    "office_chair": 19,
+    "gold_watch": 19,
+    "gold_ring": 19,
+    "gold_necklace": 19,
+    "acrylic_paint": 19,
+    "tool_set": 19
+  },
+  "activeMarketingContracts": [],
+  "rdLabs": {},
+  "unlockedProducts": [
+    "wheat",
+    "corn",
+    "cotton",
+    "sugar_cane",
+    "cocoa",
+    "coffee_beans",
+    "grapes",
+    "tobacco",
+    "rubber",
+    "cattle",
+    "raw_milk",
+    "poultry",
+    "pigs",
+    "wool",
+    "iron_ore",
+    "bauxite",
+    "crude_oil",
+    "silica",
+    "timber",
+    "gold_ore",
+    "chemical_minerals",
+    "eggs",
+    "bread",
+    "milk"
+  ],
+  "tutorialState": {
+    "completedSteps": {
+      "open_store": true,
+      "stock_goods": true,
+      "inspect_tile": true,
+      "monthly_profit": true
+    },
+    "rewardClaimed": false
+  },
+  "builtTiles": [
+    {
+      "x": 87,
+      "y": 39,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "rdCenter": null,
+      "competitor": {
+        "name": "MegaMart Porto Real (IA)",
+        "shelves": {
+          "bread": {
+            "price": 3.45,
+            "quality": 47.5,
+            "brand": 25
+          },
+          "beer": {
+            "price": 3.93,
+            "quality": 50.4,
+            "brand": 25
+          },
+          "cola": {
+            "price": 2.12,
+            "quality": 47.5,
+            "brand": 25
+          },
+          "milk": {
+            "price": 2.73,
+            "quality": 47.5,
+            "brand": 20
+          }
+        },
+        "lastShare": 0.7739592032890129
+      }
+    },
+    {
+      "x": 41,
+      "y": 41,
+      "store": {
+        "storeTypeId": "supermarket",
+        "name": "🏬 Supermercado & Alimentos (Distrito Residencial (Nova Atenas))",
+        "maxShelves": 24,
+        "rentMultiplier": 1.8,
+        "dailyRent": 90,
+        "shelves": {
+          "bread": {
+            "price": 3.5,
+            "stock": 887,
+            "maxCapacity": 1000,
+            "dailyRestock": 184,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 1.2,
+            "unitFreight": 0.785,
+            "landedCost": 1.985
+          },
+          "milk": {
+            "price": 2.8,
+            "stock": 732,
+            "maxCapacity": 1000,
+            "dailyRestock": 162,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 0.96,
+            "unitFreight": 0.785,
+            "landedCost": 1.745
+          },
+          "eggs": {
+            "price": 3.2,
+            "stock": 684,
+            "maxCapacity": 1000,
+            "dailyRestock": 147,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 1.12,
+            "unitFreight": 0.785,
+            "landedCost": 1.905
+          },
+          "poultry_meat": {
+            "price": 8.5,
+            "stock": 427,
+            "maxCapacity": 1000,
+            "dailyRestock": 88,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 3.2,
+            "unitFreight": 0.785,
+            "landedCost": 3.985
+          },
+          "yogurt": {
+            "price": 2.5,
+            "stock": 513,
+            "maxCapacity": 1000,
+            "dailyRestock": 88,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 1.04,
+            "unitFreight": 0.785,
+            "landedCost": 1.825
+          }
+        }
+      },
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "rdCenter": null,
+      "competitor": null
+    }
+  ],
+  "playtimeSeconds": 22
+}

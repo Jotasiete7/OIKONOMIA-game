@@ -73,6 +73,7 @@ const SoundEngine = {
 
   // Inicialização e AudioContext
   init() {
+    this.syncVolumesFromSettings();
     this.setupUnlockListeners();
   },
 
@@ -165,21 +166,38 @@ const SoundEngine = {
     if (typeof window !== 'undefined') {
       if (window.gameSettings) return window.gameSettings;
       if (window.GameState && window.GameState.gameSettings) return window.GameState.gameSettings;
+      try {
+        const raw = localStorage.getItem('oikonomia_settings_v1');
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
     }
     return {
       masterVolume: 1.0,
       musicVolume: 0.6,
       ambienceVolume: 0.5,
-      sfxVolume: 0.7
+      sfxVolume: 0.7,
+      isMusicMuted: false,
+      repeatMode: 'playlist',
+      currentBgmKey: 'bgm_1'
     };
   },
 
   syncVolumesFromSettings() {
     const s = this.getSettings();
+    if (s.isMusicMuted !== undefined) {
+      this.isMusicMuted = Boolean(s.isMusicMuted);
+    }
+    if (s.repeatMode) {
+      this.repeatMode = (s.repeatMode === 'track') ? 'track' : 'playlist';
+    }
+    if (s.currentBgmKey && this.bgmTracks[s.currentBgmKey]) {
+      this.currentBgmKey = s.currentBgmKey;
+    }
     this.setMasterVolume(s.masterVolume !== undefined ? s.masterVolume : 1.0);
     this.setMusicVolume(s.musicVolume !== undefined ? s.musicVolume : 0.6);
     this.setAmbienceVolume(s.ambienceVolume !== undefined ? s.ambienceVolume : 0.5);
     this.setSfxVolume(s.sfxVolume !== undefined ? s.sfxVolume : 0.7);
+    this.notifyRadioChange();
   },
 
   setMasterVolume(vol) {
@@ -262,12 +280,18 @@ const SoundEngine = {
     this.currentBgmKey = canonicalKey;
     this.isBgmPaused = false;
 
+    const s = this.getSettings();
+    s.currentBgmKey = canonicalKey;
+    if (typeof window !== 'undefined') {
+      if (window.gameSettings) window.gameSettings.currentBgmKey = canonicalKey;
+      if (window.GameState && window.GameState.gameSettings) window.GameState.gameSettings.currentBgmKey = canonicalKey;
+    }
+
     const nextAudio = new Audio();
     nextAudio.src = path;
     nextAudio.loop = (this.repeatMode === 'track');
     nextAudio.preload = 'auto';
 
-    const s = this.getSettings();
     const targetVolume = this.isMusicMuted ? 0 :
       (s.musicVolume !== undefined ? s.musicVolume : 0.6) * (s.masterVolume !== undefined ? s.masterVolume : 1.0);
 
@@ -390,12 +414,30 @@ const SoundEngine = {
     if (this.currentBgmElement) {
       this.currentBgmElement.loop = (this.repeatMode === 'track');
     }
+    const s = this.getSettings();
+    s.repeatMode = this.repeatMode;
+    if (typeof window !== 'undefined') {
+      if (window.gameSettings) window.gameSettings.repeatMode = this.repeatMode;
+      if (window.GameState && window.GameState.gameSettings) window.GameState.gameSettings.repeatMode = this.repeatMode;
+      try {
+        localStorage.setItem('oikonomia_settings_v1', JSON.stringify(s));
+      } catch (e) {}
+    }
     this.notifyRadioChange();
     return this.repeatMode;
   },
 
   toggleMusicMute() {
     this.isMusicMuted = !this.isMusicMuted;
+    const s = this.getSettings();
+    s.isMusicMuted = this.isMusicMuted;
+    if (typeof window !== 'undefined') {
+      if (window.gameSettings) window.gameSettings.isMusicMuted = this.isMusicMuted;
+      if (window.GameState && window.GameState.gameSettings) window.GameState.gameSettings.isMusicMuted = this.isMusicMuted;
+      try {
+        localStorage.setItem('oikonomia_settings_v1', JSON.stringify(s));
+      } catch (e) {}
+    }
     this.updateBgmOutputVolume();
     this.notifyRadioChange();
     return this.isMusicMuted;

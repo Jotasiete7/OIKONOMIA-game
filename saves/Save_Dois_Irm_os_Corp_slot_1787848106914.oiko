@@ -1,0 +1,372 @@
+{
+  "saveVersion": "0.7.0",
+  "timestamp": "2026-08-27T16:49:32.634Z",
+  "playerProfile": {
+    "playerName": "Jotasiete",
+    "companyName": "Dois Irmãos Corp",
+    "avatarId": "human_ceo",
+    "themeColor": "amber",
+    "difficulty": "standard"
+  },
+  "cash": 196810.67333333584,
+  "day": 31,
+  "month": 8,
+  "year": 4,
+  "unlockedCities": {
+    "nova_atenas": true,
+    "porto_real": true,
+    "montargis": false,
+    "varzea": true
+  },
+  "playerBrandRating": {
+    "bread": 75,
+    "milk": 95,
+    "eggs": 95,
+    "frozen_beef": 95,
+    "poultry_meat": 95,
+    "pork_meat": 95,
+    "cookies": 95,
+    "chocolate_bar": 95,
+    "ground_coffee": 95,
+    "beer": 95,
+    "wine": 95,
+    "cola": 95,
+    "mineral_water": 95,
+    "fruit_juice": 95,
+    "cigarettes": 95,
+    "corn_flakes": 95,
+    "canned_soup": 95,
+    "cooking_oil": 95,
+    "yogurt": 95,
+    "cheese": 95,
+    "jeans": 95,
+    "t_shirt": 95,
+    "business_suit": 95,
+    "wool_sweater": 95,
+    "leather_jacket": 95,
+    "leather_shoes": 95,
+    "athletic_shoes": 95,
+    "leather_bag": 95,
+    "gala_dress": 95,
+    "underwear": 95,
+    "mobile_phone": 95,
+    "laptop_pc": 95,
+    "desktop_pc": 95,
+    "television": 95,
+    "digital_camera": 95,
+    "game_console": 95,
+    "microwave": 95,
+    "refrigerator": 95,
+    "air_conditioner": 95,
+    "washing_machine": 95,
+    "compact_car": 95,
+    "sedan_car": 95,
+    "suv_car": 95,
+    "motorcycle": 95,
+    "heavy_truck": 95,
+    "cold_pills": 95,
+    "pain_reliever": 95,
+    "cough_syrup": 95,
+    "shampoo": 95,
+    "soap": 95,
+    "toothpaste": 95,
+    "luxury_perfume": 95,
+    "sunscreen": 95,
+    "king_bed": 95,
+    "sofa": 95,
+    "dining_table": 95,
+    "wardrobe": 95,
+    "office_chair": 95,
+    "gold_watch": 95,
+    "gold_ring": 95,
+    "gold_necklace": 95,
+    "acrylic_paint": 95,
+    "tool_set": 95
+  },
+  "activeMarketingContracts": [
+    "media_tv::__institutional__",
+    "media_radio::bread",
+    "media_radio::__institutional__"
+  ],
+  "builtTiles": [
+    {
+      "x": 40,
+      "y": 38,
+      "store": {
+        "storeTypeId": "kombini",
+        "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+        "maxShelves": 4,
+        "rentMultiplier": 1,
+        "dailyRent": 50,
+        "shelves": {
+          "bread": {
+            "price": 3.5,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 184,
+            "quality": 65,
+            "supplierId": "factory_101_52_rec_bread",
+            "supplierName": "🏭 Fábrica Central (101, 52) (Panificação Artesanal)",
+            "wholesalePrice": 0.75,
+            "unitFreight": 0.76,
+            "landedCost": 1.51
+          },
+          "milk": {
+            "price": 2.8,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 162,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 0.96,
+            "unitFreight": 0.755,
+            "landedCost": 1.71
+          },
+          "mineral_water": {
+            "price": 1.5,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 162,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 0.56,
+            "unitFreight": 0.755,
+            "landedCost": 1.31
+          },
+          "cola": {
+            "price": 2.2,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 147,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 1.04,
+            "unitFreight": 0.755,
+            "landedCost": 1.79
+          }
+        }
+      },
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "competitor": null
+    },
+    {
+      "x": 40,
+      "y": 40,
+      "store": {
+        "storeTypeId": "electronics",
+        "name": "💻 MegaStore de Eletrônicos (Distrito Residencial (Nova Atenas))",
+        "maxShelves": 12,
+        "rentMultiplier": 2,
+        "dailyRent": 100,
+        "shelves": {
+          "mobile_phone": {
+            "price": 450,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 10,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 152,
+            "unitFreight": 0.785,
+            "landedCost": 152.78
+          },
+          "laptop_pc": {
+            "price": 850,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 10,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 288,
+            "unitFreight": 0.785,
+            "landedCost": 288.79
+          },
+          "television": {
+            "price": 600,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 10,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 208,
+            "unitFreight": 0.785,
+            "landedCost": 208.78
+          },
+          "digital_camera": {
+            "price": 350,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 10,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 124.8,
+            "unitFreight": 0.785,
+            "landedCost": 125.58
+          },
+          "game_console": {
+            "price": 400,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 10,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 144,
+            "unitFreight": 0.785,
+            "landedCost": 144.78
+          },
+          "microwave": {
+            "price": 160,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 10,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 60.8,
+            "unitFreight": 0.785,
+            "landedCost": 61.58
+          },
+          "air_conditioner": {
+            "price": 550,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 10,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 200,
+            "unitFreight": 0.785,
+            "landedCost": 200.78
+          },
+          "refrigerator": {
+            "price": 750,
+            "stock": 944,
+            "maxCapacity": 1000,
+            "dailyRestock": 10,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 264,
+            "unitFreight": 0.785,
+            "landedCost": 264.79
+          },
+          "washing_machine": {
+            "price": 620,
+            "stock": 915,
+            "maxCapacity": 1000,
+            "dailyRestock": 10,
+            "quality": 55,
+            "supplierId": "port_alpha",
+            "supplierName": "Porto Alfa (Importação Marítima)",
+            "wholesalePrice": 224,
+            "unitFreight": 0.785,
+            "landedCost": 224.78
+          }
+        }
+      },
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "competitor": null
+    },
+    {
+      "x": 87,
+      "y": 39,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "competitor": {
+        "name": "MegaMart Porto Real (IA)",
+        "shelves": {
+          "bread": {
+            "price": 4.38,
+            "quality": 45,
+            "brand": 25
+          },
+          "beer": {
+            "price": 5,
+            "quality": 48,
+            "brand": 25
+          },
+          "cola": {
+            "price": 2.75,
+            "quality": 45,
+            "brand": 25
+          },
+          "milk": {
+            "price": 3.5,
+            "quality": 45,
+            "brand": 20
+          }
+        },
+        "lastShare": 0.7240922635470699
+      }
+    },
+    {
+      "x": 101,
+      "y": 52,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": {
+        "id": "factory_101_52",
+        "name": "Fábrica Central (101, 52)",
+        "maxLines": 4,
+        "lines": {
+          "rec_flour": {
+            "recipeId": "rec_flour",
+            "recipeName": "Moinho de Farinha",
+            "outputProductId": "flour",
+            "dailyCapacity": 700,
+            "unitCost": 0.65,
+            "outputQuality": 62,
+            "finishedStock": 3000,
+            "maxStock": 3000
+          },
+          "rec_bread": {
+            "recipeId": "rec_bread",
+            "recipeName": "Panificação Artesanal",
+            "outputProductId": "bread",
+            "dailyCapacity": 500,
+            "unitCost": 0.75,
+            "outputQuality": 65,
+            "finishedStock": 3000,
+            "maxStock": 3000
+          }
+        }
+      },
+      "competitor": null
+    },
+    {
+      "x": 101,
+      "y": 53,
+      "store": null,
+      "mine": null,
+      "farm": {
+        "id": "farm_101_53",
+        "name": "🌾 Fazenda de Trigo & Cereais",
+        "cropId": "wheat",
+        "cropName": "Trigo & Cereais",
+        "quality": 60,
+        "dailyYield": 500,
+        "dailyOperatingCost": 0.45,
+        "stock": 5000,
+        "maxCapacity": 5000
+      },
+      "factory": null,
+      "competitor": null
+    }
+  ],
+  "playtimeSeconds": 0
+}

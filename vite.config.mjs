@@ -22,6 +22,12 @@ function copyStaticAssetsPlugin() {
       if (fs.existsSync(assetsSrc)) {
         fs.cpSync(assetsSrc, assetsDest, { recursive: true });
       }
+      // Copia banking_system.js (IIFE) para a raiz do dist
+      const bankingSrc  = path.resolve('client', 'banking_system.js');
+      const bankingDest = path.resolve('dist', 'banking_system.js');
+      if (fs.existsSync(bankingSrc)) {
+        fs.copyFileSync(bankingSrc, bankingDest);
+      }
     }
   };
 }
@@ -43,6 +49,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    strictPort: true,    // Impede o Vite de mudar para 5174/5175 e fragmentar o localStorage
     open: true,          // abre o navegador automaticamente ao rodar npm run dev
   },
 });

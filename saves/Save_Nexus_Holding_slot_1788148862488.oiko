@@ -1,0 +1,428 @@
+{
+  "saveVersion": "0.8.1",
+  "timestamp": "2026-08-31T15:11:57.193Z",
+  "playerProfile": {
+    "playerName": "Lorenzo Falcão",
+    "companyName": "Nexus Holding",
+    "avatarId": "human_elder",
+    "themeColor": "amber",
+    "difficulty": "standard",
+    "logoRegenSeed": 9
+  },
+  "cash": 417950.89999999973,
+  "day": 16,
+  "month": 6,
+  "year": 3,
+  "unlockedCities": {
+    "nova_atenas": true,
+    "porto_real": true,
+    "montargis": true,
+    "varzea": true
+  },
+  "playerBrandRating": {
+    "bread": 10,
+    "milk": 10,
+    "eggs": 10,
+    "frozen_beef": 10,
+    "poultry_meat": 10,
+    "pork_meat": 10,
+    "cookies": 10,
+    "chocolate_bar": 10,
+    "ground_coffee": 10,
+    "beer": 10,
+    "wine": 10,
+    "cola": 10,
+    "mineral_water": 10,
+    "fruit_juice": 10,
+    "cigarettes": 10,
+    "corn_flakes": 10,
+    "canned_soup": 10,
+    "cooking_oil": 10,
+    "yogurt": 10,
+    "cheese": 10,
+    "jeans": 10,
+    "t_shirt": 10,
+    "business_suit": 10,
+    "wool_sweater": 10,
+    "leather_jacket": 10,
+    "leather_shoes": 10,
+    "athletic_shoes": 10,
+    "leather_bag": 10,
+    "gala_dress": 10,
+    "underwear": 10,
+    "mobile_phone": 10,
+    "laptop_pc": 10,
+    "desktop_pc": 10,
+    "television": 10,
+    "digital_camera": 10,
+    "game_console": 10,
+    "microwave": 10,
+    "refrigerator": 10,
+    "air_conditioner": 10,
+    "washing_machine": 10,
+    "compact_car": 10,
+    "sedan_car": 10,
+    "suv_car": 10,
+    "motorcycle": 10,
+    "heavy_truck": 10,
+    "cold_pills": 10,
+    "pain_reliever": 10,
+    "cough_syrup": 10,
+    "shampoo": 10,
+    "soap": 10,
+    "toothpaste": 10,
+    "luxury_perfume": 10,
+    "sunscreen": 10,
+    "king_bed": 10,
+    "sofa": 10,
+    "dining_table": 10,
+    "wardrobe": 10,
+    "office_chair": 10,
+    "gold_watch": 10,
+    "gold_ring": 10,
+    "gold_necklace": 10,
+    "acrylic_paint": 10,
+    "tool_set": 10,
+    "flour": 10,
+    "refined_sugar": 10,
+    "steel": 10,
+    "aluminum": 10,
+    "plastic": 10,
+    "glass": 10,
+    "cotton_cloth": 10,
+    "wool_yarn": 10,
+    "leather": 10,
+    "paper": 10,
+    "lumber": 10,
+    "chips": 10,
+    "engine": 10,
+    "tires": 10,
+    "wheat": 10,
+    "corn": 10,
+    "cotton": 10,
+    "sugar_cane": 10,
+    "cocoa": 10,
+    "coffee_beans": 10,
+    "grapes": 10,
+    "tobacco": 10,
+    "rubber": 10,
+    "cattle": 10,
+    "raw_milk": 10,
+    "poultry": 10,
+    "pigs": 10,
+    "wool": 10,
+    "iron_ore": 10,
+    "bauxite": 10,
+    "crude_oil": 10,
+    "silica": 10,
+    "timber": 10,
+    "gold_ore": 10,
+    "chemical_minerals": 10,
+    "wool_cloth": 10
+  },
+  "activeMarketingContracts": [],
+  "rdLabs": {
+    "proj_1788148988815_569": {
+      "id": "proj_1788148988815_569",
+      "productId": "bread",
+      "productName": "Pão Artesanal",
+      "category": "Alimentos",
+      "labsCount": 1,
+      "monthlyBudget": 9661,
+      "baseMonthlyRequired": 9661,
+      "startQR": 63,
+      "currentQR": 89.95811,
+      "targetQR": 90,
+      "monthsInvested": 22,
+      "totalSpent": 212542,
+      "status": "active",
+      "completedAt": null
+    },
+    "proj_1788149609729_903": {
+      "id": "proj_1788149609729_903",
+      "productId": "milk",
+      "productName": "Leite Integral",
+      "category": "Alimentos",
+      "labsCount": 2,
+      "monthlyBudget": 21896,
+      "baseMonthlyRequired": 21896,
+      "startQR": 68,
+      "currentQR": 82.33294,
+      "targetQR": 100,
+      "monthsInvested": 5,
+      "totalSpent": 109480,
+      "status": "active",
+      "completedAt": null
+    }
+  },
+  "unlockedProducts": [
+    "wheat",
+    "corn",
+    "cotton",
+    "sugar_cane",
+    "cocoa",
+    "coffee_beans",
+    "grapes",
+    "tobacco",
+    "rubber",
+    "cattle",
+    "raw_milk",
+    "poultry",
+    "pigs",
+    "wool",
+    "iron_ore",
+    "bauxite",
+    "crude_oil",
+    "silica",
+    "timber",
+    "gold_ore",
+    "chemical_minerals",
+    "eggs",
+    "bread",
+    "milk",
+    "flour"
+  ],
+  "acquiredLicenses": [
+    "kombini"
+  ],
+  "tutorialState": {
+    "completedSteps": {
+      "inspect_tile": true,
+      "monthly_profit": true,
+      "open_store": true,
+      "stock_goods": true,
+      "build_farm": true,
+      "build_factory": true,
+      "research_rd": true
+    },
+    "rewardClaimed": true,
+    "active": true
+  },
+  "builtTiles": [
+    {
+      "x": 87,
+      "y": 39,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "rdCenter": null,
+      "competitor": {
+        "name": "MegaMart Porto Real (IA)",
+        "shelves": {
+          "bread": {
+            "price": 4.38,
+            "quality": 89.2,
+            "brand": 25
+          },
+          "beer": {
+            "price": 5,
+            "quality": 90,
+            "brand": 25
+          },
+          "cola": {
+            "price": 2.75,
+            "quality": 89.2,
+            "brand": 25
+          },
+          "milk": {
+            "price": 3.5,
+            "quality": 89.2,
+            "brand": 20
+          }
+        },
+        "lastShare": 0.8624487208831453
+      }
+    },
+    {
+      "x": 40,
+      "y": 37,
+      "store": {
+        "storeTypeId": "kombini",
+        "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+        "maxShelves": 4,
+        "rentMultiplier": 1,
+        "dailyRent": 50,
+        "shelves": {
+          "bread": {
+            "price": 3.5,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 184,
+            "quality": 87.06,
+            "supplierId": "factory_45_37_line_1788148909791_567",
+            "supplierName": "🏭 Fábrica Central (45, 37) (Panificação Artesanal)",
+            "wholesalePrice": 0.96,
+            "unitFreight": 0.06,
+            "landedCost": 1.02
+          },
+          "milk": {
+            "price": 2.8,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 162,
+            "quality": 52,
+            "supplierId": "port_atenas_bay",
+            "supplierName": "⚓ Porto Nova Atenas (Doca da Baía Central - Alimentos & Varejo)",
+            "wholesalePrice": 1.4,
+            "unitFreight": 0.17,
+            "landedCost": 1.57
+          },
+          "eggs": {
+            "price": 3.2,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 147,
+            "quality": 50,
+            "supplierId": "port_atenas_bay",
+            "supplierName": "⚓ Porto Nova Atenas (Doca da Baía Central - Alimentos & Varejo)",
+            "wholesalePrice": 1.2,
+            "unitFreight": 0.17,
+            "landedCost": 1.37
+          },
+          "frozen_beef": {
+            "price": 14,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 59,
+            "quality": 52,
+            "supplierId": "port_atenas_bay",
+            "supplierName": "⚓ Porto Nova Atenas (Doca da Baía Central - Alimentos & Varejo)",
+            "wholesalePrice": 5.5,
+            "unitFreight": 0.17,
+            "landedCost": 5.67
+          }
+        }
+      },
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "rdCenter": null,
+      "competitor": null
+    },
+    {
+      "x": 44,
+      "y": 37,
+      "store": null,
+      "mine": null,
+      "farm": {
+        "id": "farm_44_37",
+        "name": "🌾 Fazenda de Trigo & Cereais",
+        "cropId": "wheat",
+        "cropName": "Trigo & Cereais",
+        "quality": 60,
+        "dailyYield": 500,
+        "dailyOperatingCost": 0.45,
+        "stock": 0,
+        "maxCapacity": 5000
+      },
+      "factory": null,
+      "rdCenter": null,
+      "competitor": null
+    },
+    {
+      "x": 45,
+      "y": 37,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": {
+        "id": "factory_45_37",
+        "name": "Fábrica Central (45, 37)",
+        "maxLines": 4,
+        "lines": {
+          "line_1788148909791_567": {
+            "lineId": "line_1788148909791_567",
+            "recipeId": "rec_bread",
+            "recipeName": "Panificação Artesanal",
+            "outputProductId": "bread",
+            "dailyCapacity": 500,
+            "unitCost": 0.96,
+            "outputQuality": 89.95811,
+            "finishedStock": 3000,
+            "maxStock": 3000,
+            "inputsConfig": {
+              "flour": {
+                "inputId": "flour",
+                "supplierId": "factory_45_37_line_1788148934094_76",
+                "supplierName": "🏭 Fábrica Central (45, 37) (Moinho de Farinha)",
+                "wholesalePrice": 0.65,
+                "freight": 0.01,
+                "landedCost": 0.66,
+                "quality": 62
+              }
+            }
+          },
+          "line_1788148934094_76": {
+            "lineId": "line_1788148934094_76",
+            "recipeId": "rec_flour",
+            "recipeName": "Moinho de Farinha",
+            "outputProductId": "flour",
+            "dailyCapacity": 700,
+            "unitCost": 0.65,
+            "outputQuality": 62,
+            "finishedStock": 3000,
+            "maxStock": 3000,
+            "inputsConfig": {
+              "wheat": {
+                "type": "internal_farm",
+                "supplierId": "farm_44_37",
+                "supplierName": "🌾 🌾 Fazenda de Trigo & Cereais",
+                "wholesalePrice": 0.45,
+                "quality": 60,
+                "quota": 500,
+                "origin": "Produção Agrícola (44, 37)",
+                "distance": 1,
+                "freight": 0.018,
+                "landedCost": 0.468
+              }
+            }
+          }
+        }
+      },
+      "rdCenter": null,
+      "competitor": null
+    },
+    {
+      "x": 43,
+      "y": 37,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "rdCenter": {
+        "name": "Centro de P&D Nova Atenas",
+        "level": 1,
+        "dailyRent": 10,
+        "constructionCost": 80000,
+        "builtAt": {
+          "day": 2,
+          "month": 7,
+          "year": 1
+        }
+      },
+      "competitor": null
+    },
+    {
+      "x": 46,
+      "y": 37,
+      "store": null,
+      "mine": null,
+      "farm": {
+        "id": "farm_46_37",
+        "name": "🥛 Pecuária Leiteira",
+        "cropId": "raw_milk",
+        "cropName": "Leite Cru",
+        "quality": 65,
+        "dailyYield": 450,
+        "dailyOperatingCost": 0.35,
+        "stock": 5000,
+        "maxCapacity": 5000
+      },
+      "factory": null,
+      "rdCenter": null,
+      "competitor": null
+    }
+  ],
+  "playtimeSeconds": 576
+}

@@ -9729,15 +9729,43 @@
     // (Modularizado em client/save_system.js e exposto em window)
     // ===========================================================================
     var GAME_VERSION_INFO = (typeof window !== 'undefined' && window.GAME_VERSION_INFO) || {
-      major: 0, minor: 8, patch: 4, build: '20260905.01', saveSchema: '0.8.2',
+      major: 0, minor: 8, patch: 4, build: '20260905.02', saveSchema: '0.8.2',
       get version() { return `${this.major}.${this.minor}.${this.patch}`; },
       get fullString() { return `v${this.version} (bld.${this.build})`; }
     };
     var SAVES_STORAGE_KEY = (typeof window !== 'undefined' && window.SAVES_STORAGE_KEY) || 'oikonomia_save_slots_v1';
     var CURRENT_SAVE_VERSION = (typeof window !== 'undefined' && window.CURRENT_SAVE_VERSION) || '0.8.2';
-    function migrateSaveData(rawSave) { return (window.migrateSaveData ? window.migrateSaveData(rawSave) : rawSave); }
-    function getSavesIndex() { return (window.getSavesIndex ? window.getSavesIndex() : []); }
-    function saveSavesIndex(index) { if (window.saveSavesIndex) window.saveSavesIndex(index); }
+    function migrateSaveData(rawSave) {
+      if (typeof window !== 'undefined' && window._saveSystem && window._saveSystem.migrateSaveData) {
+        return window._saveSystem.migrateSaveData(rawSave);
+      }
+      return rawSave;
+    }
+    function getSavesIndex() {
+      if (typeof window !== 'undefined' && window._saveSystem && window._saveSystem.getSavesIndex) {
+        return window._saveSystem.getSavesIndex();
+      }
+      try {
+        const raw = localStorage.getItem(SAVES_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    function saveSavesIndex(index) {
+      if (typeof window !== 'undefined' && window._saveSystem && window._saveSystem.saveSavesIndex) {
+        return window._saveSystem.saveSavesIndex(index);
+      }
+      try {
+        localStorage.setItem(SAVES_STORAGE_KEY, JSON.stringify(index));
+      } catch (e) {}
+    }
+    function reconcileSavesIndex() {
+      if (typeof window !== 'undefined' && window._saveSystem && window._saveSystem.reconcileSavesIndex) {
+        return window._saveSystem.reconcileSavesIndex();
+      }
+      return getSavesIndex();
+    }
 
     // Extrai apenas os lotes construídos para otimizar payload (saves com ~15-30 KB via Sparse Index)
     function extractBuiltTiles() {
@@ -9800,7 +9828,17 @@
         historicalLedger: [...historicalLedger],
         tutorialState: { ...tutorialState },
         builtTiles: extractBuiltTiles(),
-        playtimeSeconds
+        playtimeSeconds,
+        settings: {
+          autoSave: gameSettings.autoSave || 'monthly',
+          masterVolume: gameSettings.masterVolume !== undefined ? gameSettings.masterVolume : 1.0,
+          musicVolume: gameSettings.musicVolume !== undefined ? gameSettings.musicVolume : 0.6,
+          ambienceVolume: gameSettings.ambienceVolume !== undefined ? gameSettings.ambienceVolume : 0.5,
+          sfxVolume: gameSettings.sfxVolume !== undefined ? gameSettings.sfxVolume : 0.7,
+          isMusicMuted: Boolean(gameSettings.isMusicMuted),
+          repeatMode: gameSettings.repeatMode || 'playlist',
+          currentBgmKey: gameSettings.currentBgmKey || 'bgm_1'
+        }
       };
     }
 
@@ -9944,7 +9982,17 @@
       updatePlayerProfileHUD();
       checkCityUnlocks();
       updateUI();
-      scheduleRender();
+      // Restaura configurações de áudio e preferências salvas
+      if (saveData.settings && typeof saveData.settings === 'object') {
+        Object.assign(gameSettings, saveData.settings);
+        try {
+          localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(gameSettings));
+        } catch (e) {}
+        if (typeof SoundEngine !== 'undefined') {
+          SoundEngine.syncVolumesFromSettings();
+        }
+        syncPauseMenuVolumes();
+      }
 
       currentAppScreen = 'PLAYING';
       hideMainMenu();
@@ -10114,7 +10162,13 @@
       }
 
       if (typeof SoundEngine !== 'undefined') {
-        SoundEngine.playBgm('menu');
+        const s = SoundEngine.getSettings();
+        const isMuted = Boolean(SoundEngine.isMusicMuted || s.isMusicMuted || s.musicVolume === 0);
+        if (!isMuted) {
+          SoundEngine.playBgm('menu');
+        } else {
+          SoundEngine.pauseBgm();
+        }
         SoundEngine.stopAmbience();
       }
     }
@@ -10124,8 +10178,16 @@
       if (menu) menu.classList.add('hidden');
 
       if (typeof SoundEngine !== 'undefined') {
-        SoundEngine.playBgm('daytime_01');
-        SoundEngine.playAmbience('city', 0.4);
+        const s = SoundEngine.getSettings();
+        const isMuted = Boolean(SoundEngine.isMusicMuted || s.isMusicMuted || s.musicVolume === 0);
+        if (!isMuted) {
+          SoundEngine.playBgm(s.currentBgmKey || 'daytime_01');
+        } else {
+          SoundEngine.pauseBgm();
+        }
+        if (s.ambienceVolume === undefined || s.ambienceVolume > 0) {
+          SoundEngine.playAmbience('city', 0.4);
+        }
       }
     }
 
@@ -10940,6 +11002,9 @@
       }
 
       if (typeof SoundEngine !== 'undefined') {
+        gameSettings.isMusicMuted = Boolean(SoundEngine.isMusicMuted);
+        gameSettings.repeatMode = SoundEngine.repeatMode || 'playlist';
+        gameSettings.currentBgmKey = SoundEngine.currentBgmKey || 'bgm_1';
         SoundEngine.syncVolumesFromSettings();
       }
 

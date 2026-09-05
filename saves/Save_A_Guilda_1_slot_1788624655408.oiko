@@ -1,0 +1,2086 @@
+{
+  "saveVersion": "0.8.2",
+  "timestamp": "2026-09-05T16:21:47.279Z",
+  "playerProfile": {
+    "playerName": "jotasiete1",
+    "companyName": "A Guilda 1",
+    "avatarId": "human_ceo",
+    "themeColor": "purple",
+    "difficulty": "standard",
+    "logoRegenSeed": 0
+  },
+  "cash": 200797.7985000004,
+  "day": 31,
+  "month": 4,
+  "year": 3,
+  "unlockedCities": {
+    "nova_atenas": true,
+    "porto_real": true,
+    "montargis": false,
+    "varzea": true
+  },
+  "playerBrandRating": {
+    "bread": 22,
+    "milk": 22,
+    "eggs": 22,
+    "frozen_beef": 22,
+    "poultry_meat": 22,
+    "pork_meat": 22,
+    "cookies": 22,
+    "chocolate_bar": 22,
+    "ground_coffee": 22,
+    "beer": 22,
+    "wine": 22,
+    "cola": 22,
+    "mineral_water": 22,
+    "fruit_juice": 22,
+    "cigarettes": 22,
+    "corn_flakes": 22,
+    "canned_soup": 22,
+    "cooking_oil": 22,
+    "yogurt": 22,
+    "cheese": 22,
+    "jeans": 22,
+    "t_shirt": 22,
+    "business_suit": 22,
+    "wool_sweater": 22,
+    "leather_jacket": 22,
+    "leather_shoes": 22,
+    "athletic_shoes": 22,
+    "leather_bag": 22,
+    "gala_dress": 22,
+    "underwear": 22,
+    "mobile_phone": 22,
+    "laptop_pc": 22,
+    "desktop_pc": 22,
+    "television": 22,
+    "digital_camera": 22,
+    "game_console": 22,
+    "microwave": 22,
+    "refrigerator": 22,
+    "air_conditioner": 22,
+    "washing_machine": 22,
+    "compact_car": 22,
+    "sedan_car": 22,
+    "suv_car": 22,
+    "motorcycle": 22,
+    "heavy_truck": 22,
+    "cold_pills": 22,
+    "pain_reliever": 22,
+    "cough_syrup": 22,
+    "shampoo": 22,
+    "soap": 22,
+    "toothpaste": 22,
+    "luxury_perfume": 22,
+    "sunscreen": 22,
+    "king_bed": 22,
+    "sofa": 22,
+    "dining_table": 22,
+    "wardrobe": 22,
+    "office_chair": 22,
+    "gold_watch": 22,
+    "gold_ring": 22,
+    "gold_necklace": 22,
+    "acrylic_paint": 22,
+    "tool_set": 22,
+    "flour": 22,
+    "refined_sugar": 22,
+    "steel": 22,
+    "aluminum": 22,
+    "plastic": 22,
+    "glass": 22,
+    "cotton_cloth": 22,
+    "wool_yarn": 22,
+    "wool_cloth": 22,
+    "leather": 22,
+    "paper": 22,
+    "lumber": 22,
+    "chips": 22,
+    "engine": 22,
+    "tires": 22,
+    "wheat": 22,
+    "corn": 22,
+    "cotton": 22,
+    "sugar_cane": 22,
+    "cocoa": 22,
+    "coffee_beans": 22,
+    "grapes": 22,
+    "tobacco": 22,
+    "rubber": 22,
+    "cattle": 22,
+    "raw_milk": 22,
+    "poultry": 22,
+    "pigs": 22,
+    "wool": 22,
+    "iron_ore": 22,
+    "bauxite": 22,
+    "crude_oil": 22,
+    "silica": 22,
+    "timber": 22,
+    "gold_ore": 22,
+    "chemical_minerals": 22
+  },
+  "activeMarketingContracts": [
+    "media_news::__institutional__"
+  ],
+  "rdLabs": {
+    "proj_1788624892293_934": {
+      "id": "proj_1788624892293_934",
+      "productId": "flour",
+      "productName": "Farinha Refinada",
+      "category": "Insumos Industriais",
+      "labsCount": 1,
+      "monthlyBudget": 11779,
+      "baseMonthlyRequired": 11779,
+      "startQR": 62,
+      "currentQR": 80,
+      "targetQR": 80,
+      "monthsInvested": 12,
+      "totalSpent": 150948,
+      "status": "completed",
+      "completedAt": {
+        "day": 31,
+        "month": 1,
+        "year": 3
+      }
+    }
+  },
+  "unlockedProducts": [
+    "wheat",
+    "corn",
+    "cotton",
+    "sugar_cane",
+    "cocoa",
+    "coffee_beans",
+    "grapes",
+    "tobacco",
+    "rubber",
+    "cattle",
+    "raw_milk",
+    "poultry",
+    "pigs",
+    "wool",
+    "iron_ore",
+    "bauxite",
+    "crude_oil",
+    "silica",
+    "timber",
+    "gold_ore",
+    "chemical_minerals",
+    "eggs",
+    "bread",
+    "milk",
+    "flour",
+    "poultry_meat"
+  ],
+  "acquiredLicenses": [
+    "kombini"
+  ],
+  "historicalLedger": [
+    {
+      "month": 5,
+      "year": 1,
+      "revenue": 64610.90000000001,
+      "cogs": 20881.719999999998,
+      "fixedExpenses": 16905,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 16905,
+      "netProfit": 26824.180000000008,
+      "cash": 57223.57999999997,
+      "netWorth": 192127.32999999996,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 64610.90000000001,
+          "cogs": 20881.719999999994,
+          "opex": 6825,
+          "netProfit": 36904.180000000015
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 6240,
+          "netProfit": -6240
+        }
+      }
+    },
+    {
+      "month": 6,
+      "year": 1,
+      "revenue": 64535.7,
+      "cogs": 20860.350000000002,
+      "fixedExpenses": 20705,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 20705,
+      "netProfit": 22970.34999999999,
+      "cash": 80193.92999999985,
+      "netWorth": 231010.17999999985,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 64535.7,
+          "cogs": 20860.350000000006,
+          "opex": 6825,
+          "netProfit": 36850.34999999999
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 10040,
+          "netProfit": -10040
+        }
+      }
+    },
+    {
+      "month": 7,
+      "year": 1,
+      "revenue": 62794.30000000001,
+      "cogs": 18571.489999999998,
+      "fixedExpenses": 22905,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 22905,
+      "netProfit": 21317.810000000012,
+      "cash": 101511.73999999977,
+      "netWorth": 249831.73999999976,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 62794.299999999996,
+          "cogs": 18571.49,
+          "opex": 6825,
+          "netProfit": 37397.81
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 12240,
+          "netProfit": -12240
+        }
+      }
+    },
+    {
+      "month": 8,
+      "year": 1,
+      "revenue": 62326.59999999999,
+      "cogs": 18404.450000000004,
+      "fixedExpenses": 23545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 23545,
+      "netProfit": 20377.149999999987,
+      "cash": 99888.88999999975,
+      "netWorth": 274808.8899999998,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 62326.60000000001,
+          "cogs": 18404.45,
+          "opex": 6825,
+          "netProfit": 37097.15000000001
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 12240,
+          "netProfit": -12240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 640,
+          "netProfit": -640
+        }
+      }
+    },
+    {
+      "month": 9,
+      "year": 1,
+      "revenue": 62477,
+      "cogs": 18442.59,
+      "fixedExpenses": 26745,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 26745,
+      "netProfit": 17289.410000000003,
+      "cash": 117178.29999999967,
+      "netWorth": 293298.2999999997,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 62477.000000000015,
+          "cogs": 18442.589999999986,
+          "opex": 6825,
+          "netProfit": 37209.41000000003
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 12240,
+          "netProfit": -12240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        }
+      }
+    },
+    {
+      "month": 10,
+      "year": 1,
+      "revenue": 73825.8,
+      "cogs": 20811.740000000005,
+      "fixedExpenses": 26745,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 26745,
+      "netProfit": 26269.059999999998,
+      "cash": 144953.63999999978,
+      "netWorth": 319157.35999999975,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 73825.8,
+          "cogs": 20811.74,
+          "opex": 6825,
+          "netProfit": 46189.06
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 12240,
+          "netProfit": -12240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        }
+      }
+    },
+    {
+      "month": 11,
+      "year": 1,
+      "revenue": 74325.89999999998,
+      "cogs": 19614.660000000003,
+      "fixedExpenses": 31145,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 31145,
+      "netProfit": 23566.239999999976,
+      "cash": 161977.3499999998,
+      "netWorth": 354359.3499999998,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 74325.89999999998,
+          "cogs": 19614.660000000003,
+          "opex": 6825,
+          "netProfit": 47886.239999999976
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 16640,
+          "netProfit": -16640
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        }
+      }
+    },
+    {
+      "month": 12,
+      "year": 1,
+      "revenue": 68953.8,
+      "cogs": 16926.07,
+      "fixedExpenses": 34345,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 34345,
+      "netProfit": 17682.730000000003,
+      "cash": 104660.07999999978,
+      "netWorth": 338333.0799999998,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 68953.8,
+          "cogs": 16926.07,
+          "opex": 6825,
+          "netProfit": 45202.73
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 1600,
+          "netProfit": -1600
+        }
+      }
+    },
+    {
+      "month": 1,
+      "year": 2,
+      "revenue": 67446.30000000002,
+      "cogs": 16580.39,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 13320.910000000018,
+      "cash": 117508.6399999997,
+      "netWorth": 352628.98999999964,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 67446.30000000005,
+          "cogs": 16580.39,
+          "opex": 6825,
+          "netProfit": 44040.91000000005
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 2,
+      "year": 2,
+      "revenue": 67220.20000000001,
+      "cogs": 16541.43,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 13133.770000000011,
+      "cash": 108767.85999999967,
+      "netWorth": 356812.75999999966,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 67220.20000000001,
+          "cogs": 16541.42999999999,
+          "opex": 6825,
+          "netProfit": 43853.77000000002
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 3,
+      "year": 2,
+      "revenue": 67159.09999999999,
+      "cogs": 16523.33,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 13090.76999999999,
+      "cash": 109661.87999999951,
+      "netWorth": 358124.52999999956,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 67159.09999999999,
+          "cogs": 16523.330000000005,
+          "opex": 6825,
+          "netProfit": 43810.76999999999
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 4,
+      "year": 2,
+      "revenue": 71824.69999999998,
+      "cogs": 17693.66,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 16586.03999999998,
+      "cash": 114824.0699999996,
+      "netWorth": 362931.5699999996,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 71824.7,
+          "cogs": 17693.66,
+          "opex": 6825,
+          "netProfit": 47306.03999999999
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 5,
+      "year": 2,
+      "revenue": 69241.3,
+      "cogs": 17112.039999999997,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 14584.26000000001,
+      "cash": 117376.52999999959,
+      "netWorth": 365736.82999999955,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 69241.3,
+          "cogs": 17112.039999999997,
+          "opex": 6825,
+          "netProfit": 45304.26000000001
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 6,
+      "year": 2,
+      "revenue": 69290.3,
+      "cogs": 17134.809999999998,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 14610.490000000005,
+      "cash": 119980.46999999962,
+      "netWorth": 368568.3199999996,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 69290.30000000002,
+          "cogs": 17134.81,
+          "opex": 6825,
+          "netProfit": 45330.49000000002
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 7,
+      "year": 2,
+      "revenue": 66831.1,
+      "cogs": 16447.66,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 12838.440000000002,
+      "cash": 120489.05999999959,
+      "netWorth": 368002.7599999996,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 66831.09999999998,
+          "cogs": 16447.659999999996,
+          "opex": 6825,
+          "netProfit": 43558.43999999998
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 8,
+      "year": 2,
+      "revenue": 66735.5,
+      "cogs": 16413.97,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 12776.529999999999,
+      "cash": 121116.48999999973,
+      "netWorth": 369000.28999999975,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 66735.50000000001,
+          "cogs": 16413.969999999998,
+          "opex": 6825,
+          "netProfit": 43496.53000000001
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 9,
+      "year": 2,
+      "revenue": 66854.4,
+      "cogs": 16456.48,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 12852.919999999998,
+      "cash": 122115.20999999961,
+      "netWorth": 370074.2099999996,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 66854.40000000001,
+          "cogs": 16456.480000000003,
+          "opex": 6825,
+          "netProfit": 43572.920000000006
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 10,
+      "year": 2,
+      "revenue": 78830.79999999999,
+      "cogs": 19286.19,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 21999.609999999986,
+      "cash": 134643.6199999996,
+      "netWorth": 380294.8199999996,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 78830.79999999999,
+          "cogs": 19286.189999999995,
+          "opex": 6825,
+          "netProfit": 52719.60999999999
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 11,
+      "year": 2,
+      "revenue": 70212.5,
+      "cogs": 17232.820000000003,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 15434.679999999993,
+      "cash": 138498.4999999996,
+      "netWorth": 383950.4999999996,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 70212.5,
+          "cogs": 17232.82,
+          "opex": 6825,
+          "netProfit": 46154.68
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 12,
+      "year": 2,
+      "revenue": 68898.6,
+      "cogs": 16930.030000000002,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 14423.570000000007,
+      "cash": 141143.06999999954,
+      "netWorth": 386595.06999999954,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 68898.60000000002,
+          "cogs": 16930.030000000002,
+          "opex": 6825,
+          "netProfit": 45143.57000000002
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 1,
+      "year": 3,
+      "revenue": 76482.30000000002,
+      "cogs": 21643.574999999993,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 0,
+      "financialExpenses": 0,
+      "totalOpex": 37545,
+      "netProfit": 17293.72500000002,
+      "cash": 145932.20249999958,
+      "netWorth": 392990.15249999956,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 76482.29999999999,
+          "cogs": 21643.575000000004,
+          "opex": 6825,
+          "netProfit": 48013.724999999984
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 2,
+      "year": 3,
+      "revenue": 76363.8,
+      "cogs": 21584.7755,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 315,
+      "financialExpenses": 0,
+      "totalOpex": 37860,
+      "netProfit": 16919.0245,
+      "cash": 162120.0569999998,
+      "netWorth": 398684.8069999998,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 76363.79999999997,
+          "cogs": 21584.775499999996,
+          "opex": 6825,
+          "netProfit": 47954.02449999998
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 3,
+      "year": 3,
+      "revenue": 77294.09999999999,
+      "cogs": 21836.78649999999,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 450,
+      "financialExpenses": 0,
+      "totalOpex": 37995,
+      "netProfit": 17462.313500000004,
+      "cash": 179245.2480000002,
+      "netWorth": 416103.1480000002,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 77294.09999999998,
+          "cogs": 21836.7865,
+          "opex": 6825,
+          "netProfit": 48632.313499999975
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    },
+    {
+      "month": 4,
+      "year": 3,
+      "revenue": 82515.5,
+      "cogs": 23411.159499999998,
+      "fixedExpenses": 37545,
+      "marketingExpenses": 450,
+      "financialExpenses": 0,
+      "totalOpex": 37995,
+      "netProfit": 21109.340500000006,
+      "cash": 200797.7985000004,
+      "netWorth": 437270.2985000004,
+      "facilities": {
+        "41_37": {
+          "x": 41,
+          "y": 37,
+          "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+          "type": "store",
+          "loc": "Distrito Residencial (Nova Atenas) (41, 37)",
+          "revenue": 82515.49999999999,
+          "cogs": 23411.15950000001,
+          "opex": 6825,
+          "netProfit": 52279.34049999998
+        },
+        "44_37": {
+          "x": 44,
+          "y": 37,
+          "name": "🌾 Fazenda de Trigo & Cereais",
+          "type": "farm",
+          "loc": "Terreno Livre (44, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "45_37": {
+          "x": 45,
+          "y": 37,
+          "name": "Fábrica Central (45, 37)",
+          "type": "factory",
+          "loc": "Terreno Livre (45, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 18240,
+          "netProfit": -18240
+        },
+        "46_37": {
+          "x": 46,
+          "y": 37,
+          "name": "🐔 Granja Avícola",
+          "type": "farm",
+          "loc": "Terreno Livre (46, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 3840,
+          "netProfit": -3840
+        },
+        "43_37": {
+          "x": 43,
+          "y": 37,
+          "name": "Centro de P&D Nova Atenas",
+          "type": "rdCenter",
+          "loc": "Terreno Livre (43, 37)",
+          "revenue": 0,
+          "cogs": 0,
+          "opex": 4800,
+          "netProfit": -4800
+        }
+      }
+    }
+  ],
+  "tutorialState": {
+    "completedSteps": {
+      "inspect_tile": true,
+      "open_store": true,
+      "stock_goods": true,
+      "monthly_profit": true,
+      "build_farm": true,
+      "build_factory": true,
+      "research_rd": true
+    },
+    "rewardClaimed": true,
+    "active": true
+  },
+  "builtTiles": [
+    {
+      "x": 87,
+      "y": 39,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "competitor": {
+        "name": "MegaMart Porto Real (IA)",
+        "shelves": {
+          "bread": {
+            "price": 4.38,
+            "quality": 88.5,
+            "brand": 25
+          },
+          "beer": {
+            "price": 5,
+            "quality": 89.3,
+            "brand": 25
+          },
+          "cola": {
+            "price": 2.75,
+            "quality": 88.5,
+            "brand": 25
+          },
+          "milk": {
+            "price": 3.5,
+            "quality": 88.5,
+            "brand": 20
+          }
+        },
+        "lastShare": 0.8759741880258297
+      }
+    },
+    {
+      "x": 41,
+      "y": 37,
+      "store": {
+        "storeTypeId": "kombini",
+        "name": "🛒 Kombini de Bairro (Distrito Residencial (Nova Atenas))",
+        "maxShelves": 4,
+        "rentMultiplier": 1.35,
+        "dailyRent": 67.5,
+        "shelves": {
+          "bread": {
+            "price": 3.5,
+            "stock": 221,
+            "maxCapacity": 1000,
+            "dailyRestock": 184,
+            "quality": 65,
+            "supplierId": "factory_45_37_line_1788624741356_65",
+            "supplierName": "🏭 Fábrica Central (45, 37) (Panificação Artesanal)",
+            "wholesalePrice": 0.75,
+            "unitFreight": 0.05,
+            "landedCost": 0.8
+          },
+          "eggs": {
+            "price": 3.2,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 147,
+            "quality": 60,
+            "supplierId": "farm_46_37_eggs",
+            "supplierName": "🌾 🐔 Granja Avícola (Ovos Frescos)",
+            "wholesalePrice": 0.6,
+            "unitFreight": 0.05,
+            "landedCost": 0.65
+          },
+          "poultry_meat": {
+            "price": 8.5,
+            "stock": 654,
+            "maxCapacity": 1000,
+            "dailyRestock": 88,
+            "quality": 65,
+            "supplierId": "factory_45_37_line_1788624836669_813",
+            "supplierName": "🏭 Fábrica Central (45, 37) (Abatedouro Avícola)",
+            "wholesalePrice": 2,
+            "unitFreight": 0.05,
+            "landedCost": 2.05
+          },
+          "milk": {
+            "price": 2.8,
+            "stock": 1000,
+            "maxCapacity": 1000,
+            "dailyRestock": 162,
+            "quality": 50,
+            "supplierId": "port_atenas_bay",
+            "supplierName": "⚓ Porto Nova Atenas (Doca da Baía Central - Alimentos & Varejo)",
+            "wholesalePrice": 0.75,
+            "unitFreight": 0.18,
+            "landedCost": 0.93
+          }
+        }
+      },
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "competitor": null
+    },
+    {
+      "x": 44,
+      "y": 37,
+      "store": null,
+      "mine": null,
+      "farm": {
+        "id": "farm_44_37",
+        "farmTypeId": "farm_wheat",
+        "cost": 22000,
+        "name": "🌾 Fazenda de Trigo & Cereais",
+        "cropId": "wheat",
+        "cropName": "Trigo & Cereais",
+        "quality": 60,
+        "dailyYield": 500,
+        "dailyOperatingCost": 0.45,
+        "stock": 0,
+        "maxCapacity": 5000,
+        "effectiveYield": 625,
+        "effectiveQuality": 60
+      },
+      "factory": null,
+      "competitor": null
+    },
+    {
+      "x": 45,
+      "y": 37,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": {
+        "id": "factory_45_37",
+        "name": "Fábrica Central (45, 37)",
+        "maxLines": 4,
+        "lines": {
+          "line_1788624726276_862": {
+            "lineId": "line_1788624726276_862",
+            "recipeId": "rec_flour",
+            "recipeName": "Moinho de Farinha",
+            "outputProductId": "flour",
+            "dailyCapacity": 700,
+            "unitCost": 0.65,
+            "outputQuality": 80,
+            "finishedStock": 2500,
+            "maxStock": 3000,
+            "inputsConfig": {
+              "wheat": {
+                "type": "internal_farm",
+                "supplierId": "farm_44_37",
+                "supplierName": "🌾 🌾 Fazenda de Trigo & Cereais",
+                "facilityName": "🌾 Fazenda de Trigo & Cereais",
+                "ownerName": "A Guilda 1",
+                "ownerLogo": {
+                  "iconKey": "crown",
+                  "iconDef": {
+                    "name": "Coroa",
+                    "svgPath": "M3 17h18v2H3v-2zm1-2l2-7 4.5 3.5L12 4l1.5 7.5L18 8l2 7H4z",
+                    "_path2d": {}
+                  },
+                  "shape": "circle",
+                  "color": "#a855f7",
+                  "seed": 1619740530,
+                  "isAICompetitor": false,
+                  "themeColor": "emerald"
+                },
+                "ownerTag": "🏛️ Produção Própria",
+                "activitySummary": "Cultivo rural direto de Trigo & Cereais no lote (44, 37)",
+                "stockLabel": "Silo: 5000 / 5000 un (625 un/dia)",
+                "wholesalePrice": 0.45,
+                "quality": 60,
+                "quota": 625,
+                "origin": "Produção Agrícola (44, 37)",
+                "distance": 1,
+                "freight": 0.018,
+                "landedCost": 0.468
+              }
+            }
+          },
+          "line_1788624741356_65": {
+            "lineId": "line_1788624741356_65",
+            "recipeId": "rec_bread",
+            "recipeName": "Panificação Artesanal",
+            "outputProductId": "bread",
+            "dailyCapacity": 500,
+            "unitCost": 0.75,
+            "outputQuality": 65,
+            "finishedStock": 3000,
+            "maxStock": 3000,
+            "inputsConfig": {
+              "flour": {
+                "type": "internal_factory",
+                "supplierId": "factory_45_37_line_1788624726276_862",
+                "supplierName": "🏭 Fábrica Central (45, 37) (Moinho de Farinha)",
+                "facilityName": "Fábrica Central (45, 37) — Moinho de Farinha",
+                "ownerName": "A Guilda 1",
+                "ownerLogo": {
+                  "iconKey": "crown",
+                  "iconDef": {
+                    "name": "Coroa",
+                    "svgPath": "M3 17h18v2H3v-2zm1-2l2-7 4.5 3.5L12 4l1.5 7.5L18 8l2 7H4z",
+                    "_path2d": {}
+                  },
+                  "shape": "circle",
+                  "color": "#a855f7",
+                  "seed": 1619740530,
+                  "isAICompetitor": false,
+                  "themeColor": "emerald"
+                },
+                "ownerTag": "🏛️ Produção Própria",
+                "activitySummary": "Linha de manufatura e refino industrial no lote (45, 37)",
+                "stockLabel": "Armazém: 3000 / 3000 un (700 un/dia)",
+                "wholesalePrice": 0.65,
+                "quality": 62,
+                "quota": 700,
+                "origin": "Fabricação Própria (45, 37)",
+                "distance": 0,
+                "freight": 0.01,
+                "landedCost": 0.66
+              }
+            }
+          },
+          "line_1788624836669_813": {
+            "lineId": "line_1788624836669_813",
+            "recipeId": "rec_poultry",
+            "recipeName": "Abatedouro Avícola",
+            "outputProductId": "poultry_meat",
+            "dailyCapacity": 450,
+            "unitCost": 2,
+            "outputQuality": 65,
+            "finishedStock": 3000,
+            "maxStock": 3000,
+            "inputsConfig": {
+              "poultry": {
+                "type": "internal_farm",
+                "supplierId": "farm_46_37",
+                "supplierName": "🌾 🐔 Granja Avícola",
+                "facilityName": "🐔 Granja Avícola",
+                "ownerName": "A Guilda 1",
+                "ownerLogo": {
+                  "iconKey": "crown",
+                  "iconDef": {
+                    "name": "Coroa",
+                    "svgPath": "M3 17h18v2H3v-2zm1-2l2-7 4.5 3.5L12 4l1.5 7.5L18 8l2 7H4z",
+                    "_path2d": {}
+                  },
+                  "shape": "circle",
+                  "color": "#a855f7",
+                  "seed": 1619740530,
+                  "isAICompetitor": false,
+                  "themeColor": "emerald"
+                },
+                "ownerTag": "🏛️ Produção Própria",
+                "activitySummary": "Cultivo rural direto de Aves & Ovos no lote (46, 37)",
+                "stockLabel": "Silo: 5000 / 5000 un (500 un/dia)",
+                "wholesalePrice": 0.6,
+                "quality": 60,
+                "quota": 500,
+                "origin": "Produção Agrícola (46, 37)",
+                "distance": 1,
+                "freight": 0.018,
+                "landedCost": 0.618
+              }
+            }
+          }
+        }
+      },
+      "competitor": null
+    },
+    {
+      "x": 46,
+      "y": 37,
+      "store": null,
+      "mine": null,
+      "farm": {
+        "id": "farm_46_37",
+        "farmTypeId": "farm_poultry",
+        "cost": 22000,
+        "name": "🐔 Granja Avícola",
+        "cropId": "poultry",
+        "cropName": "Aves & Ovos",
+        "quality": 60,
+        "dailyYield": 500,
+        "dailyOperatingCost": 0.6,
+        "stock": 500,
+        "maxCapacity": 5000,
+        "effectiveYield": 500,
+        "effectiveQuality": 60,
+        "feedConfig": {
+          "active": true,
+          "supplierId": "farm_44_37",
+          "supplierName": "🌾 🌾 Fazenda de Trigo & Cereais",
+          "grainProdId": "wheat",
+          "landedCost": 0.476,
+          "wholesalePrice": 0.45,
+          "freight": 0.026,
+          "quality": 60
+        }
+      },
+      "factory": null,
+      "competitor": null
+    },
+    {
+      "x": 43,
+      "y": 37,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "rdCenter": {
+        "name": "Centro de P&D Nova Atenas",
+        "level": 1,
+        "dailyRent": 10,
+        "constructionCost": 80000,
+        "builtAt": {
+          "day": 21,
+          "month": 12,
+          "year": 1
+        }
+      },
+      "competitor": null
+    }
+  ],
+  "playtimeSeconds": 549
+}

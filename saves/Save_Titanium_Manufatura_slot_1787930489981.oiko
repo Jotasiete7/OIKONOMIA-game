@@ -1,0 +1,198 @@
+{
+  "saveVersion": "0.8.1",
+  "timestamp": "2026-08-29T03:28:13.311Z",
+  "playerProfile": {
+    "playerName": "Jota dos Teclados",
+    "companyName": "Titanium Manufatura",
+    "avatarId": "animal_fox",
+    "themeColor": "purple",
+    "difficulty": "standard"
+  },
+  "cash": 960592.95,
+  "day": 10,
+  "month": 4,
+  "year": 5,
+  "unlockedCities": {
+    "nova_atenas": true,
+    "porto_real": true,
+    "montargis": true,
+    "varzea": true
+  },
+  "playerBrandRating": {
+    "bread": 10,
+    "milk": 10,
+    "eggs": 10,
+    "frozen_beef": 10,
+    "poultry_meat": 10,
+    "pork_meat": 10,
+    "cookies": 10,
+    "chocolate_bar": 10,
+    "ground_coffee": 10,
+    "beer": 10,
+    "wine": 10,
+    "cola": 10,
+    "mineral_water": 10,
+    "fruit_juice": 10,
+    "cigarettes": 10,
+    "corn_flakes": 10,
+    "canned_soup": 10,
+    "cooking_oil": 10,
+    "yogurt": 10,
+    "cheese": 10,
+    "jeans": 10,
+    "t_shirt": 10,
+    "business_suit": 10,
+    "wool_sweater": 10,
+    "leather_jacket": 10,
+    "leather_shoes": 10,
+    "athletic_shoes": 10,
+    "leather_bag": 10,
+    "gala_dress": 10,
+    "underwear": 10,
+    "mobile_phone": 10,
+    "laptop_pc": 10,
+    "desktop_pc": 10,
+    "television": 10,
+    "digital_camera": 10,
+    "game_console": 10,
+    "microwave": 10,
+    "refrigerator": 10,
+    "air_conditioner": 10,
+    "washing_machine": 10,
+    "compact_car": 10,
+    "sedan_car": 10,
+    "suv_car": 10,
+    "motorcycle": 10,
+    "heavy_truck": 10,
+    "cold_pills": 10,
+    "pain_reliever": 10,
+    "cough_syrup": 10,
+    "shampoo": 10,
+    "soap": 10,
+    "toothpaste": 10,
+    "luxury_perfume": 10,
+    "sunscreen": 10,
+    "king_bed": 10,
+    "sofa": 10,
+    "dining_table": 10,
+    "wardrobe": 10,
+    "office_chair": 10,
+    "gold_watch": 10,
+    "gold_ring": 10,
+    "gold_necklace": 10,
+    "acrylic_paint": 10,
+    "tool_set": 10
+  },
+  "activeMarketingContracts": [],
+  "rdLabs": {
+    "rd_bread": {
+      "id": "rd_bread",
+      "productId": "bread",
+      "productName": "Pão Artesanal",
+      "category": "Alimentos",
+      "monthlyBudget": 10000,
+      "baseMonthlyRequired": 14778,
+      "startQR": 65,
+      "currentQR": 79.99999999999997,
+      "targetQR": 80,
+      "monthsInvested": 49,
+      "totalSpent": 490000,
+      "status": "active",
+      "completedAt": null
+    }
+  },
+  "tutorialState": {
+    "completedSteps": {
+      "open_store": true,
+      "stock_goods": true,
+      "expand_chain": true,
+      "monthly_profit": true,
+      "inspect_tile": true
+    },
+    "rewardClaimed": true
+  },
+  "builtTiles": [
+    {
+      "x": 87,
+      "y": 39,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "rdCenter": null,
+      "competitor": {
+        "name": "MegaMart Porto Real (IA)",
+        "shelves": {
+          "bread": {
+            "price": 4.38,
+            "quality": 45,
+            "brand": 25
+          },
+          "beer": {
+            "price": 5,
+            "quality": 48,
+            "brand": 25
+          },
+          "cola": {
+            "price": 2.75,
+            "quality": 45,
+            "brand": 25
+          },
+          "milk": {
+            "price": 3.5,
+            "quality": 45,
+            "brand": 20
+          }
+        },
+        "lastShare": 0.7240922635470699
+      }
+    },
+    {
+      "x": 101,
+      "y": 53,
+      "store": null,
+      "mine": null,
+      "farm": {
+        "id": "farm_101_53",
+        "name": "🌾 Fazenda de Trigo & Cereais",
+        "cropId": "wheat",
+        "cropName": "Trigo & Cereais",
+        "quality": 60,
+        "dailyYield": 500,
+        "dailyOperatingCost": 0.45,
+        "stock": 5000,
+        "maxCapacity": 5000
+      },
+      "factory": null,
+      "rdCenter": null,
+      "competitor": null
+    },
+    {
+      "x": 101,
+      "y": 52,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": {
+        "id": "factory_101_52",
+        "name": "Fábrica Central (101, 52)",
+        "maxLines": 4,
+        "lines": {
+          "rec_bread": {
+            "recipeId": "rec_bread",
+            "recipeName": "Panificação Artesanal",
+            "outputProductId": "bread",
+            "dailyCapacity": 500,
+            "unitCost": 0.75,
+            "outputQuality": 79.99999999999997,
+            "finishedStock": 3000,
+            "maxStock": 3000
+          }
+        }
+      },
+      "rdCenter": null,
+      "competitor": null
+    }
+  ],
+  "playtimeSeconds": 645
+}

@@ -3,7 +3,7 @@
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
 > **Última Atualização:** 05 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.4 (bld.20260905.01)`  
+> **Versão Oficial Corrente:** `v0.8.4 (bld.20260905.02)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -33,6 +33,33 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 14: Recuperação dos Saves Descentralizados (A Guilda 1), Trava Estrita de Porta no Vite e Persistência Completa de Áudio e Mute
+- **Data:** 05/09/2026 — 15:00
+- **Versão Oficial:** `v0.8.4 (bld.20260905.02)` | **Save Schema:** `v0.8.2`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão (Resgate de Dados, Estabilidade de Origem e Sistema de Som):
+1. **Investigação Profunda & Resgate de Saves em LevelDB:**
+   - Diagnosticada a causa do "desaparecimento" do save **"A Guilda 1"**: o Vite operava com `strictPort: false`, saltando silenciosamente para a porta `5175` quando a porta padrão `5173` estava temporariamente ocupada. Devido ao isolamento de segurança do HTML5 LocalStorage por porta/origem no navegador (Opera GX), saves gravados em `localhost:5175` ficavam inacessíveis em `localhost:5173` ou em `file:///`.
+   - Desenvolvida rotina automatizada de extração via Chrome DevTools Protocol (CDP) que varreu todos os armazenamentos locais e resgatou 100% dos dados intactos de **"A Guilda 1"** (Ano 3, Caixa $200.797), **"A GUILDA"** (Ano 5, Caixa $306.601), **"Prime Varejo"**, e de todos os slots legados de `file://`.
+   - Exportados todos os arquivos físicos `.oiko` recuperados para a pasta `saves/` na raiz do projeto.
+2. **Módulo de Semente e Reconciliação Automática de Saves:**
+   - Criado `client/recovered_saves_seed.js` contendo os dados canônicos recuperados de "A Guilda 1" e "A GUILDA".
+   - Implementada a função `reconcileSavesIndex()` em `client/save_system.js`, que varre o LocalStorage em busca de quaisquer chaves `oiko_save_*` e as integra dinamicamente ao índice visual da interface, garantindo que nenhum save existente fique oculto.
+   - Refatorada a rota de fallback em `client/index.html` via `window._saveSystem` com prevenção rigorosa de recursão infinita (`RangeError`).
+3. **Trava Rígida de Porta no Vite (`strictPort: true`):**
+   - Configurado `server: { port: 5173, strictPort: true }` no `vite.config.mjs`, garantindo que o servidor de desenvolvimento nunca mais troque de porta sem consentimento, eliminando para sempre a fragmentação de LocalStorage entre portas.
+4. **Persistência Completa de Configurações de Áudio (Volume, Mute e Rádio):**
+   - Expandida a estrutura `gameSettings` em `client/game_state.js`, `client/save_system.js` e `client/index.html` para incluir `isMusicMuted`, `repeatMode`, `currentBgmKey`, `masterVolume`, `musicVolume`, `ambienceVolume` e `sfxVolume`.
+   - Serialização do bloco `settings` adicionada diretamente aos snapshots de save (.oiko e slots locais).
+   - Sanitização no pipeline `migrateSaveData()` para preservar preferências do jogador entre versões.
+   - Sincronização imediata em `SoundEngine.init()`, `toggleMusicMute()` e `toggleRepeatMode()`, persistindo o status instantaneamente em `localStorage`.
+5. **Respeito Absoluto ao Mute no Fluxo de Jogo & "Continuar":**
+   - Corrigido o disparo forçado de trilha sonora em `hideMainMenu()` e `showMainMenu()`. Agora, o motor verifica `SoundEngine.isMusicMuted` e `musicVolume`: se o jogador silenciou a música, o jogo inicia ou retoma em silêncio absoluto sem interrupções.
+   - Restauração automática do perfil sonoro gravado no save ao clicar em **"Continuar"** ou carregar qualquer arquivo `.oiko`.
 
 ---
 
