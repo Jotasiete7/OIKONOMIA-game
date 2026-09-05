@@ -108,6 +108,20 @@ export function migrateSaveData(rawSave) {
            (t.store || t.mine || t.farm || t.factory || t.rdCenter || t.competitor);
   });
 
+  // 7. Migração do Sistema Bancário (novo em v0.8.5; saves antigos recebem estado vazio)
+  if (!migrated.banking || typeof migrated.banking !== 'object') {
+    migrated.banking = { activeLoans: [], totalDebt: 0, loanHistory: [] };
+  } else {
+    const b = migrated.banking;
+    migrated.banking = {
+      activeLoans: Array.isArray(b.activeLoans) ? b.activeLoans.filter(l => l && l.id && typeof l.remainingBalance === 'number') : [],
+      totalDebt:   typeof b.totalDebt === 'number' && isFinite(b.totalDebt) ? b.totalDebt : 0,
+      loanHistory: Array.isArray(b.loanHistory) ? b.loanHistory : [],
+    };
+    // Recalcula totalDebt a partir dos loans ativos (garante consistência)
+    migrated.banking.totalDebt = migrated.banking.activeLoans.reduce((s, l) => s + (l.remainingBalance || 0), 0);
+  }
+
   migrated.saveVersion = CURRENT_SAVE_VERSION;
   migrated.migratedFromVersion = rawVer;
   return migrated;
@@ -158,7 +172,14 @@ export function serializeGameState(state, builtTiles = []) {
     historicalLedger: [...(state.historicalLedger || [])],
     tutorialState: { ...(state.tutorialState || {}) },
     builtTiles: Array.isArray(builtTiles) ? builtTiles : [],
-    playtimeSeconds: state.playtimeSeconds || 0
+    playtimeSeconds: state.playtimeSeconds || 0,
+    banking: state.banking
+      ? {
+          activeLoans: (state.banking.activeLoans || []).map(l => ({ ...l })),
+          totalDebt:   state.banking.totalDebt || 0,
+          loanHistory: (state.banking.loanHistory || []).map(l => ({ ...l })),
+        }
+      : { activeLoans: [], totalDebt: 0, loanHistory: [] }
   };
 }
 

@@ -61,6 +61,11 @@ export function createInitialGameState() {
     tutorialState: {
       completedSteps: {},
       rewardClaimed: false
+    },
+    banking: {
+      activeLoans: [],        // Array de objetos de empréstimo ativos
+      totalDebt: 0,           // Soma dos remainingBalance de todos os empréstimos ativos
+      loanHistory: []         // Empréstimos já quitados (auditoria / histórico)
     }
   };
 }

@@ -40,6 +40,7 @@ export function resolveSimulationContext(customContext = {}) {
   const processRDProgress = customContext.processRDProgress || (isBrowser && window.processRDProgress ? window.processRDProgress : () => {});
   const renderFacilityPanel = customContext.renderFacilityPanel || (isBrowser && window.renderFacilityPanel ? window.renderFacilityPanel : () => {});
   const getActiveManagedTile = customContext.getActiveManagedTile || (isBrowser ? () => window.activeManagedTile : () => null);
+  const processBankingInstallments = customContext.processBankingInstallments || (isBrowser && window.processBankingInstallments ? window.processBankingInstallments : () => {});
 
   return {
     state,
@@ -56,7 +57,8 @@ export function resolveSimulationContext(customContext = {}) {
     showBankruptcyModal,
     processRDProgress,
     renderFacilityPanel,
-    getActiveManagedTile
+    getActiveManagedTile,
+    processBankingInstallments,
   };
 }
 
@@ -425,8 +427,12 @@ export function closeMonthEnd(customContext = {}) {
     showBankruptcyModal,
     processRDProgress,
     renderFacilityPanel,
-    getActiveManagedTile
+    getActiveManagedTile,
+    processBankingInstallments,
   } = ctx;
+
+  // Processa parcelas de empréstimos bancários ANTES da avaliação de insolvência
+  processBankingInstallments();
 
   // Snapshot de performance por instalação para auditoria e DRE detalhada
   for (const tile of activeFacilitySet.values()) {
@@ -459,7 +465,17 @@ export function closeMonthEnd(customContext = {}) {
 
   // Solvência Corporativa em 3 Degraus
   const nwObj = calculateCorporateNetWorth();
-  const isTechnicallyInsolvent = (nwObj.netWorth < 0 || (nwObj.totalDebt > Math.max(1, monthRevenue * 3) && monthRevenue > 0));
+  // Insolvência técnica:
+  // - netWorth < 0: patrimônio líquido negativo (inclui banking debt — over-leverage real)
+  // - overdraftDebt excessivo: cheque especial fora de controle (sinal de crise operacional)
+  // NOTA: banking.totalDebt (empréstimos voluntários) NÃO entra na condição de ratio —
+  //       um empréstimo estratégico de $80k numa empresa com $20k de receita mensal é
+  //       uma decisão legítima, não insolvência. Só o netWorth negativo captura over-leverage.
+  const overdraftDebt = nwObj.overdraftDebt || 0;
+  const isTechnicallyInsolvent = (
+    nwObj.netWorth < 0 ||
+    (overdraftDebt > Math.max(1, monthRevenue * 3) && monthRevenue > 0)
+  );
 
   if (isTechnicallyInsolvent) {
     state.consecutiveInsolventMonths = (state.consecutiveInsolventMonths || 0) + 1;

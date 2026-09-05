@@ -262,16 +262,68 @@ class SpriteManager {
     return this.get('comercial/supermarket') ? 'comercial/supermarket' : 'lojas/supermarket';
   }
 
-  static getFactorySprite(activeRecipeId) {
-    if (!activeRecipeId) return 'industrial/factory_default';
-    if (activeRecipeId.includes('steel') || activeRecipeId.includes('metal')) return 'industrial/steel_mill';
-    if (activeRecipeId.includes('plastic') || activeRecipeId.includes('chemical') || activeRecipeId.includes('fuel')) return 'industrial/refinery';
-    if (activeRecipeId.includes('chip') || activeRecipeId.includes('phone') || activeRecipeId.includes('computer')) return 'industrial/electronics_factory';
-    if (activeRecipeId.includes('car') || activeRecipeId.includes('auto') || activeRecipeId.includes('truck')) return 'industrial/auto_plant';
-    if (activeRecipeId.includes('cloth') || activeRecipeId.includes('jean') || activeRecipeId.includes('apparel')) return 'industrial/textile_mill';
-    if (activeRecipeId.includes('bread') || activeRecipeId.includes('food') || activeRecipeId.includes('flour') || activeRecipeId.includes('beer')) return 'industrial/food_processing';
-    if (activeRecipeId.includes('heavy') || activeRecipeId.includes('engine') || activeRecipeId.includes('glass')) return 'industrial/industry_heavy';
-    return 'industrial/factory_default';
+  static getFactorySprite(linesOrRecipeId) {
+    if (!linesOrRecipeId) return 'industrial/factory_default';
+
+    // Se receber o objeto de linhas completas da fábrica
+    let recipeKeys = [];
+    if (typeof linesOrRecipeId === 'object') {
+      recipeKeys = Object.keys(linesOrRecipeId);
+      // Se tiver objetos internos com outputProductId ou recipeId
+      Object.values(linesOrRecipeId).forEach(line => {
+        if (line && line.outputProductId) recipeKeys.push(line.outputProductId);
+        if (line && line.recipeId) recipeKeys.push(line.recipeId);
+      });
+    } else if (typeof linesOrRecipeId === 'string') {
+      recipeKeys = [linesOrRecipeId];
+    }
+
+    if (recipeKeys.length === 0) return 'industrial/factory_default';
+
+    const scores = {
+      steel: 0,
+      refinery: 0,
+      electronics: 0,
+      auto: 0,
+      textile: 0,
+      food: 0
+    };
+
+    const str = recipeKeys.join(' ').toLowerCase();
+
+    // Contabilizar pontuação por categoria
+    recipeKeys.forEach(k => {
+      const key = String(k).toLowerCase();
+      if (key.includes('steel') || key.includes('metal') || key.includes('iron') || key.includes('aluminum') || key.includes('lumber') || key.includes('paper')) scores.steel++;
+      if (key.includes('plastic') || key.includes('refinery') || key.includes('oil') || key.includes('fuel') || key.includes('chemical') || key.includes('glass') || key.includes('tires')) scores.refinery++;
+      if (key.includes('chip') || key.includes('phone') || key.includes('laptop') || key.includes('desktop') || key.includes('computer') || key.includes('tv') || key.includes('camera') || key.includes('console') || key.includes('microwave') || key.includes('refrigerator') || key.includes('ac') || key.includes('washing')) scores.electronics++;
+      if (key.includes('car') || key.includes('auto') || key.includes('truck') || key.includes('engine') || key.includes('sedan') || key.includes('suv')) scores.auto++;
+      if (key.includes('cloth') || key.includes('jean') || key.includes('apparel') || key.includes('wool') || key.includes('leather') || key.includes('tshirt') || key.includes('suit') || key.includes('sweater') || key.includes('dress') || key.includes('underwear') || key.includes('bag') || key.includes('shoes')) scores.textile++;
+      if (key.includes('bread') || key.includes('food') || key.includes('flour') || key.includes('beer') || key.includes('milk') || key.includes('beef') || key.includes('pork') || key.includes('poultry') || key.includes('cookie') || key.includes('chocolate') || key.includes('coffee') || key.includes('wine') || key.includes('cola') || key.includes('water') || key.includes('juice') || key.includes('cigarette') || key.includes('corn_flakes') || key.includes('soup') || key.includes('oil') || key.includes('yogurt') || key.includes('cheese') || key.includes('sugar')) scores.food++;
+    });
+
+    let bestCategory = 'steel';
+    let maxScore = -1;
+    for (const [cat, score] of Object.entries(scores)) {
+      if (score > maxScore) {
+        maxScore = score;
+        bestCategory = cat;
+      }
+    }
+
+    if (maxScore <= 0) {
+      return 'industrial/factory_default';
+    }
+
+    switch (bestCategory) {
+      case 'steel': return 'industrial/steel_mill';
+      case 'refinery': return 'industrial/refinery';
+      case 'electronics': return 'industrial/electronics_factory';
+      case 'auto': return 'industrial/auto_plant';
+      case 'textile': return 'industrial/textile_mill';
+      case 'food': return 'industrial/food_processing';
+      default: return 'industrial/factory_default';
+    }
   }
 
   static getRDSprite() {
