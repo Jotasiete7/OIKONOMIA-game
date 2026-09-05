@@ -278,7 +278,7 @@
   </footer>
 
   <!-- 5. FLOATING MANAGEMENT CARD (JANELA FLUTUANTE DE GESTÃO - ESTILO CAPITALISM) -->
-  <div id="floating-facility-window" class="fixed top-14 right-3 bottom-3 w-[430px] z-40 bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-200">
+  <div id="floating-facility-window" class="fixed top-14 right-3 max-h-[calc(100vh-4.5rem)] w-[430px] z-40 bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-200">
     <!-- Header do Card -->
     <div class="bg-slate-800/90 border-b border-slate-700 px-4 py-3 flex items-center justify-between drag-handle">
       <div class="flex items-center gap-2.5">
@@ -2950,7 +2950,7 @@
             if (tile.competitor) {
               facilityLogo = generateCompanyLogo(tile.competitor.name || 'Megamart Varejo', 0, true);
             } else if (tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter) {
-              facilityLogo = generateCompanyLogo(playerProfile.companyName || 'OikoCorp Holding', playerProfile.logoRegenSeed || 0, false);
+              facilityLogo = generateCompanyLogo(playerProfile.companyName || 'OikoCorp Holding', playerProfile.logoRegenSeed || 0, false, playerProfile?.themeColor);
             } else if (tile.isPort) {
               facilityLogo = { shape: 'hexagon', color: '#38bdf8', iconDef: LOGO_ICONS.anchor };
             } else if (tile.isMedia) {
@@ -9778,10 +9778,14 @@
 
     function updateWizLogoPreview() {
       const cName = document.getElementById('wiz-company-name')?.value.trim() || 'OikoCorp Holding';
-      const logo = generateCompanyLogo(cName, selectedWizLogoSeed, false);
+      const logo = generateCompanyLogo(cName, selectedWizLogoSeed, false, selectedWizColorId);
       const previewEl = document.getElementById('wiz-logo-preview');
       if (previewEl) {
         previewEl.innerHTML = getCompanyLogoSvg(logo, 28);
+        const palette = (typeof COLOR_PALETTES !== 'undefined') ? COLOR_PALETTES.find(c => c.id === selectedWizColorId) : null;
+        if (palette) {
+          previewEl.style.borderColor = palette.hex;
+        }
       }
     }
 
@@ -9862,8 +9866,8 @@
       container.innerHTML = COLOR_PALETTES.map(c => {
         const isSel = c.id === selectedWizColorId;
         return `
-          <button onclick="selectWizColor('${c.id}')" class="flex items-center gap-2 px-3 py-1.5 rounded-xl border transition ${
-            isSel ? 'border-white bg-slate-800 font-bold' : 'border-slate-800 bg-slate-950/80 text-slate-400'
+          <button onclick="selectWizColor('${c.id}')" class="flex items-center gap-2 px-3 py-1.5 rounded-xl border transition cursor-pointer ${
+            isSel ? 'border-white bg-slate-800 font-bold ring-1 ring-white/50' : 'border-slate-800 bg-slate-950/80 text-slate-400 hover:border-slate-600'
           }">
             <span class="w-3.5 h-3.5 rounded-full" style="background-color: ${c.hex}"></span>
             <span>${c.name}</span>
@@ -9874,7 +9878,9 @@
 
     function selectWizColor(id) {
       selectedWizColorId = id;
+      if (typeof window !== 'undefined') window.selectedWizColorId = id;
       renderWizColors();
+      updateWizLogoPreview();
       playBeep(520, 'sine', 0.05);
     }
 
@@ -10145,7 +10151,7 @@
       if (nameEl) nameEl.textContent = playerProfile.playerName;
 
       if (logoEl) {
-        const logo = generateCompanyLogo(playerProfile.companyName, playerProfile.logoRegenSeed || 0, false);
+        const logo = generateCompanyLogo(playerProfile.companyName, playerProfile.logoRegenSeed || 0, false, playerProfile?.themeColor);
         logoEl.innerHTML = getCompanyLogoSvg(logo, 22);
       }
 

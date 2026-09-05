@@ -25,7 +25,16 @@ export const LOGO_ICONS = {
   star:    { name: 'Estrela',    svgPath: 'M12 2l2.9 6.6 7.1.6-5.3 4.8 1.6 7-6.3-3.7-6.3 3.7 1.6-7L2 9.2l7.1-.6L12 2z' }
 };
 
-export function generateCompanyLogo(companyName, regenSeed = 0, isAICompetitor = false) {
+export const THEME_COLOR_PALETTES = {
+  emerald: ['#10b981', '#34d399', '#6ee7b7', '#059669'],
+  sky:     ['#0284c7', '#38bdf8', '#60a5fa', '#0ea5e9'],
+  amber:   ['#f59e0b', '#fbbf24', '#fcd34d', '#d97706'],
+  purple:  ['#a855f7', '#c084fc', '#d8b4fe', '#9333ea'],
+  rose:    ['#f43f5e', '#fb7185', '#fda4af', '#e11d48'],
+  cyan:    ['#06b6d4', '#22d3ee', '#67e8f9', '#38bdf8']
+};
+
+export function generateCompanyLogo(companyName, regenSeed = 0, isAICompetitor = false, themeColor = null) {
   const name = (companyName || 'OIKONOMIA').trim();
   const seed = hashStringToSeed(name + (regenSeed || 0).toString());
 
@@ -34,11 +43,31 @@ export function generateCompanyLogo(companyName, regenSeed = 0, isAICompetitor =
   const shapeKeys = ['circle', 'shield', 'hexagon'];
   const shape = shapeKeys[Math.floor(seed / iconKeys.length) % shapeKeys.length];
 
-  const PLAYER_COLORS = ['#d4b483', '#c9a86a', '#e0c28f', '#b8935f'];
   const AI_COLORS = ['#c0392b', '#e74c3c', '#d35400', '#a93226'];
 
-  const palette = isAICompetitor ? AI_COLORS : PLAYER_COLORS;
-  const color = palette[seed % palette.length];
+  let color;
+  if (isAICompetitor) {
+    color = AI_COLORS[seed % AI_COLORS.length];
+  } else {
+    const activeTheme = themeColor
+      || (typeof window !== 'undefined' && window.selectedWizColorId)
+      || (typeof window !== 'undefined' && window.playerProfile?.themeColor)
+      || (typeof window !== 'undefined' && window.GameState?.playerProfile?.themeColor)
+      || (typeof selectedWizColorId !== 'undefined' ? selectedWizColorId : null)
+      || (typeof playerProfile !== 'undefined' ? playerProfile?.themeColor : null)
+      || 'emerald';
+
+    let palette = THEME_COLOR_PALETTES[activeTheme];
+    if (!palette) {
+      if (typeof activeTheme === 'string' && activeTheme.startsWith('#')) {
+        palette = [activeTheme];
+      } else {
+        palette = THEME_COLOR_PALETTES.emerald;
+      }
+    }
+    const colorIdx = Math.abs(regenSeed || 0) % palette.length;
+    color = palette[colorIdx];
+  }
 
   return {
     iconKey,
@@ -46,7 +75,8 @@ export function generateCompanyLogo(companyName, regenSeed = 0, isAICompetitor =
     shape,
     color,
     seed,
-    isAICompetitor
+    isAICompetitor,
+    themeColor: !isAICompetitor ? (themeColor || 'emerald') : null
   };
 }
 

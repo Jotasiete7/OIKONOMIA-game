@@ -65,6 +65,7 @@ import SoundEngine, {
 import {
   hashStringToSeed,
   LOGO_ICONS,
+  THEME_COLOR_PALETTES,
   generateCompanyLogo,
   getCompanyLogoSvg,
   drawCanvasCompanyLogoBadge
@@ -145,6 +146,7 @@ window.playCashRegister = playCashRegister;
 // Re-exposição global (Fase 4A: Logo Generator)
 window.hashStringToSeed = hashStringToSeed;
 window.LOGO_ICONS = LOGO_ICONS;
+window.THEME_COLOR_PALETTES = THEME_COLOR_PALETTES;
 window.generateCompanyLogo = generateCompanyLogo;
 window.getCompanyLogoSvg = getCompanyLogoSvg;
 window.drawCanvasCompanyLogoBadge = drawCanvasCompanyLogoBadge;
