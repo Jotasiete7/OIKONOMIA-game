@@ -180,6 +180,12 @@ window.generateExportDataUri = generateExportDataUri;
 // Re-exposição global (Warehouse System)
 window.WarehouseSystem = WarehouseSystem;
 window.renderWarehousePanel = WarehouseSystem.renderWarehousePanel;
+window.openWarehouseModal = WarehouseSystem.openWarehouseModal;
+window.closeWarehouseModal = WarehouseSystem.closeWarehouseModal;
+window.renameWarehouse = WarehouseSystem.renameWarehouse;
+window.switchWarehouseTab = WarehouseSystem.switchWarehouseTab;
+window.syncOwnProductionProducts = WarehouseSystem.syncOwnProductionProducts;
+window.setWarehouseProductMaxQuota = WarehouseSystem.setWarehouseProductMaxQuota;
 window.upgradeWarehouse = WarehouseSystem.upgradeWarehouse;
 window.confirmBuildWarehouse = WarehouseSystem.confirmBuildWarehouse;
 window.openAddWarehouseProductModal = WarehouseSystem.openAddWarehouseProductModal;

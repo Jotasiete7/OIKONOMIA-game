@@ -147,7 +147,10 @@ export function simulateDay(customContext = {}) {
       let totalCurrentStock = Object.values(wh.inventory).reduce((sum, item) => sum + (item.stock || 0), 0);
       const freeCapacity = Math.max(0, (wh.maxCapacity || 25000) - totalCurrentStock);
 
-      const macroPhase = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getCurrentCycle(state.year).phase : 'boom';
+      const phaseInfo = (typeof MacroCycleSystem !== 'undefined' && MacroCycleSystem.getPhaseInfo) 
+        ? MacroCycleSystem.getPhaseInfo(state.year) 
+        : null;
+      const macroPhase = phaseInfo ? (phaseInfo.code || '').toLowerCase() : 'boom';
       const isDiscountCycle = (macroPhase === 'recession' || macroPhase === 'depression');
 
       for (const [prodId, item] of Object.entries(wh.inventory)) {
@@ -157,27 +160,33 @@ export function simulateDay(customContext = {}) {
         item.quality = item.quality || 60;
 
         // 1. Coleta Inbound Diária das fontes próprias (Fazendas, Minas, Fábricas)
-        if (item.collectMode === 'all_own' && freeCapacity > 0) {
+        const maxQuota = (item.maxQuota && item.maxQuota > 0) ? item.maxQuota : (wh.maxCapacity || 25000);
+        let quotaRoom = Math.max(0, maxQuota - item.stock);
+
+        if (item.collectMode === 'all_own' && freeCapacity > 0 && quotaRoom > 0) {
           if (typeof activeFacilitySet !== 'undefined') {
             for (const srcTile of activeFacilitySet.values()) {
-              if (freeCapacity <= 0) break;
+              if (freeCapacity <= 0 || quotaRoom <= 0) break;
 
               // Fazenda própria produzindo este item
               if (srcTile.farm && (srcTile.farm.cropId === prodId || (prodId === 'eggs' && srcTile.farm.cropId === 'poultry'))) {
                 const avail = srcTile.farm.stock || 0;
                 if (avail > 0) {
-                  const toCollect = Math.min(avail, freeCapacity);
-                  srcTile.farm.stock -= toCollect;
+                  const toCollect = Math.min(avail, freeCapacity, quotaRoom);
+                  if (toCollect > 0) {
+                    srcTile.farm.stock -= toCollect;
 
-                  const oldStock = item.stock;
-                  const newStock = oldStock + toCollect;
-                  const srcCost = srcTile.farm.dailyOperatingCost || 0.45;
-                  const srcQR = srcTile.farm.effectiveQuality || srcTile.farm.quality || 60;
+                    const oldStock = item.stock;
+                    const newStock = oldStock + toCollect;
+                    const srcCost = srcTile.farm.dailyOperatingCost || 0.45;
+                    const srcQR = srcTile.farm.effectiveQuality || srcTile.farm.quality || 60;
 
-                  item.avgUnitCost = newStock > 0 ? Number((((oldStock * item.avgUnitCost) + (toCollect * srcCost)) / newStock).toFixed(2)) : srcCost;
-                  item.quality = newStock > 0 ? Math.round(((oldStock * item.quality) + (toCollect * srcQR)) / newStock) : srcQR;
-                  item.stock = newStock;
-                  totalCurrentStock += toCollect;
+                    item.avgUnitCost = newStock > 0 ? Number((((oldStock * item.avgUnitCost) + (toCollect * srcCost)) / newStock).toFixed(2)) : srcCost;
+                    item.quality = newStock > 0 ? Math.round(((oldStock * item.quality) + (toCollect * srcQR)) / newStock) : srcQR;
+                    item.stock = newStock;
+                    totalCurrentStock += toCollect;
+                    quotaRoom -= toCollect;
+                  }
                 }
               }
 
@@ -185,37 +194,44 @@ export function simulateDay(customContext = {}) {
               if (srcTile.mine && srcTile.mine.resourceId === prodId) {
                 const avail = srcTile.mine.stock || 0;
                 if (avail > 0) {
-                  const toCollect = Math.min(avail, freeCapacity);
-                  srcTile.mine.stock -= toCollect;
+                  const toCollect = Math.min(avail, freeCapacity, quotaRoom);
+                  if (toCollect > 0) {
+                    srcTile.mine.stock -= toCollect;
 
-                  const oldStock = item.stock;
-                  const newStock = oldStock + toCollect;
-                  const srcCost = srcTile.mine.unitCost || 10.0;
-                  const srcQR = srcTile.mine.quality || 60;
+                    const oldStock = item.stock;
+                    const newStock = oldStock + toCollect;
+                    const srcCost = srcTile.mine.unitCost || 10.0;
+                    const srcQR = srcTile.mine.quality || 60;
 
-                  item.avgUnitCost = newStock > 0 ? Number((((oldStock * item.avgUnitCost) + (toCollect * srcCost)) / newStock).toFixed(2)) : srcCost;
-                  item.quality = newStock > 0 ? Math.round(((oldStock * item.quality) + (toCollect * srcQR)) / newStock) : srcQR;
-                  item.stock = newStock;
-                  totalCurrentStock += toCollect;
+                    item.avgUnitCost = newStock > 0 ? Number((((oldStock * item.avgUnitCost) + (toCollect * srcCost)) / newStock).toFixed(2)) : srcCost;
+                    item.quality = newStock > 0 ? Math.round(((oldStock * item.quality) + (toCollect * srcQR)) / newStock) : srcQR;
+                    item.stock = newStock;
+                    totalCurrentStock += toCollect;
+                    quotaRoom -= toCollect;
+                  }
                 }
               }
 
               // Fábrica própria produzindo este item
               if (srcTile.factory && srcTile.factory.lines) {
                 for (const line of Object.values(srcTile.factory.lines)) {
+                  if (quotaRoom <= 0) break;
                   if (line.outputProductId === prodId && line.finishedStock > 0) {
-                    const toCollect = Math.min(line.finishedStock, freeCapacity);
-                    line.finishedStock -= toCollect;
+                    const toCollect = Math.min(line.finishedStock, freeCapacity, quotaRoom);
+                    if (toCollect > 0) {
+                      line.finishedStock -= toCollect;
 
-                    const oldStock = item.stock;
-                    const newStock = oldStock + toCollect;
-                    const srcCost = line.unitCost || 2.0;
-                    const srcQR = line.outputQuality || 65;
+                      const oldStock = item.stock;
+                      const newStock = oldStock + toCollect;
+                      const srcCost = line.unitCost || 2.0;
+                      const srcQR = line.outputQuality || 65;
 
-                    item.avgUnitCost = newStock > 0 ? Number((((oldStock * item.avgUnitCost) + (toCollect * srcCost)) / newStock).toFixed(2)) : srcCost;
-                    item.quality = newStock > 0 ? Math.round(((oldStock * item.quality) + (toCollect * srcQR)) / newStock) : srcQR;
-                    item.stock = newStock;
-                    totalCurrentStock += toCollect;
+                      item.avgUnitCost = newStock > 0 ? Number((((oldStock * item.avgUnitCost) + (toCollect * srcCost)) / newStock).toFixed(2)) : srcCost;
+                      item.quality = newStock > 0 ? Math.round(((oldStock * item.quality) + (toCollect * srcQR)) / newStock) : srcQR;
+                      item.stock = newStock;
+                      totalCurrentStock += toCollect;
+                      quotaRoom -= toCollect;
+                    }
                   }
                 }
               }
@@ -224,10 +240,11 @@ export function simulateDay(customContext = {}) {
         }
 
         // 2. Reabastecimento Automático Portuário (Safety Stock) & Modo Anticíclico
-        if (item.autoRestockPort && item.safetyStock > 0 && item.stock < item.safetyStock && freeCapacity > 0) {
+        const targetStock = Math.min(item.safetyStock || 0, maxQuota);
+        if (item.autoRestockPort && targetStock > 0 && item.stock < targetStock && freeCapacity > 0) {
           const canBuy = !item.buyOnRecessionOnly || isDiscountCycle;
           if (canBuy) {
-            const neededUnits = Math.min(item.safetyStock - item.stock, freeCapacity, 1500);
+            const neededUnits = Math.min(targetStock - item.stock, freeCapacity, 1500);
             const macroMult = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getWholesaleCostMultiplier(state.year) : 1.0;
             const baseProdCost = (typeof PRODUCT_CATALOG !== 'undefined' && PRODUCT_CATALOG[prodId]?.baseCost) ? PRODUCT_CATALOG[prodId].baseCost : 1.0;
             const unitPrice = Number((baseProdCost * 1.15 * macroMult).toFixed(2));
@@ -424,7 +441,10 @@ export function simulateDay(customContext = {}) {
 
         shelf.stock = Math.max(0, shelf.stock - sold);
         const soldRev = sold * shelf.price;
-        const unitCogs = (shelf.landedCost || prod.baseCost) * macroWholesaleMult;
+        const isInternalSupplier = !!(shelf.supplierId?.startsWith('farm_') || shelf.supplierId?.startsWith('factory_') || shelf.supplierId?.startsWith('warehouse_') || shelf.supplierId?.startsWith('mine_'));
+        const unitCogs = isInternalSupplier 
+          ? (shelf.landedCost || prod.baseCost || 1.0) 
+          : (shelf.landedCost || prod.baseCost || 1.0) * macroWholesaleMult;
         const soldCogs = sold * unitCogs;
         dailyRev  += soldRev;
         dailyCogs += soldCogs;
@@ -465,10 +485,25 @@ export function simulateDay(customContext = {}) {
           }
 
           if (deliverUnits > 0) {
-            const rc = deliverUnits * unitCogs;
-            if (state.cash >= rc) {
-              state.cash -= rc;
+            if (isInternalSupplier) {
+              // Transferência interna de fazenda/fábrica/armazém da holding:
+              // O custo de fabricação já é pago pelo OPEX diário da instalação produtora.
+              // A holding só desembolsa o frete de logística!
+              const freightCost = deliverUnits * (shelf.unitFreight || 0.01);
+              state.cash -= freightCost;
               shelf.stock += deliverUnits;
+            } else {
+              // Compra externa do porto alfandegado: exige desembolso integral de mercadoria + frete
+              const rc = deliverUnits * unitCogs;
+              if (state.cash >= rc) {
+                state.cash -= rc;
+                shelf.stock += deliverUnits;
+              } else if (state.cash > 0) {
+                const affordUnits = Math.max(1, Math.floor(state.cash / unitCogs));
+                const actualDeliver = Math.min(deliverUnits, affordUnits);
+                state.cash -= actualDeliver * unitCogs;
+                shelf.stock += actualDeliver;
+              }
             }
           }
         }

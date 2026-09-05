@@ -110,6 +110,7 @@ const MacroCycleSystem = (() => {
     PHASES,
     getCycleYear,
     getPhaseInfo,
+    getCurrentCycle: getPhaseInfo,
     getDemandMultiplier,
     getWholesaleCostMultiplier,
     getTechDiscountMultiplier,

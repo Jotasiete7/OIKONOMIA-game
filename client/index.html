@@ -327,6 +327,105 @@
     </div>
   </div>
 
+  <!-- CENTRO DE DISTRIBUIÇÃO & ARMAZÉM LOGÍSTICO — MODAL DEDICADO -->
+  <div id="warehouse-modal" class="fixed inset-0 z-[60] bg-black/75 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-sky-800/70 rounded-2xl shadow-2xl w-full max-w-4xl mx-4 overflow-hidden flex flex-col max-h-[92vh] transition-all duration-200">
+      <!-- Header Arrastável -->
+      <div class="bg-slate-800/95 border-b border-slate-700 px-5 py-3 flex items-center justify-between drag-handle">
+        <div class="flex items-center gap-2.5">
+          <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
+          <div class="w-9 h-9 rounded-xl bg-sky-950 border border-sky-600/60 flex items-center justify-center text-lg shadow">🏢</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="wh-modal-title" class="text-sm font-bold text-sky-200">Centro de Distribuição Central</h3>
+              <button onclick="renameWarehouse()" class="text-slate-400 hover:text-sky-300 text-xs cursor-pointer" title="Renomear Armazém">✏️</button>
+              <span id="wh-modal-level-badge" class="text-[9px] bg-sky-950 text-sky-300 font-bold px-2 py-0.5 rounded border border-sky-700/60">Nível 1</span>
+            </div>
+            <span id="wh-modal-subtitle" class="text-[10px] text-slate-400 font-mono">Metrópole Central (10, 10) · Hub Multimodal de Estocagem</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div id="wh-modal-upgrade-slot"></div>
+          <button onclick="closeWarehouseModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center cursor-pointer transition">✕</button>
+        </div>
+      </div>
+
+      <!-- Barra de Métricas em Tempo Real -->
+      <div class="bg-slate-950/80 border-b border-slate-800 px-5 py-2.5 flex items-center justify-between text-xs font-mono flex-wrap gap-3">
+        <!-- Ocupação Geral do Galpão -->
+        <div class="flex-1 min-w-[240px]">
+          <div class="flex items-center justify-between text-[11px] mb-1">
+            <span class="text-slate-400">📊 Ocupação Geral:</span>
+            <span id="wh-modal-stock-summary" class="font-bold text-sky-300">0 / 25.000 un (0%)</span>
+          </div>
+          <div class="h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+            <div id="wh-modal-stock-bar" class="h-full bg-sky-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+          <div class="flex items-center justify-between text-[9px] text-slate-400 mt-0.5">
+            <span id="wh-modal-free-space">Livre: 25.000 un</span>
+            <span id="wh-modal-daily-cost" class="text-amber-400">-$75/dia (Solo $15 + Logística $60)</span>
+          </div>
+        </div>
+
+        <!-- Valuation e Insumos -->
+        <div class="flex items-center gap-4 text-right border-l border-slate-800 pl-4">
+          <div>
+            <div class="text-[10px] text-slate-400">Valor em Estoque:</div>
+            <div id="wh-modal-valuation" class="text-xs font-bold text-emerald-400">$0.00</div>
+          </div>
+          <div>
+            <div class="text-[10px] text-slate-400">Baias Ativas:</div>
+            <div id="wh-modal-slots-count" class="text-xs font-bold text-cyan-300">0 insumos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Abas e Ações Rápidas -->
+      <div class="bg-sky-950/20 border-b border-sky-800/30 px-5 py-2 flex items-center justify-between text-xs font-mono flex-wrap gap-2">
+        <div class="flex items-center gap-1.5">
+          <button id="wh-tab-inventory-btn" onclick="switchWarehouseTab('inventory')"
+            class="px-3 py-1.5 rounded-lg font-bold bg-sky-700 text-white border border-sky-500 shadow text-[10px] cursor-pointer transition">
+            📦 Inventário & Cotas
+          </button>
+          <button id="wh-tab-flow-btn" onclick="switchWarehouseTab('flow')"
+            class="px-3 py-1.5 rounded-lg font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] cursor-pointer transition">
+            🔄 Radar de Fluxo (In / Out)
+          </button>
+          <button id="wh-tab-anticyclic-btn" onclick="switchWarehouseTab('anticyclic')"
+            class="px-3 py-1.5 rounded-lg font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] cursor-pointer transition">
+            📉 Compras Portuárias & Ciclos
+          </button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="syncOwnProductionProducts()"
+            class="bg-emerald-900/80 hover:bg-emerald-800 text-emerald-200 border border-emerald-600/70 font-bold px-3 py-1.5 rounded-lg text-[10px] shadow cursor-pointer transition flex items-center gap-1.5"
+            title="Detecta e aloca automaticamente todos os produtos produzidos nas suas fazendas, minas e fábricas">
+            ⚡ Sincronizar Produção Própria
+          </button>
+          <button onclick="openAddWarehouseProductModal()"
+            class="bg-sky-800/80 hover:bg-sky-700 text-sky-200 border border-sky-600/70 font-bold px-3 py-1.5 rounded-lg text-[10px] shadow cursor-pointer transition flex items-center gap-1">
+            ➕ Alocar Produto
+          </button>
+        </div>
+      </div>
+
+      <!-- Conteúdo da Aba 1: Inventário & Sliders de Cotas -->
+      <div id="wh-tab-inventory-content" class="p-4 space-y-3 flex-1 overflow-y-auto custom-scrollbar">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+
+      <!-- Conteúdo da Aba 2: Radar de Fluxo Inbound / Outbound -->
+      <div id="wh-tab-flow-content" class="p-4 space-y-4 flex-1 overflow-y-auto custom-scrollbar hidden">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+
+      <!-- Conteúdo da Aba 3: Compras Portuárias & Modo Anticíclico -->
+      <div id="wh-tab-anticyclic-content" class="p-4 space-y-4 flex-1 overflow-y-auto custom-scrollbar hidden">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- P&D — MODAL DO CENTRO DE PESQUISA & DESENVOLVIMENTO -->
   <div id="rd-center-modal" class="fixed inset-0 z-[60] bg-black/75 backdrop-blur-sm flex items-center justify-center hidden">
     <div class="bg-slate-900 border border-purple-800/60 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden flex flex-col max-h-[90vh] transition-all duration-200">
@@ -2069,10 +2168,10 @@
         }
         if (tile.warehouse && tile.warehouse.inventory && tile.warehouse.inventory[prodId]) {
           const inv = tile.warehouse.inventory[prodId];
-          if (inv.stock > 0 || inv.safetyStock > 0) {
+          if (inv.stock > 0 || inv.safetyStock > 0 || inv.targetStock > 0 || (inv.maxCapacity && inv.maxCapacity > 0)) {
             const dist = CoreMath.calculateManhattanDistance(tile, storeTile);
             const freight = CoreMath.calculateUnitFreight(dist, 0.008, 0.01);
-            const unitPrice = typeof inv.avgUnitCost === 'number' ? inv.avgUnitCost : 1.0;
+            const unitPrice = typeof inv.avgUnitCost === 'number' && inv.avgUnitCost > 0 ? inv.avgUnitCost : (PRODUCT_CATALOG[prodId]?.baseCost || 1.0);
             const landed = CoreMath.calculateLandedCost(unitPrice, freight);
             const pNameStr = PRODUCT_CATALOG[prodId]?.name || prodId;
             offers.push({
@@ -2087,7 +2186,7 @@
               stockLabel: `Armazém: ${inv.stock.toLocaleString()} un (Custo Médio: $${unitPrice.toFixed(2)})`,
               wholesalePrice: unitPrice,
               quality: inv.quality || 60,
-              quota: inv.stock || 5000,
+              quota: inv.stock || inv.maxCapacity || 5000,
               origin: `Armazém Central (${tile.x}, ${tile.y})`,
               distance: dist,
               freight,
@@ -2097,7 +2196,12 @@
         }
       }
 
-      return offers.sort((a, b) => a.landedCost - b.landedCost);
+      return offers.sort((a, b) => {
+        const aInternal = a.type?.startsWith('internal_') ? 1 : 0;
+        const bInternal = b.type?.startsWith('internal_') ? 1 : 0;
+        if (aInternal !== bInternal) return bInternal - aInternal;
+        return a.landedCost - b.landedCost;
+      });
     }
 
     // ===========================================================================
@@ -3384,6 +3488,8 @@
         openPortModal(tile.portData);
       } else if (tile.isMedia) {
         openMarketingCentralModal(tile.mediaData.id);
+      } else if (tile.warehouse) {
+        openWarehouseModal(tile);
       } else if (tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter) {
         activeManagedTile = tile;
         renderFacilityPanel(tile);
@@ -3452,7 +3558,7 @@
         } else if (tile.rdCenter) {
           buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-purple-700 hover:bg-purple-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🔬 Gerir P&D</button>`;
         } else if (tile.warehouse) {
-          buttonsHtml = `<button onclick="openFloatingFacilityWindow(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🏢 Gerir Armazém</button>`;
+          buttonsHtml = `<button onclick="openWarehouseModal(worldGrid[${tile.x}][${tile.y}])" class="bg-sky-700 hover:bg-sky-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">🏢 Gerir Armazém</button>`;
         } else if (tile.isPort) {
           buttonsHtml = `<button onclick="openPortModal(worldGrid[${tile.x}][${tile.y}].portData)" class="bg-yellow-700 hover:bg-yellow-600 text-white font-bold px-2 py-0.5 rounded text-[9px] shadow cursor-pointer">⚓ Ver Cargas</button>`;
         } else if (tile.isMedia) {
@@ -5408,10 +5514,25 @@
               ? `<span class="text-amber-300 font-bold bg-amber-950/80 px-1 py-0.2 rounded border border-amber-800 text-[8px]">🟡 ${daysCover}d</span>`
               : `<span class="text-emerald-400 font-bold bg-emerald-950/80 px-1 py-0.2 rounded border border-emerald-800 text-[8px]">🟢 ${daysCover}d</span>`));
 
-        const isInternal = !!(shelf.supplierId?.startsWith('factory_') || shelf.supplierId?.startsWith('farm_') || shelf.supplierId?.startsWith('mine_'));
+        const isWarehouse = !!shelf.supplierId?.startsWith('warehouse_');
+        const isInternalFacility = !!(shelf.supplierId?.startsWith('factory_') || shelf.supplierId?.startsWith('farm_') || shelf.supplierId?.startsWith('mine_'));
+        const isInternal = isInternalFacility || isWarehouse;
         const macroWholesaleMult = (typeof MacroCycleSystem !== 'undefined') ? MacroCycleSystem.getWholesaleCostMultiplier(year) : 1.0;
         const effectiveUnitCost = (shelf.landedCost || prod.baseCost || 1) * (isInternal ? 1.0 : macroWholesaleMult);
         const costFill = Math.round((shelf.maxCapacity - shelf.stock) * effectiveUnitCost);
+
+        const compName = (typeof playerProfile !== 'undefined' && playerProfile?.companyName)
+          ? playerProfile.companyName
+          : (typeof state !== 'undefined' && state?.playerProfile?.companyName ? state.playerProfile.companyName : 'Holding');
+
+        let supplierDisplay = '';
+        if (isWarehouse) {
+          supplierDisplay = `<span class="text-emerald-400 font-bold">🏢 [${compName}] Armazém Central (${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'CD'})</span>`;
+        } else if (isInternalFacility) {
+          supplierDisplay = `<span class="text-amber-400 font-bold">🏛️ [${compName}] ${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Produção Própria'}</span>`;
+        } else {
+          supplierDisplay = `<span class="text-sky-300">🚢 Porto: ${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Porto'}</span>`;
+        }
 
         const card = document.createElement('div');
         card.className = `rounded-xl border ${isStockout ? 'border-rose-800 stockout-alert' : 'border-slate-800'} bg-slate-950 p-2.5 space-y-2`;
@@ -5427,12 +5548,12 @@
             <button onclick="removeProductFromStore(${tile.x}, ${tile.y}, '${prodId}')" class="text-[10px] text-slate-600 hover:text-rose-400 font-mono px-1">✕</button>
           </div>
 
-          <div class="bg-slate-900 p-1.5 rounded-lg text-[10px] font-mono flex items-center justify-between border ${isInternal ? 'border-amber-700/60 bg-amber-950/20' : 'border-slate-800'}">
-            <div class="truncate max-w-[180px]">
-              <span class="${isInternal ? 'text-amber-400 font-bold' : 'text-sky-300'}">${isInternal ? '🏛️ Próprio' : '🚢 Porto'}: ${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Porto'}</span>
+          <div class="bg-slate-900 p-1.5 rounded-lg text-[10px] font-mono flex items-center justify-between border ${isInternal ? 'border-emerald-700/60 bg-emerald-950/20' : 'border-slate-800'}">
+            <div class="truncate max-w-[210px]">
+              ${supplierDisplay}
             </div>
             <div class="flex items-center gap-1.5">
-              <span class="text-slate-400">Custo: <strong class="text-emerald-400 font-bold">$${shelf.landedCost.toFixed(2)}</strong></span>
+              <span class="text-slate-400">${isInternal ? 'Frete' : 'Custo'}: <strong class="text-emerald-400 font-bold">$${shelf.landedCost.toFixed(2)}</strong></span>
               <button onclick="openSupplierModal(${tile.x}, ${tile.y}, '${prodId}')" class="bg-slate-800 hover:bg-slate-700 text-teal-300 px-1.5 py-0.5 rounded text-[9px] font-bold border border-slate-700 cursor-pointer">Trocar</button>
             </div>
           </div>
@@ -6303,6 +6424,8 @@
     // SISTEMA DE ÁRVORE TECNOLÓGICA & PROGRESSÃO DE P&D (Tiers 0 a 5)
     // ===========================================================================
     let currentTechTreeTierFilter = 'all';
+    let activeTechLineageRoot = null;
+    let techLineageFilter = 'all'; // 'all' | 'can_unlock' | 'retail' | 'b2b' | 'unlocked'
 
     function isProductUnlocked(productId) {
       if (!productId) return false;
@@ -6316,8 +6439,10 @@
       return false;
     }
 
-    function openTechTreeModal(filterCategory = 'all', filterTier = 'all') {
+    function openTechTreeModal(filterCategory = 'all', filterTier = 'all', lineageRoot = null) {
       currentTechTreeTierFilter = filterTier;
+      activeTechLineageRoot = lineageRoot;
+      techLineageFilter = 'all';
       const modal = document.getElementById('tech-tree-modal');
       if (modal) modal.classList.remove('hidden');
       filterTechTree(filterTier);
@@ -6326,9 +6451,37 @@
     function closeTechTreeModal() {
       const modal = document.getElementById('tech-tree-modal');
       if (modal) modal.classList.add('hidden');
+      activeTechLineageRoot = null;
+      techLineageFilter = 'all';
+    }
+
+    function focusTechLineage(prodId) {
+      activeTechLineageRoot = prodId;
+      techLineageFilter = 'all';
+      const searchInput = document.getElementById('tt-search-input');
+      if (searchInput) searchInput.value = '';
+      renderTechTree();
+    }
+
+    function clearTechLineage() {
+      activeTechLineageRoot = null;
+      techLineageFilter = 'all';
+      renderTechTree();
+    }
+
+    function setTechLineageFilter(filter) {
+      techLineageFilter = filter;
+      renderTechTree();
+    }
+
+    if (typeof window !== 'undefined') {
+      window.focusTechLineage = focusTechLineage;
+      window.clearTechLineage = clearTechLineage;
+      window.setTechLineageFilter = setTechLineageFilter;
     }
 
     function filterTechTree(tier) {
+      activeTechLineageRoot = null;
       currentTechTreeTierFilter = tier;
       ['all', '0', '1', '2', '3'].forEach(t => {
         const btn = document.getElementById(`tt-filter-${t}`);
@@ -6357,6 +6510,220 @@
         5: 'bg-rose-950 text-rose-300 border-rose-800'
       };
 
+      // =========================================================================
+      // MODO 1: LINHAGEM A JUSANTE (DOWNSTREAM BRANCHES & FUTURE PRODUCTS)
+      // =========================================================================
+      if (activeTechLineageRoot) {
+        const rootProd = PRODUCT_CATALOG[activeTechLineageRoot] || { id: activeTechLineageRoot, name: activeTechLineageRoot, category: 'Geral' };
+        const rootCat = RD_CATEGORIES[rootProd.category] || { icon: '📦' };
+        const rootTier = CoreMath.calculateProductionTier(activeTechLineageRoot, FACTORY_RECIPES);
+        const isRootUnlocked = isProductUnlocked(activeTechLineageRoot);
+
+        let branches = (typeof CoreMath !== 'undefined' && CoreMath.getDownstreamBranches)
+          ? CoreMath.getDownstreamBranches(activeTechLineageRoot, FACTORY_RECIPES, PRODUCT_CATALOG, unlockedProducts)
+          : [];
+
+        const totalDerivatives = branches.length;
+        const totalUnlockedCount = branches.filter(b => b.isUnlocked).length;
+        const totalCanUnlockCount = branches.filter(b => b.canUnlock).length;
+        const totalRetailCount = branches.filter(b => !b.isIntermediate).length;
+        const totalB2BCount = branches.filter(b => b.isIntermediate).length;
+
+        // Atualiza contador de tecnologias no header
+        const countEl = document.getElementById('tech-tree-unlocked-count');
+        if (countEl) {
+          countEl.textContent = `Linhagem: ${totalDerivatives} Derivados (${totalUnlockedCount} Desbloqueados)`;
+        }
+
+        // Filtro da linhagem
+        if (techLineageFilter === 'can_unlock') {
+          branches = branches.filter(b => b.canUnlock);
+        } else if (techLineageFilter === 'retail') {
+          branches = branches.filter(b => !b.isIntermediate);
+        } else if (techLineageFilter === 'b2b') {
+          branches = branches.filter(b => b.isIntermediate);
+        } else if (techLineageFilter === 'unlocked') {
+          branches = branches.filter(b => b.isUnlocked);
+        }
+
+        if (searchQuery) {
+          branches = branches.filter(b =>
+            b.name.toLowerCase().includes(searchQuery) ||
+            b.category.toLowerCase().includes(searchQuery) ||
+            b.id.toLowerCase().includes(searchQuery)
+          );
+        }
+
+        let lineageHtml = `
+          <!-- Header de Foco da Linhagem -->
+          <div class="bg-gradient-to-r from-amber-950/60 via-slate-900 to-slate-950 p-4 rounded-2xl border-2 border-amber-500/80 shadow-xl shadow-amber-950/30 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-amber-800/40 pb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-teal-950 border-2 border-teal-500 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                  ${rootCat.icon || '🪨'}
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="bg-teal-950 text-teal-300 border border-teal-600 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">🌱 RAIZ INVESTIGADA</span>
+                    <span class="text-xs font-mono text-slate-400">Tier ${rootTier}</span>
+                    <span class="text-[9px] px-2 py-0.5 rounded border ${isRootUnlocked ? 'bg-emerald-950 text-emerald-300 border-emerald-700' : 'bg-rose-950 text-rose-300 border-rose-700'} font-bold">
+                      ${isRootUnlocked ? '✓ Desbloqueado' : '🔒 Bloqueado'}
+                    </span>
+                  </div>
+                  <h3 class="text-base font-black text-amber-200 flex items-center gap-2 mt-0.5">
+                    ${rootProd.name}
+                    <span class="text-xs font-normal text-slate-400">➔ Desdobramentos & Oportunidades Futuras</span>
+                  </h3>
+                </div>
+              </div>
+              <button onclick="clearTechLineage()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 text-xs font-bold font-mono transition flex items-center gap-1.5 cursor-pointer shadow">
+                <span>✕ Sair da Linhagem</span>
+                <span class="text-[10px] text-slate-400">(Ver Árvore Geral)</span>
+              </button>
+            </div>
+
+            <!-- Resumo Executivo / Métricas -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-mono">
+              <div class="bg-slate-950/80 p-2 rounded-xl border border-amber-900/40">
+                <div class="text-slate-400 text-[10px]">Total de Derivados</div>
+                <div class="text-amber-300 font-bold text-sm">${totalDerivatives} produtos</div>
+              </div>
+              <div class="bg-slate-950/80 p-2 rounded-xl border border-amber-900/40">
+                <div class="text-slate-400 text-[10px]">Prontos p/ P&D Agora</div>
+                <div class="text-emerald-400 font-bold text-sm">${totalCanUnlockCount} itens</div>
+              </div>
+              <div class="bg-slate-950/80 p-2 rounded-xl border border-amber-900/40">
+                <div class="text-slate-400 text-[10px]">Bens Finais (Varejo)</div>
+                <div class="text-sky-300 font-bold text-sm">${totalRetailCount} itens</div>
+              </div>
+              <div class="bg-slate-950/80 p-2 rounded-xl border border-amber-900/40">
+                <div class="text-slate-400 text-[10px]">Insumos B2B (Fábrica)</div>
+                <div class="text-purple-300 font-bold text-sm">${totalB2BCount} itens</div>
+              </div>
+            </div>
+
+            <!-- Filtros Rápidos da Linhagem -->
+            <div class="flex items-center gap-1.5 flex-wrap pt-1 text-[10px]">
+              <span class="text-slate-400 font-bold">Filtrar:</span>
+              <button onclick="setTechLineageFilter('all')" class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${techLineageFilter === 'all' ? 'bg-amber-600 text-slate-950 font-black shadow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">Todos (${totalDerivatives})</button>
+              <button onclick="setTechLineageFilter('can_unlock')" class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${techLineageFilter === 'can_unlock' ? 'bg-emerald-600 text-white font-black shadow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">⚡ Prontos para P&D (${totalCanUnlockCount})</button>
+              <button onclick="setTechLineageFilter('retail')" class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${techLineageFilter === 'retail' ? 'bg-sky-600 text-white font-black shadow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">🏆 Bens Finais / Varejo (${totalRetailCount})</button>
+              <button onclick="setTechLineageFilter('b2b')" class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${techLineageFilter === 'b2b' ? 'bg-purple-600 text-white font-black shadow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">🏭 Insumos Industriais B2B (${totalB2BCount})</button>
+              <button onclick="setTechLineageFilter('unlocked')" class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${techLineageFilter === 'unlocked' ? 'bg-teal-600 text-white font-black shadow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">✅ Já Desbloqueados (${totalUnlockedCount})</button>
+            </div>
+          </div>
+        `;
+
+        if (branches.length === 0) {
+          lineageHtml += `
+            <div class="text-center py-12 bg-slate-950/60 rounded-2xl border border-slate-800 font-mono text-slate-400 text-xs">
+              Nenhum produto derivado encontrado com os filtros selecionados.
+            </div>
+          `;
+        } else {
+          lineageHtml += `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+          `;
+
+          for (const node of branches) {
+            const canAfford = cash >= node.cost;
+            const statusBtn = node.isUnlocked
+              ? `<div class="bg-emerald-950/80 text-emerald-300 px-3 py-1 rounded-lg border border-emerald-700/80 text-[10px] font-bold flex items-center gap-1 shrink-0">✅ Desbloqueado</div>`
+              : (node.canUnlock
+                ? `<button onclick="researchProductTech('${node.id}')"
+                    class="px-3 py-1.5 rounded-xl font-bold text-xs ${canAfford ? 'bg-amber-600 hover:bg-amber-500 text-slate-950 font-black shadow-lg cursor-pointer' : 'bg-slate-800 text-slate-400 border border-slate-700 cursor-not-allowed'} transition shrink-0">
+                    🔬 Desbloquear ($${node.cost.toLocaleString('en-US')})
+                  </button>`
+                : `<div class="bg-slate-900 text-amber-400/80 px-2.5 py-1 rounded-lg border border-amber-900/60 text-[10px] font-bold shrink-0" title="Desbloqueie os insumos pré-requisitos primeiro">🔒 Requisitos Pendentes</div>`
+              );
+
+            const degreeBadge = node.degree === 1
+              ? `<span class="bg-amber-900/80 text-amber-200 border border-amber-600 px-1.5 py-0.5 rounded text-[9px] font-bold">⚡ Grau 1 · Refino Direto</span>`
+              : (node.degree === 2
+                ? `<span class="bg-purple-900/80 text-purple-200 border border-purple-600 px-1.5 py-0.5 rounded text-[9px] font-bold">⚙️ Grau 2 · Montagem / Subconjunto</span>`
+                : `<span class="bg-rose-900/80 text-rose-200 border border-rose-600 px-1.5 py-0.5 rounded text-[9px] font-bold">🏆 Grau ${node.degree} · Bem de Alto Valor</span>`);
+
+            const valueBadge = !node.isIntermediate
+              ? `<span class="text-emerald-400 font-bold bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-700/80 text-[10px]">💰 Varejo: $${node.standardPrice.toLocaleString()}/un</span>`
+              : `<span class="text-sky-300 font-bold bg-sky-950/80 px-1.5 py-0.5 rounded border border-sky-700/80 text-[10px]">🏭 Insumo B2B</span>`;
+
+            lineageHtml += `
+              <div class="bg-gradient-to-r from-amber-950/30 via-slate-900 to-slate-950 border-2 border-amber-500/70 rounded-2xl p-3.5 flex flex-col justify-between gap-2.5 transition shadow-lg shadow-amber-950/20 hover:border-amber-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      ${degreeBadge}
+                      <span class="text-[9px] px-1.5 py-0.5 rounded border font-mono ${tierBadgeColors[node.tier] || 'bg-slate-800 text-slate-300 border-slate-700'}">Tier ${node.tier}</span>
+                      ${valueBadge}
+                    </div>
+                    <div class="flex items-center gap-2 pt-0.5">
+                      <span class="text-lg">${node.emoji}</span>
+                      <span class="font-black text-sm text-slate-100">${node.name}</span>
+                    </div>
+                    <div class="text-[10px] text-slate-400">
+                      ${node.category} · Custo P&D: <strong class="text-amber-300">$${node.cost.toLocaleString('en-US')}</strong>
+                    </div>
+                  </div>
+                  ${statusBtn}
+                </div>
+
+                <!-- Conexão / Caminho da Linhagem -->
+                <div class="bg-slate-950/80 p-2 rounded-xl border border-slate-800/80 text-[9px] font-mono space-y-1">
+                  <div class="text-amber-400 font-bold flex items-center gap-1">
+                    <span>🔗 Rota a partir de ${rootProd.name}:</span>
+                  </div>
+                  <div class="text-slate-300 text-[10px] flex items-center gap-1 flex-wrap font-bold">
+                    ${node.path.map((pId, idx) => {
+                      const p = PRODUCT_CATALOG[pId] || { name: pId };
+                      const isLast = idx === node.path.length - 1;
+                      return `<span class="${isLast ? 'text-amber-300 font-black underline' : (idx === 0 ? 'text-teal-400' : 'text-slate-400')}">${p.name}</span>`;
+                    }).join('<span class="text-slate-600 font-normal"> ➔ </span>')}
+                  </div>
+                </div>
+
+                <!-- Gargalos & Insumos Obrigatórios da Receita -->
+                <div class="pt-1.5 border-t border-slate-900 space-y-1">
+                  <div class="text-[9px] text-slate-400 font-bold flex items-center justify-between">
+                    <span>Gargalos & Insumos da Receita:</span>
+                    <span class="text-[9px] ${node.allSiblingsUnlocked ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}">
+                      ${node.allSiblingsUnlocked ? '✓ Todos os Insumos Prontos' : '⚠️ Faltam Insumos Externos'}
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-1.5 flex-wrap text-[9px] font-mono">
+                    ${node.siblingInputs.map(s => {
+                      if (s.isFromLineage) {
+                        return `<span class="bg-amber-950/90 text-amber-300 border border-amber-600/80 px-1.5 py-0.5 rounded font-bold" title="Insumo vindo da linhagem desta pesquisa">🌿 ${s.name} (${s.qty} un)</span>`;
+                      }
+                      if (s.isUnlocked) {
+                        return `<span class="bg-emerald-950/80 text-emerald-300 border border-emerald-800 px-1.5 py-0.5 rounded" title="Insumo já desbloqueado na holding">✓ ${s.name} (${s.qty} un)</span>`;
+                      }
+                      return `<span class="bg-rose-950/90 text-rose-300 border border-rose-800 px-1.5 py-0.5 rounded font-bold" title="Gargalo: Este insumo precisa ser desbloqueado para liberar a fabricação">❌ ${s.name} (Falta Desbloquear)</span>`;
+                    }).join('')}
+                  </div>
+                </div>
+
+                <!-- Botão de Re-foco -->
+                <div class="pt-1 flex items-center justify-end">
+                  <button onclick="focusTechLineage('${node.id}')" class="text-[9px] text-slate-400 hover:text-amber-300 font-mono underline cursor-pointer flex items-center gap-1 transition">
+                    <span>↳ Explorar linhagem a partir de ${node.name}</span>
+                  </button>
+                </div>
+              </div>
+            `;
+          }
+
+          lineageHtml += `
+            </div>
+          `;
+        }
+
+        container.innerHTML = lineageHtml;
+        return;
+      }
+
+      // =========================================================================
+      // MODO 2: VISÃO GERAL COMPLETA DA ÁRVORE TECNOLÓGICA (COM ATALHO DE LINHAGEM)
+      // =========================================================================
       const productList = Object.values(PRODUCT_CATALOG);
       let totalUnlocked = 0;
       const tierGroups = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [] };
@@ -6455,6 +6822,11 @@
             ? CoreMath.getTechLevelLabel(currentQR)
             : { level: 1, label: 'Padrão', icon: '🥉', color: 'text-slate-300 border-slate-700 bg-slate-900' };
 
+          const downstreamBranches = (typeof CoreMath !== 'undefined' && CoreMath.getDownstreamBranches)
+            ? CoreMath.getDownstreamBranches(prod.id, FACTORY_RECIPES, PRODUCT_CATALOG)
+            : [];
+          const downstreamCount = downstreamBranches.length;
+
           // Função recursiva para renderizar a cadeia de insumos completa até a raiz (Tier 0)
           const getFullChainHtml = (pId) => {
             const rec = FACTORY_RECIPES.find(r => r.outputProdId === pId || r.id === pId);
@@ -6498,14 +6870,27 @@
                     <div class="text-[10px] text-slate-400 mt-0.5">${prod.category} · Custo Desbloqueio: <strong class="text-teal-300">$${cost.toLocaleString('en-US')}</strong> ${bonus > 0 ? `<span class="text-[9px] text-purple-400" title="Bônus de Convergência de ${roots.length} Ramos (+ $${bonus})">(+${roots.length} ramos)</span>` : ''}</div>
                   </div>
                 </div>
-                ${statusBtn}
+                <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
+                  ${downstreamCount > 0 ? `
+                    <button onclick="focusTechLineage('${prod.id}')"
+                      class="px-2.5 py-1 rounded-lg text-[9px] font-bold bg-amber-950/80 text-amber-300 border border-amber-700/80 hover:bg-amber-900 hover:border-amber-500 cursor-pointer flex items-center gap-1 transition shadow shrink-0"
+                      title="Explorar todos os produtos e tecnologias que derivam deste item">
+                      🌿 Linhagem (${downstreamCount})
+                    </button>
+                  ` : ''}
+                  ${statusBtn}
+                </div>
               </div>
 
               <!-- Cadeia Produtiva Completa (da raiz ao produto) -->
               <div class="pt-1.5 border-t border-slate-900 space-y-1">
                 <div class="text-[9px] text-slate-500 font-bold flex items-center justify-between">
                   <span>Cadeia de Insumos:</span>
-                  <span class="text-[9px] text-slate-400 font-mono">${tier > 0 ? `Profundidade: ${tier} etapas` : 'Matéria-prima livre'}</span>
+                  ${downstreamCount > 0 ? `
+                    <button onclick="focusTechLineage('${prod.id}')" class="text-[9px] text-amber-400 hover:text-amber-300 font-mono font-bold underline cursor-pointer">
+                      Ver ${downstreamCount} desdobramentos futuros ➔
+                    </button>
+                  ` : `<span class="text-[9px] text-slate-400 font-mono">${tier > 0 ? `Profundidade: ${tier} etapas` : 'Matéria-prima livre'}</span>`}
                 </div>
                 <div class="flex items-center gap-1 flex-wrap text-[9px]">
                   ${getFullChainHtml(prod.id)}
@@ -8313,8 +8698,21 @@
         products = products.filter(p => p.category === activeCategoryTab);
       }
 
+      // Ordenar: produtos do conglomerado próprio no topo!
+      products.sort((a, b) => {
+        const offersA = getSupplierOffersForProduct(a.id, pendingTile);
+        const offersB = getSupplierOffersForProduct(b.id, pendingTile);
+        const aInternal = offersA[0]?.type?.startsWith('internal_') ? 1 : 0;
+        const bInternal = offersB[0]?.type?.startsWith('internal_') ? 1 : 0;
+        if (aInternal !== bInternal) return bInternal - aInternal;
+        return a.name.localeCompare(b.name);
+      });
+
       const usedSlots = selectedProductsMap.size;
       const maxSlots  = pendingStoreType.maxShelves;
+      const compName = (typeof playerProfile !== 'undefined' && playerProfile?.companyName)
+        ? playerProfile.companyName
+        : (typeof state !== 'undefined' && state?.playerProfile?.companyName ? state.playerProfile.companyName : 'Holding');
 
       document.getElementById('product-list').innerHTML = products.map(prod => {
         const offers = getSupplierOffersForProduct(prod.id, pendingTile);
@@ -8322,11 +8720,21 @@
         const currentOffer = selectedProductsMap.get(prod.id) || (offers[0] || null);
         const isSelected = selectedProductsMap.has(prod.id);
         const isDisabled = (!isSelected && usedSlots >= maxSlots) || !hasOffer;
-        const initStockCost = currentOffer ? Math.round(100 * currentOffer.landedCost) : 0;
-        const isInternal = currentOffer?.type === 'internal_factory';
+        const isInternal = !!currentOffer?.type?.startsWith('internal_');
+        const initStockCost = currentOffer ? Math.round(100 * (isInternal ? (currentOffer.freight || 0) : currentOffer.landedCost)) : 0;
 
         return `
-          <div class="product-card rounded-xl border p-2.5 flex flex-col gap-1.5 ${isSelected ? 'border-emerald-600 bg-emerald-950/30' : 'border-slate-800 bg-slate-800/30'}">
+          <div class="product-card rounded-xl border p-2.5 flex flex-col gap-1.5 ${isSelected ? 'border-emerald-600 bg-emerald-950/30' : (isInternal ? 'border-emerald-800/60 bg-emerald-950/10' : 'border-slate-800 bg-slate-800/30')}">
+            ${isInternal ? `
+              <div class="flex items-center gap-1.5 mb-0.5">
+                <span class="bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-black text-[9px] uppercase px-1.5 py-0.2 rounded shadow tracking-wide">
+                  🏛️ CONGLOMERADO: ${compName}
+                </span>
+                <span class="bg-emerald-950 text-emerald-300 font-bold text-[8px] px-1 py-0.2 rounded border border-emerald-700">
+                  ${currentOffer.ownerTag || (currentOffer.type === 'internal_warehouse' ? '📦 ARMAZÉM' : '✨ PRÓPRIO')}
+                </span>
+              </div>
+            ` : ''}
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <input type="checkbox" ${isSelected ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}
@@ -8336,17 +8744,17 @@
               </div>
               <div class="text-right text-[10px] font-mono">
                 <span class="text-slate-400">1º Estoque (100 un): </span>
-                <strong class="text-rose-400">-$${initStockCost.toLocaleString()}</strong>
+                <strong class="${isInternal ? 'text-emerald-400' : 'text-rose-400'} font-bold">-${initStockCost > 0 ? `$${initStockCost.toLocaleString()}` : '$0 (Interno)'}</strong>
               </div>
             </div>
 
             ${hasOffer ? `
-              <div class="bg-slate-900/80 rounded-lg p-1.5 text-[10px] font-mono border ${isInternal ? 'border-orange-800 bg-orange-950/20' : 'border-slate-800/80'} flex flex-wrap items-center justify-between gap-2">
+              <div class="bg-slate-900/80 rounded-lg p-1.5 text-[10px] font-mono border ${isInternal ? 'border-emerald-700/60 bg-emerald-950/20' : 'border-slate-800/80'} flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-1.5">
-                  <span class="${isInternal ? 'text-orange-400 font-bold' : 'text-amber-400'}">${currentOffer.supplierName.split('(')[0].trim()}</span>
+                  <span class="${isInternal ? 'text-emerald-300 font-bold' : 'text-amber-400'}">${currentOffer.supplierName.split('(')[0].trim()}</span>
                   <span class="text-cyan-300 bg-cyan-950 px-1.5 py-0.2 rounded border border-cyan-800">QR: ${currentOffer.quality}</span>
                 </div>
-                <span>Custo: <strong class="text-emerald-400 font-bold">$${currentOffer.landedCost.toFixed(2)}</strong></span>
+                <span>${isInternal ? 'Frete' : 'Custo'}: <strong class="text-emerald-400 font-bold">$${(isInternal ? currentOffer.freight : currentOffer.landedCost).toFixed(2)}</strong></span>
               </div>
             ` : `<div class="text-[10px] text-rose-400 font-mono">❌ Sem fornecedores disponíveis.</div>`}
           </div>
@@ -8379,7 +8787,8 @@
       const licenseCost = getNicheLicenseCost(pendingStoreType.id);
       let stockCost = 0;
       for (const [prodId, offer] of selectedProductsMap.entries()) {
-        stockCost += Math.round(100 * offer.landedCost);
+        const isInternal = !!offer.type?.startsWith('internal_');
+        stockCost += Math.round(100 * (isInternal ? (offer.freight || 0) : offer.landedCost));
       }
       const totalCost  = buildCost + licenseCost + stockCost;
       const remaining  = cash - totalCost;
@@ -8484,15 +8893,21 @@
       const logoSvg = getCompanyLogoSvg(offer.ownerLogo, 22);
 
       return `
-        <div class="bg-slate-950 p-3.5 rounded-2xl border ${isCurrent ? 'border-emerald-500 bg-emerald-950/20 shadow-lg shadow-emerald-950/30' : (isInternal ? 'border-amber-700/60 bg-amber-950/20 hover:border-amber-500' : 'border-slate-800 hover:border-slate-700')} space-y-2 text-xs font-mono transition">
+        <div class="bg-slate-950 p-3.5 rounded-2xl border ${isCurrent ? 'border-emerald-500 bg-emerald-950/20 shadow-lg shadow-emerald-950/30' : (isInternal ? 'border-emerald-600/70 bg-emerald-950/15 hover:border-emerald-500' : 'border-slate-800 hover:border-slate-700')} space-y-2 text-xs font-mono transition">
+          ${isInternal ? `
+            <div class="flex items-center gap-1.5 mb-1 bg-gradient-to-r from-emerald-900/60 to-teal-900/30 px-2 py-0.5 rounded-lg border border-emerald-500/50 w-fit">
+              <span class="text-white font-black text-[9px] uppercase tracking-wider">🏛️ CONGLOMERADO: ${(offer.ownerName || 'SUA HOLDING').toUpperCase()}</span>
+              <span class="text-emerald-300 font-bold text-[8px] px-1 py-0.2 rounded bg-emerald-950 border border-emerald-700">${offer.ownerTag || 'UNIDADE PRÓPRIA'}</span>
+            </div>
+          ` : ''}
           <!-- Header: Logo + Empresa + Tag de Origem + QR -->
           <div class="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-1.5">
             <div class="flex items-center gap-2.5 min-w-0">
               <div class="shrink-0 flex items-center justify-center">${logoSvg}</div>
               <div class="truncate">
                 <div class="flex items-center gap-1.5 flex-wrap">
-                  <span class="font-bold text-xs ${isInternal ? 'text-amber-300' : 'text-sky-300'} truncate">${offer.ownerName || 'Fornecedor'}</span>
-                  <span class="text-[9px] px-1.5 py-0.2 rounded border ${isInternal ? 'bg-amber-950/80 text-amber-300 border-amber-700/60' : 'bg-sky-950/80 text-sky-300 border-sky-700/60'} font-bold shrink-0">${offer.ownerTag || (isInternal ? '🏛️ Produção Própria' : '🚢 Importação')}</span>
+                  <span class="font-bold text-xs ${isInternal ? 'text-emerald-300' : 'text-sky-300'} truncate">${offer.ownerName || 'Fornecedor'}</span>
+                  <span class="text-[9px] px-1.5 py-0.2 rounded border ${isInternal ? 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60' : 'bg-sky-950/80 text-sky-300 border-sky-700/60'} font-bold shrink-0">${offer.ownerTag || (isInternal ? '🏛️ Produção Própria' : '🚢 Importação')}</span>
                 </div>
                 <div class="text-[11px] text-slate-200 font-bold truncate mt-0.5">${offer.facilityName || offer.supplierName}</div>
               </div>
@@ -8516,7 +8931,11 @@
           <!-- Rodapé: Detalhamento de Custos & Botão de Ação -->
           <div class="flex items-center justify-between gap-3 pt-0.5">
             <div>
-              <div class="text-[10px] text-slate-400">Base $${offer.wholesalePrice.toFixed(2)} + Frete $${offer.freight.toFixed(2)}</div>
+              <div class="text-[10px] text-slate-400">
+                ${isInternal
+                  ? `<span class="text-emerald-400 font-bold">Transferência Interna (Frete: $${offer.freight.toFixed(2)}/un)</span>`
+                  : `Base $${offer.wholesalePrice.toFixed(2)} + Frete $${offer.freight.toFixed(2)}`}
+              </div>
               <div class="text-xs text-slate-200">Custo de Entrega: <strong class="text-emerald-400 font-black text-sm">$${offer.landedCost.toFixed(2)}</strong><span class="text-[10px] text-slate-400">/un</span></div>
             </div>
             <div>
@@ -9084,29 +9503,97 @@
         return;
       }
 
+      // Ordenar produtos: primeiro os que o CONGLOMERADO do jogador produz ou armazena!
+      availableProds.sort((a, b) => {
+        const offersA = getSupplierOffersForProduct(a.id, tile);
+        const offersB = getSupplierOffersForProduct(b.id, tile);
+        const aInternal = offersA[0]?.type?.startsWith('internal_') ? 1 : 0;
+        const bInternal = offersB[0]?.type?.startsWith('internal_') ? 1 : 0;
+        if (aInternal !== bInternal) return bInternal - aInternal;
+        return a.name.localeCompare(b.name);
+      });
+
+      const compName = (typeof playerProfile !== 'undefined' && playerProfile?.companyName)
+        ? playerProfile.companyName
+        : (typeof state !== 'undefined' && state?.playerProfile?.companyName ? state.playerProfile.companyName : 'Holding');
+
       list.innerHTML = availableProds.map(prod => {
         const offers = getSupplierOffersForProduct(prod.id, tile);
         const bestOffer = offers[0] || null;
         if (!bestOffer) return '';
 
-        const initCost = Math.round(50 * bestOffer.landedCost);
-        const canAfford = cash >= initCost;
+        const isInternal = !!bestOffer.type?.startsWith('internal_');
+        // Para produtos do conglomerado, o custo inicial de transferência para a gôndola é apenas o frete de 50 un!
+        const initCost = Math.round(50 * (isInternal ? (bestOffer.freight || 0) : bestOffer.landedCost));
+        const canAfford = isInternal || (cash >= initCost);
+
+        if (isInternal) {
+          return `
+            <div class="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 p-3 rounded-xl border-2 border-emerald-500/70 shadow-lg shadow-emerald-950/20 flex flex-col md:flex-row md:items-center justify-between text-xs font-mono gap-3">
+              <div class="space-y-1">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-black text-[10px] uppercase px-2 py-0.5 rounded shadow tracking-wider">
+                    🏛️ CONGLOMERADO: ${compName}
+                  </span>
+                  <span class="bg-emerald-950 text-emerald-300 font-bold text-[9px] px-1.5 py-0.5 rounded border border-emerald-700">
+                    ${bestOffer.ownerTag || (bestOffer.type === 'internal_warehouse' ? '📦 ARMAZÉM CENTRAL' : '✨ PRODUÇÃO PRÓPRIA')}
+                  </span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-sm text-slate-100">${prod.name}</span>
+                  <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${bestOffer.quality}</span>
+                </div>
+                <div class="text-[10px] text-emerald-300 font-bold flex items-center gap-1.5 flex-wrap">
+                  <span>🏢 Origem: <strong>${bestOffer.facilityName || bestOffer.supplierName}</strong></span>
+                  <span class="text-slate-400">· Frete: <strong class="text-emerald-400">$${(bestOffer.freight || 0).toFixed(2)}/un</strong></span>
+                  <span class="text-slate-400">· Disponível: <strong class="text-slate-200">${bestOffer.stockLabel || 'Estoque da Holding'}</strong></span>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-[10px] text-slate-300 mb-1">
+                  1º Estoque (50 un): <strong class="text-emerald-400 font-bold">${initCost > 0 ? `Frete -$${initCost.toLocaleString()}` : '$0.00 (Transferência Própria)'}</strong>
+                </div>
+                <button onclick="confirmAddNewProductToStore('${prod.id}')"
+                  class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-black cursor-pointer shadow-lg shadow-emerald-900/40 transition flex items-center gap-1.5 ml-auto">
+                  <span>➕ Abastecer da Holding</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }
 
         return `
-          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
-            <div>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/90 flex flex-col md:flex-row md:items-center justify-between text-xs font-mono gap-3">
+            <div class="space-y-1">
               <div class="flex items-center gap-2">
+                <span class="bg-sky-950 text-sky-400 text-[9px] font-bold px-1.5 py-0.2 rounded border border-sky-800/80">🚢 IMPORTAÇÃO MARÍTIMA</span>
                 <span class="font-bold text-slate-100">${prod.name}</span>
                 <span class="text-[10px] bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">QR: ${bestOffer.quality}</span>
               </div>
-              <div class="text-[10px] text-slate-400 mt-1">Fornecedor: ${bestOffer.supplierName.split('(')[0].trim()} · Custo: $${bestOffer.landedCost.toFixed(2)}/un</div>
+              <div class="text-[10px] text-slate-400">
+                Terminal: <strong class="text-slate-300">${bestOffer.supplierName.split('(')[0].trim()}</strong> · Atacado + Frete: <strong class="text-emerald-400">$${bestOffer.landedCost.toFixed(2)}/un</strong>
+              </div>
             </div>
-            <div class="text-right">
-              <div class="text-[10px] text-slate-400 mb-1">1º Estoque (50 un): <strong class="text-rose-400 font-bold">$${initCost.toLocaleString()}</strong></div>
-              <button onclick="confirmAddNewProductToStore('${prod.id}')" ${!canAfford ? 'disabled' : ''}
-                class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold cursor-pointer shadow transition">
-                ➕ Adicionar
-              </button>
+            <div class="text-right shrink-0">
+              <div class="text-[10px] text-slate-400 mb-1">
+                1º Lote (50 un): <strong class="${canAfford ? 'text-rose-400' : 'text-rose-500'} font-bold">$${initCost.toLocaleString()}</strong>
+              </div>
+              ${!canAfford ? `
+                <div class="flex flex-col items-end gap-1">
+                  <span class="text-[9px] text-rose-400 font-bold bg-rose-950/80 px-2 py-0.5 rounded border border-rose-900/80">
+                    🔒 Caixa Insuficiente ($${cash.toLocaleString()} / $${initCost.toLocaleString()})
+                  </span>
+                  <button disabled title="Você não possui $${initCost.toLocaleString()} em caixa para pagar este lote de importação à vista."
+                    class="bg-slate-800 text-slate-500 cursor-not-allowed opacity-50 px-3.5 py-1.5 rounded-xl text-xs font-bold border border-slate-700">
+                    🔒 Sem Saldo
+                  </button>
+                </div>
+              ` : `
+                <button onclick="confirmAddNewProductToStore('${prod.id}')"
+                  class="bg-sky-600 hover:bg-sky-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold cursor-pointer shadow transition">
+                  ➕ Comprar e Adicionar
+                </button>
+              `}
             </div>
           </div>
         `;
@@ -9122,15 +9609,53 @@
       if (offers.length === 0) return;
       const offer = offers[0];
 
-      const initCost = Math.round(100 * offer.landedCost);
-      if (cash < initCost) return;
+      const isInternal = !!offer.type?.startsWith('internal_');
+      const initCost = Math.round(50 * (isInternal ? (offer.freight || 0) : offer.landedCost));
 
-      cash -= initCost;
+      if (!isInternal && cash < initCost) {
+        addLog(`⚠ Saldo insuficiente para importar 50 un de ${PRODUCT_CATALOG[prodId]?.name || prodId} ($${initCost.toLocaleString()})!`, 'text-rose-400');
+        return;
+      }
+
+      if (cash >= initCost) {
+        cash -= initCost;
+      }
+
+      // Se for fornecimento interno e a fonte tiver estoque físico, transfere até 50 un da fonte
+      let initialStock = 50;
+      if (offer.supplierId?.startsWith('farm_')) {
+        const parts = offer.supplierId.split('_');
+        const fx = Number(parts[1]), fy = Number(parts[2]);
+        const farmTile = worldGrid[fx]?.[fy];
+        if (farmTile?.farm && farmTile.farm.stock > 0) {
+          const drain = Math.min(farmTile.farm.stock, 50);
+          farmTile.farm.stock -= drain;
+        }
+      } else if (offer.supplierId?.startsWith('factory_')) {
+        const parts = offer.supplierId.split('_');
+        const fx = Number(parts[1]), fy = Number(parts[2]), rId = parts.slice(3).join('_');
+        const facTile = worldGrid[fx]?.[fy];
+        const line = facTile?.factory?.lines?.[rId];
+        if (line && line.finishedStock > 0) {
+          const drain = Math.min(line.finishedStock, 50);
+          line.finishedStock -= drain;
+        }
+      } else if (offer.supplierId?.startsWith('warehouse_')) {
+        const parts = offer.supplierId.split('_');
+        const wx = Number(parts[1]), wy = Number(parts[2]);
+        const whTile = worldGrid[wx]?.[wy];
+        const whItem = whTile?.warehouse?.inventory?.[prodId];
+        if (whItem && whItem.stock > 0) {
+          const drain = Math.min(whItem.stock, 50);
+          whItem.stock -= drain;
+        }
+      }
+
       const prod = PRODUCT_CATALOG[prodId];
 
       store.shelves[prodId] = {
         price: prod.standardPrice,
-        stock: 100,
+        stock: initialStock,
         maxCapacity: 1000,
         dailyRestock: Math.max(10, Math.round(prod.perCapitaDailyDemand * tile.district.population * 0.5)),
         quality: offer.quality,
@@ -9141,7 +9666,15 @@
         landedCost: offer.landedCost
       };
 
-      addLog(`✨ ${prod.name} adicionado às gôndolas de ${store.name}!`, 'text-emerald-400 font-bold');
+      const compName = (typeof playerProfile !== 'undefined' && playerProfile?.companyName)
+        ? playerProfile.companyName
+        : (typeof state !== 'undefined' && state?.playerProfile?.companyName ? state.playerProfile.companyName : 'Holding');
+
+      if (isInternal) {
+        addLog(`✨ [${compName}] ${prod.name} abastecido nas gôndolas de ${store.name} via ${offer.supplierName}!`, 'text-emerald-400 font-bold');
+      } else {
+        addLog(`✨ ${prod.name} importado e adicionado às gôndolas de ${store.name} (-$${initCost.toLocaleString()})!`, 'text-sky-400 font-bold');
+      }
 
       renderAddProductModalList();
       renderFacilityPanel(tile);

@@ -332,6 +332,108 @@ const CoreMath = {
     });
   },
 
+  /**
+   * Rastreia a árvore de dependências a jusante (downstream / derivados futuros) a partir de um produto raiz.
+   * Realiza uma busca em largura (BFS) descobrindo todos os produtos que utilizam direta ou indiretamente
+   * o produto informado em suas receitas de manufatura.
+   *
+   * @param {string} rootProdId - ID do produto de origem (ex: 'bauxite')
+   * @param {Array|Object} recipes - Catálogo de receitas de fábrica
+   * @param {Object} [productCatalog] - Catálogo de produtos (PRODUCT_CATALOG)
+   * @param {Set|Array} [unlockedSet] - Conjunto de produtos já desbloqueados pelo jogador
+   * @returns {Array} Lista de nós derivados com degree, caminho (via), receita, gargalos e métricas econômicas
+   */
+  getDownstreamBranches(rootProdId, recipes, productCatalog = {}, unlockedSet = new Set()) {
+    if (!rootProdId || !recipes) return [];
+
+    const recipeList = Array.isArray(recipes) ? recipes : Object.values(recipes);
+    const unlSet = unlockedSet instanceof Set ? unlockedSet : new Set(unlockedSet || []);
+
+    const visited = new Set([rootProdId]);
+    const results = [];
+    
+    // Fila BFS: cada elemento contém { prodId, degree, path }
+    let currentQueue = [{ prodId: rootProdId, degree: 0, path: [rootProdId] }];
+
+    while (currentQueue.length > 0) {
+      const nextQueue = [];
+
+      for (const current of currentQueue) {
+        // Encontra todas as receitas que consom current.prodId
+        for (const rec of recipeList) {
+          if (!rec.inputs || !(current.prodId in rec.inputs)) continue;
+
+          const outId = rec.outputProdId || rec.id;
+          if (!outId || visited.has(outId)) continue;
+
+          visited.add(outId);
+
+          const outProd = productCatalog[outId] || { id: outId, name: rec.outputName || rec.name || outId, category: 'Manufatura' };
+          const newDegree = current.degree + 1;
+          const newPath = [...current.path, outId];
+
+          // Analisa outros insumos irmãos da receita (gargalos)
+          const siblingInputs = [];
+          let allSiblingsUnlocked = true;
+
+          for (const [inpId, qty] of Object.entries(rec.inputs)) {
+            const isFromLineage = current.path.includes(inpId) || inpId === current.prodId;
+            const isUnl = unlSet.has(inpId) || (this.calculateProductionTier(inpId, recipeList) === 0);
+            if (!isUnl && !isFromLineage) {
+              allSiblingsUnlocked = false;
+            }
+            const inpProd = productCatalog[inpId] || { id: inpId, name: inpId };
+            siblingInputs.push({
+              id: inpId,
+              name: inpProd.name,
+              qty,
+              isFromLineage,
+              isUnlocked: isUnl
+            });
+          }
+
+          const tier = this.calculateProductionTier(outId, recipeList);
+          const bonus = this.calculateConvergenceBonus(outId, recipeList);
+          const cost = this.calculateResearchCost(tier, bonus);
+          const isUnlocked = unlSet.has(outId) || tier === 0;
+          const canUnlock = !isUnlocked && this.canResearch(outId, unlSet, recipeList);
+
+          const downstreamNode = {
+            id: outId,
+            name: outProd.name,
+            emoji: outProd.emoji || (outProd.isIntermediate ? '⚙️' : '📦'),
+            category: outProd.category || 'Geral',
+            isIntermediate: !!outProd.isIntermediate,
+            standardPrice: outProd.standardPrice || (outProd.baseCost ? outProd.baseCost * 2 : 10),
+            baseCost: outProd.baseCost || rec.unitCost || 5,
+            tier,
+            degree: newDegree,
+            path: newPath,
+            via: current.prodId,
+            recipe: rec,
+            siblingInputs,
+            allSiblingsUnlocked,
+            cost,
+            isUnlocked,
+            canUnlock
+          };
+
+          results.push(downstreamNode);
+          nextQueue.push({ prodId: outId, degree: newDegree, path: newPath });
+        }
+      }
+
+      currentQueue = nextQueue;
+    }
+
+    // Ordena por Grau de Separação (degree), depois por Tier, depois por Preço Decrescente (bens de alto valor primeiro)
+    return results.sort((a, b) => {
+      if (a.degree !== b.degree) return a.degree - b.degree;
+      if (a.tier !== b.tier) return a.tier - b.tier;
+      return (b.standardPrice || 0) - (a.standardPrice || 0);
+    });
+  },
+
   // ═══════════════════════════════════════════════════════════════════
   // CURVA ASSINTÓTICA DE QUALIDADE (QR) SIMÉTRICA (PLAYER & IA)
   // ═══════════════════════════════════════════════════════════════════
