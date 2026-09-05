@@ -2936,7 +2936,7 @@
               spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getFarmSprite(tile.farm.farmTypeId) : null;
             } else if (tile.factory) {
               topC='#ea580c'; leftC='#c2410c'; rightC='#9a3412';
-              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getFactorySprite(tile.factory.lines || tile.factory.activeLines) : 'industrial/factory_default';
+              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getFactorySprite(tile.factory.lines || tile.factory.activeLines, tile.factory.customSkin) : 'industrial/factory_default';
             } else if (tile.rdCenter) {
               topC='#c084fc'; leftC='#9333ea'; rightC='#7e22ce';
               spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getRDSprite() : 'pesquisa/rd_center';
@@ -5125,12 +5125,32 @@
 
     function renderFactoryPanel(tile) {
       const factory = tile.factory;
-      const firstRecipe = Object.keys(factory.lines || {})[0];
-      const factorySprite = (typeof SpriteManager !== 'undefined') ? SpriteManager.getFactorySprite(firstRecipe) : 'industrial/factory_default';
+      const factorySprite = (typeof SpriteManager !== 'undefined') ? SpriteManager.getFactorySprite(factory.lines, factory.customSkin) : 'industrial/factory_default';
       const iconEl = document.getElementById('facility-icon');
       if (iconEl) iconEl.innerHTML = `<img src="assets/${factorySprite}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🏭'">`;
       document.getElementById('facility-title').textContent = factory.name;
-      document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Complexo Fabril Multinível`;
+      
+      const skinVal = factory.customSkin || 'auto';
+      const subtitleEl = document.getElementById('facility-subtitle');
+      if (subtitleEl) {
+        subtitleEl.innerHTML = `
+          <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
+            <span>${tile.district.name} · Complexo Fabril</span>
+            <span class="text-slate-600">•</span>
+            <span class="text-[10px] text-amber-400 font-medium">🎨 Fachada:</span>
+            <select onchange="setFactoryFacade(${tile.x}, ${tile.y}, this.value)" class="bg-slate-900 text-slate-200 border border-slate-700 hover:border-amber-500 rounded px-1.5 py-0.5 text-[10px] focus:outline-none focus:border-amber-500 cursor-pointer shadow-sm">
+              <option value="auto" ${skinVal === 'auto' ? 'selected' : ''}>⚙️ Automática (Por Produção)</option>
+              <option value="food_processing" ${skinVal === 'food_processing' ? 'selected' : ''}>🥫 Alimentos & Frigorífico</option>
+              <option value="steel_mill" ${skinVal === 'steel_mill' ? 'selected' : ''}>⚙️ Siderúrgica & Metais</option>
+              <option value="electronics_factory" ${skinVal === 'electronics_factory' ? 'selected' : ''}>💻 Chips & Eletrônicos</option>
+              <option value="auto_plant" ${skinVal === 'auto_plant' ? 'selected' : ''}>🚗 Montadora de Veículos</option>
+              <option value="textile_mill" ${skinVal === 'textile_mill' ? 'selected' : ''}>🧵 Indústria Têxtil</option>
+              <option value="refinery" ${skinVal === 'refinery' ? 'selected' : ''}>🛢️ Refinaria Petroquímica</option>
+              <option value="factory_default" ${skinVal === 'factory_default' ? 'selected' : ''}>📦 Galpão Geral</option>
+            </select>
+          </div>
+        `;
+      }
       const badge = document.getElementById('facility-rent-badge');
       const linesCount = factory.lines ? Object.keys(factory.lines).length : 0;
       const factoryWages = linesCount * 200;
@@ -5224,6 +5244,16 @@
       }
       renderFacilityFooterActions(tile, extraBtn);
     }
+
+    window.setFactoryFacade = function(x, y, skin) {
+      const tile = worldGrid[x] && worldGrid[x][y];
+      if (tile && tile.factory) {
+        tile.factory.customSkin = skin;
+        renderFactoryPanel(tile);
+        renderMap();
+        addGameLog(`🎨 Fachada da ${tile.factory.name} alterada para: ${skin === 'auto' ? 'Automática por Produção' : skin}`, 'text-amber-300');
+      }
+    };
 
     function renderStorePanel(tile) {
       const store = tile.store;

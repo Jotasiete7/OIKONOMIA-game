@@ -262,7 +262,12 @@ class SpriteManager {
     return this.get('comercial/supermarket') ? 'comercial/supermarket' : 'lojas/supermarket';
   }
 
-  static getFactorySprite(linesOrRecipeId) {
+  static getFactorySprite(linesOrRecipeId, customSkin) {
+    if (customSkin && customSkin !== 'auto') {
+      const skinKey = `industrial/${customSkin}`;
+      if (this.get(skinKey) || this.get(`empresas/${customSkin}`)) return skinKey;
+    }
+
     if (!linesOrRecipeId) return 'industrial/factory_default';
 
     // Se receber o objeto de linhas completas da fábrica
