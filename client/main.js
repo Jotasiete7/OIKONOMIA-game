@@ -17,6 +17,14 @@ import './style.css';
 import CoreMath from './core_math.js';
 import TickerSystem from './ticker_system.js';
 import MacroCycleSystem from './macro_cycle_system.js';
+import {
+  simulateDay,
+  closeMonthEnd,
+  calcPriceRating,
+  calcProductRating,
+  calcElasticity,
+  resolveSimulationContext
+} from './simulation.js';
 
 // --- Fase 2A: Dados do mapa ---
 import { MAP_WIDTH, MAP_HEIGHT, TILE_WIDTH, TILE_HEIGHT, CITY_PROFILES_DATA, TMX_LAYERS } from './map_data.js';
@@ -88,6 +96,14 @@ import {
 window.CoreMath = CoreMath;
 window.TickerSystem = TickerSystem;
 window.MacroCycleSystem = MacroCycleSystem;
+window.simulateDay = simulateDay;
+window.closeMonthEnd = closeMonthEnd;
+window._engineSimulateDay = simulateDay;
+window._engineCloseMonthEnd = closeMonthEnd;
+window.calcPriceRating = calcPriceRating;
+window.calcProductRating = calcProductRating;
+window.calcElasticity = calcElasticity;
+window.resolveSimulationContext = resolveSimulationContext;
 
 // Re-exposição global (Fase 2A)
 window.MAP_WIDTH = MAP_WIDTH;
@@ -152,6 +168,26 @@ window.serializeGameState = serializeGameState;
 window.createSaveMetadata = createSaveMetadata;
 window.deleteSaveSlot = deleteSaveSlot;
 window.generateExportDataUri = generateExportDataUri;
+
+// Proxies reativos globais vinculados a GameState (Single Source of Truth)
+const stateProxyProps = [
+  'currentAppScreen', 'day', 'month', 'year', 'cash',
+  'monthRevenue', 'monthCogs', 'monthFixedExpenses', 'monthMarketingExpenses',
+  'monthFinancialExpenses', 'consecutiveInsolventMonths', 'insolvencyLevel2Triggered',
+  'insolvencyCountdownMonths', 'gameSpeed', 'timerInterval', 'previousSpeedBeforePause',
+  'playtimeSeconds', 'playerProfile', 'currentSaveSlotId', 'lastSavedStateSnapshot', 'gameSettings'
+];
+if (typeof window !== 'undefined') {
+  for (const prop of stateProxyProps) {
+    if (!(prop in window)) {
+      Object.defineProperty(window, prop, {
+        get() { return GameState[prop]; },
+        set(val) { GameState[prop] = val; },
+        configurable: true
+      });
+    }
+  }
+}
 
 // Notifica que todos os módulos foram carregados e vinculados com sucesso
 if (typeof window !== 'undefined') {
