@@ -52,6 +52,7 @@ class SpriteManager {
     'industrial/auto_plant': 'assets/industrial/auto_plant.png',
     'industrial/textile_mill': 'assets/industrial/textile_mill.png',
     'industrial/food_processing': 'assets/industrial/food_processing.png',
+    'industrial/industry_heavy': 'assets/industrial/industry_heavy.png',
     'industrial/factory_default': 'assets/industrial/factory_default.png',
 
     // Legado industrial
@@ -61,6 +62,7 @@ class SpriteManager {
     'empresas/auto_plant': 'assets/empresas/auto_plant.png',
     'empresas/textile_mill': 'assets/empresas/textile_mill.png',
     'empresas/food_processing': 'assets/empresas/food_processing.png',
+    'empresas/industry_heavy': 'assets/industrial/industry_heavy.png',
     'empresas/factory_default': 'assets/empresas/factory_default.png',
 
     // 3. RESIDENCIAL / CASAS & ESTRUTURAS URBANAS
@@ -109,6 +111,7 @@ class SpriteManager {
     'agricultura/farm_plantation': 'assets/agricultura/farm_plantation.png',
     'agricultura/farm_cattle': 'assets/agricultura/farm_cattle.png',
     'agricultura/farm_dairy': 'assets/agricultura/farm_dairy.png',
+    'agricultura/farm_timber': 'assets/agricultura/farm_timber.png',
     'agricultura/farm_default': 'assets/agricultura/farm_default.png',
 
     // Legado agro
@@ -118,7 +121,11 @@ class SpriteManager {
     'agro/farm_plantation': 'assets/agro/farm_plantation.png',
     'agro/farm_cattle': 'assets/agro/farm_cattle.png',
     'agro/farm_dairy': 'assets/agro/farm_dairy.png',
+    'agro/farm_timber': 'assets/agro/farm_timber.png',
     'agro/farm_default': 'assets/agro/farm_default.png',
+
+    // 5.1 PESQUISA & DESENVOLVIMENTO (P&D)
+    'pesquisa/rd_center': 'assets/pesquisa/rd_center.png',
 
     // 6. PORTUÃ RIO & LOGÃ STICA
     'portuario/seaport': 'assets/portuario/seaport.png',
@@ -263,7 +270,12 @@ class SpriteManager {
     if (activeRecipeId.includes('car') || activeRecipeId.includes('auto') || activeRecipeId.includes('truck')) return 'industrial/auto_plant';
     if (activeRecipeId.includes('cloth') || activeRecipeId.includes('jean') || activeRecipeId.includes('apparel')) return 'industrial/textile_mill';
     if (activeRecipeId.includes('bread') || activeRecipeId.includes('food') || activeRecipeId.includes('flour') || activeRecipeId.includes('beer')) return 'industrial/food_processing';
+    if (activeRecipeId.includes('heavy') || activeRecipeId.includes('engine') || activeRecipeId.includes('glass')) return 'industrial/industry_heavy';
     return 'industrial/factory_default';
+  }
+
+  static getRDSprite() {
+    return 'pesquisa/rd_center';
   }
 
   static getFarmSprite(farmTypeId) {
@@ -274,8 +286,16 @@ class SpriteManager {
     if (farmTypeId.includes('coffee') || farmTypeId.includes('cocoa') || farmTypeId.includes('sugar') || farmTypeId.includes('grapes') || farmTypeId.includes('tobacco') || farmTypeId.includes('rubber')) return 'agricultura/farm_plantation';
     if (farmTypeId.includes('cattle') || farmTypeId.includes('pigs') || farmTypeId.includes('sheep') || farmTypeId.includes('poultry')) return 'agricultura/farm_cattle';
     if (farmTypeId.includes('dairy')) return 'agricultura/farm_dairy';
-    if (farmTypeId.includes('timber')) return 'minas/mine_timber';
+    if (farmTypeId.includes('timber')) {
+      if (this.get('agricultura/farm_timber')) return 'agricultura/farm_timber';
+      if (this.get('agro/farm_timber')) return 'agro/farm_timber';
+      return 'minas/mine_timber';
+    }
     return 'agricultura/farm_default';
+  }
+
+  static getFarmSpriteKey(farmTypeId) {
+    return this.getFarmSprite(farmTypeId);
   }
 
   static getMineSprite(mineTypeId) {
@@ -288,6 +308,10 @@ class SpriteManager {
     if (mineTypeId.includes('gold')) return 'minas/mine_gold';
     if (mineTypeId.includes('timber')) return 'minas/mine_timber';
     return 'minas/mine_iron';
+  }
+
+  static getMineSpriteKey(mineTypeId) {
+    return this.getMineSprite(mineTypeId);
   }
 
   static getRoadSprite(x, y, grid, isWater) {

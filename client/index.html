@@ -854,8 +854,8 @@
   <!-- MODAL 1: WIZARD DE ABERTURA DE LOJA ESPECIALIZADA                       -->
   <!-- ======================================================================= -->
   <div id="store-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden">
-      <div class="bg-slate-800/70 border-b border-slate-700 px-6 py-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-3xl mx-4 max-h-[90vh] flex flex-col overflow-hidden">
+      <div class="bg-slate-800/70 border-b border-slate-700 px-6 py-4 shrink-0">
         <div class="flex items-center justify-between">
           <div>
             <h2 id="modal-title" class="text-sm font-bold text-slate-100">Inaugurar Estabelecimento Comercial</h2>
@@ -871,24 +871,24 @@
         </div>
       </div>
 
-      <div id="wizard-step1" class="p-6">
-        <p class="text-xs text-slate-400 mb-3 font-mono">Escolha o formato comercial de loja especializada para atender a este distrito:</p>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-2.5 max-h-80 overflow-y-auto custom-scrollbar pr-1" id="store-type-cards"></div>
-        <div class="flex justify-end mt-4">
+      <div id="wizard-step1" class="p-6 flex flex-col flex-1 overflow-hidden min-h-0">
+        <p class="text-xs text-slate-400 mb-3 font-mono shrink-0">Escolha o formato comercial de loja especializada para atender a este distrito:</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2.5 flex-1 overflow-y-auto custom-scrollbar pr-1" id="store-type-cards"></div>
+        <div class="flex justify-end mt-4 shrink-0">
           <button onclick="advanceToStep2()" id="btn-to-step2" disabled class="px-5 py-2 rounded-xl bg-emerald-700 text-white text-xs font-bold font-mono disabled:opacity-40 disabled:cursor-not-allowed hover:bg-emerald-600 transition">
             Próximo: Escolher Produtos & Fornecedores →
           </button>
         </div>
       </div>
 
-      <div id="wizard-step2" class="hidden">
-        <div id="cost-summary-bar" class="px-6 py-3 bg-slate-800/60 border-b border-slate-700 text-[11px] font-mono flex flex-wrap gap-3 items-center"></div>
-        <div class="px-6 pt-3 pb-1 flex items-center justify-between gap-3">
+      <div id="wizard-step2" class="flex flex-col flex-1 overflow-hidden min-h-0 hidden">
+        <div id="cost-summary-bar" class="px-6 py-3 bg-slate-800/60 border-b border-slate-700 text-[11px] font-mono flex flex-wrap gap-3 items-center shrink-0"></div>
+        <div class="px-6 pt-3 pb-1 flex items-center justify-between gap-3 shrink-0">
           <div id="category-tabs" class="flex gap-1 flex-wrap"></div>
           <input type="text" id="prod-search-input" onkeyup="filterProductSelectorSearch(this.value)" placeholder="🔍 Buscar produto..." class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-slate-200 focus:outline-none focus:border-emerald-500 w-40">
         </div>
-        <div id="product-list" class="px-6 py-3 max-h-64 overflow-y-auto custom-scrollbar space-y-1.5"></div>
-        <div class="px-6 py-4 border-t border-slate-800 flex items-center justify-between bg-slate-800/40">
+        <div id="product-list" class="px-6 py-3 flex-1 overflow-y-auto custom-scrollbar space-y-1.5 min-h-[160px]"></div>
+        <div class="px-6 py-4 border-t border-slate-800 flex items-center justify-between bg-slate-800/40 shrink-0">
           <button onclick="backToStep1()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-400 text-xs font-mono hover:border-slate-500 hover:text-slate-200 transition">← Voltar</button>
           <button onclick="confirmOpenStore()" id="btn-confirm-store" disabled class="px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold font-mono disabled:opacity-40 disabled:cursor-not-allowed transition">
             Confirmar e Abrir Loja
@@ -930,7 +930,12 @@
         <button onclick="closeFarmModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
       </div>
       <div class="p-6 space-y-3">
-        <p class="text-xs text-slate-400 font-mono">Escolha o tipo de cultivo agrícola ou criação de animais para esta fazenda:</p>
+        <div class="flex items-center justify-between gap-3">
+          <p class="text-xs text-slate-400 font-mono">Escolha o tipo de cultivo agrícola ou criação de animais para esta fazenda:</p>
+        </div>
+        <div>
+          <input type="text" id="farm-search-input" oninput="filterFarmTypes(this.value)" placeholder="🔍 Buscar tipo de fazenda, produto ou cultura (ex: Trigo, Leite, Gado, Silvicultura)..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-amber-500 placeholder:text-slate-500 shadow-inner">
+        </div>
         <div id="farm-types-list" class="space-y-2 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
       </div>
     </div>
@@ -949,10 +954,15 @@
         <button onclick="closeFactoryModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-slate-200 text-sm font-bold flex items-center justify-center">✕</button>
       </div>
       <div class="p-6 space-y-4">
-        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs font-mono space-y-1">
-          <div class="text-slate-200 font-bold">Complexo Fabril & Linhas de Montagem</div>
-          <div class="text-slate-400">Capacidade: <strong class="text-emerald-400">Até 4 Linhas de Montagem</strong></div>
-          <div class="text-slate-400">Custo de Obra: <strong class="text-rose-400">$48,000.00</strong></div>
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs font-mono flex items-center gap-4">
+          <div class="w-16 h-16 rounded-xl bg-slate-900 border border-slate-700/80 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
+            <img src="assets/industrial/factory_default.png" class="w-full h-full object-contain" onerror="this.outerHTML='🏭'">
+          </div>
+          <div class="space-y-1">
+            <div class="text-slate-100 font-bold text-sm">Complexo Fabril & Manufatura Industrial</div>
+            <div class="text-slate-400">Capacidade: <strong class="text-emerald-400">Até 4 Linhas de Montagem</strong></div>
+            <div class="text-slate-400">Custo de Obra: <strong class="text-rose-400">$48,000.00</strong></div>
+          </div>
         </div>
         <p class="text-xs text-slate-400 font-mono">Após a construção, ative receitas para produzir bens intermediários (Aço, Alumínio, Chips, Plástico, Tecidos) ou bens finais de consumo (Automóveis, Eletrônicos, Moda, Alimentos, Joias e Móveis).</p>
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
@@ -2920,11 +2930,11 @@
               spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getFarmSprite(tile.farm.farmTypeId) : null;
             } else if (tile.factory) {
               topC='#ea580c'; leftC='#c2410c'; rightC='#9a3412';
-              const firstRecipe = Object.keys(tile.factory.activeLines || {})[0];
-              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getFactorySprite(firstRecipe) : null;
+              const firstRecipe = Object.keys(tile.factory.lines || tile.factory.activeLines || {})[0];
+              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getFactorySprite(firstRecipe) : 'industrial/factory_default';
             } else if (tile.rdCenter) {
               topC='#c084fc'; leftC='#9333ea'; rightC='#7e22ce';
-              spriteKey = null;
+              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getRDSprite() : 'pesquisa/rd_center';
             } else if (tile.competitor) {
               topC='#f43f5e'; leftC='#e11d48'; rightC='#be123c';
               spriteKey = 'lojas/competitor';
@@ -4461,7 +4471,7 @@
     function renderRDCenterPanel(tile) {
       const rd = tile.rdCenter;
       const iconEl = document.getElementById('facility-icon');
-      if (iconEl) iconEl.innerHTML = '🔬';
+      if (iconEl) iconEl.innerHTML = `<img src="assets/pesquisa/rd_center.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🔬'">`;
       const titleEl = document.getElementById('facility-title');
       if (titleEl) titleEl.textContent = rd.name;
       const subtitleEl = document.getElementById('facility-subtitle');
@@ -4875,6 +4885,73 @@
         const hasFeed = !!(farm.feedConfig && farm.feedConfig.active);
         const effYield = hasFeed ? Math.round(farm.dailyYield * 1.5) : (farm.effectiveYield || farm.dailyYield);
         const effQR = hasFeed ? Math.min(100, (farm.quality || 60) + 15) : (farm.effectiveQuality || farm.quality || 60);
+        const feedNeeded = Math.ceil(farm.dailyYield * 0.20);
+
+        let stockMonitorHtml = '';
+        if (hasFeed) {
+          const isInternal = farm.feedConfig.supplierId?.startsWith('farm_');
+          if (isInternal) {
+            const parts = farm.feedConfig.supplierId.split('_');
+            const fx = Number(parts[1]), fy = Number(parts[2]);
+            const feedFarmTile = (typeof worldGrid !== 'undefined' && worldGrid[fx]) ? worldGrid[fx][fy] : null;
+            const supplierStock = feedFarmTile?.farm ? (feedFarmTile.farm.stock || 0) : 0;
+            const daysAutonomy = feedNeeded > 0 ? Math.floor(supplierStock / feedNeeded) : 0;
+
+            let autonomyBadge = '';
+            let barColor = 'bg-emerald-500';
+            let alertMsg = '';
+
+            if (supplierStock < feedNeeded) {
+              autonomyBadge = '<span class="text-rose-400 bg-rose-950/80 px-2 py-0.5 rounded border border-rose-800 font-bold text-[9px] animate-pulse">🔴 Ruptura (0 dias)</span>';
+              barColor = 'bg-rose-600';
+              alertMsg = '<div class="text-[9px] text-rose-400 bg-rose-950/40 border border-rose-900/60 rounded px-1.5 py-0.5 mt-1 font-bold">⚠ Estoque esgotado! Os animais voltarão ao ritmo básico de pasto sem ração suplementar.</div>';
+            } else if (daysAutonomy <= 3) {
+              autonomyBadge = `<span class="text-rose-300 bg-rose-950/80 px-2 py-0.5 rounded border border-rose-800 font-bold text-[9px]">🔴 Risco (${daysAutonomy}d)</span>`;
+              barColor = 'bg-rose-500';
+              alertMsg = `<div class="text-[9px] text-rose-300 bg-rose-950/30 border border-rose-800/50 rounded px-1.5 py-0.5 mt-1">⚠ Apenas ${daysAutonomy} dias de ração restantes. Amplie o plantio ou conecte outro fornecedor.</div>`;
+            } else if (daysAutonomy <= 7) {
+              autonomyBadge = `<span class="text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800 font-bold text-[9px]">🟡 Atenção (${daysAutonomy}d)</span>`;
+              barColor = 'bg-amber-500';
+            } else {
+              autonomyBadge = `<span class="text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800 font-bold text-[9px]">🟢 Seguro (${daysAutonomy}d)</span>`;
+              barColor = 'bg-emerald-500';
+            }
+
+            const stockPercent = Math.min(100, Math.max(5, Math.round((supplierStock / (feedNeeded * 14)) * 100)));
+
+            stockMonitorHtml = `
+              <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 space-y-1.5 mt-2">
+                <div class="flex items-center justify-between text-[10px]">
+                  <span class="text-slate-400 flex items-center gap-1 font-bold">📊 Autonomia de Ração:</span>
+                  ${autonomyBadge}
+                </div>
+                <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                  <div class="${barColor} h-full rounded-full transition-all duration-300" style="width:${stockPercent}%"></div>
+                </div>
+                <div class="flex items-center justify-between text-[9px] text-slate-400 pt-0.5">
+                  <span>Consumo: <strong class="text-amber-300">${feedNeeded} un/dia</strong></span>
+                  <span>Estoque no Silo: <strong class="${supplierStock < feedNeeded ? 'text-rose-400 font-bold' : 'text-slate-200'}">${supplierStock.toLocaleString()} un</strong></span>
+                </div>
+                ${alertMsg}
+              </div>
+            `;
+          } else if (farm.feedConfig.supplierId?.startsWith('port_') || farm.feedConfig.supplierId?.startsWith('primary_') || farm.feedConfig.supplierId?.startsWith('port')) {
+            const feedDailyCost = feedNeeded * (farm.feedConfig.landedCost || 0.60);
+            const daysCash = feedDailyCost > 0 ? Math.floor(cash / feedDailyCost) : 999;
+            stockMonitorHtml = `
+              <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 space-y-1 mt-2 text-[10px]">
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400 font-bold">Origem: Importação Portuária</span>
+                  <span class="text-sky-300 bg-sky-950 px-2 py-0.5 rounded border border-sky-800 font-bold text-[9px]">🚢 Abastecimento Contínuo</span>
+                </div>
+                <div class="flex items-center justify-between text-[9px] text-slate-400 pt-0.5">
+                  <span>Consumo: <strong class="text-amber-300">${feedNeeded} un/dia</strong></span>
+                  <span>Custo Diário: <strong class="text-emerald-400 font-bold">-$${feedDailyCost.toFixed(2)}/dia</strong></span>
+                </div>
+              </div>
+            `;
+          }
+        }
 
         feedHtml = `
           <div class="bg-slate-900/90 p-3 rounded-xl border ${hasFeed ? 'border-amber-600/70 bg-amber-950/20' : 'border-slate-800'} space-y-2 font-mono mt-3">
@@ -4895,6 +4972,7 @@
                 </div>
                 <div class="text-[9px] text-slate-400">Fornecedor: <strong class="text-slate-200">${farm.feedConfig.supplierName || 'Fazenda Própria'}</strong></div>
                 <div class="text-[9px] text-amber-400/90 font-bold pt-0.5">🚀 Rendimento: ${effYield} un/dia · Qualidade: QR ${effQR}</div>
+                ${stockMonitorHtml}
               ` : `
                 <div class="text-[10px] text-slate-400 italic">
                   Alimente as criações com Milho ou Trigo para acelerar o rendimento em +50% e elevar a Qualidade (QR).
@@ -4939,8 +5017,10 @@
 
     function renderFactoryPanel(tile) {
       const factory = tile.factory;
+      const firstRecipe = Object.keys(factory.lines || {})[0];
+      const factorySprite = (typeof SpriteManager !== 'undefined') ? SpriteManager.getFactorySprite(firstRecipe) : 'industrial/factory_default';
       const iconEl = document.getElementById('facility-icon');
-      if (iconEl) iconEl.innerHTML = `<img src="assets/empresas/factory_default.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🏭'">`;
+      if (iconEl) iconEl.innerHTML = `<img src="assets/${factorySprite}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🏭'">`;
       document.getElementById('facility-title').textContent = factory.name;
       document.getElementById('facility-subtitle').textContent = `${tile.district.name} · Complexo Fabril Multinível`;
       const badge = document.getElementById('facility-rent-badge');
@@ -5274,13 +5354,38 @@
       pendingTile = null;
     }
 
-    function openFarmModal(tile) {
-      pendingTile = tile;
-      document.getElementById('farm-modal-subtitle').textContent = `Local: ${tile.district.name} (${tile.x}, ${tile.y}) · Aluguel: $${tile.district.landRentDaily}/dia`;
+    function filterFarmTypes(query) {
+      renderFarmTypesList(query);
+    }
+
+    function renderFarmTypesList(search = '') {
+      if (!pendingTile) return;
+      const tile = pendingTile;
+      const q = (search || '').toLowerCase().trim();
       const list = document.getElementById('farm-types-list');
-      list.innerHTML = FARM_TYPES.map(ft => {
+
+      const filtered = FARM_TYPES.filter(ft => {
+        if (!q) return true;
+        const name = (ft.name || '').toLowerCase();
+        const cropName = (ft.cropName || '').toLowerCase();
+        const desc = (ft.desc || '').toLowerCase();
+        const id = (ft.id || '').toLowerCase();
+        return name.includes(q) || cropName.includes(q) || desc.includes(q) || id.includes(q);
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="text-center py-8 text-slate-500 font-mono text-xs">
+            <span class="text-2xl block mb-2">🔍🌾</span>
+            Nenhuma propriedade encontrada para "<strong>${search}</strong>".
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = filtered.map(ft => {
         const canAfford = cash >= ft.cost;
-        const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getFarmSpriteKey) ? SpriteManager.getFarmSpriteKey(ft.id) : `agro/${ft.id}`;
+        const spriteKey = (typeof SpriteManager !== 'undefined' && SpriteManager.getFarmSpriteKey) ? SpriteManager.getFarmSpriteKey(ft.id) : (ft.id === 'farm_timber' ? 'agricultura/farm_timber' : `agro/${ft.id}`);
         const estMonthlyYield = ft.dailyYield * 30;
         const estUnitProfit = Math.max(0.4, (ft.unitCost * 1.7) - ft.unitCost);
         const estMonthlyProfit = Math.max(400, Math.round(estMonthlyYield * estUnitProfit - (tile.district.landRentDaily * 30)));
@@ -5288,14 +5393,17 @@
         const paybackMax = Math.max(paybackMin + 2, Math.round(ft.cost / (estMonthlyProfit * 0.8)));
 
         return `
-          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3">
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono gap-3 hover:border-slate-700 transition">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-700/80 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
                 <img src="assets/${spriteKey}.png" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
                 <span class="text-xl hidden">${ft.emoji}</span>
               </div>
               <div>
-                <div class="text-sm font-bold text-slate-100">${ft.name}</div>
+                <div class="text-sm font-bold text-slate-100 flex items-center gap-1.5">
+                  <span>${ft.name}</span>
+                  ${ft.id === 'farm_timber' ? '<span class="text-[9px] bg-amber-950 text-amber-300 border border-amber-800 px-1.5 py-0.2 rounded">Silvicultura</span>' : ''}
+                </div>
                 <div class="text-[11px] text-slate-400 mt-0.5">Produção: <strong class="text-emerald-400">${ft.dailyYield} un/dia</strong> · Custo: <strong class="text-slate-200">$${ft.unitCost.toFixed(2)}/un</strong> · QR: <strong class="text-cyan-300">${ft.quality}</strong></div>
                 <div class="text-[9px] font-mono text-amber-300 bg-amber-950/50 p-1 rounded-lg border border-amber-800/60 mt-1">
                   ⏱ Payback Estimado: <strong>${paybackMin} a ${paybackMax} meses</strong>
@@ -5310,6 +5418,14 @@
           </div>
         `;
       }).join('');
+    }
+
+    function openFarmModal(tile) {
+      pendingTile = tile;
+      document.getElementById('farm-modal-subtitle').textContent = `Local: ${tile.district.name} (${tile.x}, ${tile.y}) · Aluguel: $${tile.district.landRentDaily}/dia`;
+      const searchInput = document.getElementById('farm-search-input');
+      if (searchInput) searchInput.value = '';
+      renderFarmTypesList('');
       document.getElementById('farm-modal').classList.remove('hidden');
     }
 
@@ -8338,6 +8454,18 @@
         const isInternal = offer.type && offer.type.startsWith('internal_');
         const logoSvg = getCompanyLogoSvg(offer.ownerLogo, 22);
 
+        let availText = offer.stockLabel || `${offer.quota || 500} un/dia`;
+        if (isInternal && offer.supplierId?.startsWith('farm_')) {
+          const parts = offer.supplierId.split('_');
+          const supTile = (typeof worldGrid !== 'undefined' && worldGrid[parts[1]]) ? worldGrid[parts[1]][parts[2]] : null;
+          if (supTile?.farm) {
+            const sStock = supTile.farm.stock || 0;
+            const req = Math.ceil((tile.farm.dailyYield || 200) * 0.20);
+            const aDays = req > 0 ? Math.floor(sStock / req) : 0;
+            availText = `<strong class="${sStock < req ? 'text-rose-400 font-bold' : (aDays <= 5 ? 'text-amber-300' : 'text-emerald-400')}">${sStock.toLocaleString()} un</strong> (~${aDays} dias de autonomia)`;
+          }
+        }
+
         return `
           <div class="bg-slate-950 p-3.5 rounded-2xl border ${isCurrent ? 'border-emerald-500 bg-emerald-950/20 shadow-lg shadow-emerald-950/30' : (isInternal ? 'border-amber-700/60 bg-amber-950/20 hover:border-amber-500' : 'border-slate-800 hover:border-slate-700')} space-y-2 text-xs font-mono transition">
             <div class="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-1.5">
@@ -8359,7 +8487,7 @@
             <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800/60 text-[10px] text-slate-300 space-y-1">
               <div class="text-slate-300 italic truncate">📦 Suplementação nutritiva contínua para as criações</div>
               <div class="flex items-center justify-between text-[10px] text-slate-400 pt-0.5 border-t border-slate-800/40">
-                <span>Disponibilidade: <strong class="text-slate-200">${offer.stockLabel || `${offer.quota || 500} un/dia`}</strong></span>
+                <span>Disponibilidade: ${availText}</span>
                 <span>Distância: <strong class="text-slate-200">${offer.distance} ${offer.distance === 1 ? 'tile' : 'tiles'}</strong></span>
               </div>
             </div>
@@ -9341,7 +9469,7 @@
     // (Modularizado em client/save_system.js e exposto em window)
     // ===========================================================================
     var GAME_VERSION_INFO = (typeof window !== 'undefined' && window.GAME_VERSION_INFO) || {
-      major: 0, minor: 8, patch: 4, build: '20260904.01', saveSchema: '0.8.2',
+      major: 0, minor: 8, patch: 4, build: '20260905.01', saveSchema: '0.8.2',
       get version() { return `${this.major}.${this.minor}.${this.patch}`; },
       get fullString() { return `v${this.version} (bld.${this.build})`; }
     };
@@ -10667,9 +10795,11 @@
             if (typeof pos.left === 'number' && typeof pos.top === 'number') {
               const maxL = Math.max(0, window.innerWidth - (panel.offsetWidth || 320));
               const maxT = Math.max(0, window.innerHeight - 50);
+              const actualTop = Math.max(0, Math.min(pos.top, maxT));
               panel.style.position = 'fixed';
               panel.style.left = Math.max(0, Math.min(pos.left, maxL)) + 'px';
-              panel.style.top = Math.max(0, Math.min(pos.top, maxT)) + 'px';
+              panel.style.top = actualTop + 'px';
+              panel.style.maxHeight = `calc(100vh - ${actualTop}px - 1rem)`;
               panel.style.right = 'auto';
               panel.style.bottom = 'auto';
               panel.style.transform = 'none';
@@ -10701,6 +10831,7 @@
         panel.style.position = 'fixed';
         panel.style.left = initLeft + 'px';
         panel.style.top = initTop + 'px';
+        panel.style.maxHeight = `calc(100vh - ${initTop}px - 1rem)`;
         panel.style.right = 'auto';
         panel.style.bottom = 'auto';
         panel.style.transform = 'none';
@@ -10726,6 +10857,7 @@
 
         panel.style.left = newL + 'px';
         panel.style.top = newT + 'px';
+        panel.style.maxHeight = `calc(100vh - ${newT}px - 1rem)`;
       });
 
       const stopDrag = (e) => {

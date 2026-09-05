@@ -2,8 +2,8 @@
 
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
-> **Última Atualização:** 04 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.4 (bld.20260904.01)`  
+> **Última Atualização:** 05 de Setembro de 2026  
+> **Versão Oficial Corrente:** `v0.8.4 (bld.20260905.01)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -33,6 +33,44 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 13: Refinamento de UI, Expansão de Sprites Isométricos 2.5D, Buscador Agropecuário e Monitor Inteligente de Ração Animal
+- **Data:** 05/09/2026 — 00:00
+- **Versão Oficial:** `v0.8.4 (bld.20260905.01)` | **Save Schema:** `v0.8.2`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão (Correções de Usabilidade, Sprites e Telemetria Operacional):
+1. **Correção do Ícone de Silvicultura & Mapeamento Canônico de Sprites:**
+   - Diagnosticada a falha de renderização do ícone de silvicultura (madeira), que ocorria por ausência de sprite específico e inconsistência de mapeamento.
+   - Criados métodos canônicos `getFarmSpriteKey(subtype)` e `getMineSpriteKey(resource)` em `client/sprite_manager.js`.
+   - Gerado o sprite temático `farm_timber.png` (reflorestamento/eucaliptos e toras de madeira em 2.5D) e sincronizado em `client/assets/agricultura/`, `client/assets/agro/` e `OIKONOMIA-buildings/agricultura/`.
+2. **Buscador Dinâmico no Modal de Propriedades Agropecuárias (`#farm-modal`):**
+   - Adicionado campo de busca instantânea `#farm-search-input` com filtro textual em tempo real.
+   - Refatorada a renderização de tipos de fazenda para `renderFarmTypesList(filterText)` e `filterFarmTypes()`, permitindo localizar rapidamente qualquer cultura agrícola, pecuária ou florestal entre os mais de 10 tipos de produção rural.
+3. **Novo Sprite Isométrico e Painel de Centro de Pesquisa & Desenvolvimento (P&D):**
+   - Criada arte isométrica 2.5D em alta resolução `rd_center.png` (cúpula geodésica futurista com antena parabólica e anexos de laboratório tecnológico).
+   - Registrada no catálogo de ativos `SpriteManager.ASSET_CATALOG.rd_center` e implementado getter `getRDSprite()`.
+   - Atualizado o renderizador do canvas para desenhar a cúpula tecnológica sobre tiles com `tile.rdCenter` e enriquecido o modal de P&D (`renderRDCenterPanel`) com preview visual do edifício.
+4. **Sprites e Identidade Visual para Fábricas e Indústrias Pesadas:**
+   - Criada arte isométrica 2.5D detalhada `industry_heavy.png` (galpão industrial manufatureiro com chaminés fumegantes e silos de carga) em `client/assets/industrial/` e `client/assets/empresas/`.
+   - Corrigido bug de renderização no canvas onde a verificação de atividade industrial lia `tile.factory.activeLines` em vez de `tile.factory.lines`.
+   - Integrado preview visual dinâmico no modal de criação e inspeção de fábricas (`renderFactoryPanel`).
+5. **Verificação e Normalização da Fazenda de Trigo:**
+   - Validada a presença e renderização dos assets de trigo (`farm_wheat.png` e `client/assets/agricultura/farm_wheat.png`), garantindo que a cadeia primária do trigo para farinha e panificação exiba o sprite correto no mapa mundi e nos modais.
+6. **Layout Flexível Anti-Corte no Modal do Supermercado (`#store-modal`):**
+   - Resolvido o corte inferior dos botões de ação e navegação que ocorria em resoluções menores ou após arrastar o modal.
+   - Reestruturado o container modal com `max-h-[90vh] flex flex-col overflow-hidden` e área interna rolável `flex-1 overflow-y-auto`.
+   - Aprimorado o utilitário `makeDraggable` para delimitar a altura máxima dinamicamente com base na posição vertical do topo (`maxHeight = calc(100vh - top - 1rem)`), garantindo que botões como "Contratar Gerente" e navegação de abas nunca fiquem fora da tela.
+7. **Monitor Inteligente de Autonomia de Ração Animal:**
+   - Implementado cálculo preditivo de consumo diário de ração/sementes para propriedades de pecuária (taxa base de 20% do volume de produção por ciclo).
+   - Integrada busca em tempo real do estoque nas fazendas fornecedoras conectadas na rede da empresa.
+   - Indicador visual dinâmico com badges semafóricos (🟢 Seguro >15d, 🟡 Atenção 5-15d, 🔴 Crítico <5d) e barra de progresso visual de dias de autonomia restante.
+   - Enriquecido o modal de seleção de fornecedores de ração (`openFarmFeedSupplierModal`) com cartões exibindo estoque disponível e projeção de dias de suporte alimentar contínuo.
+8. **Compilação e Verificação End-to-End via Chromium/Edge CDP:**
+   - Executada compilação de produção com Vite 8 (`npm run build`), atualizando o bundle autônomo offline em `dist/index.html` e copiando todos os novos assets para `dist/assets/`.
+   - Validados 100% dos testes da suíte automatizada headless (`tools/verify_browser_suite.ps1`), cobrindo busca de fazendas, cálculo de autonomia de ração e carregamento dos novos sprites.
 
 ---
 
