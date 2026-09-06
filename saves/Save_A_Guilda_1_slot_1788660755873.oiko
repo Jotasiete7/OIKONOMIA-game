@@ -6544,10 +6544,10 @@
                 "landedCost": 1.398
               },
               "chemical_minerals": {
-                "type": "internal_mine",
-                "supplierId": "mine_68_42",
-                "supplierName": "⛏️ 🧪 Depósito de Minerais Químicos",
-                "facilityName": "🧪 Depósito de Minerais Químicos",
+                "type": "internal_warehouse",
+                "supplierId": "warehouse_45_40",
+                "supplierName": "🏢 CD & Silos Logísticos (45, 40)",
+                "facilityName": "CD & Silos Logísticos (45, 40) — Hub Logístico",
                 "ownerName": "A Guilda 1",
                 "ownerLogo": {
                   "iconKey": "crown",
@@ -6562,16 +6562,16 @@
                   "isAICompetitor": false,
                   "themeColor": "emerald"
                 },
-                "ownerTag": "🏛️ Produção Própria",
-                "activitySummary": "Extração e refino primário de Minerais Químicos no lote (68, 42)",
-                "stockLabel": "Pátio: 550 un/dia (Custo Médio: $14.00)",
+                "ownerTag": "📦 Armazém Central",
+                "activitySummary": "Estoque consolidado e buffer estratégico de Minerais Químicos no lote (45, 40)",
+                "stockLabel": "Armazém: 5000 un (Custo Médio: $14.00)",
                 "wholesalePrice": 14,
                 "quality": 60,
-                "quota": 550,
-                "origin": "Extração Mineral (68, 42)",
-                "distance": 26,
-                "freight": 0.28,
-                "landedCost": 14.28
+                "quota": 5000,
+                "origin": "Armazém Central (45, 40)",
+                "distance": 5,
+                "freight": 0.05,
+                "landedCost": 14.05
               }
             }
           }
@@ -6840,6 +6840,44 @@
       "farm": null,
       "factory": null,
       "competitor": null
+    },
+    {
+      "x": 45,
+      "y": 40,
+      "store": null,
+      "mine": null,
+      "farm": null,
+      "factory": null,
+      "rdCenter": null,
+      "competitor": null,
+      "warehouse": {
+        "id": "warehouse_45_40",
+        "name": "CD & Silos Logísticos (45, 40)",
+        "level": 1,
+        "maxCapacity": 25000,
+        "cost": 35000,
+        "dailyRent": 69,
+        "dailyMaintenance": 60,
+        "builtAt": {
+          "day": 1,
+          "month": 1,
+          "year": 8
+        },
+        "inventory": {
+          "chemical_minerals": {
+            "productId": "chemical_minerals",
+            "productName": "Minerais Químicos",
+            "stock": 5000,
+            "avgUnitCost": 14,
+            "quality": 60,
+            "collectMode": "all_own",
+            "maxQuota": 10000,
+            "safetyStock": 1000,
+            "autoRestockPort": false,
+            "buyOnRecessionOnly": false
+          }
+        }
+      }
     }
   ],
   "playtimeSeconds": 2220,

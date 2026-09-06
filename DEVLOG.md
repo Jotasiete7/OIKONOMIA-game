@@ -52,8 +52,12 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 4. **Refinamento do Modal de Simulação de Preço & Métricas de Varejo:**
    - Atualizado `updatePriceSimulation()` em `client/index.html` para projetar vendas diárias fracionárias e o acumulado mensal (`0.49 un/dia (~15 un/mês)`), eliminando o falso indicativo de faturamento nulo.
    - Atualizada a estimativa de cobertura de estoque (`daysCover`) para considerar a demanda real contínua.
-5. **Atualização da Semente Canônica de Saves:**
-   - Integrado o snapshot de `Save_A_Guilda_1_slot_1788660755873.oiko` (Ano 9, 21 propriedades) em `client/recovered_saves_seed.js`.
+5. **Identificação e Resolução Definitiva do Sumiço de Armazéns & Silos de Estoque:**
+   - Diagnosticada a causa raiz do desaparecimento de Centros de Distribuição / Armazéns (`warehouse`): as rotinas `extractBuiltTiles()` e `applyBuiltTiles()` em `client/index.html` serializavam apenas `store`, `mine`, `farm`, `factory`, `rdCenter` e `competitor`, omitindo deliberadamente o atributo `warehouse`.
+   - Ao salvar a partida (inclusive nos auto-saves de fechamento de mês) ou recarregar a sessão, qualquer lote contendo exclusivamente um Armazém era descartado do array `builtTiles`, deletando a estrutura física e pulverizando todo o estoque contido (o que provocou o sumiço do CD `warehouse_45_40` e rompeu a linha de vulcanização de pneus).
+   - Adicionado suporte nativo e persistente a `warehouse` em `extractBuiltTiles()` e `applyBuiltTiles()`, com altura isométrica adequada (`buildingHeight = 20`) e validação de sobreposição em `confirmBuildRDCenter`.
+   - Restaurado o lote `(45, 40)` em `saves/Save_A_Guilda_1_slot_1788660755873.oiko` contendo o `CD & Silos Logísticos` e 5.000 un de `chemical_minerals`.
+   - Atualizada a semente em `client/recovered_saves_seed.js` com auto-cura proativa no `localStorage` caso o slot do jogador tenha sido gravado sem o armazém antes do patch.
 
 ---
 

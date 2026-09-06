@@ -5019,7 +5019,7 @@
 
     function confirmBuildRDCenter(x, y) {
       const tile = worldGrid[x] && worldGrid[x][y];
-      if (!tile || tile.isWater || tile.isRoad || tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter) return;
+      if (!tile || tile.isWater || tile.isRoad || tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter || tile.warehouse) return;
 
       const cost = 80000;
       if (cash < cost) {
@@ -10307,7 +10307,7 @@
     function extractBuiltTiles() {
       const built = [];
       for (const t of activeFacilitySet.values()) {
-        if (t.store || t.mine || t.farm || t.factory || t.rdCenter || t.competitor) {
+        if (t.store || t.mine || t.farm || t.factory || t.rdCenter || t.warehouse || t.competitor) {
           built.push({
             x: t.x, y: t.y,
             store: t.store,
@@ -10315,6 +10315,7 @@
             farm: t.farm,
             factory: t.factory,
             rdCenter: t.rdCenter,
+            warehouse: t.warehouse,
             competitor: t.competitor
           });
         }
@@ -10334,12 +10335,14 @@
           t.farm = b.farm || null;
           t.factory = b.factory || null;
           t.rdCenter = b.rdCenter || null;
+          t.warehouse = b.warehouse || null;
           t.competitor = b.competitor || null;
           if (t.store) t.buildingHeight = 16;
           else if (t.mine) t.buildingHeight = 20;
           else if (t.farm) t.buildingHeight = 18;
           else if (t.factory) t.buildingHeight = 22;
           else if (t.rdCenter) t.buildingHeight = 24;
+          else if (t.warehouse) t.buildingHeight = 20;
           else if (t.competitor) t.buildingHeight = 18;
           _indexTile(t);
         }
