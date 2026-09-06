@@ -68,6 +68,12 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 8. **Eliminação Definitiva do Glitch Visual de Inicialização (Escudo Anti-FOUC):**
    - Diagnosticada a causa do "glitch" de 1 a 2 segundos onde imagens e menus apareciam fora de lugar ao abrir a página: o Tailwind CSS v4 era importado apenas dentro de `main.js` (módulo JS diferido), fazendo com que o HTML renderizasse sem as classes `.hidden`, `fixed` e sem controle dimensional até o Vite terminar de processar o script.
    - Inserida a folha de estilo `<link rel="stylesheet" href="./style.css">` no `<head>` e declaradas regras inline anti-FOUC forçando `display: none !important` para `.hidden` e posicionamento fixo tela cheia no `#loading-screen` (`z-index: 99999`) a partir do primeiro milissegundo de parsing do DOM.
+9. **Correção do Travamento do Mapa Isométrico e Blindagem de `SpriteManager` no Loop de Renderização:**
+   - Diagnosticado erro `Uncaught ReferenceError: SpriteManager is not defined` em `renderMap()` (linha 3134) chamado por `_rafLoop`.
+   - Causa raiz: o loop `requestAnimationFrame` iniciava a renderização de frames antes de `SpriteManager` e outros módulos do `main.js` estarem vinculados, e a exceção não capturada encerrava o loop de renderização do canvas para sempre, deixando o mapa completamente preto no jogo.
+   - Declarados todos os símbolos e módulos globais no topo do script com sincronização no evento `oiko:ready`.
+   - Adicionado `try/catch` de segurança no `_rafLoop` para impedir que o ciclo de 60 FPS seja abortado.
+   - Refatorada a chamada de desenho com fallback elegante para o renderizador vetorial 3D caso os sprites ainda não estejam disponíveis.
 
 ---
 

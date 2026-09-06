@@ -2019,17 +2019,81 @@
     });
 
     // ===========================================================================
-    // 1. DADOS MESTRES & CATÁLOGOS OFICIAIS
-    // (Carregados modularmente a partir de data_catalogs.js via main.js)
+    // 1. DADOS MESTRES & MÓDULOS GLOBAIS
+    // (Carregados modularmente a partir de main.js e expostos em window)
     // ===========================================================================
+    var SpriteManager = (typeof window !== 'undefined' && window.SpriteManager) ? window.SpriteManager : null;
+    var CoreMath = (typeof window !== 'undefined' && window.CoreMath) ? window.CoreMath : null;
+    var SoundEngine = (typeof window !== 'undefined' && window.SoundEngine) ? window.SoundEngine : null;
+    var MacroCycleSystem = (typeof window !== 'undefined' && window.MacroCycleSystem) ? window.MacroCycleSystem : null;
+    var TickerSystem = (typeof window !== 'undefined' && window.TickerSystem) ? window.TickerSystem : null;
+    var MAP_WIDTH = (typeof window !== 'undefined' && window.MAP_WIDTH) ? window.MAP_WIDTH : 128;
+    var MAP_HEIGHT = (typeof window !== 'undefined' && window.MAP_HEIGHT) ? window.MAP_HEIGHT : 128;
+    var TILE_WIDTH = (typeof window !== 'undefined' && window.TILE_WIDTH) ? window.TILE_WIDTH : 64;
+    var TILE_HEIGHT = (typeof window !== 'undefined' && window.TILE_HEIGHT) ? window.TILE_HEIGHT : 32;
+    var CITY_PROFILES_DATA = (typeof window !== 'undefined' && window.CITY_PROFILES_DATA) ? window.CITY_PROFILES_DATA : {};
+    var CITY_DISTRICTS = (typeof window !== 'undefined' && window.CITY_DISTRICTS) ? window.CITY_DISTRICTS : {};
+    var STORE_TYPES = (typeof window !== 'undefined' && window.STORE_TYPES) ? window.STORE_TYPES : {};
+    var STORE_NICHE_LICENSES = (typeof window !== 'undefined' && window.STORE_NICHE_LICENSES) ? window.STORE_NICHE_LICENSES : {};
+    var STORE_CATEGORY_WHITELIST = (typeof window !== 'undefined' && window.STORE_CATEGORY_WHITELIST) ? window.STORE_CATEGORY_WHITELIST : {};
+    var NATURAL_MINES = (typeof window !== 'undefined' && window.NATURAL_MINES) ? window.NATURAL_MINES : {};
+    var FARM_TYPES = (typeof window !== 'undefined' && window.FARM_TYPES) ? window.FARM_TYPES : {};
+    var RD_CATEGORIES = (typeof window !== 'undefined' && window.RD_CATEGORIES) ? window.RD_CATEGORIES : {};
+    var AVATAR_CATALOG = (typeof window !== 'undefined' && window.AVATAR_CATALOG) ? window.AVATAR_CATALOG : [];
+    var COLOR_PALETTES = (typeof window !== 'undefined' && window.COLOR_PALETTES) ? window.COLOR_PALETTES : {};
+    var DIFFICULTY_PRESETS = (typeof window !== 'undefined' && window.DIFFICULTY_PRESETS) ? window.DIFFICULTY_PRESETS : {};
+    var ECONOMIC_TIPS = (typeof window !== 'undefined' && window.ECONOMIC_TIPS) ? window.ECONOMIC_TIPS : [];
+    var LOGO_ICONS = (typeof window !== 'undefined' && window.LOGO_ICONS) ? window.LOGO_ICONS : {};
+    var THEME_COLOR_PALETTES = (typeof window !== 'undefined' && window.THEME_COLOR_PALETTES) ? window.THEME_COLOR_PALETTES : {};
+    var generateCompanyLogo = (typeof window !== 'undefined' && window.generateCompanyLogo) ? window.generateCompanyLogo : () => null;
+    var getCompanyLogoSvg = (typeof window !== 'undefined' && window.getCompanyLogoSvg) ? window.getCompanyLogoSvg : () => '';
+    var drawCanvasCompanyLogoBadge = (typeof window !== 'undefined' && window.drawCanvasCompanyLogoBadge) ? window.drawCanvasCompanyLogoBadge : () => {};
     var PRODUCT_CATALOG = (typeof window !== 'undefined' && window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : {};
     var FACTORY_RECIPES = (typeof window !== 'undefined' && window.FACTORY_RECIPES) ? window.FACTORY_RECIPES : [];
     var RECIPE_GRAPH = (typeof window !== 'undefined' && window.RECIPE_GRAPH) ? window.RECIPE_GRAPH : {};
     var MEDIA_OUTLETS = (typeof window !== 'undefined' && window.MEDIA_OUTLETS) ? window.MEDIA_OUTLETS : [];
     var SEAPORTS = (typeof window !== 'undefined' && window.SEAPORTS) ? window.SEAPORTS : [];
 
+    function syncGlobalModuleBindings() {
+      if (typeof window === 'undefined') return;
+      if (window.SpriteManager) SpriteManager = window.SpriteManager;
+      if (window.CoreMath) CoreMath = window.CoreMath;
+      if (window.SoundEngine) SoundEngine = window.SoundEngine;
+      if (window.MacroCycleSystem) MacroCycleSystem = window.MacroCycleSystem;
+      if (window.TickerSystem) TickerSystem = window.TickerSystem;
+      if (window.MAP_WIDTH) MAP_WIDTH = window.MAP_WIDTH;
+      if (window.MAP_HEIGHT) MAP_HEIGHT = window.MAP_HEIGHT;
+      if (window.TILE_WIDTH) TILE_WIDTH = window.TILE_WIDTH;
+      if (window.TILE_HEIGHT) TILE_HEIGHT = window.TILE_HEIGHT;
+      if (window.CITY_PROFILES_DATA) CITY_PROFILES_DATA = window.CITY_PROFILES_DATA;
+      if (window.CITY_DISTRICTS) CITY_DISTRICTS = window.CITY_DISTRICTS;
+      if (window.STORE_TYPES) STORE_TYPES = window.STORE_TYPES;
+      if (window.STORE_NICHE_LICENSES) STORE_NICHE_LICENSES = window.STORE_NICHE_LICENSES;
+      if (window.STORE_CATEGORY_WHITELIST) STORE_CATEGORY_WHITELIST = window.STORE_CATEGORY_WHITELIST;
+      if (window.NATURAL_MINES) NATURAL_MINES = window.NATURAL_MINES;
+      if (window.FARM_TYPES) FARM_TYPES = window.FARM_TYPES;
+      if (window.RD_CATEGORIES) RD_CATEGORIES = window.RD_CATEGORIES;
+      if (window.AVATAR_CATALOG) AVATAR_CATALOG = window.AVATAR_CATALOG;
+      if (window.COLOR_PALETTES) COLOR_PALETTES = window.COLOR_PALETTES;
+      if (window.DIFFICULTY_PRESETS) DIFFICULTY_PRESETS = window.DIFFICULTY_PRESETS;
+      if (window.ECONOMIC_TIPS) ECONOMIC_TIPS = window.ECONOMIC_TIPS;
+      if (window.LOGO_ICONS) LOGO_ICONS = window.LOGO_ICONS;
+      if (window.THEME_COLOR_PALETTES) THEME_COLOR_PALETTES = window.THEME_COLOR_PALETTES;
+      if (window.generateCompanyLogo) generateCompanyLogo = window.generateCompanyLogo;
+      if (window.getCompanyLogoSvg) getCompanyLogoSvg = window.getCompanyLogoSvg;
+      if (window.drawCanvasCompanyLogoBadge) drawCanvasCompanyLogoBadge = window.drawCanvasCompanyLogoBadge;
+      if (window.PRODUCT_CATALOG) PRODUCT_CATALOG = window.PRODUCT_CATALOG;
+      if (window.FACTORY_RECIPES) FACTORY_RECIPES = window.FACTORY_RECIPES;
+      if (window.RECIPE_GRAPH) RECIPE_GRAPH = window.RECIPE_GRAPH;
+      if (window.MEDIA_OUTLETS) MEDIA_OUTLETS = window.MEDIA_OUTLETS;
+      if (window.SEAPORTS) SEAPORTS = window.SEAPORTS;
+    }
+    if (typeof window !== 'undefined') {
+      window.addEventListener('oiko:ready', syncGlobalModuleBindings);
+    }
+
     function getManhattanDist(p1, p2) {
-      return CoreMath.calculateManhattanDistance(p1, p2);
+      return CoreMath ? CoreMath.calculateManhattanDistance(p1, p2) : (Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y));
     }
 
     // ===========================================================================
@@ -2919,9 +2983,13 @@
       }
 
       if (_needsRender) {
-        renderMap();
-        renderMinimap();
-        _needsRender = false;
+        try {
+          renderMap();
+          renderMinimap();
+          _needsRender = false;
+        } catch (e) {
+          console.warn('[Renderer] Erro durante o frame de renderização:', e);
+        }
       }
       requestAnimationFrame(_rafLoop);
     }
@@ -2999,13 +3067,14 @@
             drawDiamond(sx, sy, w, h, fill);
           } else {
             let drawn = false;
-            if (typeof SpriteManager !== 'undefined') {
+            const sm = (typeof SpriteManager !== 'undefined' && SpriteManager) ? SpriteManager : (typeof window !== 'undefined' ? window.SpriteManager : null);
+            if (sm && typeof sm.draw === 'function') {
               if (tile.isRoad) {
-                const roadKey = SpriteManager.getRoadSprite(gx, gy, worldGrid, tile.isWater);
-                drawn = SpriteManager.draw(ctx, roadKey, sx, sy, w, h, () => drawDiamond(sx, sy, w, h, fill));
+                const roadKey = sm.getRoadSprite(gx, gy, worldGrid, tile.isWater);
+                drawn = sm.draw(ctx, roadKey, sx, sy, w, h, () => drawDiamond(sx, sy, w, h, fill));
               } else {
-                const terrainKey = SpriteManager.getTerrainSprite(tile);
-                drawn = SpriteManager.draw(ctx, terrainKey, sx, sy, w, h, () => drawDiamond(sx, sy, w, h, fill));
+                const terrainKey = sm.getTerrainSprite(tile);
+                drawn = sm.draw(ctx, terrainKey, sx, sy, w, h, () => drawDiamond(sx, sy, w, h, fill));
               }
             }
             if (!drawn) {
@@ -3097,25 +3166,26 @@
           if (!tile.city.isLocked) {
             let topC='#38bdf8', leftC='#0284c7', rightC='#0369a1';
             let spriteKey = null;
+            const sm = (typeof SpriteManager !== 'undefined' && SpriteManager) ? SpriteManager : (typeof window !== 'undefined' ? window.SpriteManager : null);
 
             if (tile.store) {
               topC='#10b981'; leftC='#059669'; rightC='#047857';
-              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getStoreSprite(tile.store.storeTypeId) : null;
+              spriteKey = sm ? sm.getStoreSprite(tile.store.storeTypeId) : null;
             } else if (tile.mine) {
               topC='#38bdf8'; leftC='#0284c7'; rightC='#0369a1';
-              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getMineSprite(tile.mine.mineTypeId) : null;
+              spriteKey = sm ? sm.getMineSprite(tile.mine.mineTypeId) : null;
             } else if (tile.farm) {
               topC='#eab308'; leftC='#ca8a04'; rightC='#a16207';
-              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getFarmSprite(tile.farm.farmTypeId) : null;
+              spriteKey = sm ? sm.getFarmSprite(tile.farm.farmTypeId) : null;
             } else if (tile.factory) {
               topC='#ea580c'; leftC='#c2410c'; rightC='#9a3412';
-              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getFactorySprite(tile.factory.lines || tile.factory.activeLines, tile.factory.customSkin) : 'industrial/factory_default';
+              spriteKey = sm ? sm.getFactorySprite(tile.factory.lines || tile.factory.activeLines, tile.factory.customSkin) : 'industrial/factory_default';
             } else if (tile.rdCenter) {
               topC='#c084fc'; leftC='#9333ea'; rightC='#7e22ce';
-              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getRDSprite() : 'pesquisa/rd_center';
+              spriteKey = sm ? sm.getRDSprite() : 'pesquisa/rd_center';
             } else if (tile.warehouse) {
               topC='#38bdf8'; leftC='#0284c7'; rightC='#0369a1';
-              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getWarehouseSprite(tile.warehouse.level) : 'logistica/warehouse_lvl1';
+              spriteKey = sm ? sm.getWarehouseSprite(tile.warehouse.level) : 'logistica/warehouse_lvl1';
             } else if (tile.competitor) {
               topC='#f43f5e'; leftC='#e11d48'; rightC='#be123c';
               spriteKey = 'lojas/competitor';
@@ -3126,33 +3196,41 @@
               topC='#c084fc'; leftC='#9333ea'; rightC='#7e22ce';
               spriteKey = tile.mediaData && tile.mediaData.type === 'Televisão' ? 'logistica_midia/media_tv' : 'logistica_midia/media_radio';
             } else if ((tile.districtId === 'downtown' || tile.districtId === 'northside') && !tile.isWater && !tile.isRoad && hPx > 0) {
-              spriteKey = typeof SpriteManager !== 'undefined' ? SpriteManager.getUrbanSprite(tile.districtId, gx, gy) : null;
+              spriteKey = sm ? sm.getUrbanSprite(tile.districtId, gx, gy) : null;
             }
 
             if (spriteKey) {
               const fallback = () => { if (hPx > 0) drawBuilding(sx, sy, w, h, hPx, topC, leftC, rightC); };
-              SpriteManager.draw(ctx, spriteKey, sx, sy, w, h, fallback);
+              if (sm && typeof sm.draw === 'function') {
+                sm.draw(ctx, spriteKey, sx, sy, w, h, fallback);
+              } else {
+                fallback();
+              }
             } else if (hPx > 0) {
               drawBuilding(sx, sy, w, h, hPx, topC, leftC, rightC);
             }
 
             // 2. BADGES PROCEDURAIS DE LOGO DE EMPRESA (Substituem textos fixos)
+            const icons = (typeof LOGO_ICONS !== 'undefined' && LOGO_ICONS) ? LOGO_ICONS : (typeof window !== 'undefined' && window.LOGO_ICONS ? window.LOGO_ICONS : {});
+            const genLogo = (typeof generateCompanyLogo === 'function') ? generateCompanyLogo : (typeof window !== 'undefined' && window.generateCompanyLogo ? window.generateCompanyLogo : (() => null));
+            const drawBadge = (typeof drawCanvasCompanyLogoBadge === 'function') ? drawCanvasCompanyLogoBadge : (typeof window !== 'undefined' && window.drawCanvasCompanyLogoBadge ? window.drawCanvasCompanyLogoBadge : (() => {}));
+
             let facilityLogo = null;
             if (tile.competitor) {
-              facilityLogo = generateCompanyLogo(tile.competitor.name || 'Megamart Varejo', 0, true);
+              facilityLogo = genLogo(tile.competitor.name || 'Megamart Varejo', 0, true);
             } else if (tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter || tile.warehouse) {
-              facilityLogo = generateCompanyLogo(playerProfile.companyName || 'OikoCorp Holding', playerProfile.logoRegenSeed || 0, false, playerProfile?.themeColor);
+              facilityLogo = genLogo(playerProfile.companyName || 'OikoCorp Holding', playerProfile.logoRegenSeed || 0, false, playerProfile?.themeColor);
             } else if (tile.isPort) {
-              facilityLogo = { shape: 'hexagon', color: '#38bdf8', iconDef: LOGO_ICONS.anchor };
+              facilityLogo = { shape: 'hexagon', color: '#38bdf8', iconDef: icons.anchor || null };
             } else if (tile.isMedia) {
-              facilityLogo = { shape: 'circle', color: '#c084fc', iconDef: LOGO_ICONS.star };
+              facilityLogo = { shape: 'circle', color: '#c084fc', iconDef: icons.star || null };
             }
 
             if (facilityLogo) {
               const isPlayer = !!(tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter || tile.warehouse);
               const badgeRadius = isPlayer ? 9.5 : 7.5;
               const badgeY = sy - (hPx || 16 * camera.zoom) - (isPlayer ? 10 : 8) * camera.zoom;
-              drawCanvasCompanyLogoBadge(ctx, facilityLogo, sx, badgeY, badgeRadius, camera.zoom);
+              drawBadge(ctx, facilityLogo, sx, badgeY, badgeRadius, camera.zoom);
             }
           }
 
