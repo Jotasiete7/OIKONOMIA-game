@@ -139,7 +139,10 @@ class SpriteManager {
     'logistica_midia/seaport_1': 'assets/logistica_midia/seaport_1.png',
     'logistica_midia/seaport_2': 'assets/logistica_midia/seaport_2.png',
 
-    // 7. UTILIDADE PÃšBLICA & MÃ DIA
+    // 7. UTILIDADE PÚBLICA, MERCADO FINANCEIRO & SEDE
+    'utilidade_publica/stock_exchange': 'assets/utilidade_publica/stock_exchange.png',
+    'utilidade_publica/corporate_hq': 'assets/residencial/corporate_hq.png',
+    'residencial/corporate_hq': 'assets/residencial/corporate_hq.png',
     'utilidade_publica/media_tv': 'assets/utilidade_publica/media_tv.png',
     'utilidade_publica/media_radio': 'assets/utilidade_publica/media_radio.png',
     'logistica_midia/media_tv': 'assets/logistica_midia/media_tv.png',
