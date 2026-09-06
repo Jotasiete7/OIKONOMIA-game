@@ -548,26 +548,58 @@
     </div>
   </div>
 
-  <!-- P&D — WIZARD DE NOVO PROJETO -->
-  <div id="rd-new-project-modal" class="fixed inset-0 z-[65] bg-black/60 backdrop-blur-sm flex items-center justify-center hidden">
-    <div class="bg-slate-900 border border-purple-700/60 rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+  <!-- P&D — WIZARD DE NOVO PROJETO (MODAL INTELIGENTE) -->
+  <div id="rd-new-project-modal" class="fixed inset-0 z-[65] bg-black/70 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-slate-900 border border-purple-700/60 rounded-2xl shadow-2xl w-full max-w-xl mx-4 max-h-[92vh] flex flex-col overflow-hidden">
       <!-- Header -->
-      <div class="bg-slate-800 border-b border-slate-700 px-5 py-3 flex items-center justify-between">
+      <div class="bg-slate-800/90 border-b border-slate-700 px-5 py-3 flex items-center justify-between shrink-0">
         <div>
-          <h3 class="text-sm font-bold text-purple-300 flex items-center gap-2">⚗️ Iniciar Projeto de Pesquisa</h3>
+          <h3 class="text-sm font-bold text-purple-300 flex items-center gap-2">⚗️ Iniciar Projeto de Pesquisa (P&D)</h3>
           <span id="rd-wizard-slots-info" class="text-[10px] text-slate-400 block mt-0.5">Bancadas Livres: 4/4</span>
         </div>
         <button onclick="closeRDNewProjectModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center">✕</button>
       </div>
-      <div class="p-5 space-y-3.5 font-mono text-xs">
-        <!-- Seleção de Produto -->
-        <div>
-          <label class="text-slate-400 block mb-1">1. Produto a Pesquisar:</label>
-          <select id="rd-product-select" onchange="onRDProductSelectChange()"
-            class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs focus:outline-none focus:border-purple-600">
-            <option value="">-- Selecione um produto --</option>
-          </select>
-          <span id="rd-product-category-badge" class="text-[10px] text-purple-400 mt-1 block hidden"></span>
+
+      <!-- Corpo Scrollável -->
+      <div class="p-5 space-y-3.5 font-mono text-xs overflow-y-auto max-h-[calc(92vh-115px)] pr-2 custom-scrollbar">
+        <!-- Seleção de Produto Inteligente -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-slate-300 font-bold flex items-center gap-1.5">
+              <span>1. Selecionar Produto para P&D:</span>
+              <span id="rd-wizard-selected-prod-title" class="text-purple-300 font-normal">--</span>
+            </label>
+            <span id="rd-product-category-badge" class="text-[10px] text-purple-400 px-2 py-0.5 rounded bg-purple-950/60 border border-purple-800/60 hidden"></span>
+          </div>
+
+          <!-- Barra de Busca Instantânea -->
+          <div class="relative">
+            <input type="text" id="rd-wizard-search-input" oninput="onRDWizardSearchInput(this.value)" placeholder="🔍 Buscar por nome, produto ou categoria..."
+              class="w-full bg-slate-950 border border-slate-700 focus:border-purple-500 rounded-xl px-3 py-2 text-slate-200 placeholder-slate-500 text-xs focus:outline-none transition pl-8">
+            <span class="absolute left-2.5 top-2 text-slate-500 text-xs">🔍</span>
+            <button type="button" id="rd-wizard-clear-search-btn" onclick="clearRDWizardSearch()" class="absolute right-2.5 top-2 text-slate-500 hover:text-slate-300 text-xs hidden">✕</button>
+          </div>
+
+          <!-- Chips de Filtros Rápidos (Escopo & Categorias) -->
+          <div class="flex items-center gap-1 overflow-x-auto pb-1 custom-scrollbar text-[10px]" id="rd-wizard-filter-chips">
+            <button type="button" onclick="setRDWizardFilter('scope', 'all')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-purple-900 text-purple-200 border-purple-500" data-filter="all">Todos</button>
+            <button type="button" onclick="setRDWizardFilter('scope', 'manufacturing')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-slate-800/90 text-slate-400 border-slate-700 hover:text-slate-200" data-filter="manufacturing">🏭 Minha Produção</button>
+            <button type="button" onclick="setRDWizardFilter('scope', 'selling')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-slate-800/90 text-slate-400 border-slate-700 hover:text-slate-200" data-filter="selling">🏪 Meu Varejo</button>
+            <button type="button" onclick="setRDWizardFilter('scope', 'researching')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-slate-800/90 text-slate-400 border-slate-700 hover:text-slate-200" data-filter="researching">🔬 Em Pesquisa</button>
+            <span class="text-slate-600 px-0.5">|</span>
+            <button type="button" onclick="setRDWizardFilter('category', 'Agro')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-slate-800/90 text-slate-400 border-slate-700 hover:text-slate-200" data-filter="Agro">🌾 Agro/Alimentos</button>
+            <button type="button" onclick="setRDWizardFilter('category', 'Farma')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-slate-800/90 text-slate-400 border-slate-700 hover:text-slate-200" data-filter="Farma">🧪 Farma/Química</button>
+            <button type="button" onclick="setRDWizardFilter('category', 'Industria')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-slate-800/90 text-slate-400 border-slate-700 hover:text-slate-200" data-filter="Industria">⚙️ Indústria</button>
+            <button type="button" onclick="setRDWizardFilter('category', 'Consumo')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-slate-800/90 text-slate-400 border-slate-700 hover:text-slate-200" data-filter="Consumo">✨ Consumo/Tech</button>
+          </div>
+
+          <!-- Container de Cards Clicáveis dos Produtos -->
+          <div id="rd-wizard-products-list" class="max-h-44 overflow-y-auto space-y-1.5 p-1 bg-slate-950/70 rounded-xl border border-slate-800 custom-scrollbar">
+            <!-- Renderizado via renderRDWizardProductList() -->
+          </div>
+
+          <!-- Input Oculto de Controle para manter compatibilidade universal -->
+          <input type="hidden" id="rd-product-select" value="">
         </div>
 
         <!-- Card de Destaque Visual de Qualidade (QR Atual vs Alvo) -->
@@ -7144,16 +7176,216 @@
       updateRDWizardPreview();
     }
 
+    let currentRDWizardFilterType = 'scope';
+    let currentRDWizardFilterValue = 'all';
+    let currentRDWizardSearchText = '';
+
+    function setRDWizardFilter(type, value) {
+      currentRDWizardFilterType = type;
+      currentRDWizardFilterValue = value;
+
+      const chips = document.querySelectorAll('#rd-wizard-filter-chips .rd-filter-chip');
+      chips.forEach(chip => {
+        if (chip.dataset.filter === value) {
+          chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-purple-900 text-purple-200 border-purple-500 shadow-sm';
+        } else {
+          chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-slate-800/90 text-slate-400 border-slate-700 hover:text-slate-200';
+        }
+      });
+
+      renderRDWizardProductList();
+    }
+
+    function onRDWizardSearchInput(val) {
+      currentRDWizardSearchText = val || '';
+      const clearBtn = document.getElementById('rd-wizard-clear-search-btn');
+      if (clearBtn) {
+        clearBtn.classList.toggle('hidden', !currentRDWizardSearchText.trim());
+      }
+      renderRDWizardProductList();
+    }
+
+    function clearRDWizardSearch() {
+      currentRDWizardSearchText = '';
+      const input = document.getElementById('rd-wizard-search-input');
+      if (input) input.value = '';
+      const clearBtn = document.getElementById('rd-wizard-clear-search-btn');
+      if (clearBtn) clearBtn.classList.add('hidden');
+      renderRDWizardProductList();
+    }
+
+    function selectRDWizardProduct(prodId) {
+      const hiddenInput = document.getElementById('rd-product-select');
+      if (hiddenInput) hiddenInput.value = prodId;
+
+      const prod = PRODUCT_CATALOG[prodId];
+      const titleEl = document.getElementById('rd-wizard-selected-prod-title');
+      if (titleEl) {
+        titleEl.textContent = prod ? `· ${prod.name}` : '--';
+      }
+
+      // Atualiza destaque visual dos cards
+      const cards = document.querySelectorAll('#rd-wizard-products-list .rd-wizard-prod-card');
+      cards.forEach(card => {
+        if (card.dataset.prodId === prodId) {
+          card.className = 'rd-wizard-prod-card p-2 rounded-xl border border-purple-500 bg-purple-950/60 shadow-md ring-1 ring-purple-400 flex items-center justify-between cursor-pointer transition';
+        } else {
+          card.className = 'rd-wizard-prod-card p-2 rounded-xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-800/80 hover:border-slate-700 flex items-center justify-between cursor-pointer transition';
+        }
+      });
+
+      if (prod) {
+        const currentQR = getRDCurrentQR(prodId);
+        let smartTarget = 80;
+        if (currentQR < 60) smartTarget = 80;
+        else if (currentQR < 75) smartTarget = 85;
+        else if (currentQR < 85) smartTarget = 90;
+        else if (currentQR < 95) smartTarget = 98;
+        else smartTarget = 100;
+
+        const slider = document.getElementById('rd-target-qr-slider');
+        if (slider) {
+          slider.min = Math.min(100, Math.ceil(currentQR + 1));
+          slider.value = Math.max(parseInt(slider.min), smartTarget);
+        }
+
+        const cat = RD_CATEGORIES[prod.category] || { baseCost: 3000 };
+        const minCostSingle = CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || cat.baseCost);
+        const budgetInput = document.getElementById('rd-budget-input');
+        if (budgetInput) {
+          budgetInput.value = minCostSingle * (currentSelectedLabsCount || 1);
+        }
+      }
+
+      updateRDWizardPreview();
+    }
+
+    function renderRDWizardProductList() {
+      const container = document.getElementById('rd-wizard-products-list');
+      if (!container) return;
+
+      const activeManufacturing = new Set();
+      const activeSelling = new Set();
+      const activeResearchCounts = {};
+
+      for (const tile of activeFacilitySet.values()) {
+        if (tile.store) Object.keys(tile.store.shelves).forEach(id => activeSelling.add(id));
+        if (tile.factory) Object.values(tile.factory.lines).forEach(l => activeManufacturing.add(l.outputProductId));
+        if (tile.farm) {
+          if (tile.farm.cropType) activeManufacturing.add(tile.farm.cropType);
+          if (tile.farm.animalType) activeManufacturing.add(tile.farm.animalType);
+        }
+        if (tile.mine && tile.mine.resourceType) {
+          activeManufacturing.add(tile.mine.resourceType);
+        }
+      }
+
+      for (const proj of Object.values(rdLabs)) {
+        if (proj.status === 'active') {
+          activeResearchCounts[proj.productId] = (activeResearchCounts[proj.productId] || 0) + (proj.labsCount || 1);
+        }
+      }
+
+      const selectedProdId = document.getElementById('rd-product-select')?.value || '';
+      const search = (currentRDWizardSearchText || '').trim().toLowerCase();
+
+      const allProds = Object.values(PRODUCT_CATALOG).sort((a, b) => a.name.localeCompare(b.name));
+
+      const filteredProds = allProds.filter(prod => {
+        if (currentRDWizardFilterType === 'scope') {
+          if (currentRDWizardFilterValue === 'manufacturing' && !activeManufacturing.has(prod.id)) return false;
+          if (currentRDWizardFilterValue === 'selling' && !activeSelling.has(prod.id)) return false;
+          if (currentRDWizardFilterValue === 'researching' && !activeResearchCounts[prod.id]) return false;
+        } else if (currentRDWizardFilterType === 'category') {
+          if (currentRDWizardFilterValue === 'Agro') {
+            if (!['Alimentos', 'Bebidas', 'Agronegócio'].includes(prod.category)) return false;
+          } else if (currentRDWizardFilterValue === 'Farma') {
+            if (!['Farmácia', 'Higiene', 'Cosméticos'].includes(prod.category)) return false;
+          } else if (currentRDWizardFilterValue === 'Industria') {
+            if (!['Insumos Industriais', 'Construção', 'Recursos Naturais'].includes(prod.category)) return false;
+          } else if (currentRDWizardFilterValue === 'Consumo') {
+            if (!['Eletrônicos', 'Vestuário', 'Automotivo', 'Móveis', 'Joias'].includes(prod.category)) return false;
+          }
+        }
+
+        if (search) {
+          const matchName = prod.name && prod.name.toLowerCase().includes(search);
+          const matchCat = prod.category && prod.category.toLowerCase().includes(search);
+          const matchId = prod.id && prod.id.toLowerCase().includes(search);
+          if (!matchName && !matchCat && !matchId) return false;
+        }
+
+        return true;
+      });
+
+      if (filteredProds.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-6 text-slate-500 font-mono text-[11px] space-y-1">
+            <p>🔍 Nenhum produto encontrado com os filtros atuais.</p>
+            <button type="button" onclick="clearRDWizardSearch(); setRDWizardFilter('scope', 'all');" class="text-[10px] text-purple-400 hover:text-purple-300 underline cursor-pointer">Limpar filtros de busca</button>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      for (const prod of filteredProds) {
+        const isSelected = prod.id === selectedProdId;
+        const currentQR = getRDCurrentQR(prod.id);
+        const catInfo = RD_CATEGORIES[prod.category] || { icon: '🔬', baseCost: 3000 };
+        const minCostSingle = CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || catInfo.baseCost);
+
+        let qrBadgeClass = 'bg-slate-800 text-amber-300 border-slate-700';
+        if (currentQR >= 80) {
+          qrBadgeClass = 'bg-amber-950/80 text-amber-300 border-amber-500/80 shadow-sm shadow-amber-900/40 font-bold';
+        } else if (currentQR >= 65) {
+          qrBadgeClass = 'bg-purple-950/80 text-purple-300 border-purple-600/70 font-bold';
+        }
+
+        let operationalTag = '';
+        if (activeResearchCounts[prod.id]) {
+          operationalTag = `<span class="bg-purple-950 text-purple-300 border border-purple-600/80 px-1.5 py-0.5 rounded text-[8px] font-bold animate-pulse">🔬 ${activeResearchCounts[prod.id]} LABS</span>`;
+        } else if (activeManufacturing.has(prod.id)) {
+          operationalTag = `<span class="bg-indigo-950 text-indigo-300 border border-indigo-600/80 px-1.5 py-0.5 rounded text-[8px] font-bold">🏭 FABRICANDO</span>`;
+        } else if (activeSelling.has(prod.id)) {
+          operationalTag = `<span class="bg-emerald-950 text-emerald-300 border border-emerald-600/80 px-1.5 py-0.5 rounded text-[8px] font-bold">🏪 VAREJO</span>`;
+        }
+
+        const cardClass = isSelected
+          ? 'rd-wizard-prod-card p-2 rounded-xl border border-purple-500 bg-purple-950/60 shadow-md ring-1 ring-purple-400 flex items-center justify-between cursor-pointer transition'
+          : 'rd-wizard-prod-card p-2 rounded-xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-800/80 hover:border-slate-700 flex items-center justify-between cursor-pointer transition';
+
+        html += `
+          <div class="${cardClass}" data-prod-id="${prod.id}" onclick="selectRDWizardProduct('${prod.id}')">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="text-base shrink-0">${catInfo.icon || '📦'}</span>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <strong class="text-slate-100 text-[11px] truncate">${prod.name}</strong>
+                  ${operationalTag}
+                </div>
+                <div class="text-[9px] text-slate-400 flex items-center gap-1.5 mt-0.5">
+                  <span>${prod.category}</span>
+                  <span>·</span>
+                  <span class="text-emerald-400/90 font-bold">$${minCostSingle.toLocaleString('en-US')}/mês base</span>
+                </div>
+              </div>
+            </div>
+            <div class="shrink-0 flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center gap-1 ${qrBadgeClass}">
+                <span>⭐</span> QR ${currentQR.toFixed(1)}
+              </span>
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
     function onRDProductSelectChange() {
       const prodId = document.getElementById('rd-product-select').value;
-      const prod = PRODUCT_CATALOG[prodId];
-      if (prod) {
-        const cat = RD_CATEGORIES[prod.category] || { baseCost: 3000 };
-        const currentQR = getRDCurrentQR(prodId);
-        const minCostSingle = CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || cat.baseCost);
-        document.getElementById('rd-budget-input').value = minCostSingle * currentSelectedLabsCount;
-      }
-      updateRDWizardPreview();
+      selectRDWizardProduct(prodId);
     }
 
     function openRDNewProjectModal() {
@@ -7202,52 +7434,39 @@
         slotsInfoEl.textContent = `Bancadas Livres: ${freeSlots}/${totalCapacity}`;
       }
 
-      const sel = document.getElementById('rd-product-select');
-      sel.innerHTML = '<option value="">-- Selecione um produto --</option>';
+      // Reseta seleção e filtros
+      const hiddenInput = document.getElementById('rd-product-select');
+      if (hiddenInput) hiddenInput.value = '';
 
-      // Identifica produtos que o jogador fabrica, vende ou já pesquisa
-      const activeManufacturing = new Set();
-      const activeSelling = new Set();
-      const activeResearchCounts = {};
+      const titleEl = document.getElementById('rd-wizard-selected-prod-title');
+      if (titleEl) titleEl.textContent = '--';
 
-      for (const tile of activeFacilitySet.values()) {
-        if (tile.store) Object.keys(tile.store.shelves).forEach(id => activeSelling.add(id));
-        if (tile.factory) Object.values(tile.factory.lines).forEach(l => activeManufacturing.add(l.outputProductId));
-      }
+      const searchInput = document.getElementById('rd-wizard-search-input');
+      if (searchInput) searchInput.value = '';
+      currentRDWizardSearchText = '';
+      currentRDWizardFilterType = 'scope';
+      currentRDWizardFilterValue = 'all';
 
-      for (const proj of Object.values(rdLabs)) {
-        if (proj.status === 'active') {
-          activeResearchCounts[proj.productId] = (activeResearchCounts[proj.productId] || 0) + (proj.labsCount || 1);
+      const clearBtn = document.getElementById('rd-wizard-clear-search-btn');
+      if (clearBtn) clearBtn.classList.add('hidden');
+
+      // Atualiza classes dos chips de filtro
+      const chips = document.querySelectorAll('#rd-wizard-filter-chips .rd-filter-chip');
+      chips.forEach(chip => {
+        if (chip.dataset.filter === 'all') {
+          chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-purple-900 text-purple-200 border-purple-500 shadow-sm';
+        } else {
+          chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-slate-800/90 text-slate-400 border-slate-700 hover:text-slate-200';
         }
-      }
+      });
 
-      const categoryGroups = {};
-      for (const prod of Object.values(PRODUCT_CATALOG)) {
-        if (!categoryGroups[prod.category]) categoryGroups[prod.category] = [];
-        categoryGroups[prod.category].push(prod);
-      }
-
-      for (const [cat, prods] of Object.entries(categoryGroups)) {
-        const grp = document.createElement('optgroup');
-        grp.label = cat;
-        for (const prod of prods.sort((a, b) => a.name.localeCompare(b.name))) {
-          const opt = document.createElement('option');
-          opt.value = prod.id;
-          let tag = '';
-          if (activeResearchCounts[prod.id]) tag = ` [🔬 ${activeResearchCounts[prod.id]} Lab(s) Ativo(s)]`;
-          else if (activeManufacturing.has(prod.id)) tag = ' [🏭 Fabricando]';
-          else if (activeSelling.has(prod.id)) tag = ' [🏪 Vendendo]';
-          opt.textContent = `${prod.name}${tag}`;
-          grp.appendChild(opt);
-        }
-        sel.appendChild(grp);
-      }
-
+      renderRDWizardProductList();
       setRDLabsCount(1);
       document.getElementById('rd-target-qr-slider').value = 80;
       document.getElementById('rd-wizard-preview').classList.add('hidden');
       document.getElementById('rd-start-btn').disabled = true;
       document.getElementById('rd-new-project-modal').classList.remove('hidden');
+      updateRDWizardPreview();
     }
 
     function closeRDNewProjectModal() {
