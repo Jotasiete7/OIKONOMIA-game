@@ -5498,8 +5498,8 @@
 
         const brand = playerBrandRating[prodId] || 20;
         const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
-        const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
-        const estSales = Math.max(1, Math.floor(d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast));
+        const rawDailySales = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast;
+        const estSales = Math.max(0.05, rawDailySales);
         const daysCover = Math.floor(shelf.stock / estSales);
         const capitalTied = Math.round(shelf.stock * (shelf.landedCost || prod.baseCost));
         const stockPct = Math.round((shelf.stock / shelf.maxCapacity) * 100);
@@ -7243,8 +7243,8 @@
             const shelf = tile.store.shelves[prodId];
             const d = tile.district;
             const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price);
-            const dailySales = Math.max(0, Math.floor(d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast));
-            totalMonthlyNetworkUnits += (dailySales * 30);
+            const rawDailySales = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast;
+            totalMonthlyNetworkUnits += Math.round(rawDailySales * 30);
             avgSellingPrice += shelf.price;
             priceCount++;
           }
@@ -9399,14 +9399,17 @@
       }
       const { playerShare: simShare } = CoreMath.calculateQuadraticMarketShare(rating, simCompRating, 25);
 
-      const estDailySales = Math.max(0, Math.floor(priceSimTarget.pop * priceSimTarget.perCapitaDailyDemand * (priceSimTarget.traffic / 100) * simShare * elast));
-      const dailyRevenue = estDailySales * simPrice;
-      const dailyCogs = estDailySales * priceSimTarget.landedCost;
+      const rawDailySales = priceSimTarget.pop * priceSimTarget.perCapitaDailyDemand * (priceSimTarget.traffic / 100) * simShare * elast;
+      const dailyRevenue = rawDailySales * simPrice;
+      const dailyCogs = rawDailySales * priceSimTarget.landedCost;
       const dailyGrossProfit = dailyRevenue - dailyCogs;
       const monthlyNetProfit = Math.round(dailyGrossProfit * 30);
       const markupPct = Math.round(((simPrice - priceSimTarget.landedCost) / priceSimTarget.landedCost) * 100);
 
-      document.getElementById('sim-sales-display').textContent = `${estDailySales.toLocaleString()} un/dia`;
+      const salesDisplayStr = rawDailySales >= 1.0
+        ? `${Math.round(rawDailySales).toLocaleString()} un/dia`
+        : `${rawDailySales.toFixed(2)} un/dia (~${Math.round(rawDailySales * 30)} un/mês)`;
+      document.getElementById('sim-sales-display').textContent = salesDisplayStr;
       document.getElementById('sim-revenue-display').textContent = `$${dailyRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/dia`;
       document.getElementById('sim-margin-display').textContent = `${markupPct >= 0 ? '+' : ''}${markupPct}%`;
       document.getElementById('sim-margin-display').className = `text-xs font-bold ${markupPct >= 0 ? 'text-amber-300' : 'text-rose-400'}`;

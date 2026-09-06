@@ -108,20 +108,30 @@ export function simulateDay(customContext = {}) {
       tileDailyOpex += op;
     }
     if (tile.mine) {
-      const mineWages = 180; // $180/dia (equipe de extração pesada e maquinário)
+      const isFull = (tile.mine.stock || 0) >= (tile.mine.maxCapacity || 8000);
+      const mineWages = isFull ? 65 : 180; // Standby ($65/dia vs $180/dia): conservação e vigia se pátio estiver 100% lotado
       const op = d.landRentDaily + mineWages;
       dailyFixed += op;
       tileDailyOpex += op;
     }
     if (tile.farm) {
-      const farmWages = 120; // $120/dia (mão de obra rural e manutenção de safra)
+      const isFull = (tile.farm.stock || 0) >= (tile.farm.maxCapacity || 5000);
+      const farmWages = isFull ? 45 : 120; // Standby ($45/dia vs $120/dia): manutenção de safra quando silos estão lotados
       const op = d.landRentDaily + farmWages;
       dailyFixed += op;
       tileDailyOpex += op;
     }
     if (tile.factory) {
-      const linesCount = tile.factory.lines ? Math.max(1, Object.keys(tile.factory.lines).length) : 1;
-      const factoryWages = linesCount * 200; // $200/dia por linha ativa (operários e energia industrial)
+      const lines = tile.factory.lines ? Object.values(tile.factory.lines) : [];
+      let factoryWages = 0;
+      if (lines.length === 0) {
+        factoryWages = 200;
+      } else {
+        for (const line of lines) {
+          const isFull = (line.finishedStock || 0) >= (line.maxStock || 3000);
+          factoryWages += isFull ? 70 : 200; // Standby ($70/dia vs $200/dia): economia de energia/turnos quando estoque está cheio
+        }
+      }
       const op = d.landRentDaily + factoryWages;
       dailyFixed += op;
       tileDailyOpex += op;
@@ -432,7 +442,9 @@ export function simulateDay(customContext = {}) {
         if (nb) {
           nb.lastShare = compShare;
         }
-        const potDemand = Math.floor(baseDem * elast * share);
+        const rawDemand = baseDem * elast * share;
+        // Arredondamento estocástico (Poisson/Bernoulli tick) para preservar a média contínua de vendas em bens de baixo giro e alto valor
+        const potDemand = Math.floor(rawDemand) + (Math.random() < (rawDemand % 1) ? 1 : 0);
         const sold = Math.min(shelf.stock, potDemand);
 
         if (shelf.stock === 0 && potDemand > 5 && Math.random() < 0.15) {

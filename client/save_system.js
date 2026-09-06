@@ -11,7 +11,7 @@ export const GAME_VERSION_INFO = {
   major: 0,
   minor: 8,
   patch: 4,
-  build: '20260905.02',
+  build: '20260905.03',
   saveSchema: '0.8.2',
   get version() { return `${this.major}.${this.minor}.${this.patch}`; },
   get fullString() { return `v${this.version} (bld.${this.build})`; }
@@ -135,6 +135,36 @@ export function migrateSaveData(rawSave) {
     repeatMode: (rawSet.repeatMode === 'track') ? 'track' : 'playlist',
     currentBgmKey: (typeof rawSet.currentBgmKey === 'string' && rawSet.currentBgmKey) ? rawSet.currentBgmKey : 'bgm_1'
   };
+
+  // 6. Sanitização de Fornecedores Quebrados (ex: armazém demolido no lote)
+  if (Array.isArray(migrated.builtTiles)) {
+    const existingTiles = new Set(migrated.builtTiles.map(t => `${t.x}_${t.y}`));
+    migrated.builtTiles.forEach(t => {
+      if (t.factory?.lines) {
+        Object.values(t.factory.lines).forEach(line => {
+          if (line.inputsConfig) {
+            Object.entries(line.inputsConfig).forEach(([inpId, cfg]) => {
+              if (cfg?.supplierId?.startsWith('warehouse_')) {
+                const parts = cfg.supplierId.split('_');
+                const wx = parts[1], wy = parts[2];
+                if (!existingTiles.has(`${wx}_${wy}`)) {
+                  // O armazém fornecedor foi demolido: reconecta à mina ou fábrica produtora direta
+                  const altMine = migrated.builtTiles.find(m => m.mine && (m.mine.resourceId === inpId || m.mine.outputProdId === inpId));
+                  if (altMine) {
+                    cfg.type = 'internal_mine';
+                    cfg.supplierId = `mine_${altMine.x}_${altMine.y}`;
+                    cfg.supplierName = altMine.mine.name || 'Mina Própria';
+                    cfg.facilityName = altMine.mine.name || 'Mina Própria';
+                    cfg.origin = `Extração Mineral (${altMine.x}, ${altMine.y})`;
+                  }
+                }
+              }
+            });
+          }
+        });
+      }
+    });
+  }
 
   migrated.saveVersion = CURRENT_SAVE_VERSION;
   migrated.migratedFromVersion = rawVer;

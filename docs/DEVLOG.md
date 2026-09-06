@@ -3,7 +3,7 @@
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
 > **Última Atualização:** 05 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.4 (bld.20260905.02)`  
+> **Versão Oficial Corrente:** `v0.8.4 (bld.20260905.03)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -33,6 +33,27 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 15: Correção da Economia Automotiva, Arredondamento Estocástico de Demanda, Standby Ocioso e Reparo de Cadeia
+- **Data:** 05/09/2026 — 23:25
+- **Versão Oficial:** `v0.8.4 (bld.20260905.03)` | **Save Schema:** `v0.8.2`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão (Correção Matemática, Balanceamento de OPEX e Resolução de Gargalos):
+1. **Identificação e Correção do Bug de Truncamento a Zero (`Math.floor`):**
+   - Diagnosticado bug na simulação diária de varejo (`client/simulation.js`), onde produtos duráveis/alto valor agregado com consumo per capita fracionário (< 1 un/dia, ex.: Carro Compacto com 0.48 un/dia) eram truncados estritamente para zero todo dia, fazendo a Concessionária faturar $0,00 por meses a fio.
+   - Implementado **Arredondamento Estocástico (Poisson/Bernoulli tick)**: `Math.floor(rawDemand) + (Math.random() < (rawDemand % 1) ? 1 : 0)`. A probabilidade diária reflete a fração exata, restaurando a média mensal de 14 a 16 carros/mês e gerando mais de $200.000/mês de receita para a holding.
+2. **Custo Operacional Reduzido em Ociosidade / Standby de Linhas Fabris e Minas:**
+   - Fábricas com armazém de produto acabado lotado (3.000 un) e minas com pátio cheio (8.000 un) agora entram em modo Standby, reduzindo o custo operacional de mão de obra e energia em até 65-70% ($70/dia vs $200/dia por linha fabril, $65/dia vs $180/dia por mina).
+3. **Reparo Automatizado de Cadeias de Suprimentos Quebradas:**
+   - Adicionado sanitizador no pipeline `migrateSaveData()` em `client/save_system.js`: quando uma linha industrial aponta para um armazém fornecedor demolido ou ausente no mapa (como ocorria com os insumos químicos de pneus apontando para um CD 45, 40 inexistente), o motor reconecta o fluxo automaticamente para a mina ou indústria produtora compatível mais próxima (`mine_68_42`).
+4. **Refinamento do Modal de Simulação de Preço & Métricas de Varejo:**
+   - Atualizado `updatePriceSimulation()` em `client/index.html` para projetar vendas diárias fracionárias e o acumulado mensal (`0.49 un/dia (~15 un/mês)`), eliminando o falso indicativo de faturamento nulo.
+   - Atualizada a estimativa de cobertura de estoque (`daysCover`) para considerar a demanda real contínua.
+5. **Atualização da Semente Canônica de Saves:**
+   - Integrado o snapshot de `Save_A_Guilda_1_slot_1788660755873.oiko` (Ano 9, 21 propriedades) em `client/recovered_saves_seed.js`.
 
 ---
 
