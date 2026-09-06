@@ -166,6 +166,35 @@ export function migrateSaveData(rawSave) {
     });
   }
 
+  // 9. Sanitização e Garantia de Persistência do Armazém Logístico (v0.8.5)
+  if (Array.isArray(migrated.builtTiles)) {
+    migrated.builtTiles.forEach(t => {
+      if (t.warehouse) {
+        const wh = t.warehouse;
+        wh.id = wh.id || `warehouse_${t.x}_${t.y}`;
+        wh.name = wh.name || `CD & Silos Logísticos (${t.x}, ${t.y})`;
+        wh.level = Number.isInteger(wh.level) && wh.level >= 1 && wh.level <= 3 ? wh.level : 1;
+        const expectedCap = wh.level === 3 ? 150000 : (wh.level === 2 ? 60000 : 25000);
+        wh.maxCapacity = (typeof wh.maxCapacity === 'number' && wh.maxCapacity >= 25000) ? wh.maxCapacity : expectedCap;
+        wh.dailyMaintenance = (typeof wh.dailyMaintenance === 'number' && wh.dailyMaintenance >= 60) ? wh.dailyMaintenance : (wh.level === 3 ? 120 : (wh.level === 2 ? 90 : 60));
+        wh.inventory = (wh.inventory && typeof wh.inventory === 'object') ? wh.inventory : {};
+        for (const [pId, item] of Object.entries(wh.inventory)) {
+          if (item) {
+            item.productId = item.productId || pId;
+            item.stock = (typeof item.stock === 'number' && !isNaN(item.stock) && item.stock >= 0) ? Math.round(item.stock) : 0;
+            item.avgUnitCost = (typeof item.avgUnitCost === 'number' && item.avgUnitCost >= 0) ? Number(item.avgUnitCost.toFixed(2)) : 1.0;
+            item.quality = (typeof item.quality === 'number' && item.quality >= 0) ? Math.round(item.quality) : 60;
+            item.maxQuota = (typeof item.maxQuota === 'number' && item.maxQuota > 0) ? item.maxQuota : wh.maxCapacity;
+            item.safetyStock = (typeof item.safetyStock === 'number' && item.safetyStock >= 0) ? item.safetyStock : 1000;
+            item.collectMode = item.collectMode || 'all_own';
+            item.autoRestockPort = Boolean(item.autoRestockPort);
+            item.buyOnRecessionOnly = Boolean(item.buyOnRecessionOnly);
+          }
+        }
+      }
+    });
+  }
+
   migrated.saveVersion = CURRENT_SAVE_VERSION;
   migrated.migratedFromVersion = rawVer;
   return migrated;

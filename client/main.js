@@ -179,6 +179,7 @@ window.generateExportDataUri = generateExportDataUri;
 
 // Re-exposição global (Warehouse System)
 window.WarehouseSystem = WarehouseSystem;
+window.WAREHOUSE_HUB_PRESETS = WarehouseSystem.WAREHOUSE_HUB_PRESETS;
 window.renderWarehousePanel = WarehouseSystem.renderWarehousePanel;
 window.openWarehouseModal = WarehouseSystem.openWarehouseModal;
 window.closeWarehouseModal = WarehouseSystem.closeWarehouseModal;
@@ -197,6 +198,13 @@ window.toggleWarehouseCollect = WarehouseSystem.toggleWarehouseCollect;
 window.setWarehouseSafetyStock = WarehouseSystem.setWarehouseSafetyStock;
 window.toggleWarehousePortRestock = WarehouseSystem.toggleWarehousePortRestock;
 window.toggleWarehouseRecessionOnly = WarehouseSystem.toggleWarehouseRecessionOnly;
+window.toggleWarehouseCardExpand = WarehouseSystem.toggleWarehouseCardExpand;
+window.toggleAllWarehouseCards = WarehouseSystem.toggleAllWarehouseCards;
+window.applyWarehouseHubPreset = WarehouseSystem.applyWarehouseHubPreset;
+window.setWarehouseCategoryFilter = WarehouseSystem.setWarehouseCategoryFilter;
+window.toggleWarehouseAddSelect = WarehouseSystem.toggleWarehouseAddSelect;
+window.toggleSelectAllFilteredAddProducts = WarehouseSystem.toggleSelectAllFilteredAddProducts;
+window.allocateSelectedWarehouseProducts = WarehouseSystem.allocateSelectedWarehouseProducts;
 
 // Proxies reativos globais vinculados a GameState (Single Source of Truth)
 const stateProxyProps = [
