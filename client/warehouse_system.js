@@ -744,9 +744,9 @@ function renderWarehouseFlowTab(tile) {
 
     // Loja de varejo abastecida por este CD
     if (dstTile.store && dstTile.store.shelves) {
-      for (const shelf of Object.values(dstTile.store.shelves)) {
+      for (const [prodId, shelf] of Object.entries(dstTile.store.shelves)) {
         if (shelf.supplierId === whId) {
-          const pId = shelf.productId;
+          const pId = prodId;
           const salesRate = Math.round(shelf.dailySales || shelf.dailyRestock || 10);
           const available = wh.inventory?.[pId]?.stock || 0;
           outboundDestinations.push({

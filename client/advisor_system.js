@@ -19,6 +19,43 @@ export function getAbsoluteGameDays(day = 1, month = 1, year = 1) {
 }
 
 /**
+ * Computa a quantidade real de clientes (lojas, fábricas, granjas) abastecidos por um armazém
+ */
+export function countWarehouseClients(whTile, activeFacilities) {
+  if (!whTile?.warehouse) return 0;
+  const whId = `warehouse_${whTile.x}_${whTile.y}`;
+  let count = 0;
+
+  for (const dstTile of activeFacilities.values()) {
+    // Varejo / Lojas
+    if (dstTile.store?.shelves) {
+      for (const shelf of Object.values(dstTile.store.shelves)) {
+        if (shelf.supplierId === whId) {
+          count++;
+          break; // 1 cliente por loja
+        }
+      }
+    }
+    // Indústrias / Fábricas
+    if (dstTile.factory?.lines) {
+      for (const line of Object.values(dstTile.factory.lines)) {
+        const inputs = line.inputsConfig || line.ingredients || {};
+        if (Object.values(inputs).some(cfg => cfg?.supplierId === whId)) {
+          count++;
+          break; // 1 cliente por fábrica
+        }
+      }
+    }
+    // Granjas / Fazendas (ração)
+    if (dstTile.farm?.feedConfig?.active && dstTile.farm.feedConfig.supplierId === whId) {
+      count++;
+    }
+  }
+
+  return count;
+}
+
+/**
  * 1. Avalia o Pulso de Saúde Corporativa (6 KPIs semaforizados)
  */
 export function evaluateCorporatePulse(context) {
@@ -87,13 +124,16 @@ export function evaluateCorporatePulse(context) {
   for (const tile of activeFacilitySet.values()) {
     if (tile.warehouse) {
       totalWarehouses++;
-      const cap = tile.warehouse.capacity || 20000;
-      const occ = tile.warehouse.totalStoredVolume || 0;
+      const cap = tile.warehouse.maxCapacity || tile.warehouse.capacity || 25000;
+      let occ = tile.warehouse.totalStoredVolume || 0;
+      if (!occ && tile.warehouse.inventory) {
+        occ = Object.values(tile.warehouse.inventory).reduce((s, it) => s + (it.stock || 0), 0);
+      }
       const pct = (occ / cap) * 100;
-      if (pct > 90) overloadedWarehouses++;
+      if (pct > 92) overloadedWarehouses++;
       if (pct < 5) emptyWarehouses++;
 
-      const clientsCount = tile.warehouse.connectedClients ? Object.keys(tile.warehouse.connectedClients).length : 0;
+      const clientsCount = countWarehouseClients(tile, activeFacilitySet);
       if (clientsCount === 0) lonelyWarehouses++;
     }
   }
@@ -117,12 +157,10 @@ export function evaluateCorporatePulse(context) {
 
   for (const tile of activeFacilitySet.values()) {
     if (tile.store && tile.store.shelves) {
-      for (const shelf of Object.values(tile.store.shelves)) {
-        if (shelf.productId) {
-          totalShelves++;
-          if ((shelf.currentStock || 0) <= 0.05) {
-            emptyShelves++;
-          }
+      for (const [prodId, shelf] of Object.entries(tile.store.shelves)) {
+        totalShelves++;
+        if ((shelf.stock || 0) <= 0.05) {
+          emptyShelves++;
         }
       }
     }
@@ -283,51 +321,64 @@ export function diagnoseCorporateIssues(context) {
   // =========================================================================
   // B. COO & CAUSA-RAIZ: RUPTURA DE GÔNDOLAS NO VAREJO
   // =========================================================================
+  // =========================================================================
+  // B. COO & CAUSA-RAIZ: RUPTURA DE GÔNDOLAS NO VAREJO
+  // =========================================================================
   for (const [tileKey, tile] of activeFacilitySet.entries()) {
     const buildingDaysAge = tile.createdAtDay ? (currentDays - tile.createdAtDay) : 999;
     if (buildingDaysAge < GRACE_PERIOD_DAYS) continue;
 
     if (tile.store && tile.store.shelves) {
-      for (const [shelfIndex, shelf] of Object.entries(tile.store.shelves)) {
-        if (!shelf.productId) continue;
-
-        const prod = PRODUCT_CATALOG[shelf.productId];
-        const stock = shelf.currentStock || 0;
+      for (const [prodId, shelf] of Object.entries(tile.store.shelves)) {
+        const prod = PRODUCT_CATALOG[prodId];
+        const stock = shelf.stock || 0;
 
         // Se o estoque está zerado na prateleira
         if (stock <= 0.05) {
           // Rastreamento Causal da Causa-Raiz da Ruptura
-          let causalExplanation = 'A gôndola não possui fornecedor conectado ou a rota foi interrompida.';
+          let causalExplanation = 'A gôndola não possui fornecedor conectado ou a reposição está desativada.';
           let deepLinkAction = { type: 'tile', x: tile.x, y: tile.y, label: `🏪 Inspecionar ${tile.store.name || 'Loja'}` };
 
-          if (shelf.supplierType === 'warehouse') {
-            const whTile = activeFacilitySet.get(`${shelf.supplierX},${shelf.supplierY}`);
+          if (shelf.supplierId?.startsWith('warehouse_')) {
+            const parts = shelf.supplierId.split('_');
+            const whX = Number(parts[1]), whY = Number(parts[2]);
+            const whTile = activeFacilitySet.get(`${whX},${whY}`);
             if (whTile && whTile.warehouse) {
-              const whStock = whTile.warehouse.inventory ? (whTile.warehouse.inventory[shelf.productId] || 0) : 0;
+              const whStock = whTile.warehouse.inventory?.[prodId]?.stock || 0;
               if (whStock <= 0.1) {
-                causalExplanation = `O Armazém fornecedor (${whTile.x}, ${whTile.y}) está com estoque esgotado de ${prod ? prod.name : shelf.productId}.`;
+                causalExplanation = `O Armazém fornecedor (${whTile.x}, ${whTile.y}) está com estoque esgotado de ${prod ? prod.name : prodId}.`;
                 deepLinkAction = { type: 'tile', x: whTile.x, y: whTile.y, label: '🚚 Inspecionar Armazém' };
               } else {
-                causalExplanation = `O Armazém possui estoque, mas o caminhão de reposição atrasou ou a cota diária é insuficiente.`;
+                causalExplanation = `O Armazém possui estoque (${Math.round(whStock)} un), mas a reposição diária ainda não abasteceu a gôndola.`;
               }
             }
-          } else if (shelf.supplierType === 'factory') {
-            const facTile = activeFacilitySet.get(`${shelf.supplierX},${shelf.supplierY}`);
+          } else if (shelf.supplierId?.startsWith('factory_')) {
+            const parts = shelf.supplierId.split('_');
+            const facX = Number(parts[1]), facY = Number(parts[2]);
+            const facTile = activeFacilitySet.get(`${facX},${facY}`);
             if (facTile && facTile.factory) {
-              causalExplanation = `A fábrica fornecedora (${facTile.x}, ${facTile.y}) não está entregando lotes suficientes de ${prod ? prod.name : shelf.productId}.`;
+              causalExplanation = `A fábrica fornecedora (${facTile.x}, ${facTile.y}) não está entregando lotes suficientes de ${prod ? prod.name : prodId}.`;
               deepLinkAction = { type: 'tile', x: facTile.x, y: facTile.y, label: '🏭 Inspecionar Fábrica' };
             }
-          } else if (shelf.supplierType === 'port') {
-            causalExplanation = `Fornecimento via Porto Marítimo atingiu a cota diária máxima ou o frete está instável.`;
+          } else if (shelf.supplierId?.startsWith('farm_')) {
+            const parts = shelf.supplierId.split('_');
+            const farmX = Number(parts[1]), farmY = Number(parts[2]);
+            const farmTile = activeFacilitySet.get(`${farmX},${farmY}`);
+            if (farmTile && farmTile.farm) {
+              causalExplanation = `A fazenda/granja fornecedora (${farmTile.x}, ${farmTile.y}) está com estoque ou colheita insuficiente.`;
+              deepLinkAction = { type: 'tile', x: farmTile.x, y: farmTile.y, label: '🌾 Inspecionar Fazenda' };
+            }
+          } else {
+            causalExplanation = `Fornecimento via Porto Marítimo atingiu a cota diária máxima ou o saldo foi insuficiente.`;
             deepLinkAction = { type: 'modal', modalId: 'seaport-modal', label: '⚓ Abrir Porto Marítimo' };
           }
 
           rawAlerts.push({
-            id: `coo_stockout_${tileKey}_${shelf.productId}`,
+            id: `coo_stockout_${tileKey}_${prodId}`,
             category: 'COO',
             severity: 'critical',
-            title: `Ruptura de Gôndola: ${prod ? prod.name : shelf.productId}`,
-            message: `A filial em ${tile.district?.name || 'Distrito'} está sem ${prod ? prod.name : shelf.productId} na prateleira, perdendo receita diária.`,
+            title: `Ruptura de Gôndola: ${prod ? prod.name : prodId}`,
+            message: `A filial em ${tile.district?.name || 'Distrito'} está sem ${prod ? prod.name : prodId} na prateleira, perdendo receita diária.`,
             rootCause: causalExplanation,
             deepLink: deepLinkAction,
             metricVal: 1
@@ -370,9 +421,12 @@ export function diagnoseCorporateIssues(context) {
     if (buildingDaysAge < GRACE_PERIOD_DAYS) continue;
 
     if (tile.warehouse) {
-      const clientsCount = tile.warehouse.connectedClients ? Object.keys(tile.warehouse.connectedClients).length : 0;
-      const cap = tile.warehouse.capacity || 20000;
-      const occ = tile.warehouse.totalStoredVolume || 0;
+      const clientsCount = countWarehouseClients(tile, activeFacilitySet);
+      const cap = tile.warehouse.maxCapacity || tile.warehouse.capacity || 25000;
+      let occ = tile.warehouse.totalStoredVolume || 0;
+      if (!occ && tile.warehouse.inventory) {
+        occ = Object.values(tile.warehouse.inventory).reduce((s, it) => s + (it.stock || 0), 0);
+      }
       const pct = (occ / cap) * 100;
 
       if (clientsCount === 0) {
@@ -409,25 +463,25 @@ export function diagnoseCorporateIssues(context) {
   const checkedProducts = new Set();
   for (const tile of activeFacilitySet.values()) {
     if (tile.store && tile.store.shelves) {
-      for (const shelf of Object.values(tile.store.shelves)) {
-        if (!shelf.productId || checkedProducts.has(shelf.productId)) continue;
-        checkedProducts.add(shelf.productId);
+      for (const [prodId, shelf] of Object.entries(tile.store.shelves)) {
+        if (checkedProducts.has(prodId)) continue;
+        checkedProducts.add(prodId);
 
         const currentQR = shelf.quality || 50;
-        const prod = PRODUCT_CATALOG[shelf.productId];
+        const prod = PRODUCT_CATALOG[prodId];
 
         // Se o produto está no varejo mas seu QR é o mais básico (<= 52)
         if (currentQR <= 52 && prod && (prod.qualityWeight || 50) >= 45) {
-          const hasActiveResearch = rdLabs && Object.values(rdLabs).some(p => p.productId === shelf.productId && p.status === 'active');
+          const hasActiveResearch = rdLabs && Object.values(rdLabs).some(p => p.productId === prodId && p.status === 'active');
           if (!hasActiveResearch) {
             rawAlerts.push({
-              id: `cmo_low_qr_${shelf.productId}`,
+              id: `cmo_low_qr_${prodId}`,
               category: 'CMO',
               severity: 'opportunity',
               title: `Oportunidade de Inovação: ${prod.name}`,
               message: `Seu produto ${prod.name} opera com Qualidade básica (${currentQR.toFixed(0)} QR). Produtos concorrentes ou importados podem roubar seu market share neste setor sensível a qualidade.`,
               rootCause: 'Ausência de pesquisa científica em P&D para aprimorar as receitas e sementes.',
-              deepLink: { type: 'action', actionId: 'open_rd_wizard_for_prod', productId: shelf.productId, label: `🔬 Iniciar P&D em ${prod.name}` },
+              deepLink: { type: 'action', actionId: 'open_rd_wizard_for_prod', productId: prodId, label: `🔬 Iniciar P&D em ${prod.name}` },
               metricVal: currentQR
             });
           }
@@ -551,6 +605,7 @@ export function filterAdvisorByVerbosity(alerts, verbosity = 'novato') {
 
 export default {
   getAbsoluteGameDays,
+  countWarehouseClients,
   evaluateCorporatePulse,
   diagnoseCorporateIssues,
   updateAdvisorAlertStates,

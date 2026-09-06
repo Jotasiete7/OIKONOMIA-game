@@ -6100,6 +6100,11 @@
       const store = tile.store;
       const d = tile.district;
 
+      const titleEl = document.getElementById('facility-title');
+      if (titleEl) titleEl.textContent = store.name;
+      const subtitleEl = document.getElementById('facility-subtitle');
+      if (subtitleEl) subtitleEl.textContent = `${d?.name || 'Comércio'} · Lote (${tile.x}, ${tile.y})`;
+
       const iconEl = document.getElementById('facility-icon');
       if (iconEl) iconEl.innerHTML = `<img src="assets/lojas/${store.storeTypeId}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🏪'">`;
       const badge = document.getElementById('facility-rent-badge');
