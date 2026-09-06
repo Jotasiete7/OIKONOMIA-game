@@ -2933,6 +2933,16 @@
       scheduleRender();
     }
 
+    function focusOnTile(gx, gy) {
+      if (typeof gx !== 'number' || typeof gy !== 'number') return;
+      const r = canvas.getBoundingClientRect();
+      camera.panX = (r.width / 2) - (gx - gy) * (TILE_W / 2) * camera.zoom;
+      camera.panY = (r.height / 2) - (gx + gy) * (TILE_H / 2) * camera.zoom;
+      scheduleRender();
+      if (typeof renderMinimap === 'function') renderMinimap();
+    }
+    if (typeof window !== 'undefined') window.focusOnTile = focusOnTile;
+
     function changeZoom(d, pivotX = null, pivotY = null) {
       const oldZoom = camera.zoom;
       const newZoom = Math.min(2.4, Math.max(0.35, oldZoom + d));
@@ -4190,16 +4200,29 @@
 
         if (action.type === 'tile' && typeof action.x === 'number' && typeof action.y === 'number') {
           focusOnTile(action.x, action.y);
-          const tile = activeFacilitySet.get(`${action.x},${action.y}`);
+          const tile = (typeof activeFacilitySet !== 'undefined' && activeFacilitySet.get(`${action.x},${action.y}`)) || 
+                       (typeof worldGrid !== 'undefined' && worldGrid[action.x]?.[action.y]);
           if (tile) {
-            openFloatingFacilityWindow(tile);
+            activeManagedTile = tile;
+            if (tile.warehouse && typeof openWarehouseModal === 'function') {
+              openWarehouseModal(tile);
+            } else {
+              openFloatingFacilityWindow(tile);
+            }
+            if (typeof renderTileInspector === 'function') {
+              renderTileInspector(tile);
+            }
+            if (typeof scheduleRender === 'function') scheduleRender();
           }
         } else if (action.type === 'modal') {
           if (action.modalId === 'banking-modal' && typeof openBankModal === 'function') openBankModal();
           else if (action.modalId === 'dre-modal') toggleDREModal();
           else if (action.modalId === 'seaport-modal') {
             const firstPort = Array.from(activeFacilitySet.values()).find(t => t.district?.type?.includes('Port') || t.district?.id === 'harbor');
-            if (firstPort) openFloatingFacilityWindow(firstPort);
+            if (firstPort) {
+              focusOnTile(firstPort.x, firstPort.y);
+              openFloatingFacilityWindow(firstPort);
+            }
           }
         } else if (action.type === 'action') {
           if (action.actionId === 'open_rd_or_store') openRDCenterModal();
@@ -5376,6 +5399,16 @@
       else renderIdlePanel();
     }
 
+    let isRDPatentsExpanded = false;
+    function toggleRDPatentsExpanded() {
+      isRDPatentsExpanded = !isRDPatentsExpanded;
+      if (activeManagedTile?.rdCenter) renderRDCenterPanel(activeManagedTile);
+    }
+    if (typeof window !== 'undefined') {
+      window.isRDPatentsExpanded = false;
+      window.toggleRDPatentsExpanded = toggleRDPatentsExpanded;
+    }
+
     function renderRDCenterPanel(tile) {
       const rd = tile.rdCenter;
       const iconEl = document.getElementById('facility-icon');
@@ -5393,26 +5426,26 @@
       }
 
       const allProjects = Object.values(rdLabs);
-      const activeProjects = allProjects.filter(p => p.status === 'active');
+      const activeProjects = allProjects.filter(p => p.status === 'active' || p.status === 'paused');
       const completedProjects = allProjects.filter(p => p.status === 'completed');
-      const totalBudget = activeProjects.reduce((s, p) => s + (p.monthlyBudget || 0), 0);
+      const totalBudget = activeProjects.filter(p => p.status === 'active').reduce((s, p) => s + (p.monthlyBudget || 0), 0);
       const totalCapacity = getRDTotalLabCapacity();
       const usedSlots = getRDUsedLabSlots();
       const freeSlots = Math.max(0, totalCapacity - usedSlots);
 
-      // Renderiza os cards das pesquisas ativas diretamente no painel da instalação
+      // Renderiza apenas os cards das pesquisas EM ANDAMENTO nas bancadas ativas
       let projectsHtml = '';
-      if (allProjects.length === 0) {
+      if (activeProjects.length === 0) {
         projectsHtml = `
           <div class="bg-slate-900/60 p-3 rounded-xl border border-dashed border-purple-800/60 text-center space-y-2 font-mono">
-            <p class="text-[11px] text-slate-400">Nenhuma pesquisa rodando no momento.</p>
+            <p class="text-[11px] text-slate-400">Nenhuma bancada em operação no momento.</p>
             <button onclick="openRDNewProjectModal()" class="w-full py-2 rounded-lg bg-purple-800 hover:bg-purple-700 text-purple-100 font-bold text-xs border border-purple-600/60 shadow cursor-pointer transition flex items-center justify-center gap-1.5">
-              ➕ Iniciar Projeto de Pesquisa
+              ➕ Alocar Projeto de Pesquisa (${freeSlots}/${totalCapacity} Bancadas Livres)
             </button>
           </div>
         `;
       } else {
-        projectsHtml = allProjects.map(proj => {
+        projectsHtml = activeProjects.map(proj => {
           const prod = PRODUCT_CATALOG[proj.productId];
           const cat = RD_CATEGORIES[proj.category] || {};
           const labsCount = proj.labsCount || 1;
@@ -5421,20 +5454,17 @@
           const pct = Math.min(100, Math.round(((proj.currentQR - proj.startQR) / Math.max(1, proj.targetQR - proj.startQR)) * 100));
 
           const isActive = proj.status === 'active';
-          const isDone = proj.status === 'completed';
-          const statusBadge = isDone
-            ? '<span class="bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-700 text-[8px] font-bold">✅ CONCLUÍDO</span>'
-            : (isActive
-              ? '<span class="bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-700 text-[8px] font-bold animate-pulse">🟢 ATIVO</span>'
-              : '<span class="bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700 text-[8px] font-bold">⏸ PAUSADO</span>');
+          const statusBadge = isActive
+            ? '<span class="bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-700 text-[8px] font-bold animate-pulse">🟢 ATIVO</span>'
+            : '<span class="bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700 text-[8px] font-bold">⏸ PAUSADO</span>';
 
           const gainSingle = CoreMath.calculateRDQualityGain(proj.currentQR, proj.targetQR, (proj.monthlyBudget || minCostTotal) / labsCount, minCostSingle);
           const gainTotal = gainSingle * labsCount;
           const monthsLeft = gainTotal > 0 ? Math.ceil((proj.targetQR - proj.currentQR) / gainTotal) : '∞';
-          const barColor = isDone ? 'bg-emerald-500' : (isActive ? 'bg-purple-500 shadow-sm shadow-purple-500/50' : 'bg-slate-600');
+          const barColor = isActive ? 'bg-purple-500 shadow-sm shadow-purple-500/50' : 'bg-slate-600';
 
           return `
-            <div class="bg-slate-900/90 border ${isDone ? 'border-emerald-800/70' : (isActive ? 'border-purple-700/80 shadow-md shadow-purple-950/40' : 'border-slate-800')} rounded-xl p-2.5 space-y-2 font-mono text-xs">
+            <div class="bg-slate-900/90 border ${isActive ? 'border-purple-700/80 shadow-md shadow-purple-950/40' : 'border-slate-800'} rounded-xl p-2.5 space-y-2 font-mono text-xs">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-1.5">
                   <span class="text-sm">${cat.icon || '🔬'}</span>
@@ -5450,7 +5480,7 @@
               <div>
                 <div class="flex justify-between text-[9px] text-slate-400 mb-1">
                   <span>QR: <strong class="text-amber-300">${proj.currentQR.toFixed(1)}</strong> → <strong class="text-purple-300">${proj.targetQR}</strong></span>
-                  <span class="font-bold text-slate-300">${pct}% (${isDone ? 'Pronto' : (monthsLeft === '∞' ? '∞' : `~${monthsLeft}m`)})</span>
+                  <span class="font-bold text-slate-300">${pct}% (${monthsLeft === '∞' ? '∞' : `~${monthsLeft}m`})</span>
                 </div>
                 <div class="h-1.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
                   <div class="${barColor} h-full rounded-full transition-all duration-300" style="width:${pct}%"></div>
@@ -5461,9 +5491,9 @@
               <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[9px]">
                 <span class="text-emerald-400 font-bold">$${(proj.monthlyBudget || 0).toLocaleString('en-US')}/mês</span>
                 <div class="flex items-center gap-1">
-                  ${!isDone && isActive ? `<button onclick="pauseRDProject('${proj.id}')" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 font-bold cursor-pointer" title="Pausar pesquisa">⏸</button>` : ''}
-                  ${!isDone && !isActive ? `<button onclick="resumeRDProject('${proj.id}')" class="px-1.5 py-0.5 bg-purple-900 hover:bg-purple-800 text-purple-200 rounded border border-purple-700 font-bold cursor-pointer" title="Retomar pesquisa">▶</button>` : ''}
-                  ${!isDone ? `<button onclick="adjustRDBudget('${proj.id}')" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-teal-300 rounded border border-slate-700 font-bold cursor-pointer" title="Ajustar verba mensal">💰</button>` : ''}
+                  ${isActive ? `<button onclick="pauseRDProject('${proj.id}')" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 font-bold cursor-pointer" title="Pausar pesquisa">⏸</button>` : ''}
+                  ${!isActive ? `<button onclick="resumeRDProject('${proj.id}')" class="px-1.5 py-0.5 bg-purple-900 hover:bg-purple-800 text-purple-200 rounded border border-purple-700 font-bold cursor-pointer" title="Retomar pesquisa">▶</button>` : ''}
+                  <button onclick="adjustRDBudget('${proj.id}')" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-teal-300 rounded border border-slate-700 font-bold cursor-pointer" title="Ajustar verba mensal">💰</button>
                   <button onclick="cancelRDProject('${proj.id}')" class="px-1.5 py-0.5 bg-rose-950/80 hover:bg-rose-900 text-rose-300 rounded border border-rose-800 font-bold cursor-pointer" title="Cancelar pesquisa">✕</button>
                 </div>
               </div>
@@ -5471,14 +5501,87 @@
           `;
         }).join('');
 
-        // Se houver bancadas livres, adiciona botão de nova pesquisa
         if (freeSlots > 0) {
           projectsHtml += `
-            <button onclick="openRDNewProjectModal()" class="w-full py-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-purple-300 font-bold text-xs border border-dashed border-purple-800/60 cursor-pointer transition flex items-center justify-center gap-1.5">
+            <button onclick="openRDNewProjectModal()" class="w-full py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-purple-300 font-bold text-[11px] border border-dashed border-purple-800/60 cursor-pointer transition flex items-center justify-center gap-1.5">
               ➕ Alocar Nova Pesquisa (${freeSlots} Bancada${freeSlots > 1 ? 's' : ''} Livre${freeSlots > 1 ? 's' : ''})
             </button>
           `;
         }
+      }
+
+      // Galeria Compacta de Patentes & Níveis Tecnológicos (Despoluição Visual)
+      let patentsHtml = '';
+      if (completedProjects.length > 0) {
+        const sortedCompleted = [...completedProjects].sort((a, b) => (b.currentQR || 0) - (a.currentQR || 0));
+        const maxQR = Math.max(...sortedCompleted.map(p => p.currentQR || 0));
+        const techLevelName = sortedCompleted.length >= 8 || maxQR >= 95 ? 'Nível 4 (Vanguarda Tecnológica)' :
+                             (sortedCompleted.length >= 4 || maxQR >= 85 ? 'Nível 3 (Alta Tecnologia)' :
+                             (sortedCompleted.length >= 2 || maxQR >= 70 ? 'Nível 2 (Industrial Avançado)' : 'Nível 1 (Manufatura Básica)'));
+
+        patentsHtml = `
+          <div class="bg-gradient-to-b from-slate-950 to-slate-900/90 p-2.5 rounded-xl border border-emerald-900/60 space-y-2 shadow-sm">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm">🏆</span>
+                <div>
+                  <strong class="text-emerald-300 text-xs font-bold block">Acervo de Patentes (${completedProjects.length})</strong>
+                  <span class="text-[9px] text-teal-400 font-bold">${techLevelName}</span>
+                </div>
+              </div>
+              <button onclick="toggleRDPatentsExpanded()" class="px-2 py-0.5 rounded text-[9px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer transition">
+                ${isRDPatentsExpanded ? '▴ Recolher' : '▾ Ver Todas'}
+              </button>
+            </div>
+
+            <!-- Chips Compactos (Modo Recolhido) -->
+            ${!isRDPatentsExpanded ? `
+              <div class="flex items-center gap-1.5 flex-wrap pt-0.5">
+                ${sortedCompleted.slice(0, 6).map(p => {
+                  const prod = PRODUCT_CATALOG[p.productId];
+                  const name = prod ? prod.name : p.productId;
+                  return `
+                    <span class="px-2 py-0.5 rounded-md bg-emerald-950/80 border border-emerald-700/60 text-emerald-300 text-[10px] font-bold flex items-center gap-1 shadow-sm" title="Patente Consolidada: QR ${Math.round(p.currentQR)}">
+                      <span>⭐</span>
+                      <span>${name}</span>
+                      <strong class="text-cyan-300">QR ${Math.round(p.currentQR)}</strong>
+                    </span>
+                  `;
+                }).join('')}
+                ${sortedCompleted.length > 6 ? `
+                  <button onclick="toggleRDPatentsExpanded()" class="text-[9px] text-teal-400 hover:text-teal-300 font-bold px-1 underline cursor-pointer">
+                    +${sortedCompleted.length - 6} patentes
+                  </button>
+                ` : ''}
+              </div>
+            ` : `
+              <!-- Lista Detalhada Compacta (Modo Expandido) -->
+              <div class="space-y-1 max-h-48 overflow-y-auto custom-scrollbar pt-1">
+                ${sortedCompleted.map(p => {
+                  const prod = PRODUCT_CATALOG[p.productId];
+                  const name = prod ? prod.name : p.productId;
+                  const cat = RD_CATEGORIES[p.category] || {};
+                  return `
+                    <div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-950 border border-emerald-900/50 text-[10px]">
+                      <div class="flex items-center gap-1.5 min-w-0">
+                        <span>${cat.icon || '🔬'}</span>
+                        <strong class="text-slate-200 truncate">${name}</strong>
+                        <span class="text-[8px] bg-slate-800 text-slate-400 px-1 py-0.2 rounded">${p.category}</span>
+                      </div>
+                      <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="text-emerald-400 font-bold">⭐ QR ${Math.round(p.currentQR)}</span>
+                        <span class="text-[8px] bg-emerald-950 text-emerald-300 px-1.5 py-0.2 rounded border border-emerald-700 font-bold">100%</span>
+                        <button onclick="cancelRDProject('${p.id}')" class="text-slate-500 hover:text-rose-400 p-0.5 text-xs cursor-pointer transition" title="Arquivar ou remover patente antiga">
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            `}
+          </div>
+        `;
       }
 
       document.getElementById('facility-content-panel').innerHTML = `
@@ -5491,14 +5594,17 @@
             <span class="text-[10px] bg-purple-950 text-purple-300 px-2 py-0.5 rounded border border-purple-800 font-bold">Nível ${rd.level || 1}</span>
           </div>
 
-          <!-- Seção de Projetos e Bancadas -->
+          <!-- Seção de Bancadas em Operação -->
           <div class="space-y-2">
             <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold">
-              <span>🔬 PROJETOS DE PESQUISA ATIVOS</span>
+              <span>🔬 BANCADAS EM OPERAÇÃO (${activeProjects.length})</span>
               <span class="text-emerald-400">$${totalBudget.toLocaleString('en-US')}/mês</span>
             </div>
             ${projectsHtml}
           </div>
+
+          <!-- Seção de Acervo de Patentes & Nível Tecnológico -->
+          ${patentsHtml}
 
           <!-- Ações Rápidas: Árvore Tecnológica & Central de Patentes -->
           <div class="pt-2 border-t border-purple-950 space-y-2">
@@ -5507,7 +5613,7 @@
                 🧬 Árvore Tech
               </button>
               <button onclick="openRDCenterModal(); switchRDTab('market');" class="py-2 px-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-200 font-bold text-[11px] border border-purple-700/60 shadow cursor-pointer transition flex items-center justify-center gap-1">
-                📜 Patentes
+                📜 Mercado Tech
               </button>
             </div>
             <button onclick="openRDCenterModal(); switchRDTab('projects');" class="w-full py-2 rounded-xl bg-purple-800 hover:bg-purple-700 text-purple-100 font-bold text-xs border border-purple-600/60 shadow cursor-pointer transition flex items-center justify-center gap-1.5">
@@ -6794,6 +6900,13 @@
       return best;
     }
 
+    let rdProjectsFilter = 'all';
+
+    function setRDProjectsFilter(filter) {
+      rdProjectsFilter = filter;
+      renderRDProjectsList();
+    }
+
     /** Popula e renderiza todos os projetos de P&D ativos/pausados/concluídos */
     function renderRDProjectsList() {
       const list = document.getElementById('rd-projects-list');
@@ -6805,9 +6918,12 @@
       const usedSlots = getRDUsedLabSlots();
       const centersCount = getBuiltRDCentersCount();
 
-      const projects = Object.values(rdLabs);
-      const active = projects.filter(p => p.status === 'active');
-      const totalBudget = active.reduce((s, p) => s + (p.monthlyBudget || 0), 0);
+      const allProjects = Object.values(rdLabs);
+      const activeProjects = allProjects.filter(p => p.status === 'active');
+      const inProgressProjects = allProjects.filter(p => p.status !== 'completed');
+      const completedProjects = allProjects.filter(p => p.status === 'completed');
+
+      const totalBudget = activeProjects.reduce((s, p) => s + (p.monthlyBudget || 0), 0);
       budgetDisplay.textContent = `$${totalBudget.toLocaleString('en-US')} / mês`;
       subtitle.textContent = `Centros de P&D: ${centersCount} · Bancadas: ${usedSlots}/${totalCapacity} ativas · Verba Total: $${totalBudget.toLocaleString('en-US')}/mês`;
 
@@ -6825,13 +6941,54 @@
         return;
       }
 
-      if (projects.length === 0) {
+      if (allProjects.length === 0) {
         list.innerHTML = '<p class="text-xs text-slate-500 text-center py-8 font-mono">Nenhum projeto de pesquisa em andamento.<br>Clique em "➕ Novo Projeto" para alocar bancadas.</p>';
         return;
       }
 
-      list.innerHTML = '';
-      for (const proj of projects.sort((a, b) => (b.status === 'active' ? 1 : 0) - (a.status === 'active' ? 1 : 0))) {
+      // Barra de Filtros Rápidos (Todas / Em Andamento / Patentes Concluídas)
+      const filterBarHtml = `
+        <div class="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-purple-900/40 flex-wrap">
+          <div class="flex items-center gap-1.5">
+            <button onclick="setRDProjectsFilter('all')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition ${rdProjectsFilter === 'all' ? 'bg-purple-800 text-white shadow border border-purple-600' : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700'}">
+              🏢 Todas (${allProjects.length})
+            </button>
+            <button onclick="setRDProjectsFilter('active')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition ${rdProjectsFilter === 'active' ? 'bg-purple-800 text-white shadow border border-purple-600' : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700'}">
+              🟢 Em Andamento (${inProgressProjects.length})
+            </button>
+            <button onclick="setRDProjectsFilter('completed')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition ${rdProjectsFilter === 'completed' ? 'bg-emerald-800 text-white shadow border border-emerald-600' : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700'}">
+              🏆 Patentes Concluídas (${completedProjects.length})
+            </button>
+          </div>
+          <div class="text-[10px] text-slate-400 font-mono">
+            Patentes: <strong class="text-emerald-300">${completedProjects.length}</strong>
+          </div>
+        </div>
+      `;
+
+      let displayedProjects = allProjects;
+      if (rdProjectsFilter === 'active') {
+        displayedProjects = inProgressProjects;
+      } else if (rdProjectsFilter === 'completed') {
+        displayedProjects = completedProjects;
+      }
+
+      list.innerHTML = filterBarHtml;
+
+      if (displayedProjects.length === 0) {
+        const emptyMsg = rdProjectsFilter === 'active'
+          ? 'Nenhuma pesquisa em andamento no momento. Todas as pesquisas foram concluídas ou as bancadas estão ociosas.'
+          : (rdProjectsFilter === 'completed'
+            ? 'Nenhuma patente concluída ainda. Inicie pesquisas para aprimorar o QR dos seus produtos.'
+            : 'Nenhum projeto encontrado.');
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'text-xs text-slate-500 text-center py-8 font-mono';
+        emptyDiv.innerHTML = `<p>${emptyMsg}</p>`;
+        list.appendChild(emptyDiv);
+        return;
+      }
+
+      for (const proj of displayedProjects.sort((a, b) => (b.status === 'active' ? 1 : 0) - (a.status === 'active' ? 1 : 0))) {
         const prod = PRODUCT_CATALOG[proj.productId];
         const cat = RD_CATEGORIES[proj.category] || {};
         const labsCount = proj.labsCount || 1;
@@ -6842,7 +6999,7 @@
         const isActive = proj.status === 'active';
         const isDone = proj.status === 'completed';
         const statusBadge = isDone
-          ? '<span class="bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-700 text-[9px] font-bold">✅ CONCLUÍDO</span>'
+          ? '<span class="bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-700 text-[9px] font-bold">🏆 PATENTE CONCLUÍDA</span>'
           : (isActive
             ? '<span class="bg-purple-950 text-purple-300 px-2 py-0.5 rounded border border-purple-700 text-[9px] font-bold">🟢 ATIVO</span>'
             : '<span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-700 text-[9px] font-bold">⏸ PAUSADO</span>');
@@ -6878,16 +7035,26 @@
             </div>
           </div>
           <div class="grid grid-cols-3 gap-2 text-[10px] text-slate-400">
-            <div>Verba: <strong class="text-emerald-400">$${(proj.monthlyBudget || 0).toLocaleString('en-US')}/mês</strong></div>
-            <div>Ganho: <strong class="text-purple-300">+${gainTotal.toFixed(2)} QR/mês</strong></div>
-            <div>ETA: <strong class="text-slate-200">${isDone ? '--' : (monthsLeft === '∞' ? '∞' : monthsLeft + ' meses')}</strong></div>
+            <div>Verba: <strong class="text-emerald-400">${isDone ? 'Consolidada ($0/mês)' : `$${(proj.monthlyBudget || 0).toLocaleString('en-US')}/mês`}</strong></div>
+            <div>Ganho: <strong class="text-purple-300">${isDone ? 'Concluído' : `+${gainTotal.toFixed(2)} QR/mês`}</strong></div>
+            <div>ETA: <strong class="text-slate-200">${isDone ? '🏆 Concluído' : (monthsLeft === '∞' ? '∞' : monthsLeft + ' meses')}</strong></div>
           </div>
-          <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-slate-800">
-            ${!isDone && isActive ? `<button onclick="pauseRDProject('${proj.id}')" class="py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[9px] font-bold border border-slate-700 cursor-pointer">⏸ Pausar</button>` : ''}
-            ${!isDone && !isActive ? `<button onclick="resumeRDProject('${proj.id}')" class="py-1 bg-purple-900/60 hover:bg-purple-800 text-purple-300 rounded-lg text-[9px] font-bold border border-purple-700 cursor-pointer">▶ Retomar</button>` : ''}
-            ${!isDone ? `<button onclick="adjustRDBudget('${proj.id}')" class="py-1 bg-slate-800 hover:bg-slate-700 text-teal-300 rounded-lg text-[9px] font-bold border border-slate-700 cursor-pointer">💰 Ajustar Verba</button>` : ''}
-            <button onclick="cancelRDProject('${proj.id}')" class="py-1 bg-rose-950/60 hover:bg-rose-900 text-rose-300 rounded-lg text-[9px] font-bold border border-rose-800 cursor-pointer">🗑️ Cancelar</button>
-          </div>
+          ${isDone ? `
+            <div class="flex items-center justify-between pt-1 border-t border-emerald-900/40">
+              <span class="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
+                <span>⭐</span> Patente Conquistada & Ativa nas Fábricas
+              </span>
+              <button onclick="cancelRDProject('${proj.id}')" class="px-2.5 py-1 bg-slate-800 hover:bg-rose-900/80 text-slate-400 hover:text-rose-200 rounded-lg text-[9px] font-bold border border-slate-700 cursor-pointer transition flex items-center gap-1" title="Arquivar esta patente do laboratório">
+                🗑️ Arquivar
+              </button>
+            </div>
+          ` : `
+            <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-slate-800">
+              ${isActive ? `<button onclick="pauseRDProject('${proj.id}')" class="py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[9px] font-bold border border-slate-700 cursor-pointer">⏸ Pausar</button>` : `<button onclick="resumeRDProject('${proj.id}')" class="py-1 bg-purple-900/60 hover:bg-purple-800 text-purple-300 rounded-lg text-[9px] font-bold border border-purple-700 cursor-pointer">▶ Retomar</button>`}
+              <button onclick="adjustRDBudget('${proj.id}')" class="py-1 bg-slate-800 hover:bg-slate-700 text-teal-300 rounded-lg text-[9px] font-bold border border-slate-700 cursor-pointer">💰 Ajustar Verba</button>
+              <button onclick="cancelRDProject('${proj.id}')" class="py-1 bg-rose-950/60 hover:bg-rose-900 text-rose-300 rounded-lg text-[9px] font-bold border border-rose-800 cursor-pointer">🗑️ Cancelar</button>
+            </div>
+          `}
         `;
         list.appendChild(card);
       }
@@ -8238,6 +8405,32 @@
     function cancelRDProject(id) {
       const proj = rdLabs[id];
       if (!proj) return;
+      const isCompleted = proj.status === 'completed';
+
+      if (isCompleted) {
+        showCustomConfirmModal({
+          icon: '📁',
+          title: 'Arquivar Patente Concluída',
+          subtitle: `${proj.productName} (Patente QR ${Math.round(proj.currentQR)})`,
+          description: `Deseja arquivar o registro de pesquisa de <strong>${proj.productName}</strong> do laboratório? A qualidade conquistada permanecerá ativa em sua holding e disponível para todas as fábricas.`,
+          details: [
+            { label: 'Qualidade Tecnológica', value: `QR ${Math.round(proj.currentQR)}`, color: 'text-emerald-400 font-bold' },
+            { label: 'Meses de Pesquisa', value: `${proj.monthsInvested} meses`, color: 'text-slate-300' },
+            { label: 'Investimento Histórico', value: `$${proj.totalSpent.toLocaleString('en-US')}`, color: 'text-teal-300' }
+          ],
+          confirmText: 'Arquivar Patente',
+          confirmTheme: 'teal',
+          onConfirm: () => {
+            delete rdLabs[id];
+            renderRDProjectsList();
+            updateRDChip();
+            if (activeManagedTile && activeManagedTile.rdCenter) renderFacilityPanel(activeManagedTile);
+            addGameLog(`📁 Patente de "${proj.productName}" (QR ${Math.round(proj.currentQR)}) arquivada do laboratório.`, 'text-teal-400');
+          }
+        });
+        return;
+      }
+
       showCustomConfirmModal({
         icon: '🗑️',
         title: 'Cancelar Projeto de P&D',
