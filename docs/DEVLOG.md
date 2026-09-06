@@ -62,6 +62,12 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
    - Corrigido `ReferenceError: elast is not defined` em `client/index.html` (linha 5501) no painel de varejo.
    - O erro ocorria ao abrir o painel de qualquer loja (Drogaria, Kombini, Supermercado, Concessionária) e no loop diário `updateUI()`, abortando o tick de simulação diária (`simulateDay`).
    - Adicionada a declaração explícita de `elast = calcElasticity(...)`, restaurando a visualização e gestão das gôndolas e liberando a passagem contínua do tempo.
+7. **Eliminação do Race Condition de Inicialização (`PRODUCT_CATALOG is not defined`):**
+   - Corrigido travamento no boot onde a função `bootEngine()` usava um timeout frágil de 300ms aguardando os 16 módulos ESM carregados pelo Vite dev server. Em cold starts, o Vite levava mais de 300ms e disparava `initMasterData` antes de `PRODUCT_CATALOG` ser injetado no `window` por `main.js`.
+   - Implementado polling com timeout resiliente de 10s no evento `oiko:ready`, declaração prévia de variáveis no escopo global e sincronização imediata em `initMasterData()`.
+8. **Eliminação Definitiva do Glitch Visual de Inicialização (Escudo Anti-FOUC):**
+   - Diagnosticada a causa do "glitch" de 1 a 2 segundos onde imagens e menus apareciam fora de lugar ao abrir a página: o Tailwind CSS v4 era importado apenas dentro de `main.js` (módulo JS diferido), fazendo com que o HTML renderizasse sem as classes `.hidden`, `fixed` e sem controle dimensional até o Vite terminar de processar o script.
+   - Inserida a folha de estilo `<link rel="stylesheet" href="./style.css">` no `<head>` e declaradas regras inline anti-FOUC forçando `display: none !important` para `.hidden` e posicionamento fixo tela cheia no `#loading-screen` (`z-index: 99999`) a partir do primeiro milissegundo de parsing do DOM.
 
 ---
 

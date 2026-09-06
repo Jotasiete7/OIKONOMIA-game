@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <link rel="stylesheet" href="./style.css">
   <script type="module" src="./main.js"></script>
   <script src="./banking_system.js" defer></script>
   <meta charset="UTF-8">
@@ -8,6 +9,17 @@
   <link rel="icon" type="image/png" href="assets/ui/logo.png">
   <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.8.4)</title>
   <style>
+    /* Escudo Crítico Anti-FOUC: previne vazamento de menus, modais e imagens antes do carregamento completo */
+    .hidden { display: none !important; }
+    #loading-screen {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      background-color: #020617 !important;
+      z-index: 99999 !important;
+    }
     canvas { image-rendering: auto; }
     .custom-scrollbar::-webkit-scrollbar { width: 5px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #020617; }
@@ -2008,8 +2020,13 @@
 
     // ===========================================================================
     // 1. DADOS MESTRES & CATÁLOGOS OFICIAIS
-    // (Carregados modularmente a partir de data_catalogs.js)
+    // (Carregados modularmente a partir de data_catalogs.js via main.js)
     // ===========================================================================
+    var PRODUCT_CATALOG = (typeof window !== 'undefined' && window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : {};
+    var FACTORY_RECIPES = (typeof window !== 'undefined' && window.FACTORY_RECIPES) ? window.FACTORY_RECIPES : [];
+    var RECIPE_GRAPH = (typeof window !== 'undefined' && window.RECIPE_GRAPH) ? window.RECIPE_GRAPH : {};
+    var MEDIA_OUTLETS = (typeof window !== 'undefined' && window.MEDIA_OUTLETS) ? window.MEDIA_OUTLETS : [];
+    var SEAPORTS = (typeof window !== 'undefined' && window.SEAPORTS) ? window.SEAPORTS : [];
 
     function getManhattanDist(p1, p2) {
       return CoreMath.calculateManhattanDistance(p1, p2);
@@ -10244,22 +10261,45 @@
     // 13. INICIALIZAÇÃO ASSÍNCRONA E CARGA DE DADOS
     // ===========================================================================
     async function initMasterData() {
+      // Sincroniza dados mestres providos por data_catalogs.js via main.js
+      if (typeof window !== 'undefined') {
+        if (window.PRODUCT_CATALOG && Object.keys(window.PRODUCT_CATALOG).length > 0) {
+          PRODUCT_CATALOG = window.PRODUCT_CATALOG;
+        }
+        if (window.FACTORY_RECIPES && window.FACTORY_RECIPES.length > 0) {
+          FACTORY_RECIPES = window.FACTORY_RECIPES;
+        }
+        if (window.RECIPE_GRAPH) RECIPE_GRAPH = window.RECIPE_GRAPH;
+        if (window.MEDIA_OUTLETS) MEDIA_OUTLETS = window.MEDIA_OUTLETS;
+        if (window.SEAPORTS) SEAPORTS = window.SEAPORTS;
+      }
+
       if (window.location.protocol.startsWith('http')) {
         try {
           const catRes = await fetch('../data/products/catalog.json');
           if (catRes.ok) {
             const catData = await catRes.json();
-            if (catData && catData.products) PRODUCT_CATALOG = catData.products;
+            if (catData && catData.products) {
+              PRODUCT_CATALOG = catData.products;
+              if (typeof window !== 'undefined') window.PRODUCT_CATALOG = catData.products;
+            }
           }
           const recRes = await fetch('../data/production/recipes.json');
           if (recRes.ok) {
             const recData = await recRes.json();
-            if (recData && recData.recipes) RECIPES = recData.recipes;
+            if (recData && recData.recipes) {
+              FACTORY_RECIPES = recData.recipes;
+              if (typeof window !== 'undefined') window.FACTORY_RECIPES = recData.recipes;
+            }
           }
         } catch (e) {}
       }
 
-      Object.keys(PRODUCT_CATALOG).forEach(id => {
+      const catalog = (typeof PRODUCT_CATALOG !== 'undefined' && PRODUCT_CATALOG)
+        ? PRODUCT_CATALOG
+        : ((typeof window !== 'undefined' && window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : {});
+
+      Object.keys(catalog).forEach(id => {
         if (!playerBrandRating[id]) playerBrandRating[id] = 20;
       });
     }
@@ -11815,12 +11855,34 @@
     window.addEventListener('resize', () => { resizeCanvas(); scheduleRender(); });
 
     async function bootEngine() {
+      // Aguarda os módulos ES estarem totalmente prontos e vinculados (evita race condition no Vite)
       if (typeof window !== 'undefined' && !window.__OIKO_MODULES_READY__) {
         await new Promise(resolve => {
-          window.addEventListener('oiko:ready', resolve, { once: true });
-          setTimeout(resolve, 300);
+          if (window.__OIKO_MODULES_READY__) return resolve();
+          const onReady = () => {
+            window.removeEventListener('oiko:ready', onReady);
+            resolve();
+          };
+          window.addEventListener('oiko:ready', onReady);
+          let elapsed = 0;
+          const poll = setInterval(() => {
+            elapsed += 50;
+            if (window.__OIKO_MODULES_READY__ || (window.PRODUCT_CATALOG && Object.keys(window.PRODUCT_CATALOG).length > 0) || elapsed >= 10000) {
+              clearInterval(poll);
+              window.removeEventListener('oiko:ready', onReady);
+              resolve();
+            }
+          }, 50);
         });
       }
+      // Sincroniza referências locais imediatas
+      if (typeof window !== 'undefined' && window.PRODUCT_CATALOG) {
+        PRODUCT_CATALOG = window.PRODUCT_CATALOG;
+      }
+      if (typeof window !== 'undefined' && window.FACTORY_RECIPES) {
+        FACTORY_RECIPES = window.FACTORY_RECIPES;
+      }
+
       loadGameSettings();
       await initMasterData();
       resizeCanvas();
