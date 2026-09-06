@@ -194,6 +194,10 @@
       </div>
 
       <!-- Ações Primárias -->
+      <button id="btn-hud-tutorial" onclick="toggleTutorialWidget()" class="bg-amber-950/80 hover:bg-amber-900 border border-amber-600/70 text-amber-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition animate-pulse whitespace-nowrap" title="Guia do Magnata (Passo a Passo Interativo)">
+        🎓 <span class="hud-btn-text hidden xl:inline">Tutorial</span>
+        <span id="hud-tutorial-badge" class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1 rounded">0/7</span>
+      </button>
       <button onclick="toggleDREModal()" class="bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow transition whitespace-nowrap" title="Demonstrativo de Resultados do Exercício">
         📊 <span class="hud-btn-text hidden xl:inline">DRE</span>
       </button>
@@ -5115,6 +5119,41 @@
       }
     }
 
+    /**
+     * Validador de Segurança Financeira (Capital de Giro).
+     * Evita que o jogador gaste quase todo o saldo em obras e fique sem caixa para
+     * estoques de reposição, aluguéis e salários diários.
+     */
+    function checkWorkingCapitalSafety(cost, onProceed, buildingName = 'este empreendimento') {
+      const remainingCash = cash - cost;
+      const isHighRatio = cost > (cash * 0.70);
+      const isLowReserves = remainingCash < 15000;
+
+      if (isHighRatio || isLowReserves) {
+        showCustomConfirmModal({
+          icon: '⚠️',
+          title: 'Alerta de Iluquidez: Capital de Giro Baixo!',
+          subtitle: 'Gestão Financeira & Prevenção de Falência',
+          description: `Construir <strong>${buildingName}</strong> consumirá <strong>$${cost.toLocaleString('en-US')}</strong> e deixará você com apenas <strong>$${remainingCash.toLocaleString('en-US')}</strong> em caixa.<br><br>🚨 <strong>Atenção aos Custos Fixos:</strong> No <em>OIKONOMIA</em>, lojas e indústrias exigem capital de giro para <strong>comprar estoque inicial</strong> e cobrir <strong>salários e aluguel diários</strong>. Sem caixa, a empresa entrará em cheque especial (3,5% a.m.) e poderá falir rapidamente!`,
+          details: [
+            { label: 'Custo do Investimento', value: `-$${cost.toLocaleString('en-US')}`, color: 'text-rose-400 font-bold' },
+            { label: 'Saldo Restante Pós-Obra', value: `$${remainingCash.toLocaleString('en-US')}`, color: remainingCash < 5000 ? 'text-rose-400 font-bold' : 'text-amber-400 font-bold' },
+            { label: 'Reserva Segura Mínima', value: '$15,000', color: 'text-emerald-400 font-bold' }
+          ],
+          confirmText: 'Continuar Mesmo Assim',
+          confirmTheme: 'amber',
+          onConfirm: () => {
+            onProceed();
+          }
+        });
+        return false;
+      }
+
+      onProceed();
+      return true;
+    }
+    if (typeof window !== 'undefined') window.checkWorkingCapitalSafety = checkWorkingCapitalSafety;
+
     function confirmBuildRDCenter(x, y) {
       const tile = worldGrid[x] && worldGrid[x][y];
       if (!tile || tile.isWater || tile.isRoad || tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter || tile.warehouse) return;
@@ -5142,19 +5181,20 @@
       const cityName = tile.city ? (tile.city.cityName || tile.city.name || 'Nova Atenas') : 'Nova Atenas';
       const dailyRent = Math.round(d.landRentDaily * 1.2);
       const remainingCash = cash - cost;
+      const isLowReserves = remainingCash < 15000 || cost > (cash * 0.70);
 
       showCustomConfirmModal({
         icon: '🔬',
         title: 'Inaugurar Centro de P&D',
         subtitle: `Local: ${d.name} (${x}, ${y}) · ${cityName}`,
-        description: `Deseja autorizar o investimento para construção de um <strong>Laboratório Central de Pesquisa & Desenvolvimento</strong> neste lote?`,
+        description: `Deseja autorizar o investimento para construção de um <strong>Laboratório Central de Pesquisa & Desenvolvimento</strong> neste lote?${isLowReserves ? '<br><br><span class="text-amber-300 font-bold">⚠️ Alerta de Iluquidez:</span> Restarão menos de $15.000 em caixa para cobrir salários e despesas operacionais!' : ''}`,
         details: [
           { label: 'Custo de Obra (Capex)', value: `-$${cost.toLocaleString('en-US')}`, color: 'text-rose-400 font-bold' },
           { label: 'Aluguel do Solo', value: `-$${dailyRent}/dia`, color: 'text-amber-400' },
-          { label: 'Saldo de Caixa Após', value: `$${remainingCash.toLocaleString('en-US')}`, color: 'text-emerald-400 font-bold' }
+          { label: 'Saldo de Caixa Após', value: `$${remainingCash.toLocaleString('en-US')}`, color: isLowReserves ? 'text-amber-400 font-bold' : 'text-emerald-400 font-bold' }
         ],
         confirmText: `✅ Autorizar Obra (-$${cost.toLocaleString('en-US')})`,
-        confirmTheme: 'purple',
+        confirmTheme: isLowReserves ? 'amber' : 'purple',
         onConfirm: () => {
           cash -= cost;
           tile.rdCenter = {
@@ -5763,7 +5803,6 @@
       const m = NATURAL_MINES.find(n => n.id === mineId);
       if (!m || cash < m.cost) return;
 
-      cash -= m.cost;
       const res = m.resourceId || '';
       const isTimber = res === 'timber' || m.id === 'mine_timber';
       const isSilica = res === 'silica' || m.id === 'mine_silica';
@@ -5779,37 +5818,41 @@
         : (isGold ? '🥇 Mina de Ouro Nobre'
         : (isChem ? '🧪 Depósito de Minerais Químicos' : `${m.emoji} ${m.name}`)))));
 
-      pendingTile.mine = {
-        id: `mine_${pendingTile.x}_${pendingTile.y}`,
-        mineTypeId: m.id,
-        name: customName,
-        resourceId: m.resourceId,
-        resourceName: m.resourceName,
-        quality: m.quality,
-        dailyYield: m.dailyYield,
-        unitCost: m.unitCost,
-        stock: 500,
-        maxCapacity: 8000
-      };
-      pendingTile.buildingHeight = 18;
-      _indexTile(pendingTile);
+      const targetTile = pendingTile;
+      checkWorkingCapitalSafety(m.cost, () => {
+        cash -= m.cost;
+        targetTile.mine = {
+          id: `mine_${targetTile.x}_${targetTile.y}`,
+          mineTypeId: m.id,
+          name: customName,
+          resourceId: m.resourceId,
+          resourceName: m.resourceName,
+          quality: m.quality,
+          dailyYield: m.dailyYield,
+          unitCost: m.unitCost,
+          stock: 500,
+          maxCapacity: 8000
+        };
+        targetTile.buildingHeight = 18;
+        _indexTile(targetTile);
 
-      const logEmoji = isTimber ? '🪵' : (isSilica ? '🏖️' : (isOil ? '🛢️' : (isBauxite ? '🪨' : (isGold ? '🥇' : (isChem ? '🧪' : '⛏️')))));
-      const logClass = isTimber ? 'text-amber-400 font-bold' 
-        : (isSilica ? 'text-stone-300 font-bold' 
-        : (isOil ? 'text-slate-300 font-bold' 
-        : (isBauxite ? 'text-orange-400 font-bold' 
-        : (isGold ? 'text-yellow-400 font-bold' 
-        : (isChem ? 'text-teal-400 font-bold' : 'text-sky-400 font-bold')))));
+        const logEmoji = isTimber ? '🪵' : (isSilica ? '🏖️' : (isOil ? '🛢️' : (isBauxite ? '🪨' : (isGold ? '🥇' : (isChem ? '🧪' : '⛏️')))));
+        const logClass = isTimber ? 'text-amber-400 font-bold' 
+          : (isSilica ? 'text-stone-300 font-bold' 
+          : (isOil ? 'text-slate-300 font-bold' 
+          : (isBauxite ? 'text-orange-400 font-bold' 
+          : (isGold ? 'text-yellow-400 font-bold' 
+          : (isChem ? 'text-teal-400 font-bold' : 'text-sky-400 font-bold')))));
 
-      addLog(`${logEmoji} ${customName} inaugurada por $${m.cost.toLocaleString()}!`, logClass);
-      if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
-      closeMineModal();
-      activeManagedTile = pendingTile;
-      renderFacilityPanel(pendingTile);
-      renderTileInspector(pendingTile);
-      scheduleRender();
-      updateUI();
+        addLog(`${logEmoji} ${customName} inaugurada por $${m.cost.toLocaleString()}!`, logClass);
+        if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
+        closeMineModal();
+        activeManagedTile = targetTile;
+        renderFacilityPanel(targetTile);
+        renderTileInspector(targetTile);
+        scheduleRender();
+        updateUI();
+      }, customName);
     }
 
     function confirmBuildMineDirect(x, y, mineId) {
@@ -5902,31 +5945,34 @@
       const ft = FARM_TYPES.find(f => f.id === farmTypeId);
       if (!ft || cash < ft.cost) return;
 
-      cash -= ft.cost;
-      pendingTile.farm = {
-        id: `farm_${pendingTile.x}_${pendingTile.y}`,
-        farmTypeId: ft.id,
-        cost: ft.cost,
-        name: `${ft.emoji} ${ft.name}`,
-        cropId: ft.cropId,
-        cropName: ft.cropName,
-        quality: ft.quality,
-        dailyYield: ft.dailyYield,
-        dailyOperatingCost: ft.unitCost,
-        stock: 500,
-        maxCapacity: 5000
-      };
-      pendingTile.buildingHeight = 18;
-      _indexTile(pendingTile);
+      const targetTile = pendingTile;
+      checkWorkingCapitalSafety(ft.cost, () => {
+        cash -= ft.cost;
+        targetTile.farm = {
+          id: `farm_${targetTile.x}_${targetTile.y}`,
+          farmTypeId: ft.id,
+          cost: ft.cost,
+          name: `${ft.emoji} ${ft.name}`,
+          cropId: ft.cropId,
+          cropName: ft.cropName,
+          quality: ft.quality,
+          dailyYield: ft.dailyYield,
+          dailyOperatingCost: ft.unitCost,
+          stock: 500,
+          maxCapacity: 5000
+        };
+        targetTile.buildingHeight = 18;
+        _indexTile(targetTile);
 
-      addLog(`🌾 ${ft.name} construída com sucesso por $${ft.cost.toLocaleString()}!`, 'text-amber-400 font-bold');
-      if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
-      closeFarmModal();
-      activeManagedTile = pendingTile;
-      renderFacilityPanel(pendingTile);
-      renderTileInspector(pendingTile);
-      scheduleRender();
-      updateUI();
+        addLog(`🌾 ${ft.name} construída com sucesso por $${ft.cost.toLocaleString()}!`, 'text-amber-400 font-bold');
+        if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
+        closeFarmModal();
+        activeManagedTile = targetTile;
+        renderFacilityPanel(targetTile);
+        renderTileInspector(targetTile);
+        scheduleRender();
+        updateUI();
+      }, ft.name);
     }
 
     function closeFarmModal() {
@@ -5943,24 +5989,28 @@
 
     function confirmBuildFactory() {
       if (!pendingTile || cash < 48000) return;
-      cash -= 48000;
-      pendingTile.factory = {
-        id: `factory_${pendingTile.x}_${pendingTile.y}`,
-        name: `Fábrica Central (${pendingTile.x}, ${pendingTile.y})`,
-        maxLines: 4,
-        lines: {}
-      };
-      pendingTile.buildingHeight = 22;
-      _indexTile(pendingTile);
+      const cost = 48000;
+      const targetTile = pendingTile;
+      checkWorkingCapitalSafety(cost, () => {
+        cash -= cost;
+        targetTile.factory = {
+          id: `factory_${targetTile.x}_${targetTile.y}`,
+          name: `Fábrica Central (${targetTile.x}, ${targetTile.y})`,
+          maxLines: 4,
+          lines: {}
+        };
+        targetTile.buildingHeight = 22;
+        _indexTile(targetTile);
 
-      addLog(`🏭 Fábrica de Manufatura construída por $48.000!`, 'text-orange-400 font-bold');
-      if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
-      closeFactoryModal();
-      activeManagedTile = pendingTile;
-      renderFacilityPanel(pendingTile);
-      renderTileInspector(pendingTile);
-      scheduleRender();
-      updateUI();
+        addLog(`🏭 Fábrica de Manufatura construída por $48.000!`, 'text-orange-400 font-bold');
+        if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
+        closeFactoryModal();
+        activeManagedTile = targetTile;
+        renderFacilityPanel(targetTile);
+        renderTileInspector(targetTile);
+        scheduleRender();
+        updateUI();
+      }, 'Fábrica Central de Manufatura');
     }
 
     function closeFactoryModal() {
@@ -8929,55 +8979,61 @@
         return;
       }
 
-      cash -= totalCost;
+      const targetTile = pendingTile;
+      const targetStoreType = pendingStoreType;
+      const targetProductsMap = new Map(selectedProductsMap);
 
-      // Se a corporação ainda não possuía a licença do nicho, registra e emite log
-      if (licenseCost > 0) {
-        acquiredLicenses.add(pendingStoreType.id);
-        const lic = (typeof STORE_NICHE_LICENSES !== 'undefined' && STORE_NICHE_LICENSES[pendingStoreType.id]) ? STORE_NICHE_LICENSES[pendingStoreType.id] : null;
-        addLog(`📜 [LICENCIAMENTO] Corporação homologada com a "${lic ? lic.name : pendingStoreType.name}" por $${licenseCost.toLocaleString('en-US')}! Próximas filiais pagarão apenas a obra civil.`, 'text-amber-300 font-bold');
-      }
+      checkWorkingCapitalSafety(totalCost, () => {
+        cash -= totalCost;
 
-      const shelves = {};
-      for (const [prodId, offer] of selectedProductsMap.entries()) {
-        const prod = PRODUCT_CATALOG[prodId];
-        shelves[prodId] = {
-          price: prod.standardPrice,
-          stock: 100,
-          maxCapacity: 1000,
-          dailyRestock: Math.max(10, Math.round(prod.perCapitaDailyDemand * pendingTile.district.population * 0.5)),
-          quality: offer.quality,
-          supplierId: offer.supplierId,
-          supplierName: offer.supplierName,
-          wholesalePrice: offer.wholesalePrice,
-          unitFreight: offer.freight,
-          landedCost: offer.landedCost
+        // Se a corporação ainda não possuía a licença do nicho, registra e emite log
+        if (licenseCost > 0) {
+          acquiredLicenses.add(targetStoreType.id);
+          const lic = (typeof STORE_NICHE_LICENSES !== 'undefined' && STORE_NICHE_LICENSES[targetStoreType.id]) ? STORE_NICHE_LICENSES[targetStoreType.id] : null;
+          addLog(`📜 [LICENCIAMENTO] Corporação homologada com a "${lic ? lic.name : targetStoreType.name}" por $${licenseCost.toLocaleString('en-US')}! Próximas filiais pagarão apenas a obra civil.`, 'text-amber-300 font-bold');
+        }
+
+        const shelves = {};
+        for (const [prodId, offer] of targetProductsMap.entries()) {
+          const prod = PRODUCT_CATALOG[prodId];
+          shelves[prodId] = {
+            price: prod.standardPrice,
+            stock: 100,
+            maxCapacity: 1000,
+            dailyRestock: Math.max(10, Math.round(prod.perCapitaDailyDemand * targetTile.district.population * 0.5)),
+            quality: offer.quality,
+            supplierId: offer.supplierId,
+            supplierName: offer.supplierName,
+            wholesalePrice: offer.wholesalePrice,
+            unitFreight: offer.freight,
+            landedCost: offer.landedCost
+          };
+        }
+
+        const actualRent = targetTile.district.landRentDaily * targetStoreType.rentMultiplier;
+        const storeName  = `${targetStoreType.emoji} ${targetStoreType.name} (${targetTile.district.name})`;
+
+        targetTile.store = {
+          storeTypeId:     targetStoreType.id,
+          name:            storeName,
+          maxShelves:      targetStoreType.maxShelves,
+          rentMultiplier:  targetStoreType.rentMultiplier,
+          dailyRent:       actualRent,
+          shelves,
         };
-      }
+        targetTile.buildingHeight = 20;
+        _indexTile(targetTile);
 
-      const actualRent = pendingTile.district.landRentDaily * pendingStoreType.rentMultiplier;
-      const storeName  = `${pendingStoreType.emoji} ${pendingStoreType.name} (${pendingTile.district.name})`;
+        addLog(`🏗️ ${storeName} inaugurada por $${totalCost.toLocaleString()}!`, 'text-emerald-400 font-bold');
+        if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
 
-      pendingTile.store = {
-        storeTypeId:     pendingStoreType.id,
-        name:            storeName,
-        maxShelves:      pendingStoreType.maxShelves,
-        rentMultiplier:  pendingStoreType.rentMultiplier,
-        dailyRent:       actualRent,
-        shelves,
-      };
-      pendingTile.buildingHeight = 20;
-      _indexTile(pendingTile);
-
-      addLog(`🏗️ ${storeName} inaugurada por $${totalCost.toLocaleString()}!`, 'text-emerald-400 font-bold');
-      if (typeof SoundEngine !== 'undefined') SoundEngine.playBuild();
-
-      closeModal();
-      activeManagedTile = pendingTile;
-      renderFacilityPanel(pendingTile);
-      renderTileInspector(pendingTile);
-      scheduleRender();
-      updateUI();
+        closeModal();
+        activeManagedTile = targetTile;
+        renderFacilityPanel(targetTile);
+        renderTileInspector(targetTile);
+        scheduleRender();
+        updateUI();
+      }, targetStoreType.name);
     }
 
     function closeModal() {
@@ -11080,23 +11136,24 @@
       scheduleRender();
 
       currentAppScreen = 'PLAYING';
-      setSpeed(1);
+      setSpeed(0);
       jumpToCity('nova_atenas');
       tutorialState = { completedSteps: {}, rewardClaimed: false, active: true };
       renderTutorialGuide();
       playSuccessChime();
       addLog(`🎉 NOVA EMPRESA FUNDADA: Bem-vindo ao comando de ${playerProfile.companyName}!`, 'text-emerald-400 font-bold');
+      addLog('⏸️ SIMULAÇÃO PAUSADA: Analise a cidade e planeje sua estratégia. Pressione [Espaço] ou selecione a velocidade (1x a 5x) no topo para iniciar o tempo.', 'text-amber-300 font-bold');
 
       // Modal de Boas-Vindas & Escolha do Tutorial
       showCustomConfirmModal({
         icon: '🎓',
         title: 'Guia do Magnata (Tutorial)',
         subtitle: `Corporação: ${playerProfile.companyName}`,
-        description: 'Deseja iniciar o <strong>Guia do Magnata Interativo</strong> (passo a passo com incentivo de <strong>+$5.000</strong> e <strong>+5 de Reputação de Marca</strong>) ou prefere jogar no <strong>Modo Livre (Sandbox)</strong>?',
+        description: 'Deseja iniciar o <strong>Guia do Magnata Interativo</strong> (passo a passo com incentivo de <strong>+$5.000</strong> e <strong>+5 de Reputação de Marca</strong>) ou prefere jogar no <strong>Modo Livre (Sandbox)</strong>?<br><br>💡 <em>A simulação inicia pausada no Dia 1 para você estudar o mapa e planejar seus primeiros investimentos com tranquilidade.</em>',
         details: [
           { label: 'Recompensa do Tutorial', value: '+$5,000 + 5⭐ Marca Global', color: 'text-amber-400 font-bold' },
           { label: 'Estrutura', value: '7 Missões de Progressão Real', color: 'text-purple-300' },
-          { label: 'Modo Livre', value: 'Acesso total com autonomia imediata', color: 'text-slate-400' }
+          { label: 'Recomendação Inicial', value: 'Kombini de Bairro (Rápido Payback)', color: 'text-emerald-400 font-bold' }
         ],
         confirmText: '🎓 Iniciar Guia do Magnata',
         confirmTheme: 'amber',
@@ -11105,7 +11162,7 @@
           const tutWidget = document.getElementById('tutorial-guide-widget');
           if (tutWidget) tutWidget.classList.remove('hidden');
           renderTutorialGuide();
-          addLog('🎓 GUIA DO MAGNATA ATIVADO: Acompanhe as missões no painel flutuante!', 'text-amber-400 font-bold');
+          addLog('🎓 GUIA DO MAGNATA ATIVADO: Acompanhe as missões no painel flutuante à esquerda!', 'text-amber-400 font-bold');
         }
       });
     }
@@ -11123,7 +11180,7 @@
       {
         id: 'open_store',
         title: '2. Primeira Loja de Varejo',
-        desc: 'Inaugure seu primeiro estabelecimento comercial (Kombini ou Supermercado) em Nova Atenas.',
+        desc: 'Inaugure seu primeiro estabelecimento comercial (Recomendado para iniciantes: Kombini de Bairro, com baixo custo fixo e retorno rápido).',
         check: () => {
           for (const t of activeFacilitySet.values()) {
             if (t.store) return true;
@@ -11226,6 +11283,32 @@
 
       const menuBadge = document.getElementById('menu-tutorial-badge');
       const moreMenuBadge = document.getElementById('more-menu-badge');
+      const hudTutBtn = document.getElementById('btn-hud-tutorial');
+      const hudTutBadge = document.getElementById('hud-tutorial-badge');
+
+      if (hudTutBtn) {
+        if (allDone && tutorialState.rewardClaimed) {
+          hudTutBtn.classList.remove('animate-pulse');
+          if (hudTutBadge) {
+            hudTutBadge.textContent = '✓ Concluído';
+            hudTutBadge.className = 'text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1 rounded font-mono';
+          }
+        } else if (allDone) {
+          hudTutBtn.classList.add('animate-pulse');
+          if (hudTutBadge) {
+            hudTutBadge.textContent = '🎁 Resgatar!';
+            hudTutBadge.className = 'text-[9px] bg-amber-500 text-slate-950 font-black px-1 rounded font-mono';
+          }
+        } else {
+          hudTutBtn.classList.add('animate-pulse');
+          const doneCount = TUTORIAL_MISSIONS.filter(m => tutorialState.completedSteps[m.id]).length;
+          if (hudTutBadge) {
+            hudTutBadge.textContent = `${doneCount}/${TUTORIAL_MISSIONS.length}`;
+            hudTutBadge.className = 'text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1 rounded font-mono';
+          }
+        }
+      }
+
       if (allDone && tutorialState.rewardClaimed) {
         if (menuBadge) menuBadge.classList.add('hidden');
         if (moreMenuBadge) moreMenuBadge.classList.add('hidden');

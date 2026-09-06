@@ -76,21 +76,22 @@ export function confirmBuildWarehouse(x, y) {
   const cityName = tile.city ? (tile.city.cityName || tile.city.name || 'Interior') : 'Interior';
   const dailyRent = Math.round(d.landRentDaily * 1.1);
   const remainingCash = currentCash - cost;
+  const isLowReserves = remainingCash < 15000 || cost > (currentCash * 0.70);
 
   if (typeof window.showCustomConfirmModal === 'function') {
     window.showCustomConfirmModal({
       icon: '🏢',
       title: 'Construir Centro de Distribuição & Armazém',
       subtitle: `Local: ${d.name} (${x}, ${y}) · ${cityName}`,
-      description: `Deseja inaugurar um <strong>Centro de Distribuição & Armazém Logístico</strong> neste lote? Funciona como hub central: unifica safras de múltiplas fazendas, supre indústrias e lojas e estoca insumos anticiclicamente.`,
+      description: `Deseja inaugurar um <strong>Centro de Distribuição & Armazém Logístico</strong> neste lote? Funciona como hub central: unifica safras de múltiplas fazendas, supre indústrias e lojas e estoca insumos anticiclicamente.${isLowReserves ? '<br><br><span class="text-amber-300 font-bold">⚠️ Alerta de Iluquidez:</span> Restarão menos de $15.000 em caixa para sustentar despesas correntes e estoques!' : ''}`,
       details: [
         { label: 'Custo de Obra (Capex)', value: `-$${cost.toLocaleString('en-US')}`, color: 'text-rose-400 font-bold' },
         { label: 'Manutenção + Solo', value: `-$${dailyRent + 60}/dia`, color: 'text-amber-400' },
         { label: 'Capacidade Base Nível 1', value: '25.000 un', color: 'text-sky-300 font-bold' },
-        { label: 'Saldo de Caixa Restante', value: `$${remainingCash.toLocaleString('en-US')}`, color: 'text-emerald-400 font-bold' }
+        { label: 'Saldo de Caixa Restante', value: `$${remainingCash.toLocaleString('en-US')}`, color: isLowReserves ? 'text-amber-400 font-bold' : 'text-emerald-400 font-bold' }
       ],
       confirmText: `✅ Autorizar Construção (-$${cost.toLocaleString('en-US')})`,
-      confirmTheme: 'sky',
+      confirmTheme: isLowReserves ? 'amber' : 'sky',
       onConfirm: () => {
         deductCash(cost);
         tile.warehouse = {

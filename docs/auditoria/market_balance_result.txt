@@ -4,8 +4,8 @@
 
 --- CENÁRIO A: CAPEX ATUAL (Apenas Obra Civil + Estoque Inicial) ---
 • [kombini] Kombini de Bairro (4 slots)
-   Obra: $8.000 | Estoque: $794 | Capex Total: $8.794
-   Lucro Líquido/Mês: $9.324 ➔ Payback: 0.9 meses [⚠️ MUITO RÁPIDO]
+   Obra: $14.000 | Estoque: $794 | Capex Total: $14.794
+   Lucro Líquido/Mês: $8.956 ➔ Payback: 1.7 meses [⚠️ MUITO RÁPIDO]
 
 • [supermarket] Supermercado & Alimentos (10 slots)
    Obra: $45.000 | Estoque: $2.054 | Capex Total: $47.054
@@ -42,8 +42,8 @@
 
 --- CENÁRIO B: CAPEX COM LICENCIAMENTO DE NICHO (Obra + Licença de Nicho + Estoque) ---
 • [kombini] Kombini de Bairro (4 slots)
-   Obra: $8.000 | Licença: $5.000 | Estoque: $794 | Capex: $13.794
-   Lucro Líquido/Mês: $9.324 ➔ Payback: 1.5 meses [⚠️ MUITO RÁPIDO]
+   Obra: $14.000 | Licença: $5.000 | Estoque: $794 | Capex: $19.794
+   Lucro Líquido/Mês: $8.956 ➔ Payback: 2.2 meses [⚠️ MUITO RÁPIDO]
 
 • [supermarket] Supermercado & Alimentos (10 slots)
    Obra: $45.000 | Licença: $50.000 | Estoque: $2.054 | Capex: $97.054
