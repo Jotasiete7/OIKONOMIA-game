@@ -344,10 +344,45 @@ export function diagnoseCorporateIssues(context) {
             const whX = Number(parts[1]), whY = Number(parts[2]);
             const whTile = activeFacilitySet.get(`${whX},${whY}`);
             if (whTile && whTile.warehouse) {
-              const whStock = whTile.warehouse.inventory?.[prodId]?.stock || 0;
+              const wh = whTile.warehouse;
+              const whItem = wh.inventory?.[prodId];
+              const whStock = whItem?.stock || 0;
               if (whStock <= 0.1) {
-                causalExplanation = `O Armazém fornecedor (${whTile.x}, ${whTile.y}) está com estoque esgotado de ${prod ? prod.name : prodId}.`;
-                deepLinkAction = { type: 'tile', x: whTile.x, y: whTile.y, label: '🚚 Inspecionar Armazém' };
+                const totalWhStock = Object.values(wh.inventory || {}).reduce((s, i) => s + (i.stock || 0), 0);
+                const maxCap = wh.maxCapacity || 25000;
+                const isSaturated = (totalWhStock / Math.max(1, maxCap)) >= 0.98;
+
+                if (isSaturated) {
+                  causalExplanation = `🚨 Gargalo Sistêmico: O Armazém fornecedor (${whTile.x}, ${whTile.y}) atingiu lotação máxima (${Math.round(totalWhStock).toLocaleString()}/${maxCap.toLocaleString()} un - 100%) com outros produtos e bloqueou coletas das fábricas! Amplie o armazém ou reduza cotas dos itens cheios para liberar espaço.`;
+                  deepLinkAction = { type: 'tile', x: whTile.x, y: whTile.y, label: '🚚 Liberar Espaço no Armazém' };
+                } else if (!whItem) {
+                  causalExplanation = `O Armazém fornecedor (${whTile.x}, ${whTile.y}) não possui ${prod ? prod.name : prodId} cadastrado no inventário. Aloque o produto no armazém.`;
+                  deepLinkAction = { type: 'tile', x: whTile.x, y: whTile.y, label: '🚚 Alocar no Armazém' };
+                } else {
+                  // Verifica se há fábricas, fazendas ou minas próprias produzindo este produto
+                  let hasProducer = false;
+                  for (const fac of activeFacilitySet.values()) {
+                    if (fac.factory?.lines) {
+                      for (const l of Object.values(fac.factory.lines)) {
+                        if (l.outputProductId === prodId) { hasProducer = true; break; }
+                      }
+                    }
+                    if (fac.farm && (fac.farm.cropId === prodId || (prodId === 'eggs' && fac.farm.cropId === 'poultry'))) {
+                      hasProducer = true;
+                    }
+                    if (fac.mine && fac.mine.resourceId === prodId) {
+                      hasProducer = true;
+                    }
+                    if (hasProducer) break;
+                  }
+
+                  if (!hasProducer && !whItem.autoRestockPort) {
+                    causalExplanation = `O Armazém (${whTile.x}, ${whTile.y}) está sem estoque de ${prod ? prod.name : prodId}: nenhuma fábrica/fazenda produz este produto e o Porto está desativado.`;
+                  } else {
+                    causalExplanation = `O Armazém fornecedor (${whTile.x}, ${whTile.y}) está temporariamente sem estoque de ${prod ? prod.name : prodId}. A produção própria não atendeu ao ritmo das vendas.`;
+                  }
+                  deepLinkAction = { type: 'tile', x: whTile.x, y: whTile.y, label: '🚚 Inspecionar Armazém' };
+                }
               } else {
                 causalExplanation = `O Armazém possui estoque (${Math.round(whStock)} un), mas a reposição diária ainda não abasteceu a gôndola.`;
               }
@@ -442,7 +477,18 @@ export function diagnoseCorporateIssues(context) {
         });
       }
 
-      if (pct > 92) {
+      if (pct >= 98) {
+        rawAlerts.push({
+          id: `coo_overloaded_warehouse_${tileKey}`,
+          category: 'COO',
+          severity: 'critical',
+          title: `Armazém Saturado (100%) - Coletas Travadas`,
+          message: `O Armazém em (${tile.x}, ${tile.y}) atingiu capacidade máxima (${Math.round(occ).toLocaleString()}/${cap.toLocaleString()} un). Novas coletas das fábricas e fazendas foram suspensas e produtos estão em risco de ruptura!`,
+          rootCause: 'O armazém está 100% cheio com outros produtos. Sem espaço livre, ele bloqueia a coleta de mercadorias das fábricas.',
+          deepLink: { type: 'tile', x: tile.x, y: tile.y, label: '📦 Ampliar Armazém ou Ajustar Cotas' },
+          metricVal: pct
+        });
+      } else if (pct > 90) {
         rawAlerts.push({
           id: `coo_overloaded_warehouse_${tileKey}`,
           category: 'COO',

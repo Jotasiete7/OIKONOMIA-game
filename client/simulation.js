@@ -519,6 +519,9 @@ export function simulateDay(customContext = {}) {
     if (tile.warehouse) {
       const wh = tile.warehouse;
       wh.inventory = wh.inventory || {};
+      if (typeof window !== 'undefined' && typeof window.migrateWarehouseLegacyKeys === 'function') {
+        window.migrateWarehouseLegacyKeys(wh);
+      }
       let totalCurrentStock = Object.values(wh.inventory).reduce((sum, item) => sum + (item.stock || 0), 0);
       const freeCapacity = Math.max(0, (wh.maxCapacity || 25000) - totalCurrentStock);
 

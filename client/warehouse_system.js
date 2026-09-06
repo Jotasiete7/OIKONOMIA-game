@@ -8,12 +8,56 @@
 
 let activeWarehouseTile = null;
 let currentWarehouseTab = 'inventory'; // 'inventory' | 'flow' | 'anticyclic'
+let currentWarehouseFilterCategory = 'all'; // 'all' | 'agro' | 'chemical' | 'industry' | 'consumer' | 'empty' | 'stocked'
+let warehouseSearchQuery = '';
 const expandedProductCards = new Set();
 let selectedAddCategory = 'all';
 const selectedAddProductIds = new Set();
 
 /**
- * Catálogo de Presets de Especialização por Pólos Industriais
+ * Mapeamento de migração automática para saves antigos que continham chaves em inglês/mock
+ */
+export const LEGACY_PRODUCT_ID_MIGRATIONS = {
+  painkiller: 'pain_reliever',
+  perfume: 'luxury_perfume',
+  coffee: 'ground_coffee',
+  clothes: 't_shirt',
+  shoes: 'athletic_shoes',
+  appliances: 'refrigerator',
+  jewelry: 'gold_watch',
+  processed_food: 'cookies',
+  cosmetics: 'sunscreen',
+  medical_supplies: 'cold_pills',
+  parts: 'engine',
+  car: 'compact_car'
+};
+
+/**
+ * Corrige automaticamente itens com chaves em inglês legadas em um armazém
+ */
+export function migrateWarehouseLegacyKeys(wh) {
+  if (!wh?.inventory) return;
+  const catalog = (typeof window !== 'undefined' && window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : {};
+  for (const [oldKey, newKey] of Object.entries(LEGACY_PRODUCT_ID_MIGRATIONS)) {
+    if (wh.inventory[oldKey]) {
+      const oldItem = wh.inventory[oldKey];
+      const pInfo = catalog[newKey] || { name: newKey, baseCost: 1.0 };
+      if (!wh.inventory[newKey]) {
+        wh.inventory[newKey] = {
+          ...oldItem,
+          productId: newKey,
+          productName: pInfo.name || newKey
+        };
+      } else {
+        wh.inventory[newKey].stock = (wh.inventory[newKey].stock || 0) + (oldItem.stock || 0);
+      }
+      delete wh.inventory[oldKey];
+    }
+  }
+}
+
+/**
+ * Catálogo de Presets de Especialização por Pólos Industriais (Usando IDs Reais do Catálogo Oficial)
  */
 export const WAREHOUSE_HUB_PRESETS = {
   chemical: {
@@ -21,32 +65,32 @@ export const WAREHOUSE_HUB_PRESETS = {
     label: '🧪 Químico & Farma',
     icon: '🧪',
     borderClass: 'border-emerald-700/60 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/60',
-    desc: 'Minerais Químicos, Analgésicos, Perfumes, Cosméticos e Insumos Médicos',
-    products: ['chemical_minerals', 'painkiller', 'perfume', 'cosmetics', 'medical_supplies', 'glass']
+    desc: 'Minerais Químicos, Analgésicos, Perfumes, Cosméticos e Remédios',
+    products: ['chemical_minerals', 'pain_reliever', 'cold_pills', 'cough_syrup', 'luxury_perfume', 'plastic', 'glass']
   },
   agro: {
     key: 'agro',
     label: '🌾 Agroalimentar',
     icon: '🌾',
     borderClass: 'border-amber-700/60 bg-amber-950/40 text-amber-300 hover:bg-amber-900/60',
-    desc: 'Trigo, Milho, Frango, Ovos, Leite, Carne Suína, Gado e Grãos',
-    products: ['wheat', 'corn', 'poultry', 'eggs', 'raw_milk', 'pigs', 'cattle', 'wool', 'processed_food', 'bread']
+    desc: 'Trigo, Milho, Frango, Ovos, Leite, Carne Suína e Pão',
+    products: ['wheat', 'corn', 'poultry_meat', 'eggs', 'raw_milk', 'pork_meat', 'cattle', 'frozen_beef', 'bread']
   },
   metallurgy: {
     key: 'metallurgy',
     label: '⚙️ Metal-Mecânico',
     icon: '⚙️',
     borderClass: 'border-cyan-700/60 bg-cyan-950/40 text-cyan-300 hover:bg-cyan-900/60',
-    desc: 'Minério de Ferro, Aço, Peças Mecânicas, Motores, Eletrônicos e Veículos',
-    products: ['iron_ore', 'steel', 'parts', 'engine', 'electronics', 'chips', 'car']
+    desc: 'Minério de Ferro, Aço, Motores, Pneus, Chips e Veículos',
+    products: ['iron_ore', 'steel', 'engine', 'tires', 'chips', 'compact_car', 'sedan_car']
   },
   consumer: {
     key: 'consumer',
     label: '✨ Varejo & Consumo',
     icon: '✨',
     borderClass: 'border-purple-700/60 bg-purple-950/40 text-purple-300 hover:bg-purple-900/60',
-    desc: 'Café, Roupas, Calçados, Eletrodomésticos, Joias e Bens de Consumo Rápido',
-    products: ['coffee', 'bread', 'clothes', 'shoes', 'appliances', 'jewelry', 'perfume', 'processed_food']
+    desc: 'Café, Roupas, Calçados, Geladeiras, Joias e Perfumes',
+    products: ['ground_coffee', 'bread', 't_shirt', 'jeans', 'athletic_shoes', 'refrigerator', 'gold_watch', 'luxury_perfume']
   }
 };
 
@@ -165,6 +209,7 @@ export function confirmBuildWarehouse(x, y) {
         if (typeof window.renderTileInspector === 'function') window.renderTileInspector(tile);
         if (typeof window.scheduleRender === 'function') window.scheduleRender();
         if (typeof window.updateUI === 'function') window.updateUI();
+        if (typeof window.saveGame === 'function') window.saveGame(null, true);
       }
     });
   }
@@ -416,13 +461,188 @@ export function applyWarehouseHubPreset(presetKey) {
 }
 
 /**
- * Aba 1: Inventário & Sliders de Cotas (Design Compacto com Accordion)
+ * Funções de controle do filtro e busca no inventário do Armazém
  */
-function renderWarehouseInventoryTab(tile) {
+export function setWarehouseFilterCategory(cat) {
+  currentWarehouseFilterCategory = cat;
+  if (activeWarehouseTile) renderWarehouseInventoryTab(activeWarehouseTile);
+}
+
+export function onWarehouseSearchInput(query) {
+  warehouseSearchQuery = query || '';
+  if (activeWarehouseTile) renderWarehouseInventoryTab(activeWarehouseTile, true);
+}
+
+export function clearWarehouseSearch() {
+  warehouseSearchQuery = '';
+  const input = document.getElementById('wh-inventory-search-input');
+  if (input) input.value = '';
+  if (activeWarehouseTile) renderWarehouseInventoryTab(activeWarehouseTile, true);
+}
+
+function escapeWhAttr(str) {
+  if (!str) return '';
+  return String(str).replace(/"/g, '&quot;');
+}
+
+/**
+ * Renderiza a lista de cards de produtos do inventário (Compactos com Accordion)
+ */
+function renderWarehouseInventoryCardsHtml(filteredEntries, catalog, maxCap, tile) {
+  if (filteredEntries.length === 0) {
+    return `
+      <div class="bg-slate-950/70 p-6 rounded-xl border border-dashed border-slate-800 text-center space-y-2 font-mono">
+        <div class="text-2xl">🔍</div>
+        <p class="text-xs text-slate-300 font-bold">Nenhum produto encontrado com os filtros selecionados.</p>
+        <p class="text-[10px] text-slate-500">Tente buscar por outro termo ou selecione a categoria "Todos".</p>
+        <div class="pt-2">
+          <button onclick="clearWarehouseSearch(); setWarehouseFilterCategory('all');" class="px-3 py-1.5 rounded-lg bg-sky-800 hover:bg-sky-700 text-white text-xs font-bold transition cursor-pointer">
+            Limpar Filtros & Busca
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  return filteredEntries.map(([pId, item]) => {
+    const pInfo = catalog[pId] || { name: pId, icon: '📦', category: 'Geral' };
+    const pName = pInfo.name || item.productName || pId;
+    const pIcon = pInfo.emoji || pInfo.icon || '📦';
+    const pCategory = pInfo.category || 'Geral';
+    const isCollect = item.collectMode === 'all_own';
+    const isPort = !!item.autoRestockPort;
+    const isRecession = !!item.buyOnRecessionOnly;
+    const isExpanded = expandedProductCards.has(pId);
+
+    const maxQuota = (item.maxQuota && item.maxQuota > 0) ? item.maxQuota : maxCap;
+    const safetyStock = item.safetyStock || 0;
+    const currentStock = item.stock || 0;
+    const quotaPct = Math.min(100, Math.round((currentStock / Math.max(1, maxQuota)) * 100));
+
+    return `
+      <div class="bg-slate-950/90 border ${isExpanded ? 'border-sky-600/80 bg-slate-900/60' : 'border-slate-800 hover:border-sky-800/70'} rounded-xl p-2.5 transition shadow">
+        <!-- Linha Principal Compacta -->
+        <div class="flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap">
+          <!-- Bloco 1: Ícone + Nome + QR + Custo -->
+          <div class="flex items-center gap-2.5 min-w-[210px]">
+            <span class="text-xl p-1 bg-slate-900 rounded-lg border border-slate-800">${pIcon}</span>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <strong class="text-slate-100 text-xs">${pName}</strong>
+                <span class="text-[8px] bg-slate-800 text-slate-400 px-1 py-0.2 rounded">${pCategory}</span>
+              </div>
+              <div class="text-[9px] text-slate-400 mt-0.5">
+                Custo: <strong class="text-emerald-400">$${(item.avgUnitCost || 0).toFixed(2)}</strong> · QR: <strong class="text-cyan-300">${item.quality || 60}</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloco 2: Barra de Progresso & Estoque Atual -->
+          <div class="flex-1 min-w-[140px] px-1">
+            <div class="flex items-center justify-between text-[10px] mb-0.5">
+              <span class="font-bold text-sky-300">${currentStock.toLocaleString()} un</span>
+              <span class="text-[9px] text-slate-400">${quotaPct}% da cota (${maxQuota.toLocaleString()} un)</span>
+            </div>
+            <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+              <div class="h-full rounded-full transition-all duration-300 ${quotaPct > 90 ? 'bg-rose-500' : (quotaPct > 60 ? 'bg-amber-500' : 'bg-sky-500')}" style="width: ${quotaPct}%"></div>
+            </div>
+          </div>
+
+          <!-- Bloco 3: Badges de Ação Rápida & Botões -->
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="toggleWarehouseCollect(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isCollect ? 'bg-emerald-950/80 border-emerald-600/70 text-emerald-300' : 'bg-slate-900 border-slate-800 text-slate-500 line-through'}" title="Alternar Coleta de Fontes Próprias (Fazendas, Minas, Fábricas)">
+              🌾 Coleta
+            </button>
+            <button onclick="toggleWarehousePortRestock(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isPort ? 'bg-sky-950/80 border-sky-600/70 text-sky-300' : 'bg-slate-900 border-slate-800 text-slate-500 line-through'}" title="Alternar Reposição pelo Porto">
+              🚢 Porto
+            </button>
+            <button onclick="toggleWarehouseRecessionOnly(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isRecession ? 'bg-amber-950/80 border-amber-600/70 text-amber-300' : 'bg-slate-900 border-slate-800 text-slate-500'}" title="Alternar Compras Apenas em Recessão/Crise">
+              📉 Anti-Crise
+            </button>
+            <button onclick="toggleWarehouseCardExpand('${pId}')" class="text-[9px] font-bold px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 cursor-pointer transition">
+              ${isExpanded ? '▴ Ocultar' : '▾ Detalhes'}
+            </button>
+            <button onclick="removeWarehouseProduct(${tile.x}, ${tile.y}, '${pId}')" class="text-slate-500 hover:text-rose-400 p-1 text-xs cursor-pointer transition" title="Desalocar produto e liberar baia">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <!-- Gaveta de Detalhes & Sliders (Accordion Expandido) -->
+        ${isExpanded ? `
+          <div class="mt-2.5 pt-2.5 border-t border-slate-800/80 space-y-2.5 animate-fadeIn">
+            <!-- Sliders de Controle Fino: Cota Máxima & Estoque Mínimo -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-900/70 p-2.5 rounded-lg border border-slate-800 text-xs">
+              <!-- Slider 1: Cota Máxima de Armazenamento (Teto) -->
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-[10px]">
+                  <span class="text-slate-300 flex items-center gap-1 font-bold">
+                    <span>🛑 Cota Máxima (Teto):</span>
+                  </span>
+                  <span id="wh-val-maxquota-${pId}" class="font-bold text-sky-300">${maxQuota.toLocaleString()} un</span>
+                </div>
+                <input type="range" min="500" max="${maxCap}" step="500" value="${maxQuota}"
+                  oninput="setWarehouseProductMaxQuota(${tile.x}, ${tile.y}, '${pId}', this.value)"
+                  class="w-full accent-sky-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+                <div class="flex items-center justify-between text-[8px] text-slate-500">
+                  <span>Mín: 500 un</span>
+                  <span>Teto do Armazém: ${maxCap.toLocaleString()} un</span>
+                </div>
+              </div>
+
+              <!-- Slider 2: Estoque Mínimo de Segurança (Buffer) -->
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-[10px]">
+                  <span class="text-slate-300 flex items-center gap-1 font-bold">
+                    <span>🛡️ Estoque de Segurança:</span>
+                  </span>
+                  <span id="wh-val-safety-${pId}" class="font-bold text-amber-300">${safetyStock.toLocaleString()} un</span>
+                </div>
+                <input type="range" min="0" max="${Math.min(maxQuota, 25000)}" step="500" value="${safetyStock}"
+                  oninput="setWarehouseSafetyStock(${tile.x}, ${tile.y}, '${pId}', this.value)"
+                  class="w-full accent-amber-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+                <div class="flex items-center justify-between text-[8px] text-slate-500">
+                  <span>Mín: 0 un (Desligado)</span>
+                  <span>Buffer: ${Math.min(maxQuota, 25000).toLocaleString()} un</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Toggles com Descrições Explicativas -->
+            <div class="flex items-center justify-between flex-wrap gap-2 pt-0.5 text-[10px]">
+              <div class="flex items-center gap-2 flex-wrap">
+                <label class="flex items-center gap-1.5 cursor-pointer bg-slate-900 px-2 py-1 rounded-md border border-slate-800 hover:border-slate-700">
+                  <input type="checkbox" ${isCollect ? 'checked' : ''} onchange="toggleWarehouseCollect(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-sky-500 focus:ring-0">
+                  <span class="text-slate-300 font-bold">🌾 Coleta de Fontes Próprias</span>
+                </label>
+
+                <label class="flex items-center gap-1.5 cursor-pointer bg-slate-900 px-2 py-1 rounded-md border border-slate-800 hover:border-slate-700">
+                  <input type="checkbox" ${isPort ? 'checked' : ''} onchange="toggleWarehousePortRestock(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-sky-500 focus:ring-0">
+                  <span class="text-slate-300 font-bold">🚢 Repor do Porto</span>
+                </label>
+              </div>
+
+              <label class="flex items-center gap-1.5 cursor-pointer bg-slate-900 px-2 py-1 rounded-md border border-slate-800 hover:border-slate-700" title="Só compra do porto durante recessão ou depressão econômica com desconto">
+                <input type="checkbox" ${isRecession ? 'checked' : ''} onchange="toggleWarehouseRecessionOnly(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-amber-500 focus:ring-0">
+                <span class="${isRecession ? 'text-amber-400 font-bold' : 'text-slate-400'}">📉 Modo Anticíclico (Só compra com desconto de crise)</span>
+              </label>
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+/**
+ * Aba 1: Inventário & Sliders de Cotas (Design com Busca em Tempo Real e Filtros de Categoria)
+ */
+export function renderWarehouseInventoryTab(tile, cardsOnly = false) {
   const container = document.getElementById('wh-tab-inventory-content');
   if (!container) return;
 
   const wh = tile.warehouse;
+  migrateWarehouseLegacyKeys(wh);
   const invEntries = Object.entries(wh.inventory || {});
   const catalog = (typeof window !== 'undefined' && window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : {};
   const maxCap = wh.maxCapacity || 25000;
@@ -465,19 +685,66 @@ function renderWarehouseInventoryTab(tile) {
     return;
   }
 
+  // Contadores dinâmicos para os chips de categoria
+  let agroCount = 0, farmaCount = 0, techCount = 0, varejoCount = 0, emptyCount = 0, stockedCount = 0;
+  for (const [pId, item] of invEntries) {
+    const pInfo = catalog[pId] || {};
+    const cat = pInfo.category || '';
+    if (['Agronegócio', 'Alimentos', 'Bebidas'].includes(cat)) agroCount++;
+    if (['Farmácia', 'Higiene', 'Cosméticos'].includes(cat)) farmaCount++;
+    if (['Insumos Industriais', 'Recursos Naturais', 'Eletrônicos', 'Construção'].includes(cat)) techCount++;
+    if (['Vestuário', 'Móveis', 'Joias', 'Automotivo', 'Conveniência'].includes(cat)) varejoCount++;
+    if ((item.stock || 0) <= 0.1) emptyCount++;
+    else stockedCount++;
+  }
+
+  // Filtragem dos itens por Categoria e Busca em Tempo Real
+  const filteredEntries = invEntries.filter(([pId, item]) => {
+    const pInfo = catalog[pId] || { name: pId, category: 'Geral' };
+    const pCat = pInfo.category || '';
+
+    if (currentWarehouseFilterCategory !== 'all') {
+      if (currentWarehouseFilterCategory === 'empty' && (item.stock || 0) > 0.1) return false;
+      if (currentWarehouseFilterCategory === 'stocked' && (item.stock || 0) <= 0.1) return false;
+      if (currentWarehouseFilterCategory === 'agro' && !['Agronegócio', 'Alimentos', 'Bebidas'].includes(pCat)) return false;
+      if (currentWarehouseFilterCategory === 'farma' && !['Farmácia', 'Higiene', 'Cosméticos'].includes(pCat)) return false;
+      if (currentWarehouseFilterCategory === 'tech' && !['Insumos Industriais', 'Recursos Naturais', 'Eletrônicos', 'Construção'].includes(pCat)) return false;
+      if (currentWarehouseFilterCategory === 'varejo' && !['Vestuário', 'Móveis', 'Joias', 'Automotivo', 'Conveniência'].includes(pCat)) return false;
+    }
+
+    if (warehouseSearchQuery && warehouseSearchQuery.trim()) {
+      const q = warehouseSearchQuery.trim().toLowerCase();
+      const name = (pInfo.name || item.productName || pId).toLowerCase();
+      const cat = pCat.toLowerCase();
+      const id = pId.toLowerCase();
+      if (!name.includes(q) && !cat.includes(q) && !id.includes(q)) return false;
+    }
+
+    return true;
+  });
+
+  // Atualização rápida de digitação (sem recriar o input para não perder o foco)
+  const cardsContainer = document.getElementById('wh-inventory-cards-container');
+  if (cardsOnly && cardsContainer) {
+    cardsContainer.innerHTML = renderWarehouseInventoryCardsHtml(filteredEntries, catalog, maxCap, tile);
+    const countEl = document.getElementById('wh-inventory-match-count');
+    if (countEl) countEl.textContent = `${filteredEntries.length} de ${invEntries.length} ${invEntries.length === 1 ? 'item' : 'itens'}`;
+    return;
+  }
+
   container.innerHTML = `
     <div class="space-y-2.5 font-mono">
       <!-- Barra Superior: Especialização por Pólos e Ações Globais -->
       <div class="bg-slate-950/90 p-2.5 rounded-xl border border-slate-800/90 flex items-center justify-between flex-wrap gap-2 shadow-sm">
         <div class="flex items-center gap-1.5 flex-wrap">
-          <span class="text-[10px] text-slate-400 font-bold mr-1">🎯 Pólos Rápidos:</span>
+          <span class="text-[10px] text-slate-400 font-bold mr-1">🎯 Pólos:</span>
           <button onclick="applyWarehouseHubPreset('chemical')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-emerald-700/60 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/60 cursor-pointer transition" title="Aloca insumos químicos, remédios, perfumes e cosméticos">
             🧪 Químico
           </button>
-          <button onclick="applyWarehouseHubPreset('agro')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-amber-700/60 bg-amber-950/40 text-amber-300 hover:bg-amber-900/60 cursor-pointer transition" title="Aloca trigo, milho, frango, ovos, leite e carne">
+          <button onclick="applyWarehouseHubPreset('agro')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-amber-700/60 bg-amber-950/40 text-amber-300 hover:bg-amber-900/60 cursor-pointer transition" title="Aloca trigo, milho, carne, frango, ovos e leite">
             🌾 Agro
           </button>
-          <button onclick="applyWarehouseHubPreset('metallurgy')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-cyan-700/60 bg-cyan-950/40 text-cyan-300 hover:bg-cyan-900/60 cursor-pointer transition" title="Aloca ferro, aço, peças, motores e eletrônicos">
+          <button onclick="applyWarehouseHubPreset('metallurgy')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-cyan-700/60 bg-cyan-950/40 text-cyan-300 hover:bg-cyan-900/60 cursor-pointer transition" title="Aloca ferro, aço, peças, motores e veículos">
             ⚙️ Metal
           </button>
           <button onclick="applyWarehouseHubPreset('consumer')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-purple-700/60 bg-purple-950/40 text-purple-300 hover:bg-purple-900/60 cursor-pointer transition" title="Aloca café, roupas, calçados, eletros e joias">
@@ -485,9 +752,14 @@ function renderWarehouseInventoryTab(tile) {
           </button>
         </div>
 
-        <div class="flex items-center gap-2">
-          <span class="text-[10px] text-slate-400 font-bold">${invEntries.length} ${invEntries.length === 1 ? 'item' : 'itens'}</span>
-          <div class="flex items-center gap-1">
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="syncOwnProductionProducts()" class="px-2.5 py-1 rounded-md text-[9px] font-bold bg-emerald-900/60 hover:bg-emerald-800/80 text-emerald-200 border border-emerald-600/60 cursor-pointer transition flex items-center gap-1" title="Sincroniza insumos produzidos por suas fábricas, fazendas e minas">
+            ⚡ Sincronizar Própria
+          </button>
+          <button onclick="openAddWarehouseProductModal()" class="px-2.5 py-1 rounded-md text-[9px] font-bold bg-sky-700 hover:bg-sky-600 text-white border border-sky-500 cursor-pointer transition flex items-center gap-1">
+            ➕ Alocar Itens
+          </button>
+          <div class="flex items-center gap-1 ml-1">
             <button onclick="toggleAllWarehouseCards(true)" class="px-2 py-1 rounded-md text-[9px] font-bold bg-slate-900 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 cursor-pointer transition" title="Expandir sliders de todos os produtos">
               ▾ Expandir
             </button>
@@ -498,135 +770,61 @@ function renderWarehouseInventoryTab(tile) {
         </div>
       </div>
 
-      <!-- Lista de Cards Compactos / Accordion -->
-      <div class="space-y-1.5">
-        ${invEntries.map(([pId, item]) => {
-          const pInfo = catalog[pId] || { name: pId, icon: '📦' };
-          const pName = pInfo.name || pId;
-          const pIcon = pInfo.emoji || pInfo.icon || '📦';
-          const isCollect = item.collectMode === 'all_own';
-          const isPort = !!item.autoRestockPort;
-          const isRecession = !!item.buyOnRecessionOnly;
-          const isExpanded = expandedProductCards.has(pId);
+      <!-- Barra de Busca em Tempo Real e Contador -->
+      <div class="bg-slate-950/80 p-2 rounded-xl border border-slate-800 flex items-center justify-between gap-3 shadow-sm">
+        <div class="relative flex-1">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none text-slate-400 text-xs">🔍</span>
+          <input id="wh-inventory-search-input" type="text"
+            placeholder="Buscar por nome, categoria ou insumo (ex: trigo, analgésico, ferro)..."
+            value="${escapeWhAttr(warehouseSearchQuery)}"
+            oninput="onWarehouseSearchInput(this.value)"
+            class="w-full pl-8 pr-8 py-1.5 bg-slate-900/90 text-xs text-slate-100 placeholder-slate-500 rounded-lg border border-slate-700 focus:outline-none focus:border-sky-500 transition">
+          ${warehouseSearchQuery ? `
+            <button onclick="clearWarehouseSearch()" class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-400 hover:text-rose-400 cursor-pointer text-xs" title="Limpar busca">
+              ✕
+            </button>
+          ` : ''}
+        </div>
+        <div id="wh-inventory-match-count" class="text-[10px] text-slate-400 shrink-0 font-bold">
+          ${filteredEntries.length} de ${invEntries.length} ${invEntries.length === 1 ? 'item' : 'itens'}
+        </div>
+      </div>
 
-          const maxQuota = (item.maxQuota && item.maxQuota > 0) ? item.maxQuota : maxCap;
-          const safetyStock = item.safetyStock || 0;
-          const currentStock = item.stock || 0;
-          const quotaPct = Math.min(100, Math.round((currentStock / Math.max(1, maxQuota)) * 100));
+      <!-- Chips de Filtro por Categoria e Situação de Estoque -->
+      <div class="flex items-center gap-1.5 flex-wrap text-[10px]">
+        <button onclick="setWarehouseFilterCategory('all')"
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'all' ? 'bg-sky-600 text-white shadow' : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'}">
+          🏢 Todos (${invEntries.length})
+        </button>
+        <button onclick="setWarehouseFilterCategory('agro')"
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'agro' ? 'bg-amber-600 text-white shadow' : 'bg-slate-900 text-amber-400/80 hover:text-amber-300 border border-slate-800'}">
+          🌾 Agro & Alimentos (${agroCount})
+        </button>
+        <button onclick="setWarehouseFilterCategory('farma')"
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'farma' ? 'bg-emerald-600 text-white shadow' : 'bg-slate-900 text-emerald-400/80 hover:text-emerald-300 border border-slate-800'}">
+          🧪 Farma & Química (${farmaCount})
+        </button>
+        <button onclick="setWarehouseFilterCategory('tech')"
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'tech' ? 'bg-cyan-600 text-white shadow' : 'bg-slate-900 text-cyan-400/80 hover:text-cyan-300 border border-slate-800'}">
+          ⚙️ Indústria & Tech (${techCount})
+        </button>
+        <button onclick="setWarehouseFilterCategory('varejo')"
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'varejo' ? 'bg-purple-600 text-white shadow' : 'bg-slate-900 text-purple-400/80 hover:text-purple-300 border border-slate-800'}">
+          ✨ Varejo & Consumo (${varejoCount})
+        </button>
+        <button onclick="setWarehouseFilterCategory('empty')"
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'empty' ? 'bg-rose-600 text-white shadow' : 'bg-slate-900 text-rose-400/80 hover:text-rose-300 border border-slate-800'}">
+          ⚠️ Esgotados (${emptyCount})
+        </button>
+        <button onclick="setWarehouseFilterCategory('stocked')"
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'stocked' ? 'bg-teal-600 text-white shadow' : 'bg-slate-900 text-teal-400/80 hover:text-teal-300 border border-slate-800'}">
+          📦 Em Estoque (${stockedCount})
+        </button>
+      </div>
 
-          return `
-            <div class="bg-slate-950/90 border ${isExpanded ? 'border-sky-600/80 bg-slate-900/60' : 'border-slate-800 hover:border-sky-800/70'} rounded-xl p-2.5 transition shadow">
-              <!-- Linha Principal Compacta -->
-              <div class="flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap">
-                <!-- Bloco 1: Ícone + Nome + QR + Custo -->
-                <div class="flex items-center gap-2.5 min-w-[210px]">
-                  <span class="text-xl p-1 bg-slate-900 rounded-lg border border-slate-800">${pIcon}</span>
-                  <div>
-                    <div class="flex items-center gap-1.5">
-                      <strong class="text-slate-100 text-xs">${pName}</strong>
-                      <span class="text-[8px] bg-slate-800 text-slate-400 px-1 py-0.2 rounded">${pInfo.category || 'Geral'}</span>
-                    </div>
-                    <div class="text-[9px] text-slate-400 mt-0.5">
-                      Custo: <strong class="text-emerald-400">$${(item.avgUnitCost || 0).toFixed(2)}</strong> · QR: <strong class="text-cyan-300">${item.quality || 60}</strong>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Bloco 2: Barra de Progresso & Estoque Atual -->
-                <div class="flex-1 min-w-[140px] px-1">
-                  <div class="flex items-center justify-between text-[10px] mb-0.5">
-                    <span class="font-bold text-sky-300">${currentStock.toLocaleString()} un</span>
-                    <span class="text-[9px] text-slate-400">${quotaPct}% da cota (${maxQuota.toLocaleString()} un)</span>
-                  </div>
-                  <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
-                    <div class="h-full rounded-full transition-all duration-300 ${quotaPct > 90 ? 'bg-rose-500' : (quotaPct > 60 ? 'bg-amber-500' : 'bg-sky-500')}" style="width: ${quotaPct}%"></div>
-                  </div>
-                </div>
-
-                <!-- Bloco 3: Badges de Ação Rápida & Botões -->
-                <div class="flex items-center gap-1.5 shrink-0">
-                  <button onclick="toggleWarehouseCollect(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isCollect ? 'bg-emerald-950/80 border-emerald-600/70 text-emerald-300' : 'bg-slate-900 border-slate-800 text-slate-500 line-through'}" title="Alternar Coleta de Fontes Próprias (Fazendas, Minas, Fábricas)">
-                    🌾 Coleta
-                  </button>
-                  <button onclick="toggleWarehousePortRestock(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isPort ? 'bg-sky-950/80 border-sky-600/70 text-sky-300' : 'bg-slate-900 border-slate-800 text-slate-500 line-through'}" title="Alternar Reposição pelo Porto">
-                    🚢 Porto
-                  </button>
-                  <button onclick="toggleWarehouseRecessionOnly(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isRecession ? 'bg-amber-950/80 border-amber-600/70 text-amber-300' : 'bg-slate-900 border-slate-800 text-slate-500'}" title="Alternar Compras Apenas em Recessão/Crise">
-                    📉 Anti-Crise
-                  </button>
-                  <button onclick="toggleWarehouseCardExpand('${pId}')" class="text-[9px] font-bold px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 cursor-pointer transition">
-                    ${isExpanded ? '▴ Ocultar' : '▾ Detalhes'}
-                  </button>
-                  <button onclick="removeWarehouseProduct(${tile.x}, ${tile.y}, '${pId}')" class="text-slate-500 hover:text-rose-400 p-1 text-xs cursor-pointer transition" title="Desalocar produto e liberar baia">
-                    🗑️
-                  </button>
-                </div>
-              </div>
-
-              <!-- Gaveta de Detalhes & Sliders (Accordion Expandido) -->
-              ${isExpanded ? `
-                <div class="mt-2.5 pt-2.5 border-t border-slate-800/80 space-y-2.5 animate-fadeIn">
-                  <!-- Sliders de Controle Fino: Cota Máxima & Estoque Mínimo -->
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-900/70 p-2.5 rounded-lg border border-slate-800 text-xs">
-                    <!-- Slider 1: Cota Máxima de Armazenamento (Teto) -->
-                    <div class="space-y-1">
-                      <div class="flex items-center justify-between text-[10px]">
-                        <span class="text-slate-300 flex items-center gap-1 font-bold">
-                          <span>🛑 Cota Máxima (Teto):</span>
-                        </span>
-                        <span id="wh-val-maxquota-${pId}" class="font-bold text-sky-300">${maxQuota.toLocaleString()} un</span>
-                      </div>
-                      <input type="range" min="500" max="${maxCap}" step="500" value="${maxQuota}"
-                        oninput="setWarehouseProductMaxQuota(${tile.x}, ${tile.y}, '${pId}', this.value)"
-                        class="w-full accent-sky-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
-                      <div class="flex items-center justify-between text-[8px] text-slate-500">
-                        <span>Mín: 500 un</span>
-                        <span>Teto do Armazém: ${maxCap.toLocaleString()} un</span>
-                      </div>
-                    </div>
-
-                    <!-- Slider 2: Estoque Mínimo de Segurança (Buffer) -->
-                    <div class="space-y-1">
-                      <div class="flex items-center justify-between text-[10px]">
-                        <span class="text-slate-300 flex items-center gap-1 font-bold">
-                          <span>🛡️ Estoque de Segurança:</span>
-                        </span>
-                        <span id="wh-val-safety-${pId}" class="font-bold text-amber-300">${safetyStock.toLocaleString()} un</span>
-                      </div>
-                      <input type="range" min="0" max="${Math.min(maxQuota, 25000)}" step="500" value="${safetyStock}"
-                        oninput="setWarehouseSafetyStock(${tile.x}, ${tile.y}, '${pId}', this.value)"
-                        class="w-full accent-amber-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
-                      <div class="flex items-center justify-between text-[8px] text-slate-500">
-                        <span>Mín: 0 un (Desligado)</span>
-                        <span>Buffer: ${Math.min(maxQuota, 25000).toLocaleString()} un</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Toggles com Descrições Explicativas -->
-                  <div class="flex items-center justify-between flex-wrap gap-2 pt-0.5 text-[10px]">
-                    <div class="flex items-center gap-2 flex-wrap">
-                      <label class="flex items-center gap-1.5 cursor-pointer bg-slate-900 px-2 py-1 rounded-md border border-slate-800 hover:border-slate-700">
-                        <input type="checkbox" ${isCollect ? 'checked' : ''} onchange="toggleWarehouseCollect(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-sky-500 focus:ring-0">
-                        <span class="text-slate-300 font-bold">🌾 Coleta de Fontes Próprias</span>
-                      </label>
-
-                      <label class="flex items-center gap-1.5 cursor-pointer bg-slate-900 px-2 py-1 rounded-md border border-slate-800 hover:border-slate-700">
-                        <input type="checkbox" ${isPort ? 'checked' : ''} onchange="toggleWarehousePortRestock(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-sky-500 focus:ring-0">
-                        <span class="text-slate-300 font-bold">🚢 Repor do Porto</span>
-                      </label>
-                    </div>
-
-                    <label class="flex items-center gap-1.5 cursor-pointer bg-slate-900 px-2 py-1 rounded-md border border-slate-800 hover:border-slate-700" title="Só compra do porto durante recessão ou depressão econômica com desconto">
-                      <input type="checkbox" ${isRecession ? 'checked' : ''} onchange="toggleWarehouseRecessionOnly(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-amber-500 focus:ring-0">
-                      <span class="${isRecession ? 'text-amber-400 font-bold' : 'text-slate-400'}">📉 Modo Anticíclico (Só compra com desconto de crise)</span>
-                    </label>
-                  </div>
-                </div>
-              ` : ''}
-            </div>
-          `;
-        }).join('')}
+      <!-- Container de Cards (Atualizado de forma isolada na busca) -->
+      <div id="wh-inventory-cards-container" class="space-y-1.5">
+        ${renderWarehouseInventoryCardsHtml(filteredEntries, catalog, maxCap, tile)}
       </div>
     </div>
   `;
@@ -1064,6 +1262,7 @@ export function upgradeWarehouse(x, y) {
 
   renderWarehouseModal();
   if (typeof window.updateUI === 'function') window.updateUI();
+  if (typeof window.saveGame === 'function') window.saveGame(null, true);
 }
 
 /**

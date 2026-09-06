@@ -166,18 +166,73 @@ export function migrateSaveData(rawSave) {
     });
   }
 
-  // 9. Sanitização e Garantia de Persistência do Armazém Logístico (v0.8.5)
+  // Mapeamento de migração de IDs legados em inglês para nomes canônicos do catálogo
+  const LEGACY_PRODUCT_ID_MIGRATIONS = {
+    painkiller: 'pain_reliever',
+    perfume: 'luxury_perfume',
+    coffee: 'ground_coffee',
+    clothes: 't_shirt',
+    shoes: 'athletic_shoes',
+    appliances: 'refrigerator',
+    jewelry: 'gold_watch',
+    processed_food: 'cookies',
+    cosmetics: 'sunscreen',
+    medical_supplies: 'cold_pills',
+    parts: 'engine',
+    car: 'compact_car'
+  };
+
+  // 9. Sanitização e Garantia de Persistência do Armazém Logístico e Lojas (v0.8.5)
   if (Array.isArray(migrated.builtTiles)) {
     migrated.builtTiles.forEach(t => {
+      // Migra gôndolas de lojas com chaves legadas
+      if (t.store && t.store.shelves) {
+        for (const [oldKey, newKey] of Object.entries(LEGACY_PRODUCT_ID_MIGRATIONS)) {
+          if (t.store.shelves[oldKey]) {
+            if (!t.store.shelves[newKey]) {
+              t.store.shelves[newKey] = {
+                ...t.store.shelves[oldKey],
+                productId: newKey
+              };
+            }
+            delete t.store.shelves[oldKey];
+          }
+        }
+      }
+
       if (t.warehouse) {
         const wh = t.warehouse;
         wh.id = wh.id || `warehouse_${t.x}_${t.y}`;
         wh.name = wh.name || `CD & Silos Logísticos (${t.x}, ${t.y})`;
+        
+        // Inferência inteligente de nível pela capacidade caso level esteja desatualizado
+        if (typeof wh.maxCapacity === 'number') {
+          if (wh.maxCapacity >= 150000 && (!wh.level || wh.level < 3)) wh.level = 3;
+          else if (wh.maxCapacity >= 60000 && (!wh.level || wh.level < 2)) wh.level = 2;
+        }
+
         wh.level = Number.isInteger(wh.level) && wh.level >= 1 && wh.level <= 3 ? wh.level : 1;
         const expectedCap = wh.level === 3 ? 150000 : (wh.level === 2 ? 60000 : 25000);
         wh.maxCapacity = (typeof wh.maxCapacity === 'number' && wh.maxCapacity >= 25000) ? wh.maxCapacity : expectedCap;
         wh.dailyMaintenance = (typeof wh.dailyMaintenance === 'number' && wh.dailyMaintenance >= 60) ? wh.dailyMaintenance : (wh.level === 3 ? 120 : (wh.level === 2 ? 90 : 60));
         wh.inventory = (wh.inventory && typeof wh.inventory === 'object') ? wh.inventory : {};
+
+        // Migração de chaves legadas do inventário do armazém
+        for (const [oldKey, newKey] of Object.entries(LEGACY_PRODUCT_ID_MIGRATIONS)) {
+          if (wh.inventory[oldKey]) {
+            const oldItem = wh.inventory[oldKey];
+            if (!wh.inventory[newKey]) {
+              wh.inventory[newKey] = {
+                ...oldItem,
+                productId: newKey
+              };
+            } else {
+              wh.inventory[newKey].stock = (wh.inventory[newKey].stock || 0) + (oldItem.stock || 0);
+            }
+            delete wh.inventory[oldKey];
+          }
+        }
+
         for (const [pId, item] of Object.entries(wh.inventory)) {
           if (item) {
             item.productId = item.productId || pId;
