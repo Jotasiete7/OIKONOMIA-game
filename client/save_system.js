@@ -1,6 +1,6 @@
 /**
  * save_system.js — Sistema de Persistência, Versionamento e Migração de Saves
- * OIKONOMIA v0.8.4
+ * OIKONOMIA v0.8.5
  */
 
 import { AVATAR_CATALOG, COLOR_PALETTES, DIFFICULTY_PRESETS } from './game_config.js';

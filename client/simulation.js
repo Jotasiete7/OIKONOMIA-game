@@ -1,6 +1,6 @@
 /**
  * simulation.js — Motor de Simulação Contínua (Ticks Diários & Fechamento Mensal)
- * OIKONOMIA v0.8.4
+ * OIKONOMIA v0.8.5
  */
 
 import CoreMath from './core_math.js';

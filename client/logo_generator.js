@@ -1,6 +1,6 @@
 /**
  * logo_generator.js — Gerador Procedural Determinístico de Logotipos & Identicons
- * OIKONOMIA v0.8.4
+ * OIKONOMIA v0.8.5
  */
 
 export function hashStringToSeed(str) {

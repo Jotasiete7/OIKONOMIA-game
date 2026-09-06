@@ -1,6 +1,6 @@
 /**
  * game_state.js — Container Central do Estado do Jogo (Single Source of Truth)
- * OIKONOMIA v0.8.4
+ * OIKONOMIA v0.8.5
  */
 
 export function createInitialGameState() {

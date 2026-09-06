@@ -1,7 +1,7 @@
 # 🗺️ Roadmap de Desenvolvimento — OIKONOMIA
 
-**Versão Atual**: `v0.8.4 (Build 20260904.01)`  
-**Status da Infraestrutura**: 100% Validada com Arquitetura Vite + ES Modules, Tailwind CSS v4 Local Offline, Micro Rádio OikoFM e Suíte E2E Headless.
+**Versão Atual**: `v0.8.5 (Build 20260906.01)`  
+**Status da Infraestrutura**: 100% Validada com Arquitetura Vite + ES Modules, Tailwind CSS v4 Local Offline, Micro Rádio OikoFM, Diretoria Executiva Inteligente e Suíte E2E Headless.
 
 ---
 
@@ -14,6 +14,7 @@
 | **Fase 2.5** | **Diagnóstico Econômico, Séries Temporais & Causalidade** | `TimeSeriesBuffer` de 24 meses, Analista Corporativo com diagnóstico de variância, Gráficos históricos Sparklines na DRE, Lente de Oportunidade (`🎯`), Simulador "E se?", métricas de cobertura em dias e payback em wizards. | ✅ **Concluída** |
 | **Fase 3** | **Macro-Mundo 128×128 & Interface Capitalism Lab** | Mapa continental isométrico 128×128 com 4 metrópoles (Nova Atenas, Porto Real, Montargis, Várzea), portos mercantes, janelas flutuantes com arrasto, minimapa radar, câmera WASD e zoom suave. | ✅ **Concluída** |
 | **Fase 3.5** | **Balanceamento de Nicho & Enciclopédia In-Game** | Payback corrigido para todos os 9 formatos comerciais (4 a 18 meses) via Licenças de Nicho. Enciclopédia Corporativa in-game (`F1` e botões `📖 Wiki`) com 7 abas funcionais e calculadora industrial de insumos. | ✅ **Concluída** |
+| **Fase 3.8** | **Diretoria Executiva & Inteligência Estratégica (CFO, COO, CMO)** | Subsistema de conselheiros executivos com 6 KPIs em tempo real, diagnóstico de causa-raiz cruzada (rupturas, ociosidade, caixa, P&D), máquina de estados anti-spam (+20% threshold), auto-resolução positiva, filtros de verbosidade e deep-links de navegação isométrica. P&D com Acervo de Patentes e Níveis Tecnológicos. | ✅ **Concluída (v0.8.5)** |
 | **Modernização Técnica** | **Vite, ES Modules & Tailwind v4 Offline** | Transição completa para ES Modules (`main.js`, `game_state.js`, `save_system.js`, etc.), bundler Vite 8 com IIFE autônomo (`file:///`), Tailwind CSS v4 local offline, `JOGAR_DEV.bat` (HMR) e `JOGAR.bat`. | ✅ **Concluída (v0.8.4)** |
 | **Fase 4** | **Contratos Públicos, Editais & Sistema Bancário** | Editais governamentais de suprimento municipal (merenda escolar, obras públicas, frota municipal). Linhas de crédito bancário com taxas de juros mensais, debêntures e dívida de longo prazo. | ⏳ **Planejada (Próxima)** |
 | **Fase 5** | **Mercado Financeiro, Bolsa de Valores & M&A** | Ações corporativas, IPO do jogador e de rivais, dividendos trimestrais, participações cruzadas, aquisições hostis de concorrentes (*Hostile Takeovers*) e holdings empresariais. | ⏳ **Planejada** |

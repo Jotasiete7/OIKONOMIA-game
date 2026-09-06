@@ -1,6 +1,6 @@
 /**
  * advisor_system.js — Diretoria Executiva & Inteligência Estratégica (CFO, COO & CMO)
- * OIKONOMIA v0.8.4
+ * OIKONOMIA v0.8.5
  *
  * Motor analítico unificado com:
  * 1. Pulso de Saúde Corporativa (6 KPIs semaforizados).

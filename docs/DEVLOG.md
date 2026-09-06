@@ -2,8 +2,8 @@
 
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
-> **Última Atualização:** 05 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.4 (bld.20260905.03)`  
+> **Última Atualização:** 06 de Setembro de 2026  
+> **Versão Oficial Corrente:** `v0.8.5 (bld.20260906.01)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -15,7 +15,7 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 - **MAJOR (v1.0.0, v2.0.0)**: Marcos definitivos de lançamento comercial / saída de Beta.
 - **MINOR (v0.7.x -> v0.8.0 -> v0.9.0)**: Grandes módulos ou mecânicas novas (ex: P&D, QG Corporativo, frotas visuais).
-- **PATCH (v0.8.3 -> v0.8.4)**: Pacotes de usabilidade, modularização, áudio, balanceamento e refinamentos de UI.
+- **PATCH (v0.8.4 -> v0.8.5)**: Pacotes de usabilidade, modularização, inteligência executiva, áudio, balanceamento e refinamentos de UI.
 - **BUILD STAMP (`bld.YYYYMMDD.XX`)**: Carimbo diário com a data e o número da entrega daquele dia.
 - **SAVE SCHEMA (`0.8.2`)**: Controla a compatibilidade dos saves `.oiko` e do `localStorage`.
 
@@ -23,16 +23,43 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 ## 🧭 Agenda de Desenvolvimento (Próximos Passos & Backlog Priorizado)
 
+- [x] **Diretoria Executiva & Inteligência Estratégica (v0.8.5)**: Painel executivo unificado (CFO, COO, CMO), 6 KPIs semaforizados, diagnóstico causal cruzado, máquina de estados anti-spam (+20%), auto-resolução positiva e deep-links de navegação isométrica.
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
 - [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
 - [ ] **Fase 5 Mercado Financeiro, Ações & M&A**: Ações corporativas, IPO, distribuição de dividendos, participações cruzadas e aquisições hostis (*Hostile Takeovers*).
-- [ ] **QG Corporativo & Diretoria Executiva**: Sede global única com contratação de executivos (CEO, COO, CMO, CTO, CFO) provendo bônus setoriais de margem e pesquisa.
 - [ ] **Módulo de Logística Visual**: Frotas de caminhões e navios com animação isométrica navegando pelas rodovias e rotas marítimas entre portos e cidades.
 - [ ] **Fase 6 Dinâmica Macroeconômica & Clima**: Geadas, secas e safras recordes impactando o rendimento agropecuário; greves portuárias e flutuação de frete internacional.
 
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 16: Diretoria Executiva & Conselheiro Inteligente (CFO, COO, CMO), Galeria Tecnológica de Patentes e Foco Isométrico
+- **Data:** 06/09/2026 — 18:30
+- **Versão Oficial:** `v0.8.5 (bld.20260906.01)` | **Save Schema:** `v0.8.2`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão (Inteligência Corporativa, Refinamento de P&D e Navegação Isométrica):
+1. **Novo Subsistema de Inteligência Corporativa (`client/advisor_system.js`):**
+   - Implementado o módulo `advisor_system.js` com avaliação de **Pulso de Saúde Corporativa (`evaluateCorporatePulse`)** abrangendo 6 pilares: Finanças (CFO), Produção (COO), Logística (COO), Varejo (COO/CMO), Mercado (CMO) e Inovação (CTO/CMO), sintetizados em um Score Global (0 a 100).
+   - **Grafo de Causa-Raiz Cruzada (`diagnoseCorporateIssues`)**: rastreamento inteligente de rupturas de prateleira conectadas à falta de estoque em centros de distribuição e fábricas, alerta de fábricas e minas ociosas com custo fixo, aviso preventivo de caixa negativo e juros de cheque especial (3.5%/mês), além de oportunidades de inovação em produtos com QR básico em mercados competitivos.
+   - **Máquina de Estados Anti-Spam (`updateAdvisorAlertStates`)**: estados `new`, `acknowledged` (dispensado), `snoozed` e `resolved`. Regra de piora de +20%: alertas dispensados não reaparecem no mês seguinte a menos que a métrica se degrade em pelo menos 20%.
+   - **Feedback Positivo Automático**: quando o jogador resolve um gargalo operacional, o conselho registra no histórico do diário: *"✅ Problema normalizado! [Título] foi solucionado na operação corporativa."*
+   - **Filtros Temporais Anti-Falso Positivo**: período de graça de 30 dias para construções recentes e colchão de caixa proporcional para evitar alertas prematuros.
+2. **Interface Visual da Diretoria Executiva (`client/index.html`):**
+   - Botão dinâmico no Top HUD (`#btn-hud-advisor`) com selo numérico de alertas e cor reativa (azul neutro, amarelo moderado, vermelho crítico).
+   - Modal da Diretoria Executiva com 6 cartões semaforizados no topo, abas por perfil executivo (`[ 🏢 Todos ]`, `[ 💼 CFO ]`, `[ 🚚 COO ]`, `[ 📈 CMO ]`), seletor de verbosidade (`Novato`, `Expert`, `Silencioso`) e aba de Histórico de Resoluções.
+3. **Correção de Deep-Links e Navegação de Câmera Isométrica:**
+   - Criada a função matemática `focusOnTile(gx, gy)` para converter coordenadas de grid em posição isométrica centralizada no canvas (`camera.panX`, `camera.panY`), integrando com minimapa e agendador de render.
+   - Ações de inspeção do conselheiro (`executeAdvisorDeepLink`) agora fecham o modal, transicionam a câmera instantaneamente para o lote com defeito e abrem a janela de gerenciamento ou o modal logístico correspondente.
+4. **Despoluição e Galeria de Patentes no P&D:**
+   - Separadas rigidamente as bancadas de laboratório ativas dos projetos já finalizados.
+   - Criado o **Acervo de Patentes** com indicador de Nível Tecnológico da Holding (Nível 1 a 4 - Vanguarda Tecnológica) e chips recolhíveis dourados/esmeralda com accordion.
+   - Adicionadas abas de filtros rápidos no modal completo de P&D (`[ 🏢 Todas ]`, `[ 🟢 Em Andamento ]`, `[ 🏆 Patentes Concluídas ]`).
+   - Corrigida a contabilidade visual de projetos concluídos (`Verba: Consolidada ($0/mês)`).
+   - Adicionado fluxo seguro de arquivamento (`cancelRDProject`), garantindo que patentes arquivadas continuem ativas no know-how da holding e em suas fábricas.
 
 ---
 

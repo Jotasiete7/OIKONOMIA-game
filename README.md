@@ -1,6 +1,6 @@
 # 🏛️ OIKONOMIA — Simulador de Estratégia Econômica & Cadeia Produtiva
 
-[![Version](https://img.shields.io/badge/Versão-v0.8.4-emerald.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
+[![Version](https://img.shields.io/badge/Versão-v0.8.5-emerald.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
 [![Engine](https://img.shields.io/badge/Engine-HTML5%20Canvas%20Isométrico-10b981.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
 [![Bundler](https://img.shields.io/badge/Bundler-Vite%208%20%7C%20ES%20Modules-646CFF.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
 [![Styling](https://img.shields.io/badge/CSS-Tailwind%20v4%20Local%20(100%25%20Offline)-38BDF8.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
@@ -114,6 +114,26 @@ graph LR
 
 ---
 
+### 👔 7. Diretoria Executiva & Conselheiro Inteligente (CFO, COO & CMO)
+* **Pulso de Saúde Corporativa (6 KPIs Semaforizados)**:
+  - Avaliação em tempo real de **Finanças**, **Produção**, **Logística**, **Varejo**, **Mercado** e **Inovação** com Score Global (0 a 100).
+* **Diagnóstico de Causa-Raiz Cruzada**:
+  - Conecta rupturas de gôndola no varejo à escassez em centros de distribuição e fábricas, detecta capacidade ociosa, monitora risco de insolvência e sugere avanços científicos.
+* **Máquina de Estados Anti-Spam com Feedback Positivo**:
+  - Alertas com estados (`Novo`, `Dispensado`, `Silenciado` e `Resolvido`). Um alerta dispensado só retorna se a métrica piorar em mais de 20%. Quando um gargalo é corrigido, o conselho registra automaticamente o sucesso no histórico corporativo.
+* **Deep-Links com Navegação Isométrica**:
+  - Botões de ação (`[ Inspecionar Fábrica ➔ ]`, `[ Inspecionar Armazém ➔ ]`, etc.) que viajam a câmera suavemente para o lote e abrem a janela operacional correspondente.
+
+---
+
+### 🔬 8. Pesquisa & Desenvolvimento (P&D) & Acervo de Patentes
+* **Bancadas Dedicadas de Inovação**: Centros de P&D físicos fornecendo bancadas para pesquisa de produtos com curva de ganho assintótica de QR (*Quality Rating*).
+* **Galeria Compacta de Patentes & Níveis Tecnológicos**:
+  - Projetos concluídos viram patentes permanentes agrupadas em um acervo com selo de **Nível Tecnológico da Holding** (*Nível 1: Manufatura Básica* até *Nível 4: Vanguarda Tecnológica*).
+  - Gestão de custos limpa: patentes consolidadas não cobram verba mensal e possuem fluxo seguro de arquivamento sem perda de know-how.
+
+---
+
 ## 🎮 Controles & Atalhos de Teclado
 
 | Tecla / Comando | Ação |
@@ -183,6 +203,7 @@ OIKONOMIA/
 │   ├── map_data.js                # Camadas compiladas TMX e matrizes do continente 128×128
 │   ├── sprite_manager.js          # Gerenciador e cache assíncrono de texturas e sprites isométricos
 │   ├── audio.js                   # Sistema de áudio procedural e sintetizador Web Audio API
+│   ├── advisor_system.js          # Diretoria Executiva & Diagnóstico Causal Cruzado (CFO, COO, CMO)
 │   ├── ticker_system.js           # Módulo do Diário Corporativo / Ticker superior interativo
 │   ├── macro_cycle_system.js      # Módulo macroeconômico de ciclos decenais de 10 anos
 │   └── assets/                    # Texturas, spritesheets e efeitos de áudio WAV/MP3
