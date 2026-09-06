@@ -71,6 +71,15 @@ export function createInitialGameState() {
       activeLoans: [],        // Array de objetos de empréstimo ativos
       totalDebt: 0,           // Soma dos remainingBalance de todos os empréstimos ativos
       loanHistory: []         // Empréstimos já quitados (auditoria / histórico)
+    },
+    advisorState: {
+      verbosity: 'novato',    // 'novato' | 'expert' | 'silencioso'
+      activeAlerts: {},       // id -> { id, category, severity, title, message, rootCause, deepLink, state, detectedMonth, detectedYear, metricVal }
+      alertHistory: [],       // array de alertas resolvidos ou arquivados
+      lastPulse: null,
+      lastEvaluatedDay: 0,
+      lastEvaluatedMonth: 0,
+      lastEvaluatedYear: 0
     }
   };
 }

@@ -7,6 +7,7 @@ import CoreMath from './core_math.js';
 import MacroCycleSystem from './macro_cycle_system.js';
 import { PRODUCT_CATALOG, FACTORY_RECIPES, MEDIA_OUTLETS } from './data_catalogs.js';
 import GameState from './game_state.js';
+import AdvisorSystem from './advisor_system.js';
 
 export function calcPriceRating(standardPrice, price) {
   return CoreMath.calculatePriceRating(standardPrice, price);
@@ -898,6 +899,19 @@ export function closeMonthEnd(customContext = {}) {
 
   if (historicalLedger.length > 24) {
     historicalLedger.shift();
+  }
+
+  // 7. Avaliação Estratégica da Diretoria Executiva (Pulso de Saúde & Alertas com Causa-Raiz)
+  if (AdvisorSystem) {
+    const pulse = AdvisorSystem.evaluateCorporatePulse({ state, activeFacilitySet, rdLabs: state.rdLabs });
+    const rawAlerts = AdvisorSystem.diagnoseCorporateIssues({ state, activeFacilitySet, rdLabs: state.rdLabs });
+    state.advisorState = AdvisorSystem.updateAdvisorAlertStates(state.advisorState, rawAlerts, state.month, state.year);
+    state.advisorState.lastPulse = pulse;
+
+    const newCriticals = Object.values(state.advisorState.activeAlerts || {}).filter(a => a.state === 'new' && a.severity === 'critical');
+    if (newCriticals.length > 0) {
+      addLog(`👔 DIRETORIA EXECUTIVA: ${newCriticals.length} alerta(s) operacional(is) crítico(s) detectado(s)!`, 'text-rose-400 font-bold', { actionType: 'OPEN_ADVISOR' });
+    }
   }
 
   state.monthRevenue = 0;

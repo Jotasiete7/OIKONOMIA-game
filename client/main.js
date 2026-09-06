@@ -25,6 +25,7 @@ import {
   calcElasticity,
   resolveSimulationContext
 } from './simulation.js';
+import AdvisorSystem from './advisor_system.js';
 
 // --- Fase 2A: Dados do mapa ---
 import { MAP_WIDTH, MAP_HEIGHT, TILE_WIDTH, TILE_HEIGHT, CITY_PROFILES_DATA, TMX_LAYERS } from './map_data.js';
@@ -109,6 +110,7 @@ window.calcPriceRating = calcPriceRating;
 window.calcProductRating = calcProductRating;
 window.calcElasticity = calcElasticity;
 window.resolveSimulationContext = resolveSimulationContext;
+window.AdvisorSystem = AdvisorSystem;
 
 // Re-exposição global (Fase 2A)
 window.MAP_WIDTH = MAP_WIDTH;
