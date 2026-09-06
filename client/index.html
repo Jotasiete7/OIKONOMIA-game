@@ -5498,6 +5498,7 @@
 
         const brand = playerBrandRating[prodId] || 20;
         const rating = calcProductRating(prod, shelf.price, shelf.quality, brand);
+        const elast = calcElasticity(prod.necessityIndex, prod.standardPrice, shelf.price, shelf.quality);
         const rawDailySales = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast;
         const estSales = Math.max(0.05, rawDailySales);
         const daysCover = Math.floor(shelf.stock / estSales);

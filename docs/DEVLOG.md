@@ -58,6 +58,10 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
    - Adicionado suporte nativo e persistente a `warehouse` em `extractBuiltTiles()` e `applyBuiltTiles()`, com altura isométrica adequada (`buildingHeight = 20`) e validação de sobreposição em `confirmBuildRDCenter`.
    - Restaurado o lote `(45, 40)` em `saves/Save_A_Guilda_1_slot_1788660755873.oiko` contendo o `CD & Silos Logísticos` e 5.000 un de `chemical_minerals`.
    - Atualizada a semente em `client/recovered_saves_seed.js` com auto-cura proativa no `localStorage` caso o slot do jogador tenha sido gravado sem o armazém antes do patch.
+6. **Correção Crítica de Referência de Elasticidade em `renderStorePanel` (Destravamento de Dias e Painéis de Lojas):**
+   - Corrigido `ReferenceError: elast is not defined` em `client/index.html` (linha 5501) no painel de varejo.
+   - O erro ocorria ao abrir o painel de qualquer loja (Drogaria, Kombini, Supermercado, Concessionária) e no loop diário `updateUI()`, abortando o tick de simulação diária (`simulateDay`).
+   - Adicionada a declaração explícita de `elast = calcElasticity(...)`, restaurando a visualização e gestão das gôndolas e liberando a passagem contínua do tempo.
 
 ---
 
