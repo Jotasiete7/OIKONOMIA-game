@@ -8,6 +8,9 @@
 [![Supply Chain](https://img.shields.io/badge/Cadeia%20Produtiva-99%20Produtos%20%7C%2077%20Receitas-amber.svg)](https://github.com/Jotasiete7/OIKONOMIA-game)
 [![License: Dual (MIT + Proprietary Assets)](https://img.shields.io/badge/License-Dual%20(MIT%20%2B%20Assets)-blue.svg)](LICENSE.md)
 
+> ### 🎮 **[CLIQUE AQUI PARA JOGAR ONLINE NO NAVEGADOR](https://jotasiete7.github.io/OIKONOMIA-game/)**
+> *Roda instantaneamente no computador ou tablet sem necessidade de download ou instalação!*
+
 **OIKONOMIA** é um simulador econômico e empresarial profundo inspirado em clássicos como *Capitalism Lab*, *SimCity* e *Industry Giant*. O jogo combina um motor microeconômico de tempo contínuo com um vasto continente isométrico 2.5D de 128×128 blocos, integrando extração mineral, agropecuária, manufatura industrial, logística marítima, P&D com patentes e 8 redes especializadas de varejo.
 
 ---
