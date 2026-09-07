@@ -85,6 +85,7 @@ async function runDeepAudits() {
     '--no-first-run',
     '--no-default-browser-check',
     '--window-size=1920,1080',
+    '--allow-file-access-from-files',
     'about:blank'
   ]);
 
@@ -113,7 +114,25 @@ async function runDeepAudits() {
 
     console.log(`3. Carregando jogo: ${HTML_FILE_URL}`);
     await cdp.send('Page.navigate', { url: HTML_FILE_URL });
-    await sleep(1500);
+    await sleep(2000);
+
+    // Aguarda montagem dos módulos ES6 (oiko:ready)
+    await cdp.eval(`
+      new Promise((resolve) => {
+        if (window.__OIKO_MODULES_READY__) {
+          if (typeof syncGlobalModuleBindings === 'function') syncGlobalModuleBindings();
+          return resolve();
+        }
+        window.addEventListener('oiko:ready', () => {
+          if (typeof syncGlobalModuleBindings === 'function') syncGlobalModuleBindings();
+          resolve();
+        }, { once: true });
+        setTimeout(() => {
+          if (typeof syncGlobalModuleBindings === 'function') syncGlobalModuleBindings();
+          resolve();
+        }, 3000);
+      })
+    `);
 
     // Dispensa a tela de loading de 6.5s, menu principal e tutorial para entrar diretamente no modo PLAYING
     await cdp.eval(`

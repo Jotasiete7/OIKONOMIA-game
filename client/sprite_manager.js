@@ -186,6 +186,7 @@ class SpriteManager {
     keys.forEach(key => {
       const src = this.ASSET_CATALOG[key];
       const img = new Image();
+      img.crossOrigin = 'anonymous';
       img.onload = () => {
         this.loadedCount++;
         if (this.onProgress) {

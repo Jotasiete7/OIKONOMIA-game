@@ -98,6 +98,23 @@ import {
 // --- Sistema de Armazém Logístico & CDs ---
 import * as WarehouseSystem from './warehouse_system.js';
 
+// --- Sistema de Telemetria, Captura Visual & Flight Recorder (Supabase) ---
+import TelemetrySystem, {
+  initTelemetryEngine,
+  trackPlayerAction,
+  captureOptimizedScreenshot,
+  analyzeGameBalance,
+  buildTelemetryPayload,
+  dispatchReport,
+  downloadReportJson,
+  copyReportToClipboard,
+  isSupabaseConfigured
+} from './telemetry_system.js';
+import { TELEMETRY_CONFIG } from './telemetry_config.js';
+
+// Inicializa captura de erros do Flight Recorder o mais cedo possível
+initTelemetryEngine();
+
 // Re-exposição global (Fase 1)
 window.CoreMath = CoreMath;
 window.TickerSystem = TickerSystem;
@@ -211,6 +228,18 @@ window.migrateWarehouseLegacyKeys = WarehouseSystem.migrateWarehouseLegacyKeys;
 window.toggleWarehouseAddSelect = WarehouseSystem.toggleWarehouseAddSelect;
 window.toggleSelectAllFilteredAddProducts = WarehouseSystem.toggleSelectAllFilteredAddProducts;
 window.allocateSelectedWarehouseProducts = WarehouseSystem.allocateSelectedWarehouseProducts;
+
+// Re-exposição global (Telemetry & Bug Reporter Flight Recorder)
+window.TelemetrySystem = TelemetrySystem;
+window.TELEMETRY_CONFIG = TELEMETRY_CONFIG;
+window.trackPlayerAction = trackPlayerAction;
+window.captureOptimizedScreenshot = captureOptimizedScreenshot;
+window.analyzeGameBalance = analyzeGameBalance;
+window.buildTelemetryPayload = buildTelemetryPayload;
+window.dispatchReport = dispatchReport;
+window.downloadReportJson = downloadReportJson;
+window.copyReportToClipboard = copyReportToClipboard;
+window.isSupabaseConfigured = isSupabaseConfigured;
 
 // Proxies reativos globais vinculados a GameState (Single Source of Truth)
 const stateProxyProps = [

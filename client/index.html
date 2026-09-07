@@ -297,6 +297,9 @@
         </div>
       </div>
 
+      <button onclick="toggleBugReportModal()" class="bg-rose-950/80 hover:bg-rose-900 border border-rose-700/60 text-rose-300 px-2 py-0.5 rounded text-[9px] font-bold flex items-center gap-1 shadow transition cursor-pointer" title="Reportar Bug, Desbalanceamento ou Feedback com Print e Save (Atalho F8)">
+        🐛 <span class="hidden sm:inline">Reportar Bug</span> [F8]
+      </button>
       <button onclick="toggleDevDashboard()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-300 px-1.5 py-0.5 rounded text-[9px] font-bold flex items-center gap-1 shadow transition cursor-pointer" title="Abrir Painel de Desenvolvimento & Logs de Debug (Atalho F3)">
         🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
       </button>
@@ -1968,6 +1971,7 @@
         <button id="dev-tab-btn-assets" onclick="switchDevTab('assets')" class="px-3 py-1 rounded-lg font-bold text-slate-400 hover:bg-slate-800">🎨 Sprites & Assets</button>
         <button id="dev-tab-btn-logs" onclick="switchDevTab('logs')" class="px-3 py-1 rounded-lg font-bold text-slate-400 hover:bg-slate-800">📜 Logs de Debug (<span id="dev-logs-count">0</span>)</button>
         <button id="dev-tab-btn-tools" onclick="switchDevTab('tools')" class="px-3 py-1 rounded-lg font-bold text-slate-400 hover:bg-slate-800">⚡ Sandbox / Testes</button>
+        <button id="dev-tab-btn-replayer" onclick="switchDevTab('replayer')" class="px-3 py-1 rounded-lg font-bold text-slate-400 hover:bg-slate-800">🕹️ Bug Replayer</button>
       </div>
 
       <!-- Conteúdo das Abas -->
@@ -2068,12 +2072,139 @@
             </button>
           </div>
         </div>
+
+        <!-- ABA 5: BUG REPLAYER (REPRODUÇÃO DE SAVES DE REPORTES) -->
+        <div id="dev-tab-replayer" class="space-y-3 hidden">
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🕹️</span>
+              <div>
+                <h4 class="text-xs font-bold text-slate-200">Reprodutor de Saves de Reportes (Bug Replayer)</h4>
+                <p class="text-[10px] text-slate-400">Cole abaixo o payload JSON recebido de qualquer relatório no Supabase ou Discord. O jogo carregará o estado exato da partida reportada pelo jogador com 1 clique.</p>
+              </div>
+            </div>
+            <textarea id="dev-replayer-json-input" rows="6" placeholder="Cole o JSON completo do reporte ou o objeto save_snapshot aqui..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-[10px] font-mono text-slate-200 placeholder-slate-600 focus:border-indigo-500 focus:outline-none resize-none select-text"></textarea>
+            <div class="flex items-center justify-between">
+              <button onclick="clearReplayerInput()" class="text-[10px] text-slate-500 hover:text-slate-400 font-bold cursor-pointer">Limpar Campo</button>
+              <button onclick="loadReportSaveFromReplayer()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold flex items-center gap-1.5 shadow transition cursor-pointer">
+                🚀 Carregar & Reproduzir Partida
+              </button>
+            </div>
+            <div id="dev-replayer-feedback" class="hidden text-[10px] p-2.5 rounded-xl font-bold"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Footer -->
       <div class="bg-slate-950 border-t border-slate-800 px-6 py-3 flex justify-between items-center">
         <span class="text-[9px] text-slate-500">Pressione <strong>F3</strong> ou <strong>ESC</strong> a qualquer momento para fechar este painel.</span>
-        <button onclick="closeDevDashboard()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold">Fechar</button>
+        <button onclick="closeDevDashboard()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold cursor-pointer">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 8B: MODAL DE REPORTE DE BUGS & TELEMETRIA AVANÇADA (F8)        -->
+  <!-- ======================================================================= -->
+  <div id="bug-report-modal" class="fixed inset-0 z-[98] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 select-none hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col font-sans text-xs max-h-[92vh] text-slate-200">
+      <!-- Header -->
+      <div class="bg-slate-800/90 border-b border-slate-700 px-5 py-3.5 flex items-center justify-between drag-handle">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-rose-950 border border-rose-700/60 flex items-center justify-center text-sm">🐛</div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">Reportar Bug / Feedback Técnico</h3>
+            <span class="text-[10px] text-rose-400 font-mono">Flight Recorder & Telemetria OIKONOMIA</span>
+          </div>
+        </div>
+        <button onclick="closeBugReportModal()" class="w-7 h-7 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-bold flex items-center justify-center cursor-pointer">✕</button>
+      </div>
+
+      <!-- Corpo do Formulário -->
+      <div class="p-5 overflow-y-auto space-y-4 flex-1 custom-scrollbar">
+        <!-- Linha 1: Categoria e Opções de Anexo -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Categoria -->
+          <div class="space-y-1.5">
+            <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wide">Tipo de Reporte:</label>
+            <select id="bug-report-category" onchange="onBugReportCategoryChange()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 font-medium focus:border-rose-500 focus:outline-none">
+              <option value="bug">🐛 Bug / Travamento / Falha Técnica</option>
+              <option value="balance">⚖️ Desbalanceamento Econômico / Lucro Irreal</option>
+              <option value="exploit">🚨 Suspeita de Exploit / Abuso</option>
+              <option value="suggestion">💡 Sugestão / Melhoria de Jogabilidade</option>
+            </select>
+          </div>
+
+          <!-- Opções de Telemetria Automática -->
+          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 space-y-1.5 text-[11px]">
+            <span class="text-slate-400 font-bold block">Anexos de Diagnóstico:</span>
+            <label class="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white">
+              <input type="checkbox" id="bug-report-include-screen" checked class="rounded accent-rose-500">
+              <span>Incluir Captura de Tela (Print ~40KB)</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white">
+              <input type="checkbox" id="bug-report-include-save" checked class="rounded accent-rose-500">
+              <span>Incluir Savegame para Reprodução (~25KB)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Miniatura do Print Capturado -->
+        <div id="bug-report-screenshot-container" class="space-y-1.5">
+          <div class="flex justify-between items-center text-[10px] text-slate-400">
+            <span>📷 Captura da Tela no Momento do Reporte:</span>
+            <button onclick="refreshBugReportScreenshot()" class="text-indigo-400 hover:text-indigo-300 hover:underline cursor-pointer">Tirar novo print</button>
+          </div>
+          <div class="relative bg-slate-950 rounded-xl border border-slate-800 overflow-hidden flex items-center justify-center max-h-40">
+            <img id="bug-report-screenshot-preview" src="" alt="Screenshot" class="w-full h-auto object-contain max-h-40">
+          </div>
+        </div>
+
+        <!-- Título do Reporte -->
+        <div class="space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wide">Título / Resumo Curto <span class="text-rose-400">*</span>:</label>
+          <input type="text" id="bug-report-title" placeholder="Ex: Armazém parou de entregar trigo para a fábrica após o 2º ano" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:border-rose-500 focus:outline-none">
+        </div>
+
+        <!-- Descrição -->
+        <div class="space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wide">O que você estava fazendo? O que aconteceu de errado?</label>
+          <textarea id="bug-report-desc" rows="3" placeholder="Descreva os passos para reproduzir, o que você esperava que acontecesse e o que aconteceu..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:border-rose-500 focus:outline-none resize-none"></textarea>
+        </div>
+
+        <!-- Acordeão Transparência: Diagnóstico Técnico e Heurísticas -->
+        <details class="bg-slate-950 rounded-xl border border-slate-800 p-3 text-[11px] group">
+          <summary class="font-bold text-slate-400 cursor-pointer flex justify-between items-center select-none group-open:text-indigo-400">
+            <span>👁️ Ver Diagnóstico Técnico e Dados de Voo</span>
+            <span class="text-[10px] text-slate-500 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <div class="mt-3 space-y-2 text-slate-300 font-mono text-[10px] border-t border-slate-800/80 pt-2">
+            <div id="bug-report-tech-summary">Carregando dados de voo...</div>
+          </div>
+        </details>
+
+        <!-- Feedback de Envio / Alertas -->
+        <div id="bug-report-feedback" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+      </div>
+
+      <!-- Rodapé com Botões de Ação -->
+      <div class="bg-slate-950/90 border-t border-slate-800 px-5 py-3 flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <button onclick="copyBugReportToClipboard()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-[11px] flex items-center gap-1.5 transition cursor-pointer" title="Copiar relatório formatado em JSON para colar no Discord ou suporte">
+            📋 Copiar Pacote
+          </button>
+          <button onclick="downloadBugReportFile()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-[11px] flex items-center gap-1.5 transition cursor-pointer" title="Baixar arquivo .json com print e save">
+            💾 Baixar .json
+          </button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="closeBugReportModal()" class="px-3 py-1.5 rounded-xl text-slate-400 hover:text-white text-[11px] font-medium transition cursor-pointer">
+            Cancelar
+          </button>
+          <button id="bug-report-submit-btn" onclick="submitBugReport()" class="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold text-[11px] flex items-center gap-1.5 shadow-lg transition cursor-pointer">
+            <span>🚀 Enviar para Supabase</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -2915,6 +3046,7 @@
       canvas.height = r.height * window.devicePixelRatio;
       ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     }
+    if (typeof window !== 'undefined') window.resizeCanvas = resizeCanvas;
 
     function resetCamera() {
       jumpToCity('nova_atenas');
@@ -10799,8 +10931,14 @@
       }
 
       // Espelha no Ticker (reaproveita o mesmo evento com filtragem interna por cor)
-      if (typeof TickerSystem !== 'undefined') {
-        TickerSystem.pushFromLog(text, color, options);
+      const ticker = (typeof window !== 'undefined' && window.TickerSystem) ? window.TickerSystem : (typeof TickerSystem !== 'undefined' && TickerSystem ? TickerSystem : null);
+      if (ticker && typeof ticker.pushFromLog === 'function') {
+        ticker.pushFromLog(text, color, options);
+      }
+
+      // Registra no Flight Recorder de Telemetria
+      if (typeof trackPlayerAction === 'function') {
+        trackPlayerAction(options.category || 'EVENT', text, options);
       }
     }
     const addGameLog = addLog;
@@ -10850,6 +10988,12 @@
       if (e.key === 'F3') {
         e.preventDefault();
         toggleDevDashboard();
+        return;
+      }
+
+      if (e.key === 'F8') {
+        e.preventDefault();
+        toggleBugReportModal();
         return;
       }
 
@@ -10988,7 +11132,7 @@
     }
 
     function switchDevTab(tab) {
-      ['diag', 'assets', 'logs', 'tools'].forEach(t => {
+      ['diag', 'assets', 'logs', 'tools', 'replayer'].forEach(t => {
         const content = document.getElementById(`dev-tab-${t}`);
         const btn = document.getElementById(`dev-tab-btn-${t}`);
         if (content) content.classList.toggle('hidden', t !== tab);
@@ -11125,6 +11269,321 @@
       logDebug('Dump completo de GameState exportado.', 'SANDBOX');
     }
 
+    // ===========================================================================
+    // SISTEMA DE REPORTE DE BUGS, TELEMETRIA & BUG REPLAYER (F8 / F3)
+    // ===========================================================================
+    let currentBugReportScreenshot = null;
+    let currentBugReportCachedPayload = null;
+
+    async function toggleBugReportModal() {
+      const modal = document.getElementById('bug-report-modal');
+      if (!modal) return;
+      if (modal.classList.contains('hidden')) {
+        await openBugReportModal();
+      } else {
+        closeBugReportModal();
+      }
+    }
+
+    async function openBugReportModal() {
+      const modal = document.getElementById('bug-report-modal');
+      if (!modal) return;
+
+      // Pausa o jogo temporariamente para não perder o estado exato
+      if (typeof window.gameSpeed !== 'undefined' && window.gameSpeed > 0) {
+        if (typeof setSpeed === 'function') setSpeed(0);
+      }
+
+      // Reseta inputs
+      const titleEl = document.getElementById('bug-report-title');
+      if (titleEl) titleEl.value = '';
+      const descEl = document.getElementById('bug-report-desc');
+      if (descEl) descEl.value = '';
+      const catEl = document.getElementById('bug-report-category');
+      if (catEl) catEl.value = 'bug';
+      const chkScreen = document.getElementById('bug-report-include-screen');
+      if (chkScreen) chkScreen.checked = true;
+      const chkSave = document.getElementById('bug-report-include-save');
+      if (chkSave) chkSave.checked = true;
+
+      const fbEl = document.getElementById('bug-report-feedback');
+      if (fbEl) {
+        fbEl.className = 'hidden';
+        fbEl.innerHTML = '';
+      }
+
+      const submitBtn = document.getElementById('bug-report-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>🚀 Enviar para Supabase</span>';
+      }
+
+      // Tira o screenshot instantâneo antes de exibir o modal
+      await refreshBugReportScreenshot();
+
+      // Atualiza sumário técnico de transparência
+      updateBugReportTechSummary();
+
+      modal.classList.remove('hidden');
+      if (titleEl) setTimeout(() => titleEl.focus(), 100);
+      logDebug('Modal de reporte de bugs (Flight Recorder) aberto.', 'BUG_UI');
+    }
+
+    function closeBugReportModal() {
+      const modal = document.getElementById('bug-report-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function onBugReportCategoryChange() {
+      const catEl = document.getElementById('bug-report-category');
+      const chkScreen = document.getElementById('bug-report-include-screen');
+      const chkSave = document.getElementById('bug-report-include-save');
+      const screenContainer = document.getElementById('bug-report-screenshot-container');
+      if (!catEl) return;
+
+      if (catEl.value === 'suggestion') {
+        // Para sugestão, por padrão economiza espaço desmarcando print
+        if (chkScreen) chkScreen.checked = false;
+        if (screenContainer) screenContainer.classList.add('opacity-40');
+      } else {
+        if (chkScreen) chkScreen.checked = true;
+        if (chkSave) chkSave.checked = true;
+        if (screenContainer) screenContainer.classList.remove('opacity-40');
+      }
+    }
+
+    async function refreshBugReportScreenshot() {
+      const preview = document.getElementById('bug-report-screenshot-preview');
+      if (typeof captureOptimizedScreenshot === 'function') {
+        currentBugReportScreenshot = await captureOptimizedScreenshot();
+        if (preview && currentBugReportScreenshot) {
+          preview.src = currentBugReportScreenshot;
+          preview.style.display = 'block';
+        }
+      }
+    }
+
+    function updateBugReportTechSummary() {
+      const summaryEl = document.getElementById('bug-report-tech-summary');
+      if (!summaryEl) return;
+
+      const cashVal = typeof cash !== 'undefined' ? cash : 0;
+      const dateStr = `Dia ${window.day || 1}/${window.month || 1} · Ano ${window.year || 1}`;
+      const facilitiesCount = typeof activeFacilitySet !== 'undefined' ? activeFacilitySet.size : 0;
+      const isCfg = typeof isSupabaseConfigured === 'function' ? isSupabaseConfigured() : false;
+
+      let balanceInfo = 'Sem alertas graves de desbalanceamento';
+      if (typeof analyzeGameBalance === 'function') {
+        const analysis = analyzeGameBalance();
+        if (analysis && analysis.anomalies && analysis.anomalies.length > 0) {
+          balanceInfo = `<span class="text-rose-400 font-bold">${analysis.anomalies.length} anomalia(s) detectada(s):</span> ` +
+            analysis.anomalies.map(a => `<br>• [${a.code}] ${a.message}`).join('');
+        }
+      }
+
+      summaryEl.innerHTML = `
+        <div><strong>Empresa:</strong> ${window.playerProfile?.companyName || 'Empresa'} (CEO: ${window.playerProfile?.playerName || 'Jogador'})</div>
+        <div><strong>Data / Caixa:</strong> ${dateStr} · Caixa: $${cashVal.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+        <div><strong>Instalações no Sparse Index:</strong> ${facilitiesCount} prédios mapeados</div>
+        <div><strong>Destino Supabase:</strong> ${isCfg ? '<span class="text-emerald-400 font-bold">Configurado & Conectado</span>' : '<span class="text-amber-400 font-bold">Modo Local / Aguardando chaves no telemetry_config.js</span>'}</div>
+        <div class="mt-1 border-t border-slate-800 pt-1"><strong>Status de Balanceamento:</strong> ${balanceInfo}</div>
+      `;
+    }
+
+    async function prepareCurrentReportPayload() {
+      const catEl = document.getElementById('bug-report-category');
+      const titleEl = document.getElementById('bug-report-title');
+      const descEl = document.getElementById('bug-report-desc');
+      const chkScreen = document.getElementById('bug-report-include-screen');
+      const chkSave = document.getElementById('bug-report-include-save');
+
+      const category = catEl ? catEl.value : 'bug';
+      const title = titleEl?.value?.trim() || 'Reporte de Jogo';
+      const description = descEl?.value?.trim() || '';
+      const includeScreenshot = chkScreen ? chkScreen.checked : true;
+      const includeSave = chkSave ? chkSave.checked : true;
+
+      if (typeof buildTelemetryPayload === 'function') {
+        const payload = await buildTelemetryPayload({
+          category,
+          title,
+          description,
+          includeScreenshot,
+          includeSave
+        });
+        if (includeScreenshot && currentBugReportScreenshot) {
+          payload.screenshot = currentBugReportScreenshot;
+        }
+        return payload;
+      }
+      return null;
+    }
+
+    async function submitBugReport() {
+      const titleEl = document.getElementById('bug-report-title');
+      const fbEl = document.getElementById('bug-report-feedback');
+      const submitBtn = document.getElementById('bug-report-submit-btn');
+
+      if (!titleEl || !titleEl.value.trim()) {
+        if (fbEl) {
+          fbEl.className = 'p-3 rounded-xl text-xs font-bold bg-rose-950/80 border border-rose-700 text-rose-300 block';
+          fbEl.innerHTML = '⚠️ Por favor, preencha um título ou resumo curto para o reporte.';
+        }
+        if (titleEl) titleEl.focus();
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="animate-spin">⏳</span> <span>Enviando...</span>';
+      }
+
+      if (fbEl) {
+        fbEl.className = 'p-3 rounded-xl text-xs font-bold bg-indigo-950/80 border border-indigo-700 text-indigo-300 block';
+        fbEl.innerHTML = '🔄 Empacotando telemetria, save e enviando para o Supabase...';
+      }
+
+      try {
+        const payload = await prepareCurrentReportPayload();
+        if (!payload) throw new Error('Falha ao gerar payload de telemetria.');
+
+        currentBugReportCachedPayload = payload;
+
+        const result = await dispatchReport(payload);
+
+        if (result.success) {
+          if (fbEl) {
+            fbEl.className = 'p-3 rounded-xl text-xs font-bold bg-emerald-950/80 border border-emerald-700 text-emerald-300 block';
+            fbEl.innerHTML = `✅ Relatório gravado com sucesso no Supabase! ID: <span class="font-mono text-[11px] text-white">${result.reportId}</span>.<br><span class="text-[10px] text-slate-300">Obrigado por ajudar a aprimorar o OIKONOMIA!</span>`;
+          }
+          if (submitBtn) {
+            submitBtn.innerHTML = '<span>✅ Enviado com Sucesso</span>';
+          }
+          if (typeof playSuccessChime === 'function') playSuccessChime();
+          setTimeout(() => {
+            closeBugReportModal();
+          }, 3000);
+        } else if (!result.isConfigured) {
+          if (fbEl) {
+            fbEl.className = 'p-3 rounded-xl text-xs bg-amber-950/80 border border-amber-700 text-amber-200 block';
+            fbEl.innerHTML = `
+              <strong>ℹ️ Supabase em Configuração:</strong><br>
+              As chaves ativas do Supabase ainda não foram adicionadas no arquivo <code>telemetry_config.js</code>.<br>
+              <span class="block mt-1">Você pode <strong>copiar o pacote</strong> ou <strong>baixar o arquivo .json</strong> abaixo para envio manual!</span>
+            `;
+          }
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>🚀 Tentar Novamente</span>';
+          }
+        } else {
+          if (fbEl) {
+            fbEl.className = 'p-3 rounded-xl text-xs bg-rose-950/80 border border-rose-700 text-rose-300 block';
+            fbEl.innerHTML = `
+              <strong>❌ Erro ao enviar para o Supabase:</strong> ${result.error || 'Falha de rede'}<br>
+              <span class="text-[10px] text-slate-400">${result.details || ''}</span><br>
+              <span class="block mt-1">Você pode <strong>copiar o pacote</strong> ou <strong>baixar o arquivo .json</strong> abaixo para não perder os dados.</span>
+            `;
+          }
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>🚀 Tentar Novamente</span>';
+          }
+        }
+      } catch (err) {
+        if (fbEl) {
+          fbEl.className = 'p-3 rounded-xl text-xs bg-rose-950/80 border border-rose-700 text-rose-300 block';
+          fbEl.innerHTML = `❌ Erro inesperado: ${err.message || err}`;
+        }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>🚀 Tentar Novamente</span>';
+        }
+      }
+    }
+
+    async function copyBugReportToClipboard() {
+      const payload = currentBugReportCachedPayload || await prepareCurrentReportPayload();
+      if (!payload) return;
+
+      const fbEl = document.getElementById('bug-report-feedback');
+      const ok = await copyReportToClipboard(payload);
+      if (ok && fbEl) {
+        fbEl.className = 'p-3 rounded-xl text-xs font-bold bg-indigo-950/80 border border-indigo-700 text-indigo-300 block';
+        fbEl.innerHTML = '📋 Pacote completo copiado para a Área de Transferência com sucesso!';
+        if (typeof playSuccessChime === 'function') playSuccessChime();
+      }
+    }
+
+    async function downloadBugReportFile() {
+      const payload = currentBugReportCachedPayload || await prepareCurrentReportPayload();
+      if (!payload) return;
+
+      const fbEl = document.getElementById('bug-report-feedback');
+      const ok = downloadReportJson(payload);
+      if (ok && fbEl) {
+        fbEl.className = 'p-3 rounded-xl text-xs font-bold bg-indigo-950/80 border border-indigo-700 text-indigo-300 block';
+        fbEl.innerHTML = '💾 Arquivo de relatório baixado com sucesso no seu computador!';
+        if (typeof playSuccessChime === 'function') playSuccessChime();
+      }
+    }
+
+    // ---------------------------------------------------------------------------
+    // Ferramenta Bug Replayer (Carregar Save de Reporte no Dev Dashboard F3)
+    // ---------------------------------------------------------------------------
+    function clearReplayerInput() {
+      const inputEl = document.getElementById('dev-replayer-json-input');
+      if (inputEl) inputEl.value = '';
+      const fbEl = document.getElementById('dev-replayer-feedback');
+      if (fbEl) fbEl.className = 'hidden';
+    }
+
+    function loadReportSaveFromReplayer() {
+      const inputEl = document.getElementById('dev-replayer-json-input');
+      const fbEl = document.getElementById('dev-replayer-feedback');
+      if (!inputEl || !inputEl.value.trim()) {
+        if (fbEl) {
+          fbEl.className = 'text-rose-400 bg-rose-950/80 border border-rose-800 p-2.5 rounded-xl block';
+          fbEl.textContent = '⚠️ Cole o JSON do reporte ou do save_snapshot no campo acima.';
+        }
+        return;
+      }
+
+      try {
+        const rawData = JSON.parse(inputEl.value.trim());
+        
+        // Se o desenvolvedor colou o reporte completo, extrai save_snapshot
+        let saveObj = rawData;
+        if (rawData.save_snapshot && typeof rawData.save_snapshot === 'object') {
+          saveObj = rawData.save_snapshot;
+        } else if (rawData.saveSnapshot && typeof rawData.saveSnapshot === 'object') {
+          saveObj = rawData.saveSnapshot;
+        }
+
+        if (!saveObj.playerProfile && !saveObj.cash && !saveObj.builtTiles) {
+          throw new Error('O JSON colado não contém uma estrutura de save válida (playerProfile/cash/builtTiles).');
+        }
+
+        const loaded = loadGameFromData(saveObj);
+        if (loaded) {
+          if (fbEl) {
+            fbEl.className = 'text-emerald-400 bg-emerald-950/80 border border-emerald-800 p-2.5 rounded-xl block';
+            fbEl.textContent = `✅ Partida carregada com sucesso! Empresa: [${playerProfile.companyName}]. Fechando Dev Dashboard...`;
+          }
+          setTimeout(() => {
+            closeDevDashboard();
+          }, 1200);
+        } else {
+          throw new Error('Falha ao processar e migrar os dados do save.');
+        }
+      } catch (err) {
+        if (fbEl) {
+          fbEl.className = 'text-rose-400 bg-rose-950/80 border border-rose-800 p-2.5 rounded-xl block';
+          fbEl.textContent = `❌ Erro ao carregar save: ${err.message}`;
+        }
+      }
+    }
+
     function updateUI() {
       const clockEl = document.getElementById('clock-date');
       if (clockEl) {
@@ -11133,12 +11592,16 @@
       }
 
       const qBadge = document.getElementById('hud-quarter-badge');
-      if (qBadge && typeof CoreMath !== 'undefined' && CoreMath.getQuarterInfo) {
-        const qInfo = CoreMath.getQuarterInfo(month);
-        const macroInfo = typeof MacroCycleSystem !== 'undefined' ? MacroCycleSystem.getHUDLabel(year) : null;
-        const phaseName = (macroInfo && macroInfo.phase) ? macroInfo.phase.name : (macroInfo ? macroInfo.shortText : qInfo.season);
-        qBadge.textContent = `${qInfo.emoji} ${qInfo.code} · ${phaseName}`;
-        qBadge.title = `Trimestre: ${qInfo.code} — ${qInfo.name} (Meses ${qInfo.months.join(', ')})\nCiclo Decenal: ${macroInfo ? macroInfo.text + ' — ' + macroInfo.desc : ''}`;
+      const mathMod = (typeof window !== 'undefined' && window.CoreMath) ? window.CoreMath : (typeof CoreMath !== 'undefined' && CoreMath ? CoreMath : null);
+      if (qBadge && mathMod && typeof mathMod.getQuarterInfo === 'function') {
+        const qInfo = mathMod.getQuarterInfo(month);
+        const macroMod = (typeof window !== 'undefined' && window.MacroCycleSystem) ? window.MacroCycleSystem : (typeof MacroCycleSystem !== 'undefined' && MacroCycleSystem ? MacroCycleSystem : null);
+        const macroInfo = macroMod && typeof macroMod.getHUDLabel === 'function' ? macroMod.getHUDLabel(year) : null;
+        const phaseName = (macroInfo && macroInfo.phase) ? macroInfo.phase.name : (macroInfo ? macroInfo.shortText : (qInfo ? qInfo.season : 'Padrão'));
+        if (qInfo) {
+          qBadge.textContent = `${qInfo.emoji} ${qInfo.code} · ${phaseName}`;
+          qBadge.title = `Trimestre: ${qInfo.code} — ${qInfo.name} (Meses ${qInfo.months.join(', ')})\nCiclo Decenal: ${macroInfo ? macroInfo.text + ' — ' + macroInfo.desc : ''}`;
+        }
       }
 
       const cashEl = document.getElementById('corp-cash');
@@ -12360,7 +12823,21 @@
     }
 
     function handleGlobalEscapeKey() {
-      // Prioridade 0: Modal de Confirmação de Venda / Demolição
+      // Prioridade 0A: Modal de Reporte de Bugs (F8)
+      const bugModal = document.getElementById('bug-report-modal');
+      if (bugModal && !bugModal.classList.contains('hidden')) {
+        closeBugReportModal();
+        return;
+      }
+
+      // Prioridade 0B: Dev Dashboard (F3)
+      const devModal = document.getElementById('dev-dashboard-modal');
+      if (devModal && !devModal.classList.contains('hidden')) {
+        closeDevDashboard();
+        return;
+      }
+
+      // Prioridade 0C: Modal de Confirmação de Venda / Demolição
       const facConfirm = document.getElementById('confirm-facility-modal');
       if (facConfirm && !facConfirm.classList.contains('hidden')) {
         closeFacilityConfirmModal();
@@ -12425,7 +12902,8 @@
         'floating-facility-window', 'store-modal', 'mine-modal', 'farm-modal',
         'factory-modal', 'factory-recipe-modal', 'port-modal', 'supplier-modal',
         'add-product-modal', 'marketing-modal', 'dre-modal', 'diary-modal',
-        'confirm-exit-modal', 'save-load-modal', 'settings-modal', 'new-game-modal'
+        'confirm-exit-modal', 'save-load-modal', 'settings-modal', 'new-game-modal',
+        'bug-report-modal'
       ];
       for (const id of openInGameModals) {
         const el = document.getElementById(id);
