@@ -144,6 +144,11 @@ export async function captureOptimizedScreenshot() {
     ctx.fillStyle = '#020617';
     ctx.fillRect(0, 0, targetWidth, targetHeight);
 
+    // Garante que o mapa esteja desenhado no canvas
+    if (typeof window !== 'undefined' && typeof window.renderMap === 'function') {
+      try { window.renderMap(); } catch (_) {}
+    }
+
     // Desenha o canvas renderizado
     if (mainCanvas.width > 0 && mainCanvas.height > 0) {
       try {

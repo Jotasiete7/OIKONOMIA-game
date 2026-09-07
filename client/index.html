@@ -2152,11 +2152,22 @@
         <!-- Miniatura do Print Capturado -->
         <div id="bug-report-screenshot-container" class="space-y-1.5">
           <div class="flex justify-between items-center text-[10px] text-slate-400">
-            <span>📷 Captura da Tela no Momento do Reporte:</span>
-            <button onclick="refreshBugReportScreenshot()" class="text-indigo-400 hover:text-indigo-300 hover:underline cursor-pointer">Tirar novo print</button>
+            <span class="flex items-center gap-1.5">
+              <span>📷 Captura da Tela:</span>
+              <span id="bug-report-screenshot-status" class="text-indigo-400 font-medium"></span>
+            </span>
+            <button type="button" onclick="retakeScreenshotFromGame()" class="text-indigo-400 hover:text-indigo-300 hover:underline cursor-pointer font-medium flex items-center gap-1">
+              <span>🔄 Tirar novo print</span>
+            </button>
           </div>
-          <div class="relative bg-slate-950 rounded-xl border border-slate-800 overflow-hidden flex items-center justify-center max-h-40">
-            <img id="bug-report-screenshot-preview" src="" alt="Screenshot" class="w-full h-auto object-contain max-h-40">
+          <div class="relative bg-slate-950 rounded-xl border border-slate-800 overflow-hidden flex items-center justify-center min-h-[110px] max-h-44 group">
+            <!-- Loading / Placeholder elegante quando não há print ou enquanto carrega -->
+            <div id="bug-report-screenshot-placeholder" class="py-6 flex flex-col items-center justify-center text-slate-500 gap-1.5 text-center px-4">
+              <span class="text-xl animate-pulse">📷</span>
+              <span class="text-[11px] text-slate-400 font-medium">Capturando imagem do jogo...</span>
+              <span class="text-[9px] text-slate-600">Dica: Você também pode colar um print do clipboard com <kbd class="px-1 py-0.5 bg-slate-800 rounded text-slate-300 font-mono">Ctrl + V</kbd></span>
+            </div>
+            <img id="bug-report-screenshot-preview" src="" alt="Screenshot" class="hidden w-full h-auto object-contain max-h-44 transition duration-200">
           </div>
         </div>
 
@@ -2202,7 +2213,7 @@
             Cancelar
           </button>
           <button id="bug-report-submit-btn" onclick="submitBugReport()" class="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold text-[11px] flex items-center gap-1.5 shadow-lg transition cursor-pointer">
-            <span>🚀 Enviar para Supabase</span>
+            <span>🚀 Enviar para a Equipe OIKONOMIA</span>
           </button>
         </div>
       </div>
@@ -3514,6 +3525,7 @@
         }
       }
     }
+    if (typeof window !== 'undefined') window.renderMap = renderMap;
 
     // ===========================================================================
     
@@ -11306,6 +11318,18 @@
       const chkSave = document.getElementById('bug-report-include-save');
       if (chkSave) chkSave.checked = true;
 
+      const preview = document.getElementById('bug-report-screenshot-preview');
+      const placeholder = document.getElementById('bug-report-screenshot-placeholder');
+      const statusBadge = document.getElementById('bug-report-screenshot-status');
+      if (preview) {
+        preview.src = '';
+        preview.classList.add('hidden');
+      }
+      if (placeholder) {
+        placeholder.classList.remove('hidden');
+      }
+      if (statusBadge) statusBadge.textContent = '';
+
       const fbEl = document.getElementById('bug-report-feedback');
       if (fbEl) {
         fbEl.className = 'hidden';
@@ -11315,7 +11339,7 @@
       const submitBtn = document.getElementById('bug-report-submit-btn');
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>🚀 Enviar para Supabase</span>';
+        submitBtn.innerHTML = '<span>🚀 Enviar para a Equipe OIKONOMIA</span>';
       }
 
       // Tira o screenshot instantâneo antes de exibir o modal
@@ -11352,15 +11376,131 @@
       }
     }
 
+    async function retakeScreenshotFromGame() {
+      const modal = document.getElementById('bug-report-modal');
+      const statusBadge = document.getElementById('bug-report-screenshot-status');
+      if (statusBadge) statusBadge.textContent = '⏳ Capturando...';
+
+      // Se o modal estiver aberto, torna-o temporariamente invisível por 1 frame para capturar a visão do jogo
+      if (modal && !modal.classList.contains('hidden')) {
+        modal.style.opacity = '0';
+        if (typeof renderMap === 'function') {
+          try { renderMap(); } catch (_) {}
+        }
+        await new Promise(r => requestAnimationFrame(r));
+        await new Promise(r => setTimeout(r, 60));
+      }
+
+      await refreshBugReportScreenshot();
+
+      if (modal) {
+        modal.style.opacity = '1';
+      }
+    }
+
     async function refreshBugReportScreenshot() {
       const preview = document.getElementById('bug-report-screenshot-preview');
-      if (typeof captureOptimizedScreenshot === 'function') {
-        currentBugReportScreenshot = await captureOptimizedScreenshot();
-        if (preview && currentBugReportScreenshot) {
-          preview.src = currentBugReportScreenshot;
-          preview.style.display = 'block';
+      const placeholder = document.getElementById('bug-report-screenshot-placeholder');
+      const statusBadge = document.getElementById('bug-report-screenshot-status');
+
+      if (statusBadge) statusBadge.textContent = '⏳ Capturando...';
+
+      try {
+        const shotFn = window.captureOptimizedScreenshot ||
+                       (window.TelemetrySystem && window.TelemetrySystem.captureOptimizedScreenshot) ||
+                       (typeof captureOptimizedScreenshot === 'function' ? captureOptimizedScreenshot : null);
+
+        if (shotFn) {
+          currentBugReportScreenshot = await shotFn();
+        } else {
+          console.warn('[Telemetry] Função captureOptimizedScreenshot não encontrada.');
         }
+
+        if (currentBugReportScreenshot && preview) {
+          preview.src = currentBugReportScreenshot;
+          preview.classList.remove('hidden');
+          if (placeholder) placeholder.classList.add('hidden');
+          if (statusBadge) {
+            statusBadge.textContent = '✅ Print pronto';
+            setTimeout(() => { if (statusBadge) statusBadge.textContent = ''; }, 3000);
+          }
+        } else {
+          if (statusBadge) statusBadge.textContent = '⚠️ Sem print do jogo';
+        }
+      } catch (err) {
+        console.error('[Telemetry] Erro ao capturar screenshot:', err);
+        if (statusBadge) statusBadge.textContent = '⚠️ Erro na captura';
       }
+    }
+
+    function optimizePastedImage(dataUrl, callback) {
+      try {
+        const img = new Image();
+        img.onload = () => {
+          const maxWidth = 960;
+          const maxHeight = 540;
+          let targetWidth = img.width || 960;
+          let targetHeight = img.height || 540;
+          if (targetWidth > maxWidth || targetHeight > maxHeight) {
+            const ratio = Math.min(maxWidth / targetWidth, maxHeight / targetHeight);
+            targetWidth = Math.max(10, Math.round(targetWidth * ratio));
+            targetHeight = Math.max(10, Math.round(targetHeight * ratio));
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return callback(dataUrl);
+          ctx.fillStyle = '#020617';
+          ctx.fillRect(0, 0, targetWidth, targetHeight);
+          ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+          callback(canvas.toDataURL('image/jpeg', 0.70));
+        };
+        img.onerror = () => callback(dataUrl);
+        img.src = dataUrl;
+      } catch (_) {
+        callback(dataUrl);
+      }
+    }
+
+    // Suporte para colar print via Clipboard (Ctrl + V)
+    if (typeof window !== 'undefined') {
+      window.addEventListener('paste', (e) => {
+        const modal = document.getElementById('bug-report-modal');
+        if (!modal || modal.classList.contains('hidden')) return;
+
+        const items = (e.clipboardData || e.originalEvent?.clipboardData)?.items;
+        if (!items) return;
+        for (const item of items) {
+          if (item.type.indexOf('image') !== -1) {
+            e.preventDefault();
+            const file = item.getAsFile();
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const dataUrl = event.target.result;
+              optimizePastedImage(dataUrl, (optimizedUrl) => {
+                currentBugReportScreenshot = optimizedUrl;
+                const preview = document.getElementById('bug-report-screenshot-preview');
+                const placeholder = document.getElementById('bug-report-screenshot-placeholder');
+                const statusBadge = document.getElementById('bug-report-screenshot-status');
+                if (preview) {
+                  preview.src = optimizedUrl;
+                  preview.classList.remove('hidden');
+                }
+                if (placeholder) placeholder.classList.add('hidden');
+                if (statusBadge) {
+                  statusBadge.textContent = '📋 Print colado via Clipboard (Ctrl+V)!';
+                  setTimeout(() => { if (statusBadge) statusBadge.textContent = ''; }, 3000);
+                }
+                const chkScreen = document.getElementById('bug-report-include-screen');
+                if (chkScreen) chkScreen.checked = true;
+              });
+            };
+            reader.readAsDataURL(file);
+            break;
+          }
+        }
+      });
     }
 
     function updateBugReportTechSummary() {
@@ -11385,7 +11525,7 @@
         <div><strong>Empresa:</strong> ${window.playerProfile?.companyName || 'Empresa'} (CEO: ${window.playerProfile?.playerName || 'Jogador'})</div>
         <div><strong>Data / Caixa:</strong> ${dateStr} · Caixa: $${cashVal.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
         <div><strong>Instalações no Sparse Index:</strong> ${facilitiesCount} prédios mapeados</div>
-        <div><strong>Destino Supabase:</strong> ${isCfg ? '<span class="text-emerald-400 font-bold">Configurado & Conectado</span>' : '<span class="text-amber-400 font-bold">Modo Local / Aguardando chaves no telemetry_config.js</span>'}</div>
+        <div><strong>Destino Telemetria:</strong> ${isCfg ? '<span class="text-emerald-400 font-bold">Conectado ao Servidor Oficial</span>' : '<span class="text-amber-400 font-bold">Modo Local / Aguardando chaves</span>'}</div>
         <div class="mt-1 border-t border-slate-800 pt-1"><strong>Status de Balanceamento:</strong> ${balanceInfo}</div>
       `;
     }
@@ -11435,12 +11575,12 @@
 
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="animate-spin">⏳</span> <span>Enviando...</span>';
+        submitBtn.innerHTML = '<span class="animate-spin">⏳</span> <span>Enviando para a Equipe...</span>';
       }
 
       if (fbEl) {
         fbEl.className = 'p-3 rounded-xl text-xs font-bold bg-indigo-950/80 border border-indigo-700 text-indigo-300 block';
-        fbEl.innerHTML = '🔄 Empacotando telemetria, save e enviando para o Supabase...';
+        fbEl.innerHTML = '🔄 Empacotando telemetria, diagnóstico e enviando para a equipe de desenvolvimento...';
       }
 
       try {
@@ -11454,7 +11594,7 @@
         if (result.success) {
           if (fbEl) {
             fbEl.className = 'p-3 rounded-xl text-xs font-bold bg-emerald-950/80 border border-emerald-700 text-emerald-300 block';
-            fbEl.innerHTML = `✅ Relatório gravado com sucesso no Supabase! ID: <span class="font-mono text-[11px] text-white">${result.reportId}</span>.<br><span class="text-[10px] text-slate-300">Obrigado por ajudar a aprimorar o OIKONOMIA!</span>`;
+            fbEl.innerHTML = `✅ Relatório enviado com sucesso para a Equipe OIKONOMIA! ID: <span class="font-mono text-[11px] text-white">${result.reportId}</span>.<br><span class="text-[10px] text-slate-300">A equipe agradece seu apoio para aprimorar o jogo!</span>`;
           }
           if (submitBtn) {
             submitBtn.innerHTML = '<span>✅ Enviado com Sucesso</span>';
@@ -11467,9 +11607,9 @@
           if (fbEl) {
             fbEl.className = 'p-3 rounded-xl text-xs bg-amber-950/80 border border-amber-700 text-amber-200 block';
             fbEl.innerHTML = `
-              <strong>ℹ️ Supabase em Configuração:</strong><br>
-              As chaves ativas do Supabase ainda não foram adicionadas no arquivo <code>telemetry_config.js</code>.<br>
-              <span class="block mt-1">Você pode <strong>copiar o pacote</strong> ou <strong>baixar o arquivo .json</strong> abaixo para envio manual!</span>
+              <strong>ℹ️ Servidor de Relatórios em Manutenção:</strong><br>
+              As credenciais ativas do servidor ainda não foram sincronizadas.<br>
+              <span class="block mt-1">Você pode clicar em <strong>Copiar Pacote</strong> ou <strong>Baixar .json</strong> abaixo para envio manual!</span>
             `;
           }
           if (submitBtn) {
@@ -11480,9 +11620,9 @@
           if (fbEl) {
             fbEl.className = 'p-3 rounded-xl text-xs bg-rose-950/80 border border-rose-700 text-rose-300 block';
             fbEl.innerHTML = `
-              <strong>❌ Erro ao enviar para o Supabase:</strong> ${result.error || 'Falha de rede'}<br>
+              <strong>❌ Erro ao enviar para o Servidor:</strong> ${result.error || 'Falha de conexão'}<br>
               <span class="text-[10px] text-slate-400">${result.details || ''}</span><br>
-              <span class="block mt-1">Você pode <strong>copiar o pacote</strong> ou <strong>baixar o arquivo .json</strong> abaixo para não perder os dados.</span>
+              <span class="block mt-1">Você pode clicar em <strong>Copiar Pacote</strong> ou <strong>Baixar .json</strong> abaixo para não perder os dados.</span>
             `;
           }
           if (submitBtn) {
