@@ -182,16 +182,16 @@ export function _renderBankScoreTab() {
 
       <div class="relative mt-4 pt-4 border-t border-white/10">
         <div class="grid grid-cols-3 gap-3 text-center">
-          <div class="bg-black/20 rounded-lg p-2">
-            <div class="text-xs text-slate-400 font-mono mb-0.5">Limite Bruto</div>
-            <div class="text-sm md:text-base font-bold text-slate-200 font-mono">${bs.fmtCurrency(score.rawCreditLimit)}</div>
+          <div class="bg-[#121620] border border-white/[0.04] rounded-lg p-2.5">
+            <div class="text-xs text-[#94a3b8] font-mono mb-0.5">Limite Bruto</div>
+            <div class="text-sm md:text-base font-bold text-[#f1f5f9] font-mono">${bs.fmtCurrency(score.rawCreditLimit)}</div>
           </div>
-          <div class="bg-black/20 rounded-lg p-2">
-            <div class="text-xs text-slate-400 font-mono mb-0.5">Dívida Ativa</div>
-            <div class="text-sm md:text-base font-bold ${GameState.banking.totalDebt > 0 ? 'text-rose-300' : 'text-slate-400'} font-mono">${bs.fmtCurrency(GameState.banking.totalDebt)}</div>
+          <div class="bg-[#121620] border border-white/[0.04] rounded-lg p-2.5">
+            <div class="text-xs text-[#94a3b8] font-mono mb-0.5">Dívida Ativa</div>
+            <div class="text-sm md:text-base font-bold ${GameState.banking.totalDebt > 0 ? 'text-rose-300' : 'text-[#94a3b8]'} font-mono">${bs.fmtCurrency(GameState.banking.totalDebt)}</div>
           </div>
-          <div class="bg-black/20 rounded-lg p-2">
-            <div class="text-xs text-slate-400 font-mono mb-0.5">Disponível</div>
+          <div class="bg-[#121620] border border-white/[0.04] rounded-lg p-2.5">
+            <div class="text-xs text-[#94a3b8] font-mono mb-0.5">Disponível</div>
             <div class="text-sm md:text-base font-bold text-emerald-300 font-mono">${bs.fmtCurrency(score.availableLimit)}</div>
           </div>
         </div>
@@ -199,14 +199,14 @@ export function _renderBankScoreTab() {
     </div>
 
     <div class="space-y-3 mb-4">
-      <div class="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider">Composição do Score</div>
+      <div class="text-xs font-bold text-[#f1f5f9] font-mono uppercase tracking-wider">Composição do Score</div>
       ${_scoreBar('A', '🏛', 'Patrimônio Líquido', score.netWorth, barA, 'bg-emerald-500')}
       ${_scoreBar('B', '🗺', 'Cobertura Territorial', score.territorial, barB, 'bg-blue-500')}
       ${_scoreBar('C', '🔬', 'Nível Tecnológico', score.tech, barC, 'bg-purple-500')}
       ${_scoreBar('D', '⭐', 'Reputação de Mercado', score.reputation, barD, 'bg-amber-500')}
     </div>
 
-    ${tip ? `<div class="bg-slate-800/80 border border-slate-700/60 rounded-xl px-4 py-3 text-xs md:text-sm text-amber-200/90 font-mono flex items-start gap-2"><span>💡</span> <span>${tip}</span></div>` : ''}
+    ${tip ? `<div class="bg-[#121620] border border-[#c9a86a]/30 rounded-xl px-4 py-3 text-xs md:text-sm text-[#c9a86a] font-mono flex items-start gap-2"><span>💡</span> <span>${tip}</span></div>` : ''}
   `;
 }
 
@@ -215,14 +215,14 @@ export function _scoreBar(letter, icon, label, value, pct, color) {
   const valStr = bs ? bs.fmtCurrency(value) : `$${value.toLocaleString()}`;
   return `
     <div class="flex items-center gap-2.5">
-      <span class="w-6 h-6 rounded-md bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-black text-slate-300 font-mono shrink-0">${letter}</span>
+      <span class="w-6 h-6 rounded-md bg-[#121620] border border-white/[0.08] flex items-center justify-center text-xs font-black text-[#c9a86a] font-mono shrink-0">${letter}</span>
       <span class="text-sm font-mono shrink-0">${icon}</span>
       <div class="flex-1 min-w-0">
         <div class="flex justify-between items-center mb-1">
-          <span class="text-xs font-medium text-slate-200 font-mono">${label}</span>
-          <span class="text-xs font-bold text-slate-300 font-mono">${valStr}</span>
+          <span class="text-xs font-medium text-[#f1f5f9] font-mono">${label}</span>
+          <span class="text-xs font-bold text-[#94a3b8] font-mono">${valStr}</span>
         </div>
-        <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+        <div class="h-2 bg-[#121620] border border-white/[0.04] rounded-full overflow-hidden">
           <div class="h-full ${color} rounded-full bank-score-bar" style="width:${pct}%"></div>
         </div>
       </div>
@@ -278,11 +278,11 @@ export function _renderBankNewTab() {
   const juros   = total - initVal;
 
   return `
-    <div class="bg-slate-800/60 border border-slate-700/70 rounded-xl p-5 mb-4 shadow-sm">
-      <div class="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider mb-2.5">Valor do Empréstimo</div>
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-xl p-5 mb-4 shadow-sm">
+      <div class="text-xs font-bold text-[#f1f5f9] font-mono uppercase tracking-wider mb-2.5">Valor do Empréstimo</div>
       <div class="flex items-baseline gap-3 mb-3">
-        <div class="text-3xl md:text-4xl font-black text-amber-300 font-mono" id="bank-val-display">${bs.fmtFull(initVal)}</div>
-        <div class="text-sm font-medium text-slate-400 font-mono">/ máx. ${bs.fmtCurrency(maxVal)}</div>
+        <div class="text-3xl md:text-4xl font-black text-[#c9a86a] font-mono" id="bank-val-display">${bs.fmtFull(initVal)}</div>
+        <div class="text-sm font-medium text-[#94a3b8] font-mono">/ máx. ${bs.fmtCurrency(maxVal)}</div>
       </div>
       <div class="py-1">
         <input type="range" id="bank-loan-slider"
@@ -291,35 +291,35 @@ export function _renderBankNewTab() {
           oninput="_onBankSlider(this.value)"
         >
       </div>
-      <div class="flex justify-between text-xs font-semibold text-slate-400 font-mono">
+      <div class="flex justify-between text-xs font-semibold text-[#94a3b8] font-mono">
         <span>Mín: ${bs.fmtCurrency(minVal)}</span>
         <span>Máx: ${bs.fmtCurrency(maxVal)}</span>
       </div>
     </div>
 
     <div class="mb-4">
-      <div class="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider mb-2.5">Prazo de Amortização</div>
+      <div class="text-xs font-bold text-[#f1f5f9] font-mono uppercase tracking-wider mb-2.5">Prazo de Amortização</div>
       <div class="grid grid-cols-3 gap-2.5">
         ${bs.LOAN_PLANS.map((p, i) => `
           <button onclick="_onBankPlanSelect(${i})" id="bank-plan-btn-${i}"
-            class="bank-plan-btn rounded-xl border p-3.5 text-center transition ${i === _bankLoanPlan ? 'border-amber-500 bg-amber-950/70 shadow-md shadow-amber-950/50 ring-1 ring-amber-500/40' : 'border-slate-700/80 bg-slate-800/50 hover:border-amber-800/80'}">
-            <div class="text-xl font-black ${i === _bankLoanPlan ? 'text-amber-300' : 'text-slate-200'} font-mono">${p.months}<span class="text-sm font-semibold"> meses</span></div>
-            <div class="text-xs font-semibold ${i === _bankLoanPlan ? 'text-amber-400' : 'text-slate-400'} font-mono mt-0.5">${(p.monthlyRate * 100).toFixed(1)}%/mês</div>
+            class="bank-plan-btn rounded-xl border p-3.5 text-center transition cursor-pointer ${i === _bankLoanPlan ? 'border-[#c9a86a] bg-[#c9a86a]/15 shadow-md shadow-[#c9a86a]/20 ring-1 ring-[#c9a86a]/40' : 'border-white/[0.08] bg-[#121620] hover:border-[#c9a86a]/40'}">
+            <div class="text-xl font-black ${i === _bankLoanPlan ? 'text-[#c9a86a]' : 'text-[#f1f5f9]'} font-mono">${p.months}<span class="text-sm font-semibold"> meses</span></div>
+            <div class="text-xs font-semibold ${i === _bankLoanPlan ? 'text-[#dfba76]' : 'text-[#94a3b8]'} font-mono mt-0.5">${(p.monthlyRate * 100).toFixed(1)}%/mês</div>
           </button>
         `).join('')}
       </div>
     </div>
 
-    <div id="bank-preview" class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-4 mb-4">
+    <div id="bank-preview" class="bg-[#080a0d] border border-white/[0.08] rounded-xl p-4 mb-4">
       ${_bankPreviewHTML(initVal, inst, total, juros, rate)}
     </div>
 
     <button onclick="_confirmNewLoan()"
-      class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 active:from-amber-700 active:to-amber-800 text-white font-bold text-base md:text-lg font-mono transition shadow-lg shadow-amber-950/60 flex items-center justify-center gap-2">
+      class="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#c9a86a] to-[#b38f4d] hover:from-[#dfba76] hover:to-[#c9a86a] active:scale-[0.99] text-[#080a0d] font-bold text-base md:text-lg font-mono transition shadow-lg shadow-[#c9a86a]/20 flex items-center justify-center gap-2 cursor-pointer">
       🏦 Contratar Linha de Crédito
     </button>
-    <div class="text-xs text-slate-400 font-mono text-center mt-2.5">
-      Contratos ativos: <span class="text-slate-200 font-bold">${activeCount}/${maxLoans}</span> · Rating Aplicado: <span class="text-amber-300 font-bold">${score.creditRating.label}</span>
+    <div class="text-xs text-[#94a3b8] font-mono text-center mt-2.5">
+      Contratos ativos: <span class="text-[#f1f5f9] font-bold">${activeCount}/${maxLoans}</span> · Rating Aplicado: <span class="text-[#c9a86a] font-bold">${score.creditRating.label}</span>
     </div>
   `;
 }
@@ -357,11 +357,11 @@ export function _onBankPlanSelect(idx) {
     const btn = document.getElementById(`bank-plan-btn-${i}`);
     if (!btn) return;
     const active = i === idx;
-    btn.className = `bank-plan-btn rounded-xl border p-3.5 text-center transition ${active ? 'border-amber-500 bg-amber-950/70 shadow-md shadow-amber-950/50 ring-1 ring-amber-500/40' : 'border-slate-700/80 bg-slate-800/50 hover:border-amber-800/80'}`;
+    btn.className = `bank-plan-btn rounded-xl border p-3.5 text-center transition cursor-pointer ${active ? 'border-[#c9a86a] bg-[#c9a86a]/15 shadow-md shadow-[#c9a86a]/20 ring-1 ring-[#c9a86a]/40' : 'border-white/[0.08] bg-[#121620] hover:border-[#c9a86a]/40'}`;
     const d1 = btn.querySelector('div:first-child');
-    if (d1) d1.className = `text-xl font-black ${active ? 'text-amber-300' : 'text-slate-200'} font-mono`;
+    if (d1) d1.className = `text-xl font-black ${active ? 'text-[#c9a86a]' : 'text-[#f1f5f9]'} font-mono`;
     const d2 = btn.querySelector('div:last-child');
-    if (d2) d2.className = `text-xs font-semibold ${active ? 'text-amber-400' : 'text-slate-400'} font-mono mt-0.5`;
+    if (d2) d2.className = `text-xs font-semibold ${active ? 'text-[#dfba76]' : 'text-[#94a3b8]'} font-mono mt-0.5`;
   });
   _refreshBankPreview();
 }
@@ -446,45 +446,45 @@ export function _loanCard(loan) {
   const savings  = (loan.monthlyInstallment * loan.monthsRemaining) - earlyAmt;
 
   return `
-    <div class="bank-loan-card bg-slate-800/60 border border-slate-700/70 rounded-xl p-5 shadow-sm">
+    <div class="bank-loan-card bg-[#0b0e14] border border-white/[0.08] rounded-xl p-5 shadow-sm">
       <div class="flex items-start justify-between mb-3.5">
         <div>
-          <div class="text-xs font-semibold text-slate-400 font-mono uppercase tracking-wider">Contrato · ${loan.plan}</div>
-          <div class="text-xl font-black text-amber-300 font-mono">${bs.fmtFull(loan.principal)}</div>
+          <div class="text-xs font-semibold text-[#94a3b8] font-mono uppercase tracking-wider">Contrato · ${loan.plan}</div>
+          <div class="text-xl font-black text-[#c9a86a] font-mono">${bs.fmtFull(loan.principal)}</div>
         </div>
         <div class="text-right">
-          <div class="text-xs font-semibold text-slate-400 font-mono">Saldo Devedor</div>
+          <div class="text-xs font-semibold text-[#94a3b8] font-mono">Saldo Devedor</div>
           <div class="text-lg font-black text-rose-300 font-mono">${bs.fmtFull(loan.remainingBalance)}</div>
         </div>
       </div>
 
       <div class="mb-3.5">
-        <div class="flex justify-between text-xs font-semibold text-slate-300 font-mono mb-1.5">
+        <div class="flex justify-between text-xs font-semibold text-[#f1f5f9] font-mono mb-1.5">
           <span>${loan.monthsTaken || 0} de ${loan.planMonths} meses pagos</span>
           <span>${loan.monthsRemaining} meses restantes</span>
         </div>
-        <div class="h-2.5 bg-slate-700/80 rounded-full overflow-hidden">
-          <div class="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full bank-score-bar" style="width:${pct.toFixed(1)}%"></div>
+        <div class="h-2.5 bg-[#121620] border border-white/[0.04] rounded-full overflow-hidden">
+          <div class="h-full bg-gradient-to-r from-[#c9a86a] to-[#dfba76] rounded-full bank-score-bar" style="width:${pct.toFixed(1)}%"></div>
         </div>
       </div>
 
       <div class="grid grid-cols-3 gap-2.5 text-center mb-3.5">
-        <div class="bg-slate-900/70 rounded-lg p-2.5">
-          <div class="text-xs text-slate-400 font-mono mb-0.5">Parcela / mês</div>
-          <div class="text-sm font-bold text-slate-100 font-mono">${bs.fmtFull(loan.monthlyInstallment)}</div>
+        <div class="bg-[#121620] border border-white/[0.04] rounded-lg p-2.5">
+          <div class="text-xs text-[#94a3b8] font-mono mb-0.5">Parcela / mês</div>
+          <div class="text-sm font-bold text-[#f1f5f9] font-mono">${bs.fmtFull(loan.monthlyInstallment)}</div>
         </div>
-        <div class="bg-slate-900/70 rounded-lg p-2.5">
-          <div class="text-xs text-slate-400 font-mono mb-0.5">Taxa de Juros</div>
-          <div class="text-sm font-bold text-slate-100 font-mono">${(loan.monthlyRate * 100).toFixed(2)}%/m</div>
+        <div class="bg-[#121620] border border-white/[0.04] rounded-lg p-2.5">
+          <div class="text-xs text-[#94a3b8] font-mono mb-0.5">Taxa de Juros</div>
+          <div class="text-sm font-bold text-[#f1f5f9] font-mono">${(loan.monthlyRate * 100).toFixed(2)}%/m</div>
         </div>
-        <div class="bg-slate-900/70 rounded-lg p-2.5">
-          <div class="text-xs text-slate-400 font-mono mb-0.5">Total Amortizado</div>
+        <div class="bg-[#121620] border border-white/[0.04] rounded-lg p-2.5">
+          <div class="text-xs text-[#94a3b8] font-mono mb-0.5">Total Amortizado</div>
           <div class="text-sm font-bold text-emerald-300 font-mono">${bs.fmtFull(loan.totalPaid || 0)}</div>
         </div>
       </div>
 
       <button onclick="_promptEarlyPayoff('${loan.id}', ${earlyAmt}, ${savings})"
-        class="w-full py-2.5 rounded-xl bg-slate-700 hover:bg-amber-900/60 border border-slate-600 hover:border-amber-700/70 text-slate-100 hover:text-amber-200 text-xs md:text-sm font-mono font-bold transition flex items-center justify-center gap-2">
+        class="w-full py-2.5 rounded-xl bg-white/[0.04] hover:bg-[#c9a86a]/15 border border-white/[0.08] hover:border-[#c9a86a]/40 text-[#f1f5f9] hover:text-[#c9a86a] text-xs md:text-sm font-mono font-bold transition flex items-center justify-center gap-2 cursor-pointer">
         💳 Quitar Antecipadamente · <span class="text-emerald-300 font-bold">${bs.fmtFull(earlyAmt)}</span>
         ${savings > 0 ? `<span class="text-xs text-emerald-400/90 font-semibold">(Economia de ${bs.fmtCurrency(savings)})</span>` : ''}
       </button>

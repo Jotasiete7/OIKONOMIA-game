@@ -134,6 +134,9 @@ import ModalManager, {
   closeModal,
   toggleModal,
   isModalOpen,
+  openDiaryModal,
+  closeDiaryModal,
+  toggleDiaryModal,
   closeAllInGameModals,
   handleGlobalEscape
 } from './ui/modal_manager.js';
@@ -326,6 +329,9 @@ window.openModal = openModal;
 window.closeModal = closeModal;
 window.toggleModal = toggleModal;
 window.isModalOpen = isModalOpen;
+window.openDiaryModal = openDiaryModal;
+window.closeDiaryModal = closeDiaryModal;
+window.toggleDiaryModal = toggleDiaryModal;
 window.closeAllInGameModals = closeAllInGameModals;
 window.handleGlobalEscape = handleGlobalEscape;
 

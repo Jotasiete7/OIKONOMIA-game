@@ -11,6 +11,7 @@
  */
 
 import { screenToGrid } from './iso_math.js';
+import { camera as globalCamera } from './camera.js';
 
 export function renderMinimap() {
   const mmCanvas = document.getElementById('minimap-canvas');
@@ -74,13 +75,17 @@ export function renderMinimap() {
   mmCtx.fillText(unlockedCities.varzea ? '🌾 Várzea' : '🔒 Várzea', (88 / step) - 10, (88 / step) - 2);
 
   // Caixa da Câmera Atual no Minimap
-  if (canvas && canvas.width > 0 && canvas.height > 0) {
-    const camCenter = screenToGrid(canvas.width / 2, canvas.height / 2);
-    const camMmX = Math.max(0, Math.min(mmW - 14, (camCenter.gx / step) - 7));
-    const camMmY = Math.max(0, Math.min(mmH - 14, (camCenter.gy / step) - 7));
-    mmCtx.strokeStyle = '#38bdf8';
-    mmCtx.lineWidth = 1.5;
-    mmCtx.strokeRect(camMmX, camMmY, 14, 14);
+  if (canvas) {
+    const r = canvas.getBoundingClientRect();
+    if (r.width > 0 && r.height > 0) {
+      const cam = (typeof window !== 'undefined' ? (window.CameraController?.camera || window.camera) : null) || globalCamera;
+      const camCenter = screenToGrid(r.width / 2, r.height / 2, cam);
+      const camMmX = Math.max(0, Math.min(mmW - 14, (camCenter.gx / step) - 7));
+      const camMmY = Math.max(0, Math.min(mmH - 14, (camCenter.gy / step) - 7));
+      mmCtx.strokeStyle = '#38bdf8';
+      mmCtx.lineWidth = 1.5;
+      mmCtx.strokeRect(camMmX, camMmY, 14, 14);
+    }
   }
 }
 
@@ -92,9 +97,10 @@ export function initMinimapEvents() {
     const canvas = document.getElementById('iso-canvas');
     if (!canvas) return;
 
-    const camera = (typeof window !== 'undefined' && window.camera) ? window.camera : null;
-    if (!camera) return;
+    const cam = (typeof window !== 'undefined' ? (window.CameraController?.camera || window.camera) : null) || globalCamera;
+    if (!cam) return;
 
+    const r = canvas.getBoundingClientRect();
     const rect = mmCanvas.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
@@ -106,10 +112,10 @@ export function initMinimapEvents() {
     const targetGx = Math.max(0, Math.min(gridSize - 1, Math.floor(clickX * step)));
     const targetGy = Math.max(0, Math.min(gridSize - 1, Math.floor(clickY * step)));
 
-    const targetSx = (targetGx - targetGy) * (tW / 2) * camera.zoom;
-    const targetSy = (targetGx + targetGy) * (tH / 2) * camera.zoom;
-    camera.panX = (canvas.width / 2) - targetSx;
-    camera.panY = (canvas.height / 2) - targetSy;
+    const targetSx = (targetGx - targetGy) * (tW / 2) * cam.zoom;
+    const targetSy = (targetGx + targetGy) * (tH / 2) * cam.zoom;
+    cam.panX = (r.width / 2) - targetSx;
+    cam.panY = (r.height / 2) - targetSy;
 
     if (typeof window !== 'undefined' && typeof window.scheduleRender === 'function') {
       window.scheduleRender();

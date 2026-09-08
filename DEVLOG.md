@@ -3,7 +3,7 @@
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
 > **Última Atualização:** 08 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.5 (bld.20260908.01)`  
+> **Versão Oficial Corrente:** `v0.8.5 (bld.20260908.02)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -24,7 +24,9 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ## 🧭 Agenda de Desenvolvimento (Próximos Passos & Backlog Priorizado)
 
 - [x] **Redesign Visual do HUD & Menus (Terminal Executivo Obsidian & Gold - v0.8.5)**: TopBar contínua 44px, pílulas companheiras de navegação de cidades/lentes, dropdown Mais Opções balanceado, menu de pausa ESC e Diretoria Executiva integrados à identidade visual dark fintech / Bloomberg terminal.
-- [x] **Diretoria Executiva & Inteligência Estratégica (v0.8.5)**: Painel executivo unificado (CFO, COO, CMO), 6 KPIs semaforizados, diagnóstico causal cruzado, máquina de estados anti-spam (+20%), auto-resolução positiva e deep-links de navegação isométrica.
+- [x] **Alinhamento Preciso de Coordenadas do Mouse & Minimapa HiDPI (v0.8.5)**: Unificação da instância singleton da câmera, remoção de 307 linhas de listeners legados e validação de 21.504 pontos de projeção isométrica.
+- [x] **Overhaul Visual Integral Obsidian & Emojis Semânticos (v0.8.5)**: Padronização de 14 modais e inspetores para o tema executivo obsidian e catálogo completo de emojis para 99 produtos sem fallbacks.
+- [ ] **Fase 7.0 Desacoplamento Total de Wizards & Grid Engine (Fim do Monolito index.html)**: Extrair assistentes de construção (lojas, fábricas, fazendas, minas) para `client/ui/wizards/`, central de mídia para `client/ui/panels/marketing_panel.js`, e o grid procedural/IA para `client/engine/world_grid.js`, reduzindo o index.html a uma casca limpa de ~200 linhas.
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
 - [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
 - [ ] **Fase 5 Mercado Financeiro, Ações & M&A**: Ações corporativas, IPO, distribuição de dividendos, participações cruzadas e aquisições hostis (*Hostile Takeovers*).
@@ -34,6 +36,43 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 18: Alinhamento de Mouse, Diário de Bordo, Overhaul Visual Obsidian & Catálogo de Emojis
+- **Data:** 08/09/2026 — 18:45
+- **Versão Oficial:** `v0.8.5 (bld.20260908.02)` | **Save Schema:** `v0.8.2`
+- **Branch:** `main`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Resolução Definitiva da Incongruência de Coordenadas do Mouse:**
+   - Diagnosticada duplicidade de instâncias de câmera (`camera.js` vs `index.html`) e conflito de listeners redundantes de canvas.
+   - Unificada `window.CameraController?.camera || window.camera` como única fonte da verdade em `iso_math.js` e `mouse.js`.
+   - Removidos 307 linhas de listeners legados de mouse/teclado de `index.html`, delegando 100% dos eventos para `MouseSystem` e `KeyboardSystem`.
+   - Corrigido cálculo de proporção de pixels (`devicePixelRatio`) no radar do minimapa (`minimap.js`).
+   - Validada projeção em teste matemático com 21.504 coordenadas roundtrip com 0 erros em zooms de 0.35x a 2.4x.
+2. **Ativação e Registro do Diário de Bordo:**
+   - Vinculadas as rotinas `openDiaryModal`, `closeDiaryModal` e `toggleDiaryModal` através de `modal_manager.js`, `main.js` e `index.html`, com suporte a tecla ESC e drag handle.
+3. **Mapeamento Semântico de Emojis em 99 Produtos:**
+   - Adicionados dicionários `PRODUCT_EMOJIS` (99 mercadorias individuais) e `CATEGORY_EMOJIS` (13 ramos) em `data_catalogs.js`.
+   - Criada função auxiliar `getProductEmoji(id)` exportada como módulo ES e exposta em `window.getProductEmoji`.
+   - Eliminados todos os emojis genéricos de caixa de papelão (`📦`) nas interfaces de varejo, fábrica, armazém, P&D e marketing.
+4. **Overhaul Visual Obsidian Executive em Modais e Painéis:**
+   - Padronizados 14 modais e painéis de inspeção com a paleta obsidian (`--oiko-bg-0: #080a0d`, `--oiko-bg-1: #0d1017`, `--oiko-bg-2: #0b0e14`, acentos `#c9a86a`, bordas `border-white/[0.08]`):
+     - DRE Consolidada e Auditoria por Instalação (`dre_panel.js`);
+     - Enciclopédia Corporativa e Wiki Interativa (`encyclopedia_panel.js`);
+     - Árvore Tecnológica e Árvore de Linhagem (`tech_tree_panel.js`);
+     - Banco Central de Nova Atenas (`banking_panel.js`);
+     - Central de Mídia & IBOPE (`#marketing-modal`);
+     - Janela Flutuante de Instalações, Menus de Zoneamento e 7 vocações naturais (`facility_panel.js` e templates inline);
+     - Wizards de Construção (Minas, Fazendas, Fábricas, Lojas);
+     - Centro de Distribuição & Sistema Logístico de Armazéns (`warehouse_system.js`);
+     - Centro de P&D e Wizard de Projetos (`rd_panel.js`);
+     - Modais de Sistema (Configurações, Confirmações de Saída/Demolição, Simulador de Preços, Novo Jogo, Saves, Alertas de Insolvência e Falência).
+5. **Diagnóstico Estrutural do Monolito Remanescente:**
+   - Mapeadas as 313 funções e ~7.380 linhas inline na tag `<script>` de `index.html` (remanescentes após a remoção de ~7.500 linhas na manhã).
+   - Traçado o plano para a Fase 7.0 de desacoplamento completo dos assistentes de construção, marketing e grid engine.
 
 ---
 

@@ -110,7 +110,7 @@ export class MouseController {
     const screenToGridFn = window.IsoMath?.screenToGrid || window.screenToGrid;
     if (typeof screenToGridFn !== 'function') return;
 
-    const { gx, gy } = screenToGridFn(mx, my);
+    const { gx, gy } = screenToGridFn(mx, my, cam);
     const worldGrid = window.worldGrid;
 
     if (gx >= 0 && gx < gridSize && gy >= 0 && gy < gridSize && worldGrid && worldGrid[gx] && worldGrid[gx][gy]) {
@@ -309,8 +309,9 @@ export class MouseController {
 
     const screenToGridFn = window.IsoMath?.screenToGrid || window.screenToGrid;
     const gridSize = window.GRID_SIZE || 128;
+    const cam = window.CameraController?.camera || window.camera;
     if (typeof screenToGridFn === 'function') {
-      const { gx, gy } = screenToGridFn(mx, my);
+      const { gx, gy } = screenToGridFn(mx, my, cam);
       if (gx >= 0 && gx < gridSize && gy >= 0 && gy < gridSize) {
         window.hoveredTileX = gx;
         window.hoveredTileY = gy;
@@ -335,7 +336,8 @@ export class MouseController {
     const gridSize = window.GRID_SIZE || 128;
     if (typeof screenToGridFn !== 'function') return;
 
-    const { gx, gy } = screenToGridFn(mx, my);
+    const cam = window.CameraController?.camera || window.camera;
+    const { gx, gy } = screenToGridFn(mx, my, cam);
     if (gx < 0 || gx >= gridSize || gy < 0 || gy >= gridSize) return;
 
     const worldGrid = window.worldGrid;

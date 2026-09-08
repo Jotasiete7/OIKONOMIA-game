@@ -1,4 +1,4 @@
-﻿// data_catalogs.js - Master Catalogs (Products, Mines, Farms, Stores, Recipes, Media, Ports)
+// data_catalogs.js - Master Catalogs (Products, Mines, Farms, Stores, Recipes, Media, Ports)
 const CITY_DISTRICTS = {
   water:       { id: 'water',       name: 'Baía de Arquipélago de Neo Capital',           type: 'Oceano',              population: 0,     trafficIndex: 0,  landRentDaily: 0     },
   harbor:      { id: 'harbor',      name: 'Zona Portuária & Trânsito',      type: 'Logística / Hub',     population: 8000,  trafficIndex: 42, landRentDaily: 20    },
@@ -2402,15 +2402,170 @@ const RD_CATEGORIES = {
   "Recursos Naturais":   { baseCost: 3500,  icon: "⛏️", label: "Recursos Naturais & Mineração" }
 };
 
-// Auto-popula rdBaseCost em cada produto do catálogo a partir da categoria
-(function populateRDBaseCosts() {
-  for (const prod of Object.values(PRODUCT_CATALOG)) {
+// Mapeamento semântico completo de emojis para produtos e insumos
+const PRODUCT_EMOJIS = {
+  // Alimentos
+  bread: '🍞',
+  milk: '🥛',
+  eggs: '🥚',
+  frozen_beef: '🥩',
+  poultry_meat: '🍗',
+  pork_meat: '🥓',
+  cookies: '🍪',
+  chocolate_bar: '🍫',
+  ground_coffee: '☕',
+  corn_flakes: '🥣',
+  canned_soup: '🍲',
+  cooking_oil: '🫒',
+  yogurt: '🥛',
+  cheese: '🧀',
+  // Bebidas
+  beer: '🍺',
+  wine: '🍷',
+  cola: '🥤',
+  mineral_water: '💧',
+  fruit_juice: '🧃',
+  // Conveniência
+  cigarettes: '🚬',
+  // Vestuário
+  jeans: '👖',
+  t_shirt: '👕',
+  business_suit: '👔',
+  wool_sweater: '🧶',
+  leather_jacket: '🧥',
+  leather_shoes: '👞',
+  athletic_shoes: '👟',
+  leather_bag: '👜',
+  gala_dress: '👗',
+  underwear: '🩲',
+  // Eletrônicos
+  mobile_phone: '📱',
+  laptop_pc: '💻',
+  desktop_pc: '🖥️',
+  television: '📺',
+  digital_camera: '📷',
+  game_console: '🎮',
+  microwave: '📻',
+  refrigerator: '🧊',
+  air_conditioner: '💨',
+  washing_machine: '🌀',
+  // Automotivo
+  compact_car: '🚗',
+  sedan_car: '🚘',
+  suv_car: '🚙',
+  motorcycle: '🏍️',
+  heavy_truck: '🚛',
+  // Farmácia
+  cold_pills: '💊',
+  pain_reliever: '🩹',
+  cough_syrup: '🧪',
+  // Higiene
+  shampoo: '🧴',
+  soap: '🧼',
+  toothpaste: '🪥',
+  // Cosméticos
+  luxury_perfume: '✨',
+  sunscreen: '☀️',
+  // Móveis
+  king_bed: '🛏️',
+  sofa: '🛋️',
+  dining_table: '🪑',
+  wardrobe: '🚪',
+  office_chair: '💺',
+  // Joias
+  gold_watch: '⌚',
+  gold_ring: '💍',
+  gold_necklace: '📿',
+  // Construção
+  acrylic_paint: '🎨',
+  tool_set: '🧰',
+  // Insumos Industriais
+  flour: '🌾',
+  refined_sugar: '🍬',
+  steel: '🏗️',
+  aluminum: '🪙',
+  plastic: '🧪',
+  glass: '🪟',
+  cotton_cloth: '🧵',
+  wool_yarn: '🧶',
+  wool_cloth: '🧣',
+  leather: '👞',
+  paper: '📜',
+  lumber: '🪵',
+  chips: '💾',
+  engine: '⚙️',
+  tires: '🛞',
+  // Agronegócio
+  wheat: '🌾',
+  corn: '🌽',
+  cotton: '☁️',
+  sugar_cane: '🎋',
+  cocoa: '🍫',
+  coffee_beans: '☕',
+  grapes: '🍇',
+  tobacco: '🍂',
+  rubber: '🌳',
+  cattle: '🐄',
+  raw_milk: '🥛',
+  poultry: '🐔',
+  pigs: '🐷',
+  wool: '🐑',
+  // Recursos Naturais
+  iron_ore: '⛏️',
+  bauxite: '🪨',
+  crude_oil: '🛢️',
+  silica: '🏖️',
+  timber: '🪵',
+  gold_ore: '🥇',
+  chemical_minerals: '🧪'
+};
+
+const CATEGORY_EMOJIS = {
+  'Alimentos': '🍞',
+  'Bebidas': '🥤',
+  'Conveniência': '🏪',
+  'Vestuário': '👔',
+  'Eletrônicos': '📱',
+  'Automotivo': '🚗',
+  'Farmácia': '💊',
+  'Higiene': '🧼',
+  'Cosméticos': '✨',
+  'Móveis': '🛋️',
+  'Joias': '💍',
+  'Construção': '🔨',
+  'Insumos Industriais': '⚙️',
+  'Agronegócio': '🌾',
+  'Recursos Naturais': '⛏️'
+};
+
+function getProductEmoji(productId, category) {
+  if (!productId) return '📦';
+  if (PRODUCT_EMOJIS[productId]) return PRODUCT_EMOJIS[productId];
+  if (PRODUCT_CATALOG[productId]?.emoji) return PRODUCT_CATALOG[productId].emoji;
+  if (category && CATEGORY_EMOJIS[category]) return CATEGORY_EMOJIS[category];
+  const prod = PRODUCT_CATALOG[productId];
+  if (prod && prod.category && CATEGORY_EMOJIS[prod.category]) return CATEGORY_EMOJIS[prod.category];
+  return '📦';
+}
+
+// Auto-popula emoji e rdBaseCost em cada produto do catálogo
+(function populateProductDefaults() {
+  for (const [id, prod] of Object.entries(PRODUCT_CATALOG)) {
+    if (!prod.emoji) {
+      prod.emoji = getProductEmoji(id, prod.category);
+    }
     if (!prod.rdBaseCost) {
       const cat = RD_CATEGORIES[prod.category];
       prod.rdBaseCost = cat ? cat.baseCost : 3000;
     }
   }
 })();
+
+if (typeof window !== 'undefined') {
+  window.PRODUCT_EMOJIS = PRODUCT_EMOJIS;
+  window.CATEGORY_EMOJIS = CATEGORY_EMOJIS;
+  window.getProductEmoji = getProductEmoji;
+}
 
 // Grafo de Receitas Indexado por ID de Saída para busca O(1)
 const RECIPE_GRAPH = {};
@@ -2438,5 +2593,8 @@ export {
   PORT_SUPPLIES_FOOD_CONSUMER,
   PORT_SUPPLIES_COMMODITIES,
   PORT_SUPPLIES_TECH_PARTS,
-  RD_CATEGORIES
+  RD_CATEGORIES,
+  PRODUCT_EMOJIS,
+  CATEGORY_EMOJIS,
+  getProductEmoji
 };

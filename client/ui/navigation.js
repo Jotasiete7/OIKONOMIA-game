@@ -10,6 +10,8 @@
  * - Fechamento automático de menus ao clicar fora (click-outside)
  */
 
+import { camera } from '../renderer/camera.js';
+
 export function toggleCitiesDropdown() {
   const menu = document.getElementById('cities-dropdown-menu');
   if (menu) menu.classList.toggle('hidden');
@@ -74,9 +76,7 @@ export function jumpToCity(cityId) {
   else if (cityId === 'montargis') { targetX = 42; targetY = 86; }
   else if (cityId === 'varzea') { targetX = 88; targetY = 84; }
 
-  const cam = (typeof window !== 'undefined' && window.camera) 
-    ? window.camera 
-    : (typeof camera !== 'undefined' ? camera : null);
+  const cam = (typeof window !== 'undefined' ? (window.CameraController?.camera || window.camera) : null) || camera;
   const tW = (typeof window !== 'undefined' && window.TILE_W) ? window.TILE_W : 64;
   const tH = (typeof window !== 'undefined' && window.TILE_H) ? window.TILE_H : 32;
 
@@ -127,9 +127,7 @@ export function focusOnTile(gx, gy) {
   if (!canvas) return;
   const r = canvas.getBoundingClientRect();
 
-  const cam = (typeof window !== 'undefined' && window.camera) 
-    ? window.camera 
-    : (typeof camera !== 'undefined' ? camera : null);
+  const cam = (typeof window !== 'undefined' ? (window.CameraController?.camera || window.camera) : null) || camera;
   const tW = (typeof window !== 'undefined' && window.TILE_W) ? window.TILE_W : 64;
   const tH = (typeof window !== 'undefined' && window.TILE_H) ? window.TILE_H : 32;
 

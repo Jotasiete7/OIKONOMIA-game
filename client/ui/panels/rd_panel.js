@@ -115,95 +115,100 @@ export const RDPanel = {
 
     // Barra de Filtros Rápidos (Todas / Em Andamento / Patentes Concluídas)
     const filterBarHtml = `
-      <div class="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-purple-900/40 flex-wrap">
+      <div class="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-white/[0.08] flex-wrap">
         <div class="flex items-center gap-1.5">
-          <button onclick="setRDProjectsFilter('all')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition ${this.rdProjectsFilter === 'all' ? 'bg-purple-800 text-white shadow border border-purple-600' : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700'}">
+          <button onclick="setRDProjectsFilter('all')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition ${this.rdProjectsFilter === 'all' ? 'bg-[#c9a86a] text-[#080a0d] shadow-sm border border-[#c9a86a]' : 'bg-[#0b0e14] hover:bg-white/[0.05] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08]'}">
             🏢 Todas (${allProjects.length})
           </button>
-          <button onclick="setRDProjectsFilter('active')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition ${this.rdProjectsFilter === 'active' ? 'bg-purple-800 text-white shadow border border-purple-600' : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700'}">
+          <button onclick="setRDProjectsFilter('active')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition ${this.rdProjectsFilter === 'active' ? 'bg-[#c9a86a] text-[#080a0d] shadow-sm border border-[#c9a86a]' : 'bg-[#0b0e14] hover:bg-white/[0.05] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08]'}">
             🟢 Em Andamento (${inProgressProjects.length})
           </button>
-          <button onclick="setRDProjectsFilter('completed')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition ${this.rdProjectsFilter === 'completed' ? 'bg-emerald-800 text-white shadow border border-emerald-600' : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700'}">
+          <button onclick="setRDProjectsFilter('completed')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition ${this.rdProjectsFilter === 'completed' ? 'bg-emerald-600 text-white shadow-sm border border-emerald-500' : 'bg-[#0b0e14] hover:bg-white/[0.05] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08]'}">
             🏆 Patentes Concluídas (${completedProjects.length})
           </button>
         </div>
         <div class="text-[10px] text-slate-400 font-mono">
-          Patentes: <strong class="text-emerald-300">${completedProjects.length}</strong>
+          Patentes: <strong class="text-emerald-400">${completedProjects.length}</strong>
         </div>
       </div>
     `;
 
-    let displayedProjects = allProjects;
+    let filteredProjects = allProjects;
     if (this.rdProjectsFilter === 'active') {
-      displayedProjects = inProgressProjects;
+      filteredProjects = inProgressProjects;
     } else if (this.rdProjectsFilter === 'completed') {
-      displayedProjects = completedProjects;
+      filteredProjects = completedProjects;
     }
 
     list.innerHTML = filterBarHtml;
 
-    if (displayedProjects.length === 0) {
+    if (filteredProjects.length === 0) {
       const emptyMsg = this.rdProjectsFilter === 'active'
         ? 'Nenhuma pesquisa em andamento no momento. Todas as pesquisas foram concluídas ou as bancadas estão ociosas.'
         : (this.rdProjectsFilter === 'completed'
           ? 'Nenhuma patente concluída ainda. Inicie pesquisas para aprimorar o QR dos seus produtos.'
           : 'Nenhum projeto encontrado.');
       const emptyDiv = document.createElement('div');
-      emptyDiv.className = 'text-xs text-slate-500 text-center py-8 font-mono';
+      emptyDiv.className = 'text-xs text-[#94a3b8] text-center py-8 font-mono bg-[#0b0e14]/40 rounded-xl border border-dashed border-white/[0.08]';
       emptyDiv.innerHTML = `<p>${emptyMsg}</p>`;
       list.appendChild(emptyDiv);
       return;
     }
 
-    for (const proj of displayedProjects.sort((a, b) => (b.status === 'active' ? 1 : 0) - (a.status === 'active' ? 1 : 0))) {
+    for (const proj of filteredProjects.sort((a, b) => (b.status === 'active' ? 1 : 0) - (a.status === 'active' ? 1 : 0))) {
       const prod = PRODUCT_CATALOG[proj.productId];
-      const cat = RD_CATEGORIES[proj.category] || {};
-      const labsCount = proj.labsCount || 1;
-      const minCostSingle = CoreMath ? CoreMath.calculateRDMonthlyCost(proj.currentQR, prod ? prod.rdBaseCost : 3000) : 3000;
+      const cat = RD_CATEGORIES[proj.category] || { icon: '🔬', baseCost: 3000 };
+      const currentQR = proj.currentQR || 40;
+      const targetQR = proj.targetQR || 80;
+      const minCostSingle = CoreMath ? CoreMath.calculateRDMonthlyCost(currentQR, prod?.rdBaseCost || cat.baseCost) : 3000;
+      const labsCount = Math.max(1, proj.labsCount || 1);
       const minCostTotal = minCostSingle * labsCount;
-      const pct = Math.min(100, Math.round(((proj.currentQR - proj.startQR) / Math.max(1, proj.targetQR - proj.startQR)) * 100));
+
+      const pct = Math.min(100, Math.round(((proj.currentQR - 40) / Math.max(1, proj.targetQR - 40)) * 100));
 
       const isActive = proj.status === 'active';
       const isDone = proj.status === 'completed';
       const statusBadge = isDone
-        ? '<span class="bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-700 text-[9px] font-bold">🏆 PATENTE CONCLUÍDA</span>'
+        ? '<span class="bg-emerald-950/80 text-emerald-300 px-2 py-0.5 rounded border border-emerald-700/60 text-[9px] font-bold">🏆 PATENTE CONCLUÍDA</span>'
         : (isActive
-          ? '<span class="bg-purple-950 text-purple-300 px-2 py-0.5 rounded border border-purple-700 text-[9px] font-bold">🟢 ATIVO</span>'
-          : '<span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-700 text-[9px] font-bold">⏸ PAUSADO</span>');
+          ? '<span class="bg-[#c9a86a]/15 text-[#c9a86a] px-2 py-0.5 rounded border border-[#c9a86a]/30 text-[9px] font-bold">🟢 ATIVO</span>'
+          : '<span class="bg-white/[0.04] text-slate-400 px-2 py-0.5 rounded border border-white/[0.08] text-[9px] font-bold">⏸ PAUSADO</span>');
 
       const gainSingle = CoreMath ? CoreMath.calculateRDQualityGain(proj.currentQR, proj.targetQR, (proj.monthlyBudget || minCostTotal) / labsCount, minCostSingle) : 0;
       const gainTotal = gainSingle * labsCount;
       const monthsLeft = gainTotal > 0 ? Math.ceil((proj.targetQR - proj.currentQR) / gainTotal) : '∞';
-      const barColor = isDone ? 'bg-emerald-500' : (isActive ? 'bg-purple-500' : 'bg-slate-600');
+      const barColor = isDone ? 'bg-emerald-500' : (isActive ? 'bg-[#c9a86a]' : 'bg-slate-600');
+
+      const prodEmoji = (typeof window !== 'undefined' && window.getProductEmoji) ? window.getProductEmoji(proj.productId) : (prod?.emoji || cat.icon || '🔬');
 
       const card = document.createElement('div');
-      card.className = `bg-slate-950 border rounded-xl p-3 space-y-2.5 font-mono text-xs ${isDone ? 'border-emerald-800/60' : (isActive ? 'border-purple-800/50' : 'border-slate-800')}`;
+      card.className = `bg-[#0b0e14] border rounded-xl p-3 space-y-2.5 font-mono text-xs ${isDone ? 'border-emerald-600/40' : (isActive ? 'border-[#c9a86a]/40' : 'border-white/[0.08]')}`;
       card.innerHTML = `
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="text-base">${cat.icon || '🔬'}</span>
+            <span class="text-base">${prodEmoji}</span>
             <div>
               <div class="font-bold text-slate-100 text-[11px] flex items-center gap-1.5">
                 <span>${prod ? prod.name : proj.productId}</span>
-                <span class="text-[9px] px-1.5 py-0.2 rounded bg-purple-950 text-purple-300 border border-purple-800">${labsCount} Lab${labsCount > 1 ? 's' : ''}</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/30">${labsCount} Lab${labsCount > 1 ? 's' : ''}</span>
               </div>
-              <div class="text-[9px] text-slate-400">${proj.category} · Meses investidos: ${proj.monthsInvested}</div>
+              <div class="text-[9px] text-[#94a3b8]">${proj.category} · Meses investidos: ${proj.monthsInvested}</div>
             </div>
           </div>
           ${statusBadge}
         </div>
         <div>
           <div class="flex justify-between text-[10px] text-slate-400 mb-1">
-            <span>QR: <strong class="text-amber-300">${proj.currentQR.toFixed(1)}</strong> → <strong class="text-purple-300">${proj.targetQR}</strong></span>
+            <span>QR: <strong class="text-amber-300">${proj.currentQR.toFixed(1)}</strong> → <strong class="text-[#c9a86a]">${proj.targetQR}</strong></span>
             <span>${pct}% completo</span>
           </div>
-          <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+          <div class="h-2 bg-[#080a0d] rounded-full overflow-hidden border border-white/[0.08]">
             <div class="${barColor} h-full rounded-full transition-all" style="width:${pct}%"></div>
           </div>
         </div>
         <div class="grid grid-cols-3 gap-2 text-[10px] text-slate-400">
           <div>Verba: <strong class="text-emerald-400">${isDone ? 'Consolidada ($0/mês)' : `$${(proj.monthlyBudget || 0).toLocaleString('en-US')}/mês`}</strong></div>
-          <div>Ganho: <strong class="text-purple-300">${isDone ? 'Concluído' : `+${gainTotal.toFixed(2)} QR/mês`}</strong></div>
+          <div>Ganho: <strong class="text-[#c9a86a]">${isDone ? 'Concluído' : `+${gainTotal.toFixed(2)} QR/mês`}</strong></div>
           <div>ETA: <strong class="text-slate-200">${isDone ? '🏆 Concluído' : (monthsLeft === '∞' ? '∞' : monthsLeft + ' meses')}</strong></div>
         </div>
         ${isDone ? `
@@ -211,15 +216,15 @@ export const RDPanel = {
             <span class="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
               <span>⭐</span> Patente Conquistada & Ativa nas Fábricas
             </span>
-            <button onclick="cancelRDProject('${proj.id}')" class="px-2.5 py-1 bg-slate-800 hover:bg-rose-900/80 text-slate-400 hover:text-rose-200 rounded-lg text-[9px] font-bold border border-slate-700 cursor-pointer transition flex items-center gap-1" title="Arquivar esta patente do laboratório">
+            <button onclick="cancelRDProject('${proj.id}')" class="px-2.5 py-1 bg-white/[0.04] hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 rounded-lg text-[9px] font-bold border border-white/[0.08] cursor-pointer transition flex items-center gap-1" title="Arquivar esta patente do laboratório">
               🗑️ Arquivar
             </button>
           </div>
         ` : `
-          <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-slate-800">
-            ${isActive ? `<button onclick="pauseRDProject('${proj.id}')" class="py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[9px] font-bold border border-slate-700 cursor-pointer">⏸ Pausar</button>` : `<button onclick="resumeRDProject('${proj.id}')" class="py-1 bg-purple-900/60 hover:bg-purple-800 text-purple-300 rounded-lg text-[9px] font-bold border border-purple-700 cursor-pointer">▶ Retomar</button>`}
-            <button onclick="adjustRDBudget('${proj.id}')" class="py-1 bg-slate-800 hover:bg-slate-700 text-teal-300 rounded-lg text-[9px] font-bold border border-slate-700 cursor-pointer">💰 Ajustar Verba</button>
-            <button onclick="cancelRDProject('${proj.id}')" class="py-1 bg-rose-950/60 hover:bg-rose-900 text-rose-300 rounded-lg text-[9px] font-bold border border-rose-800 cursor-pointer">🗑️ Cancelar</button>
+          <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-white/[0.08]">
+            ${isActive ? `<button onclick="pauseRDProject('${proj.id}')" class="py-1 bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 rounded-lg text-[9px] font-bold border border-white/[0.08] cursor-pointer">⏸ Pausar</button>` : `<button onclick="resumeRDProject('${proj.id}')" class="py-1 bg-[#c9a86a]/20 hover:bg-[#c9a86a]/30 text-[#c9a86a] rounded-lg text-[9px] font-bold border border-[#c9a86a]/40 cursor-pointer">▶ Retomar</button>`}
+            <button onclick="adjustRDBudget('${proj.id}')" class="py-1 bg-white/[0.04] hover:bg-white/[0.08] text-[#c9a86a] rounded-lg text-[9px] font-bold border border-white/[0.08] cursor-pointer">💰 Ajustar Verba</button>
+            <button onclick="cancelRDProject('${proj.id}')" class="py-1 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-lg text-[9px] font-bold border border-rose-800/60 cursor-pointer">🗑️ Cancelar</button>
           </div>
         `}
       `;
@@ -238,8 +243,8 @@ export const RDPanel = {
     const treeList = document.getElementById('rd-techtree-list');
     const mktList = document.getElementById('rd-market-list');
 
-    const btnInactive = 'px-2.5 py-1 rounded-lg font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] cursor-pointer';
-    const btnActive = 'px-2.5 py-1 rounded-lg font-bold bg-purple-800 text-purple-100 border border-purple-600/60 shadow text-[10px] cursor-pointer';
+    const btnInactive = 'px-2.5 py-1 rounded-lg font-bold bg-[#0b0e14] hover:bg-white/[0.05] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] text-[10px] cursor-pointer transition';
+    const btnActive = 'px-2.5 py-1 rounded-lg font-bold bg-[#c9a86a] text-[#080a0d] border border-[#c9a86a] shadow-sm text-[10px] cursor-pointer transition';
 
     if (projBtn) projBtn.className = tab === 'projects' ? btnActive : btnInactive;
     if (treeBtn) treeBtn.className = tab === 'techtree' ? btnActive : btnInactive;
@@ -323,26 +328,28 @@ export const RDPanel = {
         ? `<span class="bg-emerald-950 text-emerald-300 px-1.5 py-0.2 rounded border border-emerald-700 text-[9px] font-bold">🔥 -${Math.round(discountRate * 100)}% Liq. Recessão</span>`
         : '';
 
+      const prodEmoji = (typeof window !== 'undefined' && window.getProductEmoji) ? window.getProductEmoji(item.productId) : (prod.emoji || cat.icon || '🔬');
+
       const card = document.createElement('div');
-      card.className = 'bg-slate-950 border border-slate-800 hover:border-purple-800/80 rounded-xl p-3 space-y-2 font-mono text-xs transition';
+      card.className = 'bg-[#0b0e14] border border-white/[0.08] hover:border-[#c9a86a]/40 rounded-xl p-3 space-y-2 font-mono text-xs transition';
       card.innerHTML = `
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="text-base">${cat.icon || '🔬'}</span>
+            <span class="text-base">${prodEmoji}</span>
             <div>
               <div class="font-bold text-slate-100 text-[11px]">${prod.name}</div>
-              <div class="text-[9px] text-purple-400">Detentor da Patente: <strong>${item.competitorName}</strong></div>
+              <div class="text-[9px] text-[#94a3b8]">Detentor da Patente: <strong class="text-slate-200">${item.competitorName}</strong></div>
             </div>
           </div>
           <div class="flex items-center gap-1.5">
             ${discountBadge}
-            <span class="bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded border border-indigo-700 text-[9px] font-bold">Patente Disponível</span>
+            <span class="bg-[#c9a86a]/15 text-[#c9a86a] px-2 py-0.5 rounded border border-[#c9a86a]/30 text-[9px] font-bold">Patente Disponível</span>
           </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-2 text-[10px] bg-slate-900/60 p-2 rounded-lg border border-slate-800/80">
+        <div class="grid grid-cols-3 gap-2 text-[10px] bg-[#080a0d] p-2 rounded-lg border border-white/[0.08]">
           <div>Seu QR: <strong class="text-amber-300">${item.myQR.toFixed(1)}</strong></div>
-          <div>QR Concorrente: <strong class="text-purple-300">${item.quality.toFixed(1)}</strong></div>
+          <div>QR Concorrente: <strong class="text-[#c9a86a]">${item.quality.toFixed(1)}</strong></div>
           <div>Salto Imediato: <strong class="text-emerald-400">+${item.gain.toFixed(1)} QR</strong></div>
         </div>
 
@@ -353,7 +360,7 @@ export const RDPanel = {
           </div>
           <button onclick="buyCompetitorTech('${item.productId}', ${item.quality}, ${buyoutCost}, '${item.competitorName}')"
             ${canAfford ? '' : 'disabled'}
-            class="px-3 py-1 rounded-lg font-bold text-xs ${canAfford ? 'bg-purple-800 hover:bg-purple-700 text-purple-100 border border-purple-600/60 cursor-pointer shadow' : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'} transition">
+            class="px-3 py-1 rounded-lg font-bold text-xs ${canAfford ? 'bg-[#c9a86a] hover:bg-[#d8b87a] text-[#080a0d] shadow-sm cursor-pointer' : 'bg-white/[0.04] text-slate-500 border border-white/[0.08] cursor-not-allowed'} transition">
             📜 Adquirir Patente
           </button>
         </div>
@@ -423,9 +430,9 @@ export const RDPanel = {
       const btn = document.getElementById(`rd-lab-btn-${i}`);
       if (!btn) continue;
       if (i === this.currentSelectedLabsCount) {
-        btn.className = 'flex-1 py-1.5 rounded-lg bg-purple-900 text-purple-100 font-bold border border-purple-500 text-[11px] cursor-pointer shadow';
+        btn.className = 'flex-1 py-1.5 rounded-lg bg-[#c9a86a] text-[#080a0d] font-bold border border-[#c9a86a] text-[11px] cursor-pointer shadow-sm';
       } else {
-        btn.className = 'flex-1 py-1.5 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 text-[11px] cursor-pointer hover:text-slate-200';
+        btn.className = 'flex-1 py-1.5 rounded-lg bg-[#0b0e14] text-slate-400 border border-white/[0.08] text-[11px] cursor-pointer hover:text-white';
       }
     }
 
@@ -452,9 +459,9 @@ export const RDPanel = {
     const chips = document.querySelectorAll('#rd-wizard-filter-chips .rd-filter-chip');
     chips.forEach(chip => {
       if (chip.dataset.filter === value) {
-        chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-purple-900 text-purple-200 border-purple-500 shadow-sm';
+        chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#c9a86a] text-[#080a0d] border-[#c9a86a] shadow-sm';
       } else {
-        chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-slate-800/90 text-slate-400 border-slate-700 hover:text-slate-200';
+        chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#0b0e14] text-slate-400 border-white/[0.08] hover:text-white';
       }
     });
 
@@ -495,9 +502,9 @@ export const RDPanel = {
     const cards = document.querySelectorAll('#rd-wizard-products-list .rd-wizard-prod-card');
     cards.forEach(card => {
       if (card.dataset.prodId === prodId) {
-        card.className = 'rd-wizard-prod-card p-2 rounded-xl border border-purple-500 bg-purple-950/60 shadow-md ring-1 ring-purple-400 flex items-center justify-between cursor-pointer transition';
+        card.className = 'rd-wizard-prod-card p-2 rounded-xl border border-[#c9a86a] bg-[#c9a86a]/15 shadow-md ring-1 ring-[#c9a86a]/40 flex items-center justify-between cursor-pointer transition';
       } else {
-        card.className = 'rd-wizard-prod-card p-2 rounded-xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-800/80 hover:border-slate-700 flex items-center justify-between cursor-pointer transition';
+        card.className = 'rd-wizard-prod-card p-2 rounded-xl border border-white/[0.08] bg-[#0b0e14] hover:bg-white/[0.04] hover:border-white/20 flex items-center justify-between cursor-pointer transition';
       }
     });
 
@@ -609,30 +616,32 @@ export const RDPanel = {
       const catInfo = RD_CATEGORIES[prod.category] || { icon: '🔬', baseCost: 3000 };
       const minCostSingle = CoreMath ? CoreMath.calculateRDMonthlyCost(currentQR, prod.rdBaseCost || catInfo.baseCost) : 3000;
 
-      let qrBadgeClass = 'bg-slate-800 text-amber-300 border-slate-700';
+      let qrBadgeClass = 'bg-[#080a0d] text-amber-300 border-white/[0.08]';
       if (currentQR >= 80) {
-        qrBadgeClass = 'bg-amber-950/80 text-amber-300 border-amber-500/80 shadow-sm shadow-amber-900/40 font-bold';
+        qrBadgeClass = 'bg-[#c9a86a]/20 text-[#c9a86a] border-[#c9a86a]/50 shadow-sm font-bold';
       } else if (currentQR >= 65) {
-        qrBadgeClass = 'bg-purple-950/80 text-purple-300 border-purple-600/70 font-bold';
+        qrBadgeClass = 'bg-cyan-950/70 text-cyan-300 border-cyan-700/60 font-bold';
       }
 
       let operationalTag = '';
       if (activeResearchCounts[prod.id]) {
-        operationalTag = `<span class="bg-purple-950 text-purple-300 border border-purple-600/80 px-1.5 py-0.5 rounded text-[8px] font-bold animate-pulse">🔬 ${activeResearchCounts[prod.id]} LABS</span>`;
+        operationalTag = `<span class="bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/40 px-1.5 py-0.5 rounded text-[8px] font-bold animate-pulse">🔬 ${activeResearchCounts[prod.id]} LABS</span>`;
       } else if (activeManufacturing.has(prod.id)) {
-        operationalTag = `<span class="bg-indigo-950 text-indigo-300 border border-indigo-600/80 px-1.5 py-0.5 rounded text-[8px] font-bold">🏭 FABRICANDO</span>`;
+        operationalTag = `<span class="bg-amber-950/70 text-amber-300 border border-amber-600/60 px-1.5 py-0.5 rounded text-[8px] font-bold">🏭 FABRICANDO</span>`;
       } else if (activeSelling.has(prod.id)) {
-        operationalTag = `<span class="bg-emerald-950 text-emerald-300 border border-emerald-600/80 px-1.5 py-0.5 rounded text-[8px] font-bold">🏪 VAREJO</span>`;
+        operationalTag = `<span class="bg-emerald-950/70 text-emerald-300 border border-emerald-600/60 px-1.5 py-0.5 rounded text-[8px] font-bold">🏪 VAREJO</span>`;
       }
 
       const cardClass = isSelected
-        ? 'rd-wizard-prod-card p-2 rounded-xl border border-purple-500 bg-purple-950/60 shadow-md ring-1 ring-purple-400 flex items-center justify-between cursor-pointer transition'
-        : 'rd-wizard-prod-card p-2 rounded-xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-800/80 hover:border-slate-700 flex items-center justify-between cursor-pointer transition';
+        ? 'rd-wizard-prod-card p-2 rounded-xl border border-[#c9a86a] bg-[#c9a86a]/15 shadow-md ring-1 ring-[#c9a86a]/40 flex items-center justify-between cursor-pointer transition'
+        : 'rd-wizard-prod-card p-2 rounded-xl border border-white/[0.08] bg-[#0b0e14] hover:bg-white/[0.04] hover:border-white/20 flex items-center justify-between cursor-pointer transition';
+
+      const pEmoji = (typeof window !== 'undefined' && window.getProductEmoji) ? window.getProductEmoji(prod.id) : (prod.emoji || catInfo.icon || '📦');
 
       html += `
         <div class="${cardClass}" data-prod-id="${prod.id}" onclick="selectRDWizardProduct('${prod.id}')">
           <div class="flex items-center gap-2.5 min-w-0">
-            <span class="text-base shrink-0">${catInfo.icon || '📦'}</span>
+            <span class="text-base shrink-0">${pEmoji}</span>
             <div class="min-w-0">
               <div class="flex items-center gap-1.5 flex-wrap">
                 <strong class="text-slate-100 text-[11px] truncate">${prod.name}</strong>
@@ -732,9 +741,9 @@ export const RDPanel = {
     const chips = document.querySelectorAll('#rd-wizard-filter-chips .rd-filter-chip');
     chips.forEach(chip => {
       if (chip.dataset.filter === 'all') {
-        chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-purple-900 text-purple-200 border-purple-500 shadow-sm';
+        chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#c9a86a] text-[#080a0d] border-[#c9a86a] shadow-sm';
       } else {
-        chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-slate-800/90 text-slate-400 border-slate-700 hover:text-slate-200';
+        chip.className = 'rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#0b0e14] text-slate-400 border-white/[0.08] hover:text-white';
       }
     });
 

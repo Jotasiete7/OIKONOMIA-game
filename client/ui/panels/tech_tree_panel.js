@@ -103,8 +103,8 @@ export const TechTreePanel = {
       const btn = document.getElementById(`tt-filter-${t}`);
       if (btn) {
         btn.className = (t === tier)
-          ? 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-teal-800 text-teal-100 border border-teal-600 shadow cursor-pointer'
-          : 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer';
+          ? 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-[#c9a86a]/20 text-[#c9a86a] border border-[#c9a86a]/50 shadow-sm cursor-pointer'
+          : 'px-2.5 py-1 rounded-lg text-[10px] font-bold bg-[#121620] hover:bg-white/[0.04] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] cursor-pointer';
       }
     });
     this.renderTechTree('tech-tree-grid');
@@ -125,12 +125,12 @@ export const TechTreePanel = {
     const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
     const tierBadgeColors = {
-      0: 'bg-slate-800 text-slate-300 border-slate-700',
-      1: 'bg-emerald-950 text-emerald-300 border-emerald-800',
-      2: 'bg-sky-950 text-sky-300 border-sky-800',
-      3: 'bg-purple-950 text-purple-300 border-purple-800',
-      4: 'bg-amber-950 text-amber-300 border-amber-800',
-      5: 'bg-rose-950 text-rose-300 border-rose-800'
+      0: 'bg-white/[0.04] text-[#94a3b8] border-white/[0.08]',
+      1: 'bg-emerald-950/60 text-emerald-300 border-emerald-800/60',
+      2: 'bg-sky-950/60 text-sky-300 border-sky-800/60',
+      3: 'bg-purple-950/60 text-purple-300 border-purple-800/60',
+      4: 'bg-amber-950/60 text-amber-300 border-amber-800/60',
+      5: 'bg-rose-950/60 text-rose-300 border-rose-800/60'
     };
 
     // =========================================================================
@@ -464,35 +464,35 @@ export const TechTreePanel = {
         };
 
         const statusBtn = unlocked
-          ? `<div class="bg-emerald-950/80 text-emerald-300 px-3 py-1 rounded-lg border border-emerald-700/80 text-[10px] font-bold flex items-center gap-1 shrink-0">✅ Desbloqueado</div>`
+          ? `<div class="bg-emerald-950/80 text-emerald-300 px-3 py-1 rounded-lg border border-emerald-700/80 text-[10px] font-bold flex items-center gap-1 shrink-0 font-mono">✅ Desbloqueado</div>`
           : (canUnlock
             ? `<button onclick="researchProductTech('${prod.id}')"
-                class="px-3 py-1.5 rounded-xl font-bold text-xs ${canAfford ? 'bg-teal-600 hover:bg-teal-500 text-white shadow-lg cursor-pointer' : 'bg-slate-800 text-slate-400 border border-slate-700 cursor-not-allowed'} transition shrink-0">
+                class="px-3 py-1.5 rounded-xl font-bold text-xs ${canAfford ? 'bg-[#c9a86a] hover:bg-[#dfba76] text-[#080a0d] font-bold shadow-md cursor-pointer' : 'bg-white/[0.04] text-[#94a3b8]/50 border border-white/[0.08] cursor-not-allowed'} transition shrink-0 font-mono">
                 🔬 Desbloquear ($${cost.toLocaleString('en-US')})
               </button>`
-            : `<div class="bg-slate-900 text-slate-500 px-2.5 py-1 rounded-lg border border-slate-800 text-[10px] font-bold flex items-center gap-1 shrink-0" title="Desbloqueie os insumos pré-requisitos primeiro">🔒 Requisitos Pendentes</div>`
+            : `<div class="bg-white/[0.03] text-[#94a3b8]/60 px-2.5 py-1 rounded-lg border border-white/[0.06] text-[10px] font-bold flex items-center gap-1 shrink-0 font-mono" title="Desbloqueie os insumos pré-requisitos primeiro">🔒 Requisitos Pendentes</div>`
           );
 
         html += `
-          <div class="bg-slate-950 border ${unlocked ? 'border-emerald-900/40 bg-emerald-950/5' : (canUnlock ? 'border-teal-800/70' : 'border-slate-800/80 opacity-75')} rounded-xl p-3 flex flex-col justify-between gap-2.5 transition">
+          <div class="bg-[#0b0e14] border ${unlocked ? 'border-emerald-500/30 bg-emerald-950/10' : (canUnlock ? 'border-[#c9a86a]/40 bg-[#c9a86a]/5' : 'border-white/[0.06] opacity-75')} rounded-xl p-3 flex flex-col justify-between gap-2.5 transition shadow-sm">
             <div class="flex items-start justify-between gap-2">
               <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-base shrink-0 shadow-inner">
-                  ${cat.icon || '📦'}
+                <div class="w-9 h-9 rounded-lg bg-[#121620] border border-white/[0.08] flex items-center justify-center text-base shrink-0 shadow-inner">
+                  ${prod.emoji || cat.icon || '📦'}
                 </div>
                 <div>
-                  <div class="font-bold text-slate-100 text-xs flex items-center gap-1.5 flex-wrap">
+                  <div class="font-bold text-[#f1f5f9] text-xs flex items-center gap-1.5 flex-wrap">
                     <span>${prod.name}</span>
-                    <span class="text-[8px] px-1.5 py-0.5 rounded border font-mono ${tierBadgeColors[tier] || 'bg-slate-800 text-slate-400 border-slate-700'}">Tier ${tier}</span>
+                    <span class="text-[8px] px-1.5 py-0.5 rounded border font-mono ${tierBadgeColors[tier] || 'bg-white/[0.04] text-[#94a3b8] border-white/[0.08]'}">Tier ${tier}</span>
                     <span class="text-[8px] px-1.5 py-0.5 rounded border font-bold font-mono ${techLvl.color}">${techLvl.icon} Tech Lvl ${techLvl.level} · QR ${currentQR.toFixed(0)}</span>
                   </div>
-                  <div class="text-[10px] text-slate-400 mt-0.5">${prod.category} · Custo Desbloqueio: <strong class="text-teal-300">$${cost.toLocaleString('en-US')}</strong> ${bonus > 0 ? `<span class="text-[9px] text-purple-400" title="Bônus de Convergência de ${roots.length} Ramos (+ $${bonus})">(+${roots.length} ramos)</span>` : ''}</div>
+                  <div class="text-[10px] text-[#94a3b8] mt-0.5 font-mono">${prod.category} · Custo Desbloqueio: <strong class="text-[#c9a86a] font-mono">$${cost.toLocaleString('en-US')}</strong> ${bonus > 0 ? `<span class="text-[9px] text-purple-400" title="Bônus de Convergência de ${roots.length} Ramos (+ $${bonus})">(+${roots.length} ramos)</span>` : ''}</div>
                 </div>
               </div>
               <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
                 ${downstreamCount > 0 ? `
                   <button onclick="focusTechLineage('${prod.id}')"
-                    class="px-2.5 py-1 rounded-lg text-[9px] font-bold bg-amber-950/80 text-amber-300 border border-amber-700/80 hover:bg-amber-900 hover:border-amber-500 cursor-pointer flex items-center gap-1 transition shadow shrink-0"
+                    class="px-2.5 py-1 rounded-lg text-[9px] font-bold bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/30 hover:bg-[#c9a86a]/25 hover:border-[#c9a86a] cursor-pointer flex items-center gap-1 transition shadow-sm shrink-0"
                     title="Explorar todos os produtos e tecnologias que derivam deste item">
                     🌿 Linhagem (${downstreamCount})
                   </button>
@@ -502,14 +502,14 @@ export const TechTreePanel = {
             </div>
 
             <!-- Cadeia Produtiva Completa (da raiz ao produto) -->
-            <div class="pt-1.5 border-t border-slate-900 space-y-1">
-              <div class="text-[9px] text-slate-500 font-bold flex items-center justify-between">
+            <div class="pt-1.5 border-t border-white/[0.04] space-y-1">
+              <div class="text-[9px] text-[#94a3b8] font-bold flex items-center justify-between">
                 <span>Cadeia de Insumos:</span>
                 ${downstreamCount > 0 ? `
-                  <button onclick="focusTechLineage('${prod.id}')" class="text-[9px] text-amber-400 hover:text-amber-300 font-mono font-bold underline cursor-pointer">
+                  <button onclick="focusTechLineage('${prod.id}')" class="text-[9px] text-[#c9a86a] hover:text-[#dfba76] font-mono font-bold underline cursor-pointer">
                     Ver ${downstreamCount} desdobramentos futuros ➔
                   </button>
-                ` : `<span class="text-[9px] text-slate-400 font-mono">${tier > 0 ? `Profundidade: ${tier} etapas` : 'Matéria-prima livre'}</span>`}
+                ` : `<span class="text-[9px] text-[#94a3b8]/70 font-mono">${tier > 0 ? `Profundidade: ${tier} etapas` : 'Matéria-prima livre'}</span>`}
               </div>
               <div class="flex items-center gap-1 flex-wrap text-[9px]">
                 ${getFullChainHtml(prod.id)}

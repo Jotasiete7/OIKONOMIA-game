@@ -131,9 +131,9 @@ export const EncyclopediaPanel = {
       const btn = document.getElementById(`wiki-tab-${t}`);
       if (!btn) return;
       if (t === this.state.currentTab) {
-        btn.className = 'px-3 py-1.5 rounded-lg font-bold transition bg-blue-600 text-white shadow';
+        btn.className = 'px-3 py-1.5 rounded-lg font-bold transition bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/40 shadow-sm';
       } else {
-        btn.className = 'px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition';
+        btn.className = 'px-3 py-1.5 rounded-lg text-[#94a3b8] hover:text-[#f1f5f9] hover:bg-white/[0.04] transition border border-transparent';
       }
     });
   },
@@ -235,36 +235,36 @@ export const EncyclopediaPanel = {
       return `
         <div class="space-y-4 max-w-4xl mx-auto">
           <!-- Header do Produto -->
-          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex flex-wrap items-center justify-between gap-4">
+          <div class="bg-[#0b0e14] p-4 rounded-2xl border border-white/[0.08] flex flex-wrap items-center justify-between gap-4 shadow-lg">
             <div class="flex items-center gap-3">
-              <div class="w-14 h-14 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-3xl shadow-inner shrink-0">
+              <div class="w-14 h-14 rounded-xl bg-[#121620] border border-white/[0.08] flex items-center justify-center text-3xl shadow-inner shrink-0">
                 ${prod.emoji || '📦'}
               </div>
               <div>
                 <div class="flex items-center gap-2">
-                  <h2 class="text-base font-bold text-slate-100">${prod.name}</h2>
-                  <span class="text-[10px] bg-blue-950 text-blue-300 border border-blue-800 px-2 py-0.5 rounded font-mono font-bold">Tier ${tier}</span>
-                  <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">${prod.category}</span>
+                  <h2 class="text-base font-bold text-[#f1f5f9]">${prod.name}</h2>
+                  <span class="text-[10px] bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/30 px-2 py-0.5 rounded font-mono font-bold">Tier ${tier}</span>
+                  <span class="text-[10px] bg-white/[0.05] text-[#94a3b8] px-2 py-0.5 rounded font-mono border border-white/[0.06]">${prod.category}</span>
                 </div>
-                <div class="text-xs text-slate-400 font-mono mt-1">ID: <code class="text-cyan-300">${prod.id}</code> · Tipo: <strong class="${prod.isIntermediate ? 'text-amber-400' : 'text-emerald-400'}">${prod.isIntermediate ? 'Insumo Manufaturado (B2B)' : 'Produto de Consumo (Varejo)'}</strong></div>
+                <div class="text-xs text-[#94a3b8] font-mono mt-1">ID: <code class="text-amber-300/90">${prod.id}</code> · Tipo: <strong class="${prod.isIntermediate ? 'text-amber-400' : 'text-emerald-400'}">${prod.isIntermediate ? 'Insumo Manufaturado (B2B)' : 'Produto de Consumo (Varejo)'}</strong></div>
               </div>
             </div>
-            <button onclick="navigateEncyclopedia('products', null)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-mono">
+            <button onclick="navigateEncyclopedia('products', null)" class="px-3 py-1.5 bg-white/[0.05] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] rounded-lg text-xs font-mono transition cursor-pointer">
               ◄ Ver Todos os Produtos
             </button>
           </div>
 
           <!-- Grade de Métricas Econômicas -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-              <span class="text-[10px] text-slate-500 block uppercase">Preço Padrão (Varejo)</span>
+            <div class="bg-[#0b0e14] p-3 rounded-xl border border-white/[0.08]">
+              <span class="text-[10px] text-[#94a3b8] block uppercase font-mono">Preço Padrão (Varejo)</span>
               <span class="text-sm font-bold text-emerald-400 font-mono">$${stdPrice.toFixed(2)}</span>
-              <span class="text-[10px] text-slate-400 block mt-0.5">Custo Base: $${baseCost.toFixed(2)}</span>
+              <span class="text-[10px] text-[#94a3b8] block mt-0.5 font-mono">Custo Base: $${baseCost.toFixed(2)}</span>
             </div>
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-              <span class="text-[10px] text-slate-500 block uppercase">Margem Bruta Unitária</span>
+            <div class="bg-[#0b0e14] p-3 rounded-xl border border-white/[0.08]">
+              <span class="text-[10px] text-[#94a3b8] block uppercase font-mono">Margem Bruta Unitária</span>
               <span class="text-sm font-bold ${marginGross > 0 ? 'text-emerald-400' : 'text-rose-400'} font-mono">${marginGross > 0 ? `+$${marginGross}` : `-$${Math.abs(marginGross)}`} (${marginPct}%)</span>
-              <span class="text-[10px] text-slate-400 block mt-0.5">Custo Entrega: $${landedCost.toFixed(2)}</span>
+              <span class="text-[10px] text-[#94a3b8] block mt-0.5 font-mono">Custo Entrega: $${landedCost.toFixed(2)}</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[10px] text-slate-500 block uppercase">Demanda / Necessidade</span>
@@ -400,23 +400,23 @@ export const EncyclopediaPanel = {
     return `
       <div class="space-y-4">
         <!-- Filtros de Categoria e Tier -->
-        <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-[#0b0e14] p-3 rounded-xl border border-white/[0.08]">
           <div class="flex flex-wrap items-center gap-1.5">
-            <span class="text-[10px] text-slate-500 uppercase font-mono mr-1">Categoria:</span>
+            <span class="text-[10px] text-[#94a3b8] uppercase font-mono mr-1">Categoria:</span>
             ${categories.map(cat => `
               <button onclick="setEncyclopediaCategoryFilter('${cat}')"
-                class="px-2 py-0.5 rounded-lg text-[10px] font-mono transition
-                  ${this.state.selectedCategory === cat ? 'bg-blue-600 text-white font-bold' : 'bg-slate-900 text-slate-400 hover:text-slate-200'}">
+                class="px-2 py-0.5 rounded-lg text-[10px] font-mono transition cursor-pointer
+                  ${this.state.selectedCategory === cat ? 'bg-[#c9a86a]/20 text-[#c9a86a] border border-[#c9a86a]/40 font-bold shadow-sm' : 'bg-[#121620] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.06]'}">
                 ${cat === 'all' ? 'Todas' : cat}
               </button>
             `).join('')}
           </div>
           <div class="flex items-center gap-1.5">
-            <span class="text-[10px] text-slate-500 uppercase font-mono mr-1">Tier:</span>
+            <span class="text-[10px] text-[#94a3b8] uppercase font-mono mr-1">Tier:</span>
             ${['all', '0', '1', '2', '3', '4', '5'].map(t => `
               <button onclick="setEncyclopediaTierFilter('${t}')"
-                class="px-2 py-0.5 rounded-lg text-[10px] font-mono transition
-                  ${this.state.selectedTier === t ? 'bg-cyan-600 text-white font-bold' : 'bg-slate-900 text-slate-400 hover:text-slate-200'}">
+                class="px-2 py-0.5 rounded-lg text-[10px] font-mono transition cursor-pointer
+                  ${this.state.selectedTier === t ? 'bg-[#c9a86a]/20 text-[#c9a86a] border border-[#c9a86a]/40 font-bold shadow-sm' : 'bg-[#121620] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.06]'}">
                 ${t === 'all' ? 'Todos' : `T${t}`}
               </button>
             `).join('')}
@@ -424,9 +424,9 @@ export const EncyclopediaPanel = {
         </div>
 
         <!-- Total de Produtos Encontrados -->
-        <div class="text-[11px] text-slate-400 font-mono flex justify-between">
-          <span>Mostrando <strong>${products.length}</strong> produtos do catálogo</span>
-          ${q ? `<span class="text-cyan-300">Filtrado por: "${q}"</span>` : ''}
+        <div class="text-[11px] text-[#94a3b8] font-mono flex justify-between">
+          <span>Mostrando <strong class="text-[#f1f5f9]">${products.length}</strong> produtos do catálogo</span>
+          ${q ? `<span class="text-[#c9a86a]">Filtrado por: "${q}"</span>` : ''}
         </div>
 
         <!-- Grade de Cards de Produto -->
@@ -436,20 +436,20 @@ export const EncyclopediaPanel = {
             const stdPrice = prod.standardPrice || (prod.baseCost * 2.0);
             return `
               <div onclick="navigateEncyclopedia('products', '${prod.id}')"
-                class="bg-slate-950 hover:bg-slate-900/90 border border-slate-800 hover:border-blue-600/60 p-3 rounded-xl cursor-pointer transition flex flex-col justify-between gap-2 group">
+                class="bg-[#0b0e14] hover:bg-[#121620] border border-white/[0.08] hover:border-[#c9a86a]/40 p-3 rounded-xl cursor-pointer transition flex flex-col justify-between gap-2 group shadow-sm">
                 <div class="flex items-start justify-between gap-2">
                   <div class="flex items-center gap-2">
                     <span class="text-2xl shrink-0">${prod.emoji || '📦'}</span>
                     <div>
-                      <div class="text-xs font-bold text-slate-100 group-hover:text-blue-300 transition">${prod.name}</div>
-                      <div class="text-[10px] text-slate-400 font-mono">${prod.category}</div>
+                      <div class="text-xs font-bold text-[#f1f5f9] group-hover:text-[#c9a86a] transition">${prod.name}</div>
+                      <div class="text-[10px] text-[#94a3b8] font-mono">${prod.category}</div>
                     </div>
                   </div>
-                  <span class="text-[9px] bg-blue-950 text-blue-300 border border-blue-800/80 px-1.5 py-0.2 rounded font-mono font-bold">T${tier}</span>
+                  <span class="text-[9px] bg-[#c9a86a]/10 text-[#c9a86a] border border-[#c9a86a]/30 px-1.5 py-0.2 rounded font-mono font-bold">T${tier}</span>
                 </div>
-                <div class="border-t border-slate-850 pt-2 flex items-center justify-between text-[10px] font-mono text-slate-400">
-                  <span>Preço: <strong class="text-emerald-400">$${stdPrice.toFixed(2)}</strong></span>
-                  <span class="text-blue-400 font-bold">Ver Detalhes ➔</span>
+                <div class="border-t border-white/[0.04] pt-2 flex items-center justify-between text-[10px] font-mono text-[#94a3b8]">
+                  <span>Preço: <strong class="text-emerald-400 font-mono">$${stdPrice.toFixed(2)}</strong></span>
+                  <span class="text-[#c9a86a] font-bold">Ver Detalhes ➔</span>
                 </div>
               </div>
             `;
@@ -490,14 +490,14 @@ export const EncyclopediaPanel = {
             const outProd = PRODUCT_CATALOG[rec.outputProdId] || { name: rec.outputName || rec.id };
             const inputsList = rec.inputs ? Object.entries(rec.inputs) : [];
             return `
-              <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col justify-between gap-3">
+              <div class="bg-[#0b0e14] p-3.5 rounded-xl border border-white/[0.08] flex flex-col justify-between gap-3 shadow-sm">
                 <div>
                   <div class="flex items-center justify-between">
-                    <div class="font-bold text-orange-300 text-xs">${rec.name}</div>
-                    <span class="text-[10px] bg-orange-950 text-orange-300 px-1.5 py-0.2 rounded border border-orange-800 font-mono">Linha Industrial</span>
+                    <div class="font-bold text-[#f1f5f9] text-xs">${rec.name}</div>
+                    <span class="text-[10px] bg-orange-950/60 text-orange-300 px-1.5 py-0.2 rounded border border-orange-700/50 font-mono">Linha Industrial</span>
                   </div>
-                  <div class="text-[11px] text-slate-300 mt-1">Produto Gerado: <button onclick="navigateEncyclopedia('products', '${rec.outputProdId}')" class="text-cyan-300 font-bold hover:underline">${outProd.name}</button></div>
-                  <div class="text-[10px] text-slate-400 mt-0.5">Capacidade Diária: <strong>${rec.dailyCap} un/dia</strong> · Custo de Operação: <strong>$${rec.unitCost.toFixed(2)}/un</strong></div>
+                  <div class="text-[11px] text-[#94a3b8] mt-1">Produto Gerado: <button onclick="navigateEncyclopedia('products', '${rec.outputProdId}')" class="text-[#c9a86a] font-bold hover:underline cursor-pointer">${outProd.name}</button></div>
+                  <div class="text-[10px] text-[#94a3b8] mt-0.5 font-mono">Capacidade Diária: <strong>${rec.dailyCap} un/dia</strong> · Custo de Operação: <strong>$${rec.unitCost.toFixed(2)}/un</strong></div>
                 </div>
 
                 ${inputsList.length > 0 ? `
@@ -546,13 +546,13 @@ export const EncyclopediaPanel = {
             const validProds = Object.values(PRODUCT_CATALOG).filter(p => allowedCats.includes(p.category) && !p.isIntermediate);
 
             return `
-              <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col justify-between gap-3">
+              <div class="bg-[#0b0e14] p-4 rounded-xl border border-white/[0.08] flex flex-col justify-between gap-3 shadow-sm">
                 <div>
                   <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
                       <span class="text-2xl">${st.emoji}</span>
                       <div>
-                        <div class="font-bold text-slate-100 text-xs">${st.name}</div>
+                        <div class="font-bold text-[#f1f5f9] text-xs">${st.name}</div>
                         <div class="text-[10px] text-emerald-400 font-mono font-bold">Obra: $${st.cost.toLocaleString('en-US')}</div>
                       </div>
                     </div>

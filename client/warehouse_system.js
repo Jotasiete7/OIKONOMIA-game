@@ -280,9 +280,9 @@ export function switchWarehouseTab(tabName) {
 
     if (btn) {
       if (isActive) {
-        btn.className = 'px-3 py-1.5 rounded-lg font-bold bg-sky-700 text-white border border-sky-500 shadow text-[10px] cursor-pointer transition';
+        btn.className = 'px-3 py-1.5 rounded-lg font-bold bg-[#c9a86a] text-[#080a0d] border border-[#c9a86a] shadow-sm text-[10px] cursor-pointer transition';
       } else {
-        btn.className = 'px-3 py-1.5 rounded-lg font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] cursor-pointer transition';
+        btn.className = 'px-3 py-1.5 rounded-lg font-bold bg-[#0b0e14] hover:bg-white/[0.05] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] text-[10px] cursor-pointer transition';
       }
     }
 
@@ -507,7 +507,7 @@ function renderWarehouseInventoryCardsHtml(filteredEntries, catalog, maxCap, til
   return filteredEntries.map(([pId, item]) => {
     const pInfo = catalog[pId] || { name: pId, icon: '📦', category: 'Geral' };
     const pName = pInfo.name || item.productName || pId;
-    const pIcon = pInfo.emoji || pInfo.icon || '📦';
+    const pIcon = (typeof window !== 'undefined' && window.getProductEmoji) ? window.getProductEmoji(pId) : (pInfo.emoji || pInfo.icon || '📦');
     const pCategory = pInfo.category || 'Geral';
     const isCollect = item.collectMode === 'all_own';
     const isPort = !!item.autoRestockPort;
@@ -520,16 +520,16 @@ function renderWarehouseInventoryCardsHtml(filteredEntries, catalog, maxCap, til
     const quotaPct = Math.min(100, Math.round((currentStock / Math.max(1, maxQuota)) * 100));
 
     return `
-      <div class="bg-slate-950/90 border ${isExpanded ? 'border-sky-600/80 bg-slate-900/60' : 'border-slate-800 hover:border-sky-800/70'} rounded-xl p-2.5 transition shadow">
+      <div class="bg-[#0b0e14] border ${isExpanded ? 'border-[#c9a86a]/60 bg-[#0d1017]' : 'border-white/[0.08] hover:border-white/20'} rounded-xl p-2.5 transition shadow-sm">
         <!-- Linha Principal Compacta -->
         <div class="flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap">
           <!-- Bloco 1: Ícone + Nome + QR + Custo -->
           <div class="flex items-center gap-2.5 min-w-[210px]">
-            <span class="text-xl p-1 bg-slate-900 rounded-lg border border-slate-800">${pIcon}</span>
+            <span class="text-xl p-1.5 bg-[#080a0d] rounded-lg border border-white/[0.08]">${pIcon}</span>
             <div>
               <div class="flex items-center gap-1.5">
                 <strong class="text-slate-100 text-xs">${pName}</strong>
-                <span class="text-[8px] bg-slate-800 text-slate-400 px-1 py-0.2 rounded">${pCategory}</span>
+                <span class="text-[8px] bg-white/[0.05] text-[#94a3b8] border border-white/[0.08] px-1 py-0.2 rounded">${pCategory}</span>
               </div>
               <div class="text-[9px] text-slate-400 mt-0.5">
                 Custo: <strong class="text-emerald-400">$${(item.avgUnitCost || 0).toFixed(2)}</strong> · QR: <strong class="text-cyan-300">${item.quality || 60}</strong>
@@ -540,26 +540,26 @@ function renderWarehouseInventoryCardsHtml(filteredEntries, catalog, maxCap, til
           <!-- Bloco 2: Barra de Progresso & Estoque Atual -->
           <div class="flex-1 min-w-[140px] px-1">
             <div class="flex items-center justify-between text-[10px] mb-0.5">
-              <span class="font-bold text-sky-300">${currentStock.toLocaleString()} un</span>
+              <span class="font-bold text-[#c9a86a]">${currentStock.toLocaleString()} un</span>
               <span class="text-[9px] text-slate-400">${quotaPct}% da cota (${maxQuota.toLocaleString()} un)</span>
             </div>
-            <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
-              <div class="h-full rounded-full transition-all duration-300 ${quotaPct > 90 ? 'bg-rose-500' : (quotaPct > 60 ? 'bg-amber-500' : 'bg-sky-500')}" style="width: ${quotaPct}%"></div>
+            <div class="h-1.5 bg-[#080a0d] rounded-full overflow-hidden border border-white/[0.08]">
+              <div class="h-full rounded-full transition-all duration-300 ${quotaPct > 90 ? 'bg-rose-500' : (quotaPct > 60 ? 'bg-[#c9a86a]' : 'bg-emerald-500')}" style="width: ${quotaPct}%"></div>
             </div>
           </div>
 
           <!-- Bloco 3: Badges de Ação Rápida & Botões -->
           <div class="flex items-center gap-1.5 shrink-0">
-            <button onclick="toggleWarehouseCollect(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isCollect ? 'bg-emerald-950/80 border-emerald-600/70 text-emerald-300' : 'bg-slate-900 border-slate-800 text-slate-500 line-through'}" title="Alternar Coleta de Fontes Próprias (Fazendas, Minas, Fábricas)">
+            <button onclick="toggleWarehouseCollect(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isCollect ? 'bg-emerald-950/70 border-emerald-600/60 text-emerald-300' : 'bg-[#080a0d] border-white/[0.06] text-slate-500 line-through'}" title="Alternar Coleta de Fontes Próprias (Fazendas, Minas, Fábricas)">
               🌾 Coleta
             </button>
-            <button onclick="toggleWarehousePortRestock(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isPort ? 'bg-sky-950/80 border-sky-600/70 text-sky-300' : 'bg-slate-900 border-slate-800 text-slate-500 line-through'}" title="Alternar Reposição pelo Porto">
+            <button onclick="toggleWarehousePortRestock(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isPort ? 'bg-cyan-950/70 border-cyan-600/60 text-cyan-300' : 'bg-[#080a0d] border-white/[0.06] text-slate-500 line-through'}" title="Alternar Reposição pelo Porto">
               🚢 Porto
             </button>
-            <button onclick="toggleWarehouseRecessionOnly(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isRecession ? 'bg-amber-950/80 border-amber-600/70 text-amber-300' : 'bg-slate-900 border-slate-800 text-slate-500'}" title="Alternar Compras Apenas em Recessão/Crise">
+            <button onclick="toggleWarehouseRecessionOnly(${tile.x}, ${tile.y}, '${pId}')" class="text-[9px] px-2 py-1 rounded-md font-bold border transition cursor-pointer ${isRecession ? 'bg-amber-950/70 border-amber-600/60 text-amber-300' : 'bg-[#080a0d] border-white/[0.06] text-slate-500'}" title="Alternar Compras Apenas em Recessão/Crise">
               📉 Anti-Crise
             </button>
-            <button onclick="toggleWarehouseCardExpand('${pId}')" class="text-[9px] font-bold px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 cursor-pointer transition">
+            <button onclick="toggleWarehouseCardExpand('${pId}')" class="text-[9px] font-bold px-2 py-1 rounded-md bg-[#080a0d] hover:bg-white/[0.06] text-slate-300 border border-white/[0.1] cursor-pointer transition">
               ${isExpanded ? '▴ Ocultar' : '▾ Detalhes'}
             </button>
             <button onclick="removeWarehouseProduct(${tile.x}, ${tile.y}, '${pId}')" class="text-slate-500 hover:text-rose-400 p-1 text-xs cursor-pointer transition" title="Desalocar produto e liberar baia">
@@ -570,20 +570,20 @@ function renderWarehouseInventoryCardsHtml(filteredEntries, catalog, maxCap, til
 
         <!-- Gaveta de Detalhes & Sliders (Accordion Expandido) -->
         ${isExpanded ? `
-          <div class="mt-2.5 pt-2.5 border-t border-slate-800/80 space-y-2.5 animate-fadeIn">
+          <div class="mt-2.5 pt-2.5 border-t border-white/[0.08] space-y-2.5 animate-fadeIn">
             <!-- Sliders de Controle Fino: Cota Máxima & Estoque Mínimo -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-900/70 p-2.5 rounded-lg border border-slate-800 text-xs">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-[#080a0d] p-2.5 rounded-lg border border-white/[0.08] text-xs">
               <!-- Slider 1: Cota Máxima de Armazenamento (Teto) -->
               <div class="space-y-1">
                 <div class="flex items-center justify-between text-[10px]">
                   <span class="text-slate-300 flex items-center gap-1 font-bold">
                     <span>🛑 Cota Máxima (Teto):</span>
                   </span>
-                  <span id="wh-val-maxquota-${pId}" class="font-bold text-sky-300">${maxQuota.toLocaleString()} un</span>
+                  <span id="wh-val-maxquota-${pId}" class="font-bold text-[#c9a86a]">${maxQuota.toLocaleString()} un</span>
                 </div>
                 <input type="range" min="500" max="${maxCap}" step="500" value="${maxQuota}"
                   oninput="setWarehouseProductMaxQuota(${tile.x}, ${tile.y}, '${pId}', this.value)"
-                  class="w-full accent-sky-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+                  class="w-full accent-[#c9a86a] cursor-pointer h-1.5 bg-slate-800 rounded-lg">
                 <div class="flex items-center justify-between text-[8px] text-slate-500">
                   <span>Mín: 500 un</span>
                   <span>Teto do Armazém: ${maxCap.toLocaleString()} un</span>
@@ -611,19 +611,19 @@ function renderWarehouseInventoryCardsHtml(filteredEntries, catalog, maxCap, til
             <!-- Toggles com Descrições Explicativas -->
             <div class="flex items-center justify-between flex-wrap gap-2 pt-0.5 text-[10px]">
               <div class="flex items-center gap-2 flex-wrap">
-                <label class="flex items-center gap-1.5 cursor-pointer bg-slate-900 px-2 py-1 rounded-md border border-slate-800 hover:border-slate-700">
-                  <input type="checkbox" ${isCollect ? 'checked' : ''} onchange="toggleWarehouseCollect(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-sky-500 focus:ring-0">
+                <label class="flex items-center gap-1.5 cursor-pointer bg-[#0b0e14] px-2 py-1 rounded-md border border-white/[0.08] hover:border-white/20">
+                  <input type="checkbox" ${isCollect ? 'checked' : ''} onchange="toggleWarehouseCollect(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-[#c9a86a] accent-[#c9a86a] focus:ring-0">
                   <span class="text-slate-300 font-bold">🌾 Coleta de Fontes Próprias</span>
                 </label>
 
-                <label class="flex items-center gap-1.5 cursor-pointer bg-slate-900 px-2 py-1 rounded-md border border-slate-800 hover:border-slate-700">
-                  <input type="checkbox" ${isPort ? 'checked' : ''} onchange="toggleWarehousePortRestock(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-sky-500 focus:ring-0">
+                <label class="flex items-center gap-1.5 cursor-pointer bg-[#0b0e14] px-2 py-1 rounded-md border border-white/[0.08] hover:border-white/20">
+                  <input type="checkbox" ${isPort ? 'checked' : ''} onchange="toggleWarehousePortRestock(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-cyan-400 accent-cyan-400 focus:ring-0">
                   <span class="text-slate-300 font-bold">🚢 Repor do Porto</span>
                 </label>
               </div>
 
-              <label class="flex items-center gap-1.5 cursor-pointer bg-slate-900 px-2 py-1 rounded-md border border-slate-800 hover:border-slate-700" title="Só compra do porto durante recessão ou depressão econômica com desconto">
-                <input type="checkbox" ${isRecession ? 'checked' : ''} onchange="toggleWarehouseRecessionOnly(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-amber-500 focus:ring-0">
+              <label class="flex items-center gap-1.5 cursor-pointer bg-[#0b0e14] px-2 py-1 rounded-md border border-white/[0.08] hover:border-white/20" title="Só compra do porto durante recessão ou depressão econômica com desconto">
+                <input type="checkbox" ${isRecession ? 'checked' : ''} onchange="toggleWarehouseRecessionOnly(${tile.x}, ${tile.y}, '${pId}')" class="rounded text-amber-500 accent-amber-500 focus:ring-0">
                 <span class="${isRecession ? 'text-amber-400 font-bold' : 'text-slate-400'}">📉 Modo Anticíclico (Só compra com desconto de crise)</span>
               </label>
             </div>
@@ -649,34 +649,34 @@ export function renderWarehouseInventoryTab(tile, cardsOnly = false) {
 
   if (invEntries.length === 0) {
     container.innerHTML = `
-      <div class="bg-slate-950/70 p-6 rounded-2xl border border-dashed border-sky-800/60 text-center space-y-3.5 font-mono">
+      <div class="bg-[#0b0e14] p-6 rounded-2xl border border-dashed border-white/[0.12] text-center space-y-3.5 font-mono">
         <div class="text-4xl">📦</div>
-        <h4 class="text-sm font-bold text-slate-200">Nenhum produto alocado neste Centro de Distribuição</h4>
-        <p class="text-xs text-slate-400 max-w-md mx-auto">
+        <h4 class="text-sm font-bold text-[#f1f5f9]">Nenhum produto alocado neste Centro de Distribuição</h4>
+        <p class="text-xs text-[#94a3b8] max-w-md mx-auto">
           Você pode especializar este armazém instantaneamente por pólo industrial, sincronizar insumos próprios ou alocar manualmente.
         </p>
 
         <!-- Presets Rápidos de Especialização -->
         <div class="flex items-center justify-center gap-2 flex-wrap pt-1">
-          <button onclick="applyWarehouseHubPreset('chemical')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-emerald-700/60 bg-emerald-950/50 text-emerald-300 hover:bg-emerald-900/60 cursor-pointer transition flex items-center gap-1 shadow">
-            🧪 Pólo Químico & Farma
+          <button onclick="applyWarehouseHubPreset('chemical')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-emerald-600/40 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/60 cursor-pointer transition flex items-center gap-1 shadow-sm">
+            🧪 Químico & Farma
           </button>
-          <button onclick="applyWarehouseHubPreset('agro')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-amber-700/60 bg-amber-950/50 text-amber-300 hover:bg-amber-900/60 cursor-pointer transition flex items-center gap-1 shadow">
-            🌾 Pólo Agroalimentar
+          <button onclick="applyWarehouseHubPreset('agro')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-amber-600/40 bg-amber-950/40 text-amber-300 hover:bg-amber-900/60 cursor-pointer transition flex items-center gap-1 shadow-sm">
+            🌾 Agroalimentar
           </button>
-          <button onclick="applyWarehouseHubPreset('metallurgy')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-cyan-700/60 bg-cyan-950/50 text-cyan-300 hover:bg-cyan-900/60 cursor-pointer transition flex items-center gap-1 shadow">
+          <button onclick="applyWarehouseHubPreset('metallurgy')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-cyan-600/40 bg-cyan-950/40 text-cyan-300 hover:bg-cyan-900/60 cursor-pointer transition flex items-center gap-1 shadow-sm">
             ⚙️ Metal-Mecânico
           </button>
-          <button onclick="applyWarehouseHubPreset('consumer')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-purple-700/60 bg-purple-950/50 text-purple-300 hover:bg-purple-900/60 cursor-pointer transition flex items-center gap-1 shadow">
+          <button onclick="applyWarehouseHubPreset('consumer')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-[#c9a86a]/40 bg-[#c9a86a]/15 text-[#c9a86a] hover:bg-[#c9a86a]/25 cursor-pointer transition flex items-center gap-1 shadow-sm">
             ✨ Varejo & Consumo
           </button>
         </div>
 
-        <div class="flex items-center justify-center gap-3 pt-2 border-t border-slate-800">
-          <button onclick="syncOwnProductionProducts()" class="py-2 px-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs shadow-lg cursor-pointer transition flex items-center gap-1.5">
+        <div class="flex items-center justify-center gap-3 pt-2 border-t border-white/[0.08]">
+          <button onclick="syncOwnProductionProducts()" class="py-2 px-3.5 rounded-xl bg-amber-600/20 hover:bg-amber-600/30 text-[#c9a86a] border border-[#c9a86a]/40 font-bold text-xs shadow-sm cursor-pointer transition flex items-center gap-1.5">
             ⚡ Sincronizar Produção Própria
           </button>
-          <button onclick="openAddWarehouseProductModal()" class="py-2 px-3.5 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs shadow-lg cursor-pointer transition flex items-center gap-1.5">
+          <button onclick="openAddWarehouseProductModal()" class="py-2 px-3.5 rounded-xl bg-[#c9a86a] hover:bg-[#d8b87a] text-[#080a0d] font-bold text-xs shadow-sm cursor-pointer transition flex items-center gap-1.5">
             ➕ Alocar Manualmente
           </button>
         </div>
@@ -735,35 +735,35 @@ export function renderWarehouseInventoryTab(tile, cardsOnly = false) {
   container.innerHTML = `
     <div class="space-y-2.5 font-mono">
       <!-- Barra Superior: Especialização por Pólos e Ações Globais -->
-      <div class="bg-slate-950/90 p-2.5 rounded-xl border border-slate-800/90 flex items-center justify-between flex-wrap gap-2 shadow-sm">
+      <div class="bg-[#0b0e14] p-2.5 rounded-xl border border-white/[0.08] flex items-center justify-between flex-wrap gap-2 shadow-sm">
         <div class="flex items-center gap-1.5 flex-wrap">
           <span class="text-[10px] text-slate-400 font-bold mr-1">🎯 Pólos:</span>
-          <button onclick="applyWarehouseHubPreset('chemical')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-emerald-700/60 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/60 cursor-pointer transition" title="Aloca insumos químicos, remédios, perfumes e cosméticos">
+          <button onclick="applyWarehouseHubPreset('chemical')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-emerald-600/40 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/60 cursor-pointer transition" title="Aloca insumos químicos, remédios, perfumes e cosméticos">
             🧪 Químico
           </button>
-          <button onclick="applyWarehouseHubPreset('agro')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-amber-700/60 bg-amber-950/40 text-amber-300 hover:bg-amber-900/60 cursor-pointer transition" title="Aloca trigo, milho, carne, frango, ovos e leite">
+          <button onclick="applyWarehouseHubPreset('agro')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-amber-600/40 bg-amber-950/40 text-amber-300 hover:bg-amber-900/60 cursor-pointer transition" title="Aloca trigo, milho, carne, frango, ovos e leite">
             🌾 Agro
           </button>
-          <button onclick="applyWarehouseHubPreset('metallurgy')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-cyan-700/60 bg-cyan-950/40 text-cyan-300 hover:bg-cyan-900/60 cursor-pointer transition" title="Aloca ferro, aço, peças, motores e veículos">
+          <button onclick="applyWarehouseHubPreset('metallurgy')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-cyan-600/40 bg-cyan-950/40 text-cyan-300 hover:bg-cyan-900/60 cursor-pointer transition" title="Aloca ferro, aço, peças, motores e veículos">
             ⚙️ Metal
           </button>
-          <button onclick="applyWarehouseHubPreset('consumer')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-purple-700/60 bg-purple-950/40 text-purple-300 hover:bg-purple-900/60 cursor-pointer transition" title="Aloca café, roupas, calçados, eletros e joias">
+          <button onclick="applyWarehouseHubPreset('consumer')" class="px-2 py-1 rounded-md text-[9px] font-bold border border-[#c9a86a]/40 bg-[#c9a86a]/15 text-[#c9a86a] hover:bg-[#c9a86a]/25 cursor-pointer transition" title="Aloca café, roupas, calçados, eletros e joias">
             ✨ Varejo
           </button>
         </div>
 
         <div class="flex items-center gap-2 flex-wrap">
-          <button onclick="syncOwnProductionProducts()" class="px-2.5 py-1 rounded-md text-[9px] font-bold bg-emerald-900/60 hover:bg-emerald-800/80 text-emerald-200 border border-emerald-600/60 cursor-pointer transition flex items-center gap-1" title="Sincroniza insumos produzidos por suas fábricas, fazendas e minas">
+          <button onclick="syncOwnProductionProducts()" class="px-2.5 py-1 rounded-md text-[9px] font-bold bg-amber-600/20 hover:bg-amber-600/30 text-[#c9a86a] border border-[#c9a86a]/40 cursor-pointer transition flex items-center gap-1" title="Sincroniza insumos produzidos por suas fábricas, fazendas e minas">
             ⚡ Sincronizar Própria
           </button>
-          <button onclick="openAddWarehouseProductModal()" class="px-2.5 py-1 rounded-md text-[9px] font-bold bg-sky-700 hover:bg-sky-600 text-white border border-sky-500 cursor-pointer transition flex items-center gap-1">
+          <button onclick="openAddWarehouseProductModal()" class="px-2.5 py-1 rounded-md text-[9px] font-bold bg-[#c9a86a] hover:bg-[#d8b87a] text-[#080a0d] border border-[#c9a86a] shadow-sm cursor-pointer transition flex items-center gap-1">
             ➕ Alocar Itens
           </button>
           <div class="flex items-center gap-1 ml-1">
-            <button onclick="toggleAllWarehouseCards(true)" class="px-2 py-1 rounded-md text-[9px] font-bold bg-slate-900 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 cursor-pointer transition" title="Expandir sliders de todos os produtos">
+            <button onclick="toggleAllWarehouseCards(true)" class="px-2 py-1 rounded-md text-[9px] font-bold bg-[#080a0d] text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/20 cursor-pointer transition" title="Expandir sliders de todos os produtos">
               ▾ Expandir
             </button>
-            <button onclick="toggleAllWarehouseCards(false)" class="px-2 py-1 rounded-md text-[9px] font-bold bg-slate-900 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 cursor-pointer transition" title="Recolher todos os cards para linha compacta">
+            <button onclick="toggleAllWarehouseCards(false)" class="px-2 py-1 rounded-md text-[9px] font-bold bg-[#080a0d] text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/20 cursor-pointer transition" title="Recolher todos os cards para linha compacta">
               ▴ Recolher
             </button>
           </div>
@@ -771,14 +771,14 @@ export function renderWarehouseInventoryTab(tile, cardsOnly = false) {
       </div>
 
       <!-- Barra de Busca em Tempo Real e Contador -->
-      <div class="bg-slate-950/80 p-2 rounded-xl border border-slate-800 flex items-center justify-between gap-3 shadow-sm">
+      <div class="bg-[#0b0e14] p-2 rounded-xl border border-white/[0.08] flex items-center justify-between gap-3 shadow-sm">
         <div class="relative flex-1">
           <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none text-slate-400 text-xs">🔍</span>
           <input id="wh-inventory-search-input" type="text"
             placeholder="Buscar por nome, categoria ou insumo (ex: trigo, analgésico, ferro)..."
             value="${escapeWhAttr(warehouseSearchQuery)}"
             oninput="onWarehouseSearchInput(this.value)"
-            class="w-full pl-8 pr-8 py-1.5 bg-slate-900/90 text-xs text-slate-100 placeholder-slate-500 rounded-lg border border-slate-700 focus:outline-none focus:border-sky-500 transition">
+            class="w-full pl-8 pr-8 py-1.5 bg-[#080a0d] text-xs text-slate-100 placeholder-slate-500 rounded-lg border border-white/[0.08] focus:outline-none focus:border-[#c9a86a]/60 transition">
           ${warehouseSearchQuery ? `
             <button onclick="clearWarehouseSearch()" class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-400 hover:text-rose-400 cursor-pointer text-xs" title="Limpar busca">
               ✕
@@ -793,31 +793,31 @@ export function renderWarehouseInventoryTab(tile, cardsOnly = false) {
       <!-- Chips de Filtro por Categoria e Situação de Estoque -->
       <div class="flex items-center gap-1.5 flex-wrap text-[10px]">
         <button onclick="setWarehouseFilterCategory('all')"
-          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'all' ? 'bg-sky-600 text-white shadow' : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'}">
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'all' ? 'bg-[#c9a86a] text-[#080a0d] shadow-sm' : 'bg-[#0b0e14] text-slate-400 hover:text-white border border-white/[0.08]'}">
           🏢 Todos (${invEntries.length})
         </button>
         <button onclick="setWarehouseFilterCategory('agro')"
-          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'agro' ? 'bg-amber-600 text-white shadow' : 'bg-slate-900 text-amber-400/80 hover:text-amber-300 border border-slate-800'}">
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'agro' ? 'bg-amber-600 text-white shadow-sm' : 'bg-[#0b0e14] text-amber-400/80 hover:text-amber-300 border border-white/[0.08]'}">
           🌾 Agro & Alimentos (${agroCount})
         </button>
         <button onclick="setWarehouseFilterCategory('farma')"
-          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'farma' ? 'bg-emerald-600 text-white shadow' : 'bg-slate-900 text-emerald-400/80 hover:text-emerald-300 border border-slate-800'}">
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'farma' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-[#0b0e14] text-emerald-400/80 hover:text-emerald-300 border border-white/[0.08]'}">
           🧪 Farma & Química (${farmaCount})
         </button>
         <button onclick="setWarehouseFilterCategory('tech')"
-          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'tech' ? 'bg-cyan-600 text-white shadow' : 'bg-slate-900 text-cyan-400/80 hover:text-cyan-300 border border-slate-800'}">
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'tech' ? 'bg-cyan-600 text-white shadow-sm' : 'bg-[#0b0e14] text-cyan-400/80 hover:text-cyan-300 border border-white/[0.08]'}">
           ⚙️ Indústria & Tech (${techCount})
         </button>
         <button onclick="setWarehouseFilterCategory('varejo')"
-          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'varejo' ? 'bg-purple-600 text-white shadow' : 'bg-slate-900 text-purple-400/80 hover:text-purple-300 border border-slate-800'}">
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'varejo' ? 'bg-[#c9a86a] text-[#080a0d] shadow-sm' : 'bg-[#0b0e14] text-purple-400/80 hover:text-purple-300 border border-white/[0.08]'}">
           ✨ Varejo & Consumo (${varejoCount})
         </button>
         <button onclick="setWarehouseFilterCategory('empty')"
-          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'empty' ? 'bg-rose-600 text-white shadow' : 'bg-slate-900 text-rose-400/80 hover:text-rose-300 border border-slate-800'}">
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'empty' ? 'bg-rose-600 text-white shadow-sm' : 'bg-[#0b0e14] text-rose-400/80 hover:text-rose-300 border border-white/[0.08]'}">
           ⚠️ Esgotados (${emptyCount})
         </button>
         <button onclick="setWarehouseFilterCategory('stocked')"
-          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'stocked' ? 'bg-teal-600 text-white shadow' : 'bg-slate-900 text-teal-400/80 hover:text-teal-300 border border-slate-800'}">
+          class="px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${currentWarehouseFilterCategory === 'stocked' ? 'bg-teal-600 text-white shadow-sm' : 'bg-[#0b0e14] text-teal-400/80 hover:text-teal-300 border border-white/[0.08]'}">
           📦 Em Estoque (${stockedCount})
         </button>
       </div>
@@ -1485,10 +1485,10 @@ export function renderWarehouseAddProductList(query = '') {
 
   listEl.innerHTML = `
     <!-- Barra de Categorias -->
-    <div class="flex items-center gap-1.5 flex-wrap pb-2 border-b border-slate-800">
+    <div class="flex items-center gap-1.5 flex-wrap pb-2 border-b border-white/[0.08]">
       ${categories.map(c => `
         <button onclick="setWarehouseCategoryFilter('${c.id}')"
-          class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer ${selectedAddCategory === c.id ? 'bg-sky-600 text-white shadow' : 'bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-800'}">
+          class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer ${selectedAddCategory === c.id ? 'bg-[#c9a86a] text-[#080a0d] shadow-sm' : 'bg-[#0b0e14] text-slate-400 hover:text-white border border-white/[0.08]'}">
           ${c.label}
         </button>
       `).join('')}
@@ -1496,13 +1496,13 @@ export function renderWarehouseAddProductList(query = '') {
 
     <!-- Barra de Ação em Lote -->
     ${filtered.length > 0 ? `
-      <div class="flex items-center justify-between bg-slate-950/80 p-2 rounded-xl border border-slate-800 text-[10px]">
+      <div class="flex items-center justify-between bg-[#0b0e14] p-2 rounded-xl border border-white/[0.08] text-[10px]">
         <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-300">
-          <input type="checkbox" ${isAllFilteredSelected ? 'checked' : ''} onchange='toggleSelectAllFilteredAddProducts(${JSON.stringify(filteredIds)})' class="rounded text-sky-500 focus:ring-0">
+          <input type="checkbox" ${isAllFilteredSelected ? 'checked' : ''} onchange='toggleSelectAllFilteredAddProducts(${JSON.stringify(filteredIds)})' class="rounded text-[#c9a86a] accent-[#c9a86a] focus:ring-0">
           <span>Selecionar Todos (${filtered.length})</span>
         </label>
         ${selectedCount > 0 ? `
-          <button onclick="allocateSelectedWarehouseProducts()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-3 py-1 rounded-lg text-xs shadow cursor-pointer transition flex items-center gap-1">
+          <button onclick="allocateSelectedWarehouseProducts()" class="bg-gradient-to-r from-amber-600 to-[#c9a86a] hover:brightness-110 text-[#080a0d] font-bold px-3 py-1 rounded-lg text-xs shadow-sm cursor-pointer transition flex items-center gap-1">
             ⚡ Alocar Selecionados (${selectedCount})
           </button>
         ` : `
@@ -1513,27 +1513,28 @@ export function renderWarehouseAddProductList(query = '') {
 
     <!-- Itens Disponíveis -->
     ${filtered.length === 0 ? `
-      <div class="text-xs text-slate-400 font-mono text-center py-6 bg-slate-950/40 rounded-xl border border-dashed border-slate-800">
+      <div class="text-xs text-slate-400 font-mono text-center py-6 bg-[#0b0e14]/40 rounded-xl border border-dashed border-white/[0.08]">
         Nenhum produto disponível encontrado para os filtros atuais.
       </div>
     ` : `
       <div class="space-y-1.5 max-h-64 overflow-y-auto custom-scrollbar pr-1">
         ${filtered.map(item => {
           const isSel = selectedAddProductIds.has(item.id);
+          const itemEmoji = (typeof window !== 'undefined' && window.getProductEmoji) ? window.getProductEmoji(item.id) : (item.emoji || '📦');
           return `
-            <div class="flex items-center justify-between p-2 ${isSel ? 'bg-sky-950/40 border-sky-600/70' : (item.isOwn ? 'bg-emerald-950/30 border-emerald-800/60 hover:bg-emerald-900/40' : 'bg-slate-950/80 hover:bg-slate-800/80 border-slate-800')} rounded-xl border transition font-mono text-xs">
+            <div class="flex items-center justify-between p-2 ${isSel ? 'bg-[#c9a86a]/15 border-[#c9a86a]/70' : (item.isOwn ? 'bg-amber-500/5 border-amber-500/30 hover:border-amber-500/50' : 'bg-[#0b0e14] hover:bg-white/[0.04] border-white/[0.08]')} rounded-xl border transition font-mono text-xs">
               <div class="flex items-center gap-2.5">
-                <input type="checkbox" ${isSel ? 'checked' : ''} onchange="toggleWarehouseAddSelect('${item.id}')" class="rounded text-sky-500 focus:ring-0 cursor-pointer">
-                <span class="text-base">${item.emoji}</span>
+                <input type="checkbox" ${isSel ? 'checked' : ''} onchange="toggleWarehouseAddSelect('${item.id}')" class="rounded text-[#c9a86a] accent-[#c9a86a] focus:ring-0 cursor-pointer">
+                <span class="text-base">${itemEmoji}</span>
                 <div>
                   <div class="flex items-center gap-1.5">
                     <span class="font-bold text-slate-200">${item.name}</span>
-                    ${item.isOwn ? `<span class="text-[8px] bg-emerald-900 text-emerald-300 font-bold px-1.5 py-0.5 rounded border border-emerald-600/60">⚡ SUA PRODUÇÃO</span>` : ''}
+                    ${item.isOwn ? `<span class="text-[8px] bg-amber-950/80 text-[#c9a86a] font-bold px-1.5 py-0.5 rounded border border-[#c9a86a]/40">⚡ SUA PRODUÇÃO</span>` : ''}
                   </div>
                   <div class="text-[10px] text-slate-400">${item.category} · Custo Base $${item.baseCost.toFixed(2)}</div>
                 </div>
               </div>
-              <button onclick="addWarehouseProduct(${activeWarehouseTile.x}, ${activeWarehouseTile.y}, '${item.id}')" class="${item.isOwn ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-sky-600 hover:bg-sky-500'} text-white font-bold px-2.5 py-1 rounded-lg text-xs cursor-pointer transition">
+              <button onclick="addWarehouseProduct(${activeWarehouseTile.x}, ${activeWarehouseTile.y}, '${item.id}')" class="${item.isOwn ? 'bg-[#c9a86a] hover:bg-[#d8b87a] text-[#080a0d]' : 'bg-white/[0.08] hover:bg-white/[0.15] text-slate-200 border border-white/10'} font-bold px-2.5 py-1 rounded-lg text-xs cursor-pointer transition">
                 Alocar
               </button>
             </div>

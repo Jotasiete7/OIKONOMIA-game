@@ -75,6 +75,18 @@ export function isModalOpen(modalId) {
   return !!(el && !el.classList.contains('hidden'));
 }
 
+export function openDiaryModal() {
+  return openModal('diary-modal');
+}
+
+export function closeDiaryModal() {
+  return closeModal('diary-modal');
+}
+
+export function toggleDiaryModal() {
+  return toggleModal('diary-modal');
+}
+
 export function closeAllInGameModals(exceptions = []) {
   const excSet = new Set(exceptions);
   for (const id of ALL_IN_GAME_MODALS) {
@@ -195,6 +207,9 @@ export const ModalManager = {
   closeModal,
   toggleModal,
   isModalOpen,
+  openDiaryModal,
+  closeDiaryModal,
+  toggleDiaryModal,
   closeAllInGameModals,
   handleGlobalEscape
 };
@@ -206,6 +221,9 @@ if (typeof window !== 'undefined') {
   window.closeModal = closeModal;
   window.toggleModal = toggleModal;
   window.isModalOpen = isModalOpen;
+  window.openDiaryModal = openDiaryModal;
+  window.closeDiaryModal = closeDiaryModal;
+  window.toggleDiaryModal = toggleDiaryModal;
   window.closeAllInGameModals = closeAllInGameModals;
   window.handleGlobalEscape = handleGlobalEscape;
 }

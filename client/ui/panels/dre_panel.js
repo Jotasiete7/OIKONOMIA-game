@@ -192,30 +192,30 @@ export function renderFacilityDRETable() {
   rows.sort((a, b) => a.net - b.net);
 
   tbody.innerHTML = rows.length > 0 ? rows.map(r => `
-    <tr class="hover:bg-slate-900/60 transition">
-      <td class="p-2.5 font-bold text-slate-200">
+    <tr class="hover:bg-white/[0.03] transition border-b border-white/[0.04]">
+      <td class="p-2.5 font-bold text-[#f1f5f9]">
         <span class="mr-1">${r.emoji}</span> ${r.facName}
-        <span class="text-[9px] text-slate-500 block font-normal">${r.typeName}</span>
+        <span class="text-[9px] text-[#94a3b8] block font-normal">${r.typeName}</span>
       </td>
-      <td class="p-2.5 text-slate-400 text-[10px]">${r.loc}</td>
-      <td class="p-2.5 text-right font-bold text-emerald-400">$${r.rev.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-      <td class="p-2.5 text-right text-rose-400">-$${r.cogs.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-      <td class="p-2.5 text-right text-slate-300">-$${r.opex.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-      <td class="p-2.5 text-right font-black ${r.net >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+      <td class="p-2.5 text-[#94a3b8] text-[10px]">${r.loc}</td>
+      <td class="p-2.5 text-right font-bold text-emerald-400 font-mono">$${r.rev.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+      <td class="p-2.5 text-right text-rose-400 font-mono">-$${r.cogs.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+      <td class="p-2.5 text-right text-[#94a3b8] font-mono">-$${r.opex.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+      <td class="p-2.5 text-right font-black font-mono ${r.net >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
         ${r.net >= 0 ? '+$' : '-$'}${Math.abs(r.net).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
       </td>
-      <td class="p-2.5 text-right font-bold ${r.margin >= 0 ? 'text-slate-300' : 'text-rose-400'}">
+      <td class="p-2.5 text-right font-bold font-mono ${r.margin >= 0 ? 'text-[#f1f5f9]' : 'text-rose-400'}">
         ${r.margin > 0 ? '+' : ''}${r.margin}%
       </td>
       <td class="p-2.5 text-center">
-        <button onclick="closeFacilityDREModal(); activeManagedTile=worldGrid[${r.tile.x}][${r.tile.y}]; if (typeof renderFacilityPanel==='function') renderFacilityPanel(activeManagedTile); if (typeof renderTileInspector==='function') renderTileInspector(activeManagedTile); if (typeof scheduleRender==='function') scheduleRender();" class="bg-slate-800 hover:bg-slate-700 text-teal-300 px-2 py-1 rounded text-[9px] font-bold border border-slate-700 cursor-pointer">
+        <button onclick="closeFacilityDREModal(); activeManagedTile=worldGrid[${r.tile.x}][${r.tile.y}]; if (typeof renderFacilityPanel==='function') renderFacilityPanel(activeManagedTile); if (typeof renderTileInspector==='function') renderTileInspector(activeManagedTile); if (typeof scheduleRender==='function') scheduleRender();" class="px-2.5 py-1 rounded text-[9px] font-bold border border-[#c9a86a]/30 text-[#c9a86a] bg-[#c9a86a]/10 hover:bg-[#c9a86a]/20 hover:border-[#c9a86a] transition cursor-pointer">
           Gerir
         </button>
       </td>
     </tr>
   `).join('') : `
     <tr>
-      <td colspan="8" class="p-4 text-center text-slate-500 font-mono">Nenhuma instalação ativa registrada na auditoria.</td>
+      <td colspan="8" class="p-6 text-center text-[#94a3b8] font-mono text-xs">Nenhuma instalação ativa registrada na auditoria.</td>
     </tr>
   `;
 
@@ -295,11 +295,11 @@ export function renderFacilityDRETable() {
 
         return `
           <div class="flex items-end shrink-0 ${isNewYear ? 'border-l-2 border-amber-500/60 pl-2 ml-1' : ''}">
-            <div class="flex flex-col items-center gap-1 shrink-0 group relative cursor-pointer hover:bg-slate-900/90 p-1 rounded-lg transition-all">
-              <div class="absolute bottom-full mb-2 hidden group-hover:flex flex-col bg-slate-950/98 border border-slate-700 rounded-xl px-3 py-2 text-[10px] font-mono shadow-2xl z-30 pointer-events-none whitespace-nowrap -translate-x-1/2 left-1/2 min-w-[190px] backdrop-blur-md">
-                <div class="font-bold text-amber-300 pb-0.5 border-b border-slate-800 flex justify-between items-center">
+            <div class="flex flex-col items-center gap-1 shrink-0 group relative cursor-pointer hover:bg-white/[0.04] p-1 rounded-lg transition-all">
+              <div class="absolute bottom-full mb-2 hidden group-hover:flex flex-col bg-[#0b0e14] border border-white/10 rounded-xl px-3 py-2 text-[10px] font-mono shadow-2xl z-30 pointer-events-none whitespace-nowrap -translate-x-1/2 left-1/2 min-w-[190px] backdrop-blur-md">
+                <div class="font-bold text-[#c9a86a] pb-0.5 border-b border-white/10 flex justify-between items-center">
                   <span>📅 Mês ${String(h.month).padStart(2, '0')} / A${h.year}</span>
-                  <span class="text-[8px] text-slate-400 font-normal">${macroInfo.shortText || ''}</span>
+                  <span class="text-[8px] text-[#94a3b8] font-normal">${macroInfo.shortText || ''}</span>
                 </div>
                 <div class="flex justify-between gap-3 text-sky-300 mt-1"><span>Receita:</span> <strong>$${h.revenue.toLocaleString()}</strong></div>
                 <div class="flex justify-between gap-3 ${isProfit ? 'text-emerald-400' : 'text-rose-400'}"><span>Lucro Líq:</span> <strong>${isProfit ? '+$' : '-$'}${Math.abs(h.netProfit).toLocaleString()} (${marginPct}%)</strong></div>

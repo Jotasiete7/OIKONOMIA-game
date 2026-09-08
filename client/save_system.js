@@ -11,7 +11,7 @@ export const GAME_VERSION_INFO = {
   major: 0,
   minor: 8,
   patch: 5,
-  build: '20260908.01',
+  build: '20260908.02',
   saveSchema: '0.8.2',
   get version() { return `${this.major}.${this.minor}.${this.patch}`; },
   get fullString() { return `v${this.version} (bld.${this.build})`; }

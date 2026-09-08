@@ -10,7 +10,7 @@
  */
 
 export function gridToScreen(gx, gy, camera = null, tileW = null, tileH = null) {
-  const cam = camera || (typeof window !== 'undefined' ? window.camera : { panX: 0, panY: 0, zoom: 1 });
+  const cam = camera || (typeof window !== 'undefined' ? (window.CameraController?.camera || window.camera) : { panX: 0, panY: 0, zoom: 1 });
   const tW = tileW ?? ((typeof window !== 'undefined' && window.TILE_W) ? window.TILE_W : 64);
   const tH = tileH ?? ((typeof window !== 'undefined' && window.TILE_H) ? window.TILE_H : 32);
 
@@ -21,7 +21,7 @@ export function gridToScreen(gx, gy, camera = null, tileW = null, tileH = null) 
 }
 
 export function screenToGrid(mx, my, camera = null, tileW = null, tileH = null) {
-  const cam = camera || (typeof window !== 'undefined' ? window.camera : { panX: 0, panY: 0, zoom: 1 });
+  const cam = camera || (typeof window !== 'undefined' ? (window.CameraController?.camera || window.camera) : { panX: 0, panY: 0, zoom: 1 });
   const tW = tileW ?? ((typeof window !== 'undefined' && window.TILE_W) ? window.TILE_W : 64);
   const tH = tileH ?? ((typeof window !== 'undefined' && window.TILE_H) ? window.TILE_H : 32);
 
