@@ -26,6 +26,8 @@ import {
   resolveSimulationContext
 } from './simulation.js';
 import AdvisorSystem from './advisor_system.js';
+import SimulationGuard from './simulation_guard.js';
+import ProductionGraph from './production_graph.js';
 
 // --- Fase 2A: Dados do mapa ---
 import { MAP_WIDTH, MAP_HEIGHT, TILE_WIDTH, TILE_HEIGHT, CITY_PROFILES_DATA, TMX_LAYERS } from './map_data.js';
@@ -92,7 +94,9 @@ import {
   serializeGameState,
   createSaveMetadata,
   deleteSaveSlot,
-  generateExportDataUri
+  generateExportDataUri,
+  saveSlotWithBackup,
+  loadSlotWithFallback
 } from './save_system.js';
 
 // --- Sistema de Armazém Logístico & CDs ---
@@ -128,6 +132,8 @@ window.calcProductRating = calcProductRating;
 window.calcElasticity = calcElasticity;
 window.resolveSimulationContext = resolveSimulationContext;
 window.AdvisorSystem = AdvisorSystem;
+window.SimulationGuard = SimulationGuard;
+window.ProductionGraph = ProductionGraph;
 
 // Re-exposição global (Fase 2A)
 window.MAP_WIDTH = MAP_WIDTH;
@@ -190,11 +196,13 @@ window.migrateSaveData = migrateSaveData;
 window.getSavesIndex = getSavesIndex;
 window.saveSavesIndex = saveSavesIndex;
 window.reconcileSavesIndex = reconcileSavesIndex;
-window._saveSystem = { getSavesIndex, saveSavesIndex, reconcileSavesIndex, migrateSaveData };
+window._saveSystem = { getSavesIndex, saveSavesIndex, reconcileSavesIndex, migrateSaveData, saveSlotWithBackup, loadSlotWithFallback };
 window.serializeGameState = serializeGameState;
 window.createSaveMetadata = createSaveMetadata;
 window.deleteSaveSlot = deleteSaveSlot;
 window.generateExportDataUri = generateExportDataUri;
+window.saveSlotWithBackup = saveSlotWithBackup;
+window.loadSlotWithFallback = loadSlotWithFallback;
 
 // Re-exposição global (Warehouse System)
 window.WarehouseSystem = WarehouseSystem;

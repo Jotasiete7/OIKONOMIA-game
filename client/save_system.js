@@ -10,8 +10,8 @@ import { seedRecoveredSavesIfMissing } from './recovered_saves_seed.js';
 export const GAME_VERSION_INFO = {
   major: 0,
   minor: 8,
-  patch: 4,
-  build: '20260905.03',
+  patch: 5,
+  build: '20260908.01',
   saveSchema: '0.8.2',
   get version() { return `${this.major}.${this.minor}.${this.patch}`; },
   get fullString() { return `v${this.version} (bld.${this.build})`; }
@@ -413,3 +413,68 @@ export function deleteSaveSlot(slotId) {
 export function generateExportDataUri(saveData) {
   return "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(saveData, null, 2));
 }
+
+/**
+ * Salva com criação de geração anterior (Backup Generation)
+ * Se já existir um save no slot, ele é promovido a backup antes de ser sobrescrito.
+ */
+export function saveSlotWithBackup(slotId, serializedState) {
+  try {
+    const key = `oiko_save_${slotId}`;
+    const backupKey = `oiko_save_${slotId}_backup`;
+    const previousSave = localStorage.getItem(key);
+    if (previousSave) {
+      try {
+        localStorage.setItem(backupKey, previousSave);
+      } catch (e) {
+        // Se a cota estiver no limite, ignora o backup secundário para não impedir o save principal
+      }
+    }
+    localStorage.setItem(key, serializedState);
+    return true;
+  } catch (e) {
+    console.error(`Erro ao gravar save com backup no slot "${slotId}":`, e);
+    return false;
+  }
+}
+
+/**
+ * Carrega um slot com fallback automático para geração anterior (Save Generations).
+ */
+export function loadSlotWithFallback(slotId) {
+  const key = `oiko_save_${slotId}`;
+  const backupKey = `oiko_save_${slotId}_backup`;
+  
+  let raw = null;
+  try {
+    raw = localStorage.getItem(key);
+  } catch (e) {}
+
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        return { data: parsed, fromBackup: false };
+      }
+    } catch (e) {
+      console.warn(`[SaveSystem] ⚠ Save principal "${slotId}" corrompido ou ilegível. Tentando backup...`);
+    }
+  }
+
+  // Tentativa no snapshot de geração anterior
+  try {
+    const backupRaw = localStorage.getItem(backupKey);
+    if (backupRaw) {
+      const parsedBackup = JSON.parse(backupRaw);
+      if (parsedBackup && typeof parsedBackup === 'object') {
+        console.info(`[SaveSystem] ✅ Snapshot de recuperação ativado para slot "${slotId}".`);
+        return { data: parsedBackup, fromBackup: true };
+      }
+    }
+  } catch (e) {
+    console.error(`[SaveSystem] Falha ao ler snapshot de backup do slot "${slotId}":`, e);
+  }
+
+  return { data: null, fromBackup: false };
+}
+

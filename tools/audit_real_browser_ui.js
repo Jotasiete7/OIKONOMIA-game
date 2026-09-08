@@ -83,9 +83,11 @@ async function runBrowserAudit() {
   console.log('================================================================\n');
 
   console.log('1. Iniciando Microsoft Edge Chromium Headless...');
+  const tmpDir = path.join(require('os').tmpdir(), 'edge_audit_' + Date.now());
   const edgeProc = spawn(EDGE_PATH, [
     '--headless=new',
     '--remote-debugging-port=9222',
+    '--user-data-dir=' + tmpDir,
     '--disable-gpu',
     '--no-first-run',
     '--no-default-browser-check',
@@ -93,17 +95,32 @@ async function runBrowserAudit() {
     'about:blank'
   ]);
 
-  await sleep(2500);
-
   let cdp;
   try {
-    const targets = await new Promise((resolve, reject) => {
-      http.get('http://127.0.0.1:9222/json', (res) => {
-        let data = '';
-        res.on('data', chunk => data += chunk);
-        res.on('end', () => resolve(JSON.parse(data)));
-      }).on('error', reject);
-    });
+    let targets = null;
+    for (let attempt = 0; attempt < 15; attempt++) {
+      await sleep(500);
+      try {
+        targets = await new Promise((resolve, reject) => {
+          const req = http.get('http://127.0.0.1:9222/json', (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+              try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
+            });
+          });
+          req.on('error', reject);
+          req.setTimeout(1000, () => req.destroy());
+        });
+        if (targets && targets.length > 0) break;
+      } catch (e) {
+        // tenta novamente no próximo ciclo
+      }
+    }
+
+    if (!targets || targets.length === 0) {
+      throw new Error('Não foi possível conectar ao endpoint de depuração do Edge na porta 9222.');
+    }
 
     const pageTarget = targets.find(t => t.type === 'page') || targets[0];
     console.log(`2. Conectando via DevTools WebSocket: ${pageTarget.webSocketDebuggerUrl}`);

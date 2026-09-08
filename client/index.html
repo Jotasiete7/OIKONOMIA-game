@@ -7785,7 +7785,7 @@
         if (unlocked) totalUnlocked++;
 
         // Encontra insumos requeridos pela receita
-        const recipe = FACTORY_RECIPES.find(r => r.outputProdId === prod.id || r.id === prod.id);
+        const recipe = (window.ProductionGraph ? window.ProductionGraph.getRecipeForProduct(prod.id) : FACTORY_RECIPES.find(r => r.outputProdId === prod.id || r.id === prod.id));
         const inputReqs = [];
         if (recipe && recipe.inputs) {
           for (const [inpId, qty] of Object.entries(recipe.inputs)) {
@@ -7875,7 +7875,7 @@
 
           // Função recursiva para renderizar a cadeia de insumos completa até a raiz (Tier 0)
           const getFullChainHtml = (pId) => {
-            const rec = FACTORY_RECIPES.find(r => r.outputProdId === pId || r.id === pId);
+            const rec = (window.ProductionGraph ? window.ProductionGraph.getRecipeForProduct(pId) : FACTORY_RECIPES.find(r => r.outputProdId === pId || r.id === pId));
             if (!rec || !rec.inputs || Object.keys(rec.inputs).length === 0) {
               const p = PRODUCT_CATALOG[pId] || { name: pId };
               const isUnl = isProductUnlocked(pId);
@@ -7969,7 +7969,7 @@
       }
 
       if (!CoreMath.canResearch(productId, unlockedProducts, FACTORY_RECIPES)) {
-        const recipe = FACTORY_RECIPES.find(r => r.outputProdId === productId || r.id === productId);
+        const recipe = (window.ProductionGraph ? window.ProductionGraph.getRecipeForProduct(productId) : FACTORY_RECIPES.find(r => r.outputProdId === productId || r.id === productId));
         const missing = [];
         if (recipe && recipe.inputs) {
           for (const inpId of Object.keys(recipe.inputs)) {
@@ -8552,7 +8552,7 @@
       }
       // Fallback: qualidade base da receita do catálogo
       if (bestQR === 0) {
-        const recipe = FACTORY_RECIPES.find(r => r.outputProdId === prodId);
+        const recipe = (window.ProductionGraph ? window.ProductionGraph.getRecipeForProduct(prodId) : FACTORY_RECIPES.find(r => r.outputProdId === prodId || r.id === prodId));
         bestQR = recipe ? (recipe.quality || 60) : 60;
       }
       return bestQR;
@@ -9174,7 +9174,7 @@
       // Se há um produto selecionado, renderiza sua Ficha Técnica Detalhada
       if (selId && PRODUCT_CATALOG[selId]) {
         const prod = PRODUCT_CATALOG[selId];
-        const recipe = FACTORY_RECIPES.find(r => r.outputProdId === prod.id || r.id === prod.id);
+        const recipe = (window.ProductionGraph ? window.ProductionGraph.getRecipeForProduct(prod.id) : FACTORY_RECIPES.find(r => r.outputProdId === prod.id || r.id === prod.id));
         const farm = FARM_TYPES.find(f => f.cropId === prod.id);
         const mine = NATURAL_MINES.find(m => m.resourceId === prod.id);
         const tier = CoreMath.determineProductTier(prod.id, FACTORY_RECIPES);
@@ -9402,7 +9402,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             ${products.map(prod => {
               const tier = CoreMath.determineProductTier(prod.id, FACTORY_RECIPES);
-              const recipe = FACTORY_RECIPES.find(r => r.outputProdId === prod.id || r.id === prod.id);
+              const recipe = (window.ProductionGraph ? window.ProductionGraph.getRecipeForProduct(prod.id) : FACTORY_RECIPES.find(r => r.outputProdId === prod.id || r.id === prod.id));
               const stdPrice = prod.standardPrice || (prod.baseCost * 2.0);
               return `
                 <div onclick="navigateEncyclopedia('products', '${prod.id}')"
@@ -9664,7 +9664,7 @@
       const prodId = encyclopediaState.calcProductId || 'bread';
       const targetDaily = encyclopediaState.calcTargetAmount || 500;
       const prod = PRODUCT_CATALOG[prodId] || PRODUCT_CATALOG.bread;
-      const recipe = FACTORY_RECIPES.find(r => r.outputProdId === prod.id || r.id === prod.id);
+      const recipe = (window.ProductionGraph ? window.ProductionGraph.getRecipeForProduct(prod.id) : FACTORY_RECIPES.find(r => r.outputProdId === prod.id || r.id === prod.id));
 
       // Calcula requisitos de fábrica
       const factoryCap = recipe ? recipe.dailyCap : 400;
@@ -9673,7 +9673,7 @@
       // Insumos de 1º Nível
       const level1Inputs = recipe && recipe.inputs ? Object.entries(recipe.inputs).map(([inpId, qty]) => {
         const inpProd = PRODUCT_CATALOG[inpId] || { name: inpId };
-        const inpRecipe = FACTORY_RECIPES.find(r => r.outputProdId === inpId || r.id === inpId);
+        const inpRecipe = (window.ProductionGraph ? window.ProductionGraph.getRecipeForProduct(inpId) : FACTORY_RECIPES.find(r => r.outputProdId === inpId || r.id === inpId));
         const inpFarm = FARM_TYPES.find(f => f.cropId === inpId);
         const inpMine = NATURAL_MINES.find(m => m.resourceId === inpId);
         const totalNeededDaily = targetDaily * qty;
@@ -12152,7 +12152,17 @@
       };
 
       try {
-        localStorage.setItem(`oiko_save_${slotId}`, JSON.stringify(state));
+        // Validação de Integridade antes do Save (Anti-NaN, Anti-Infinity)
+        if (typeof window !== 'undefined' && window.SimulationGuard && typeof window.SimulationGuard.validateEconomySnapshot === 'function') {
+          window.SimulationGuard.validateEconomySnapshot(state);
+        }
+
+        const serialized = JSON.stringify(state);
+        if (typeof window !== 'undefined' && typeof window.saveSlotWithBackup === 'function') {
+          window.saveSlotWithBackup(slotId, serialized);
+        } else {
+          localStorage.setItem(`oiko_save_${slotId}`, serialized);
+        }
         
         let index = getSavesIndex().filter(s => s.id !== slotId);
         index.unshift(metadata);
@@ -12301,15 +12311,30 @@
 
     function loadGameById(slotId) {
       try {
-        const raw = localStorage.getItem(`oiko_save_${slotId}`);
-        if (!raw) {
-          alert('Save não encontrado.');
+        let state = null;
+        let isBackup = false;
+
+        if (typeof window !== 'undefined' && typeof window.loadSlotWithFallback === 'function') {
+          const loadRes = window.loadSlotWithFallback(slotId);
+          state = loadRes.data;
+          isBackup = loadRes.fromBackup;
+        } else {
+          const raw = localStorage.getItem(`oiko_save_${slotId}`);
+          if (raw) state = JSON.parse(raw);
+        }
+
+        if (!state) {
+          alert('Save não encontrado ou arquivo corrompido.');
           return;
         }
-        const state = JSON.parse(raw);
+
         currentSaveSlotId = slotId;
         closeSaveLoadModal();
         loadGameFromData(state);
+
+        if (isBackup) {
+          addLog(`⚠ AVISO: Save corrompido recuperado com sucesso da geração anterior (Backup)!`, 'text-amber-300 font-bold', { category: 'system' });
+        }
       } catch (e) {
         alert('Erro ao carregar o arquivo salvo.');
       }
@@ -12321,6 +12346,7 @@
 
       try {
         localStorage.removeItem(`oiko_save_${slotId}`);
+        localStorage.removeItem(`oiko_save_${slotId}_backup`);
         let index = getSavesIndex().filter(s => s.id !== slotId);
         saveSavesIndex(index);
         if (currentSaveSlotId === slotId) currentSaveSlotId = null;

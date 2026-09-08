@@ -8,6 +8,8 @@ import MacroCycleSystem from './macro_cycle_system.js';
 import { PRODUCT_CATALOG, FACTORY_RECIPES, MEDIA_OUTLETS } from './data_catalogs.js';
 import GameState from './game_state.js';
 import AdvisorSystem from './advisor_system.js';
+import SimulationGuard from './simulation_guard.js';
+import ProductionGraph from './production_graph.js';
 
 export function calcPriceRating(standardPrice, price) {
   return CoreMath.calculatePriceRating(standardPrice, price);
@@ -229,7 +231,9 @@ export function simulateDay(customContext = {}) {
   for (const tile of activeFacilitySet.values()) {
     if (tile.factory && tile.factory.lines) {
       for (const line of Object.values(tile.factory.lines)) {
-        const rec = FACTORY_RECIPES.find(r => r.id === line.recipeId);
+        const rec = (ProductionGraph && ProductionGraph.getRecipeById)
+          ? ProductionGraph.getRecipeById(line.recipeId)
+          : FACTORY_RECIPES.find(r => r.id === line.recipeId);
         let productionRatio = 1.0;
 
         if (rec && rec.inputs) {
@@ -667,6 +671,11 @@ export function simulateDay(customContext = {}) {
   state.monthFixedExpenses = (state.monthFixedExpenses || 0) + dailyFixed;
   state.monthMarketingExpenses = (state.monthMarketingExpenses || 0) + dailyMarketing;
 
+  // Barreira de Integridade da Engine (Anti-NaN, Anti-Infinity e estoques)
+  if (SimulationGuard && typeof SimulationGuard.validateEconomySnapshot === 'function') {
+    SimulationGuard.validateEconomySnapshot(state, activeFacilitySet);
+  }
+
   // Boletim Trimestral Antecipado (Dia 20 dos meses de fechamento 3, 6, 9, 12)
   if (state.day === 20 && (state.month === 3 || state.month === 6 || state.month === 9 || state.month === 12)) {
     const nextMonth = state.month === 12 ? 1 : state.month + 1;
@@ -922,6 +931,11 @@ export function closeMonthEnd(customContext = {}) {
   state.monthFixedExpenses = 0;
   state.monthMarketingExpenses = 0;
   state.monthFinancialExpenses = 0;
+
+  // Barreira de Integridade no Fechamento Mensal
+  if (SimulationGuard && typeof SimulationGuard.validateEconomySnapshot === 'function') {
+    SimulationGuard.validateEconomySnapshot(state, activeFacilitySet);
+  }
 
   const activeTile = getActiveManagedTile();
   if (activeTile) {

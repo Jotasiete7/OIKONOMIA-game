@@ -220,9 +220,20 @@ const CoreMath = {
   calculateProductionTier(productId, recipes, cache = {}) {
     if (cache[productId] !== undefined) return cache[productId];
     
+    // Otimização O(1) via ProductionGraph quando disponível
+    if (typeof window !== 'undefined' && window.ProductionGraph && (!recipes || recipes === window.FACTORY_RECIPES)) {
+      const gTier = window.ProductionGraph.getProductTier(productId);
+      if (typeof gTier === 'number') {
+        cache[productId] = gTier;
+        return gTier;
+      }
+    }
+
     // Suporta array de receitas ou dicionário indexado por outputProdId/id
     let recipe = null;
-    if (Array.isArray(recipes)) {
+    if (typeof window !== 'undefined' && window.ProductionGraph && (!recipes || recipes === window.FACTORY_RECIPES)) {
+      recipe = window.ProductionGraph.getRecipeForProduct(productId);
+    } else if (Array.isArray(recipes)) {
       recipe = recipes.find(r => r.outputProdId === productId || r.id === productId);
     } else if (recipes && typeof recipes === 'object') {
       recipe = recipes[productId] || Object.values(recipes).find(r => r.outputProdId === productId || r.id === productId);
@@ -259,7 +270,9 @@ const CoreMath = {
     visited.add(productId);
 
     let recipe = null;
-    if (Array.isArray(recipes)) {
+    if (typeof window !== 'undefined' && window.ProductionGraph && (!recipes || recipes === window.FACTORY_RECIPES)) {
+      recipe = window.ProductionGraph.getRecipeForProduct(productId);
+    } else if (Array.isArray(recipes)) {
       recipe = recipes.find(r => r.outputProdId === productId || r.id === productId);
     } else if (recipes && typeof recipes === 'object') {
       recipe = recipes[productId] || Object.values(recipes).find(r => r.outputProdId === productId || r.id === productId);
@@ -314,7 +327,9 @@ const CoreMath = {
     if (!unlockedSet) return true;
     
     let recipe = null;
-    if (Array.isArray(recipes)) {
+    if (typeof window !== 'undefined' && window.ProductionGraph && (!recipes || recipes === window.FACTORY_RECIPES)) {
+      recipe = window.ProductionGraph.getRecipeForProduct(productId);
+    } else if (Array.isArray(recipes)) {
       recipe = recipes.find(r => r.outputProdId === productId || r.id === productId);
     } else if (recipes && typeof recipes === 'object') {
       recipe = recipes[productId] || Object.values(recipes).find(r => r.outputProdId === productId || r.id === productId);
@@ -360,9 +375,11 @@ const CoreMath = {
 
       for (const current of currentQueue) {
         // Encontra todas as receitas que consom current.prodId
-        for (const rec of recipeList) {
-          if (!rec.inputs || !(current.prodId in rec.inputs)) continue;
+        const candidateRecipes = (typeof window !== 'undefined' && window.ProductionGraph && (!recipes || recipes === window.FACTORY_RECIPES))
+          ? window.ProductionGraph.getRecipesConsuming(current.prodId)
+          : recipeList.filter(rec => rec.inputs && (current.prodId in rec.inputs));
 
+        for (const rec of candidateRecipes) {
           const outId = rec.outputProdId || rec.id;
           if (!outId || visited.has(outId)) continue;
 

@@ -4,132 +4,132 @@
       {
         "simulatedDays": 30,
         "date": "30/1/2026",
-        "cash": 504725,
-        "monthRevenueAccumulated": 13500,
-        "monthCogsAccumulated": 5625,
+        "cash": 485550,
+        "monthRevenueAccumulated": 900,
+        "monthCogsAccumulated": 375,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 60,
         "date": "30/2/2026",
-        "cash": 509000,
-        "monthRevenueAccumulated": 13050,
-        "monthCogsAccumulated": 5438,
+        "cash": 471300,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 90,
         "date": "30/3/2026",
-        "cash": 513275,
-        "monthRevenueAccumulated": 13050,
-        "monthCogsAccumulated": 5438,
+        "cash": 457050,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 120,
         "date": "30/4/2026",
-        "cash": 517550,
-        "monthRevenueAccumulated": 13050,
-        "monthCogsAccumulated": 5438,
+        "cash": 442800,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 150,
         "date": "30/5/2026",
-        "cash": 521825,
-        "monthRevenueAccumulated": 13050,
-        "monthCogsAccumulated": 5438,
+        "cash": 428550,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 180,
         "date": "30/6/2026",
-        "cash": 526100,
-        "monthRevenueAccumulated": 13050,
-        "monthCogsAccumulated": 5438,
+        "cash": 414300,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 210,
         "date": "30/7/2026",
-        "cash": 530375,
-        "monthRevenueAccumulated": 13050,
-        "monthCogsAccumulated": 5438,
+        "cash": 400050,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 240,
         "date": "30/8/2026",
-        "cash": 534650,
-        "monthRevenueAccumulated": 13050,
-        "monthCogsAccumulated": 5438,
+        "cash": 385800,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 270,
         "date": "30/9/2026",
-        "cash": 538925,
-        "monthRevenueAccumulated": 13050,
-        "monthCogsAccumulated": 5438,
+        "cash": 371550,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 300,
         "date": "30/10/2026",
-        "cash": 543200,
-        "monthRevenueAccumulated": 13050,
-        "monthCogsAccumulated": 5438,
+        "cash": 357300,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 330,
         "date": "30/11/2026",
-        "cash": 547475,
-        "monthRevenueAccumulated": 13050,
-        "monthCogsAccumulated": 5438,
+        "cash": 343050,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 360,
         "date": "30/12/2026",
-        "cash": 551750,
-        "monthRevenueAccumulated": 13050,
-        "monthCogsAccumulated": 5438,
+        "cash": 328800,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       },
       {
         "simulatedDays": 365,
         "date": "5/1/2027",
-        "cash": 552463,
-        "monthRevenueAccumulated": 1800,
-        "monthCogsAccumulated": 750,
+        "cash": 326425,
+        "monthRevenueAccumulated": 0,
+        "monthCogsAccumulated": 0,
         "farmStock": 5000,
         "breadStock": 3000,
-        "storeShelfStock": 250
+        "storeShelfStock": 0
       }
     ],
     "anyNaN": false,
@@ -137,9 +137,9 @@
     "finalDay": 6,
     "finalMonth": 1,
     "finalYear": 2027,
-    "finalCash": 552462.5,
+    "finalCash": 326425,
     "dreVisible": true,
-    "dreTextSample": "⋮⋮\n📊 Demonstrativo de Resultados (DRE Consolidada)\n✕\n(+) Receita Bruta (Varejo):\n+$2.250,00\n(-) Custo das Mercadorias (CPV + Frete):\n-$937,50\n(-) Alu"
+    "dreTextSample": "⋮⋮\n📊 Demonstrativo de Resultados (DRE Consolidada)\n✕\n(+) Receita Bruta (Varejo):\n+$0,00\n(-) Custo das Mercadorias (CPV + Frete):\n-$0,00\n(-) Aluguéis "
   },
   "system2": {
     "testMontargisLockBefore": true,
@@ -176,7 +176,7 @@
     "outletName": "Rede Capital TV",
     "contractKey": "media_tv::bread",
     "initialBrand": 10,
-    "finalBrand": 26,
+    "finalBrand": 25,
     "brandGrew": true,
     "brandHistory": [
       {
@@ -196,7 +196,7 @@
       },
       {
         "day": 30,
-        "brand": 26,
+        "brand": 25,
         "monthMarketingExpenses": 416.66666666666663
       }
     ],
@@ -204,22 +204,22 @@
     "monthMarketingExpenses": 416.66666666666663
   },
   "system4": {
-    "grossSalesText": "+$2.250,00",
-    "cogsText": "-$937,50",
-    "rentText": "-$600,00",
+    "grossSalesText": "+$0,00",
+    "cogsText": "-$0,00",
+    "rentText": "-$2.375,00",
     "mktText": "-$416,67",
-    "netProfitText": "+$295,83",
+    "netProfitText": "-$2.791,67",
     "rawMath": {
-      "monthRevenue": 2250,
-      "monthCogs": 937.5,
-      "monthFixedExpenses": 600,
+      "monthRevenue": 0,
+      "monthCogs": 0,
+      "monthFixedExpenses": 2375,
       "monthMarketingExpenses": 416.66666666666663,
-      "calculatedNet": 295.83333333333337
+      "calculatedNet": -2791.6666666666665
     }
   },
   "system5": {
     "priceBefore": 2.2,
-    "priceAfter": 2.11,
+    "priceAfter": 2.09,
     "priceDropped": true,
     "priceHistory": [
       2.2,
@@ -247,56 +247,56 @@
       2.2,
       2.2,
       2.2,
-      2.11,
-      2.11,
-      2.11,
-      2.11,
-      2.11,
-      2.11,
-      2.11,
-      2.11,
-      2.11,
-      2.11,
-      2.11
+      2.09,
+      2.09,
+      2.09,
+      2.09,
+      2.09,
+      2.09,
+      2.09,
+      2.09,
+      2.09,
+      2.09,
+      2.09
     ],
     "shareHistory": [
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.3420688829848475,
-      0.347567716055337,
-      0.347567716055337,
-      0.347567716055337,
-      0.347567716055337,
-      0.347567716055337,
-      0.347567716055337,
-      0.347567716055337,
-      0.347567716055337,
-      0.347567716055337,
-      0.347567716055337
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.3428577804806369,
+      0.35578286824961713,
+      0.35578286824961713,
+      0.35578286824961713,
+      0.35578286824961713,
+      0.35578286824961713,
+      0.35578286824961713,
+      0.35578286824961713,
+      0.35578286824961713,
+      0.35578286824961713,
+      0.35578286824961713
     ],
-    "finalShare": 0.347567716055337
+    "finalShare": 0.35578286824961713
   },
   "system6": {
     "saveSuccess": true,
