@@ -14,19 +14,35 @@ import GameState from '../game_state.js';
 
 let _lastActiveSpeed = 2;
 
+function getActiveState() {
+  if (typeof window !== 'undefined' && window.GameState) {
+    return window.GameState;
+  }
+  return GameState;
+}
+
 export function getLastActiveSpeed() {
   return _lastActiveSpeed;
 }
 
 export function setSpeed(s) {
   if (s > 0) _lastActiveSpeed = s;
+  const activeState = getActiveState();
+  activeState.gameSpeed = s;
   GameState.gameSpeed = s;
   if (typeof window !== 'undefined') window.gameSpeed = s;
 
   if (GameState.timerInterval) {
     clearInterval(GameState.timerInterval);
     GameState.timerInterval = null;
-    if (typeof window !== 'undefined') window.timerInterval = null;
+  }
+  if (activeState.timerInterval && activeState !== GameState) {
+    clearInterval(activeState.timerInterval);
+    activeState.timerInterval = null;
+  }
+  if (typeof window !== 'undefined' && window.timerInterval) {
+    clearInterval(window.timerInterval);
+    window.timerInterval = null;
   }
 
   const map = { 0: 'btn-p', 1: 'btn-1x', 2: 'btn-2x', 3: 'btn-3x', 4: 'btn-4x', 5: 'btn-5x' };
@@ -49,34 +65,38 @@ export function setSpeed(s) {
     }
   };
 
-  GameState.timerInterval = setInterval(stepFn, intervalMs);
-  if (typeof window !== 'undefined') window.timerInterval = GameState.timerInterval;
+  const intervalId = setInterval(stepFn, intervalMs);
+  GameState.timerInterval = intervalId;
+  activeState.timerInterval = intervalId;
+  if (typeof window !== 'undefined') window.timerInterval = intervalId;
 }
 
-export function updateClock(
-  day = (GameState.day || (typeof window !== 'undefined' ? window.day : 1)),
-  month = (GameState.month || (typeof window !== 'undefined' ? window.month : 1)),
-  year = (GameState.year || (typeof window !== 'undefined' ? window.year : 1))
-) {
+export function updateClock(day = null, month = null, year = null) {
+  const activeState = getActiveState();
+  const d = (day !== null && day !== undefined) ? day : ((typeof window !== 'undefined' && window.day !== undefined) ? window.day : (activeState.day || 1));
+  const m = (month !== null && month !== undefined) ? month : ((typeof window !== 'undefined' && window.month !== undefined) ? window.month : (activeState.month || 1));
+  const y = (year !== null && year !== undefined) ? year : ((typeof window !== 'undefined' && window.year !== undefined) ? window.year : (activeState.year || 1));
+
   const clockEl = document.getElementById('clock-date');
   if (clockEl) {
-    clockEl.textContent = `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')} · Ano ${year}`;
-    clockEl.title = `Data da Simulação: Dia ${day} / Mês ${month} / Ano ${year}`;
+    clockEl.textContent = `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')} · Ano ${y}`;
+    clockEl.title = `Data da Simulação: Dia ${d} / Mês ${m} / Ano ${y}`;
   }
 }
 
-export function updateQuarterBadge(
-  month = (GameState.month || (typeof window !== 'undefined' ? window.month : 1)),
-  year = (GameState.year || (typeof window !== 'undefined' ? window.year : 1))
-) {
+export function updateQuarterBadge(month = null, year = null) {
+  const activeState = getActiveState();
+  const m = (month !== null && month !== undefined) ? month : ((typeof window !== 'undefined' && window.month !== undefined) ? window.month : (activeState.month || 1));
+  const y = (year !== null && year !== undefined) ? year : ((typeof window !== 'undefined' && window.year !== undefined) ? window.year : (activeState.year || 1));
+
   const qBadge = document.getElementById('hud-quarter-badge');
   const macroBadge = document.getElementById('hud-macro-cycle-badge');
   const mathMod = (typeof window !== 'undefined' && window.CoreMath) ? window.CoreMath : null;
 
   if (qBadge && mathMod && typeof mathMod.getQuarterInfo === 'function') {
-    const qInfo = mathMod.getQuarterInfo(month);
+    const qInfo = mathMod.getQuarterInfo(m);
     const macroMod = (typeof window !== 'undefined' && window.MacroCycleSystem) ? window.MacroCycleSystem : null;
-    const macroInfo = macroMod && typeof macroMod.getHUDLabel === 'function' ? macroMod.getHUDLabel(year) : null;
+    const macroInfo = macroMod && typeof macroMod.getHUDLabel === 'function' ? macroMod.getHUDLabel(y) : null;
     const phaseName = (macroInfo && macroInfo.phase) 
       ? macroInfo.phase.name 
       : (macroInfo ? macroInfo.shortText : (qInfo ? qInfo.season : 'Padrão'));
@@ -92,35 +112,38 @@ export function updateQuarterBadge(
   }
 }
 
-export function updateCash(
-  cash = (GameState.cash !== undefined && GameState.cash !== null ? GameState.cash : (typeof window !== 'undefined' ? window.cash : 0))
-) {
+export function updateCash(cash = null) {
+  const activeState = getActiveState();
+  const val = (cash !== null && cash !== undefined)
+    ? cash
+    : ((typeof window !== 'undefined' && window.cash !== undefined && window.cash !== null) ? window.cash : (activeState.cash ?? 0));
+
   const cashEl = document.getElementById('corp-cash');
   if (!cashEl) return;
 
-  const fullCashStr = `$${cash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const fullCashStr = `$${val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   cashEl.title = `Caixa Total da Empresa: ${fullCashStr}`;
 
-  if (Math.abs(cash) >= 1_000_000_000) {
-    cashEl.textContent = `$${(cash / 1_000_000_000).toFixed(2)}B`;
-  } else if (Math.abs(cash) >= 10_000_000) {
-    cashEl.textContent = `$${(cash / 1_000_000).toFixed(2)}M`;
-  } else if (Math.abs(cash) >= 1_000_000) {
-    cashEl.textContent = `$${(cash / 1_000_000).toFixed(2)}M`;
+  if (Math.abs(val) >= 1_000_000_000) {
+    cashEl.textContent = `$${(val / 1_000_000_000).toFixed(2)}B`;
+  } else if (Math.abs(val) >= 10_000_000) {
+    cashEl.textContent = `$${(val / 1_000_000).toFixed(2)}M`;
+  } else if (Math.abs(val) >= 1_000_000) {
+    cashEl.textContent = `$${(val / 1_000_000).toFixed(2)}M`;
   } else {
-    cashEl.textContent = `$${cash.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+    cashEl.textContent = `$${val.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
   }
 }
 
-export function updateProfit(
-  net = null,
-  rev = (GameState.monthRevenue ?? (typeof window !== 'undefined' ? window.monthRevenue : 0) ?? 0),
-  cogs = (GameState.monthCogs ?? (typeof window !== 'undefined' ? window.monthCogs : 0) ?? 0),
-  fixed = (GameState.monthFixedExpenses ?? (typeof window !== 'undefined' ? window.monthFixedExpenses : 0) ?? 0),
-  mkt = (GameState.monthMarketingExpenses ?? (typeof window !== 'undefined' ? window.monthMarketingExpenses : 0) ?? 0),
-  fin = (GameState.monthFinancialExpenses ?? (typeof window !== 'undefined' ? window.monthFinancialExpenses : 0) ?? 0)
-) {
-  const calculatedNet = net !== null ? net : (rev - cogs - fixed - mkt - fin);
+export function updateProfit(net = null, rev = null, cogs = null, fixed = null, mkt = null, fin = null) {
+  const activeState = getActiveState();
+  const r = (rev !== null && rev !== undefined) ? rev : ((typeof window !== 'undefined' && window.monthRevenue !== undefined) ? window.monthRevenue : (activeState.monthRevenue ?? 0));
+  const c = (cogs !== null && cogs !== undefined) ? cogs : ((typeof window !== 'undefined' && window.monthCogs !== undefined) ? window.monthCogs : (activeState.monthCogs ?? 0));
+  const f = (fixed !== null && fixed !== undefined) ? fixed : ((typeof window !== 'undefined' && window.monthFixedExpenses !== undefined) ? window.monthFixedExpenses : (activeState.monthFixedExpenses ?? 0));
+  const mk = (mkt !== null && mkt !== undefined) ? mkt : ((typeof window !== 'undefined' && window.monthMarketingExpenses !== undefined) ? window.monthMarketingExpenses : (activeState.monthMarketingExpenses ?? 0));
+  const fi = (fin !== null && fin !== undefined) ? fin : ((typeof window !== 'undefined' && window.monthFinancialExpenses !== undefined) ? window.monthFinancialExpenses : (activeState.monthFinancialExpenses ?? 0));
+
+  const calculatedNet = net !== null ? net : (r - c - f - mk - fi);
   const pe = document.getElementById('month-profit');
   if (!pe) return;
 

@@ -9557,6 +9557,23 @@
       year = saveData.year;
       playtimeSeconds = saveData.playtimeSeconds;
 
+      if (typeof window !== 'undefined') {
+        window.cash = cash;
+        window.day = day;
+        window.month = month;
+        window.year = year;
+        window.playerProfile = playerProfile;
+        window.playtimeSeconds = playtimeSeconds;
+        if (window.GameState) {
+          window.GameState.cash = cash;
+          window.GameState.day = day;
+          window.GameState.month = month;
+          window.GameState.year = year;
+          window.GameState.playerProfile = playerProfile;
+          window.GameState.playtimeSeconds = playtimeSeconds;
+        }
+      }
+
       Object.assign(unlockedCities, saveData.unlockedCities);
 
       Object.keys(playerBrandRating).forEach(k => delete playerBrandRating[k]);
@@ -9614,9 +9631,32 @@
       }
 
       if (saveData.tutorialState && typeof saveData.tutorialState === 'object') {
-        Object.assign(tutorialState, saveData.tutorialState);
+        const steps = saveData.tutorialState.completedSteps || {};
+        const claimed = Boolean(saveData.tutorialState.rewardClaimed);
+        const active = saveData.tutorialState.active !== false;
+        if (typeof window !== 'undefined' && window.AppLifecycle) {
+          window.AppLifecycle.tutorialState = { completedSteps: { ...steps }, rewardClaimed: claimed, active };
+        }
+        tutorialState = (typeof window !== 'undefined' && window.AppLifecycle)
+          ? window.AppLifecycle.tutorialState
+          : { completedSteps: { ...steps }, rewardClaimed: claimed, active };
+        if (typeof window !== 'undefined') window.tutorialState = tutorialState;
       } else {
-        tutorialState = { completedSteps: {}, rewardClaimed: false };
+        // Save veterano sem tutorialState: se o jogador já possui histórico/instalações, auto-conclui para silenciar toasts repetidos
+        const isVeteranSave = (year > 1 || month > 3 || (saveData.builtTiles && saveData.builtTiles.length > 2));
+        const completed = {};
+        if (isVeteranSave) {
+          ['inspect_tile', 'open_store', 'stock_goods', 'build_farm', 'research_rd', 'build_factory', 'monthly_profit'].forEach(id => {
+            completed[id] = true;
+          });
+        }
+        if (typeof window !== 'undefined' && window.AppLifecycle) {
+          window.AppLifecycle.tutorialState = { completedSteps: completed, rewardClaimed: isVeteranSave, active: !isVeteranSave };
+        }
+        tutorialState = (typeof window !== 'undefined' && window.AppLifecycle)
+          ? window.AppLifecycle.tutorialState
+          : { completedSteps: completed, rewardClaimed: isVeteranSave, active: !isVeteranSave };
+        if (typeof window !== 'undefined') window.tutorialState = tutorialState;
       }
       renderTutorialGuide();
 
@@ -9640,9 +9680,11 @@
       }
 
       currentAppScreen = 'PLAYING';
+      if (typeof window !== 'undefined') window.currentAppScreen = 'PLAYING';
       hideMainMenu();
       closeAllInGameModals();
       setSpeed(1);
+      updateUI();
       jumpToCity('nova_atenas');
       
       const verInfo = saveData.migratedFromVersion && saveData.migratedFromVersion !== CURRENT_SAVE_VERSION

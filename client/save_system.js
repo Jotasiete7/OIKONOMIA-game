@@ -50,7 +50,7 @@ export function migrateSaveData(rawSave) {
   migrated.cash = (!isNaN(numCash) && isFinite(numCash)) ? Number(numCash.toFixed(2)) : 100000.00;
 
   const numDay = parseInt(migrated.day, 10);
-  migrated.day = (!isNaN(numDay) && numDay >= 1 && numDay <= 30) ? numDay : 1;
+  migrated.day = (!isNaN(numDay) && numDay >= 1 && numDay <= 31) ? numDay : 1;
 
   const numMonth = parseInt(migrated.month, 10);
   migrated.month = (!isNaN(numMonth) && numMonth >= 1 && numMonth <= 12) ? numMonth : 1;
@@ -135,6 +135,17 @@ export function migrateSaveData(rawSave) {
     repeatMode: (rawSet.repeatMode === 'track') ? 'track' : 'playlist',
     currentBgmKey: (typeof rawSet.currentBgmKey === 'string' && rawSet.currentBgmKey) ? rawSet.currentBgmKey : 'bgm_1'
   };
+
+  // 9. Sanitização de Tutorial (novo em v0.8.2)
+  if (migrated.tutorialState && typeof migrated.tutorialState === 'object') {
+    migrated.tutorialState = {
+      completedSteps: (migrated.tutorialState.completedSteps && typeof migrated.tutorialState.completedSteps === 'object')
+        ? { ...migrated.tutorialState.completedSteps }
+        : {},
+      rewardClaimed: Boolean(migrated.tutorialState.rewardClaimed),
+      active: migrated.tutorialState.active !== false
+    };
+  }
 
   // 6. Sanitização de Fornecedores Quebrados (ex: armazém demolido no lote)
   if (Array.isArray(migrated.builtTiles)) {

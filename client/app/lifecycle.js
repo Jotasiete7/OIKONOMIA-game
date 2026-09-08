@@ -124,11 +124,16 @@ export class LifecycleManager {
     this.selectedWizDifficultyId = 'standard';
     this.selectedWizLogoSeed = 0;
     this.currentSaveLoadMode = 'load';
-    this.tutorialState = {
-      completedSteps: {},
-      rewardClaimed: false,
-      active: true
-    };
+    this.tutorialState = (typeof window !== 'undefined' && window.tutorialState)
+      ? window.tutorialState
+      : {
+          completedSteps: {},
+          rewardClaimed: false,
+          active: true
+        };
+    if (typeof window !== 'undefined') {
+      window.tutorialState = this.tutorialState;
+    }
   }
 
   // ===========================================================================
@@ -609,17 +614,19 @@ export class LifecycleManager {
     }
   }
 
-  checkTutorialProgress() {
+  checkTutorialProgress(silent = false) {
     let anyNew = false;
     for (const m of TUTORIAL_MISSIONS) {
       if (!this.tutorialState.completedSteps[m.id] && m.check()) {
         this.tutorialState.completedSteps[m.id] = true;
         anyNew = true;
-        if (typeof window.addLog === 'function') {
-          window.addLog(`🎓 Missão Concluída: "${m.title}"!`, 'text-amber-400 font-bold');
-        }
-        if (typeof window.playSuccessChime === 'function') {
-          window.playSuccessChime();
+        if (!silent) {
+          if (typeof window.addLog === 'function') {
+            window.addLog(`🎓 Missão Concluída: "${m.title}"!`, 'text-amber-400 font-bold');
+          }
+          if (typeof window.playSuccessChime === 'function') {
+            window.playSuccessChime();
+          }
         }
       }
     }

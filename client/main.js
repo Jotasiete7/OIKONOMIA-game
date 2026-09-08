@@ -233,7 +233,16 @@ window.DIFFICULTY_PRESETS = DIFFICULTY_PRESETS;
 window.ECONOMIC_TIPS = ECONOMIC_TIPS;
 
 // Re-exposição global (Fase 4B: Game State & Save System)
-window.GameState = window.GameState || GameState;
+if (typeof window !== 'undefined') {
+  if (window.GameState && window.GameState !== GameState) {
+    Object.assign(GameState, window.GameState);
+    window.GameState = GameState;
+  } else {
+    window.GameState = GameState;
+  }
+} else {
+  window.GameState = GameState;
+}
 window.createInitialGameState = createInitialGameState;
 window.GAME_VERSION_INFO = GAME_VERSION_INFO;
 window.SAVES_STORAGE_KEY = SAVES_STORAGE_KEY;
@@ -418,13 +427,16 @@ const stateProxyProps = [
 ];
 if (typeof window !== 'undefined') {
   for (const prop of stateProxyProps) {
-    if (!(prop in window)) {
+    try {
       Object.defineProperty(window, prop, {
-        get() { return GameState[prop]; },
-        set(val) { GameState[prop] = val; },
+        get() { return (window.GameState || GameState)[prop]; },
+        set(val) {
+          if (window.GameState) window.GameState[prop] = val;
+          GameState[prop] = val;
+        },
         configurable: true
       });
-    }
+    } catch (e) {}
   }
 }
 
