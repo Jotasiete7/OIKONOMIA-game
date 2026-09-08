@@ -142,6 +142,12 @@ import ModalManager, {
 import HUDSystem, { setSpeed, updateHUD, updateAdvisorHUDChip } from './ui/hud.js';
 import TickerUI from './ui/ticker.js';
 
+// --- Fase 6.3: Motor de Renderização Canvas & Isometria ---
+import IsoMath, { gridToScreen, screenToGrid, drawDiamond, drawBuilding } from './renderer/iso_math.js';
+import CameraController, { camera, changeZoom, focusOnTile as cameraFocusOnTile, jumpToCity as cameraJumpToCity, resetCamera } from './renderer/camera.js';
+import MinimapSystem, { renderMinimap, initMinimapEvents } from './renderer/minimap.js';
+import CanvasRenderer, { renderMap, resizeCanvas, scheduleRender, startRenderLoop, stopRenderLoop, getCurrentFps } from './renderer/canvas_renderer.js';
+
 // Inicializa captura de erros do Flight Recorder o mais cedo possível
 initTelemetryEngine();
 
@@ -307,6 +313,30 @@ window.updateHUD = updateHUD;
 window.updateUI = updateHUD;
 window.updateAdvisorHUDChip = updateAdvisorHUDChip;
 window.TickerUI = TickerUI;
+
+// Re-exposição global (Fase 6.3 — Motor Gráfico Canvas & Isometria)
+window.IsoMath = IsoMath;
+window.gridToScreen = gridToScreen;
+window.screenToGrid = screenToGrid;
+window.drawDiamond = drawDiamond;
+window.drawBuilding = drawBuilding;
+
+window.camera = camera;
+window.CameraController = CameraController;
+window.changeZoom = changeZoom;
+window.resetCamera = resetCamera;
+
+window.MinimapSystem = MinimapSystem;
+window.renderMinimap = renderMinimap;
+window.initMinimapEvents = initMinimapEvents;
+
+window.CanvasRenderer = CanvasRenderer;
+window.renderMap = renderMap;
+window.resizeCanvas = resizeCanvas;
+window.scheduleRender = scheduleRender;
+window.startRenderLoop = startRenderLoop;
+window.stopRenderLoop = stopRenderLoop;
+window.getCurrentFps = getCurrentFps;
 
 // Proxies reativos globais vinculados a GameState (Single Source of Truth)
 const stateProxyProps = [

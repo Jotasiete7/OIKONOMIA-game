@@ -2268,7 +2268,15 @@
   <script>
     // Render loop global dirty flag & function (disponíveis imediatamente no topo do script)
     var _needsRender = true;
-    function scheduleRender() { _needsRender = true; if (typeof window !== 'undefined') window._needsRender = true; }
+    function scheduleRender() {
+      _needsRender = true;
+      if (typeof window !== 'undefined') {
+        window._needsRender = true;
+        if (window.CanvasRenderer && typeof window.CanvasRenderer.scheduleRender === 'function') {
+          window.CanvasRenderer.scheduleRender();
+        }
+      }
+    }
     if (typeof window !== 'undefined') {
       window.scheduleRender = scheduleRender;
       window._needsRender = true;
@@ -2701,6 +2709,14 @@
     let wasDragging   = false;
     let currentHeatmap = 'terrain';
 
+    if (typeof window !== 'undefined') {
+      Object.defineProperty(window, 'selectedTileX', { get() { return selectedTileX; }, set(v) { selectedTileX = v; }, configurable: true });
+      Object.defineProperty(window, 'selectedTileY', { get() { return selectedTileY; }, set(v) { selectedTileY = v; }, configurable: true });
+      Object.defineProperty(window, 'hoveredTileX', { get() { return hoveredTileX; }, set(v) { hoveredTileX = v; }, configurable: true });
+      Object.defineProperty(window, 'hoveredTileY', { get() { return hoveredTileY; }, set(v) { hoveredTileY = v; }, configurable: true });
+      Object.defineProperty(window, 'currentHeatmap', { get() { return currentHeatmap; }, set(v) { currentHeatmap = v; }, configurable: true });
+    }
+
     let pendingTile = null;
     let pendingStoreType = null;
     let selectedProductsMap = new Map();
@@ -3105,6 +3121,9 @@
     if (typeof window !== 'undefined') window.camera = camera;
 
     function resizeCanvas() {
+      if (typeof window !== 'undefined' && window.CanvasRenderer && typeof window.CanvasRenderer.resizeCanvas === 'function') {
+        return window.CanvasRenderer.resizeCanvas();
+      }
       const r = canvas.getBoundingClientRect();
       canvas.width  = r.width  * window.devicePixelRatio;
       canvas.height = r.height * window.devicePixelRatio;
@@ -3177,6 +3196,9 @@
     if (typeof window !== 'undefined') window.focusOnTile = focusOnTile;
 
     function changeZoom(d, pivotX = null, pivotY = null) {
+      if (typeof window !== 'undefined' && window.CameraController && typeof window.CameraController.changeZoom === 'function') {
+        return window.CameraController.changeZoom(d, pivotX, pivotY, canvas);
+      }
       const oldZoom = camera.zoom;
       const newZoom = Math.min(2.4, Math.max(0.35, oldZoom + d));
       if (newZoom === oldZoom) return;
@@ -3194,6 +3216,9 @@
     }
 
     function gridToScreen(gx, gy) {
+      if (typeof window !== 'undefined' && window.IsoMath && typeof window.IsoMath.gridToScreen === 'function') {
+        return window.IsoMath.gridToScreen(gx, gy, camera, TILE_W, TILE_H);
+      }
       return {
         sx: (gx - gy) * (TILE_W / 2) * camera.zoom + camera.panX,
         sy: (gx + gy) * (TILE_H / 2) * camera.zoom + camera.panY,
@@ -3201,12 +3226,18 @@
     }
 
     function screenToGrid(mx, my) {
+      if (typeof window !== 'undefined' && window.IsoMath && typeof window.IsoMath.screenToGrid === 'function') {
+        return window.IsoMath.screenToGrid(mx, my, camera, TILE_W, TILE_H);
+      }
       const relX = (mx - camera.panX) / ((TILE_W / 2) * camera.zoom);
       const relY = (my - camera.panY) / ((TILE_H / 2) * camera.zoom);
       return { gx: Math.floor((relY + relX) / 2), gy: Math.floor((relY - relX) / 2) };
     }
 
     function drawDiamond(sx, sy, w, h, fill, stroke = '#09111e') {
+      if (typeof window !== 'undefined' && window.IsoMath && typeof window.IsoMath.drawDiamond === 'function') {
+        return window.IsoMath.drawDiamond(ctx, sx, sy, w, h, fill, stroke);
+      }
       ctx.beginPath();
       ctx.moveTo(sx, sy);
       ctx.lineTo(sx + w/2, sy + h/2);
@@ -3219,6 +3250,9 @@
     }
 
     function drawBuilding(sx, sy, w, h, hPx, topC, leftC, rightC) {
+      if (typeof window !== 'undefined' && window.IsoMath && typeof window.IsoMath.drawBuilding === 'function') {
+        return window.IsoMath.drawBuilding(ctx, sx, sy, w, h, hPx, topC, leftC, rightC);
+      }
       const tsy = sy - hPx;
       ctx.beginPath(); ctx.moveTo(sx - w/2, sy + h/2); ctx.lineTo(sx, sy + h); ctx.lineTo(sx, tsy + h); ctx.lineTo(sx - w/2, tsy + h/2); ctx.closePath();
       ctx.fillStyle = leftC; ctx.fill();
@@ -3233,6 +3267,9 @@
     // RADAR MINIMAPA (RENDERIZAÇÃO DEDICADA & TELETRANSPORTE POR CLIQUE)
     // ===========================================================================
     function renderMinimap() {
+      if (typeof window !== 'undefined' && window.MinimapSystem && typeof window.MinimapSystem.renderMinimap === 'function') {
+        return window.MinimapSystem.renderMinimap();
+      }
       const mmCanvas = document.getElementById('minimap-canvas');
       if (!mmCanvas) return;
       const mmCtx = mmCanvas.getContext('2d');
@@ -3351,6 +3388,9 @@
     requestAnimationFrame(_rafLoop);
 
     function renderMap() {
+      if (typeof window !== 'undefined' && window.CanvasRenderer && typeof window.CanvasRenderer.renderMap === 'function') {
+        return window.CanvasRenderer.renderMap();
+      }
 
       const r = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, r.width, r.height);
