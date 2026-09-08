@@ -19,7 +19,7 @@ export class MouseController {
   init(canvasEl, tooltipEl) {
     if (typeof window === 'undefined') return;
     this.canvas = canvasEl || document.getElementById('iso-canvas');
-    this.tooltip = tooltipEl || document.getElementById('tile-tooltip');
+    this.tooltip = tooltipEl || document.getElementById('iso-tooltip') || document.getElementById('tile-tooltip');
 
     if (!this.canvas) return;
 
