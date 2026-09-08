@@ -2279,56 +2279,42 @@
     // (Modularizado em client/logo_generator.js e exposto em window)
     // ===========================================================================
 
-    // Dropdown Controllers (Cidades, Lentes & Mais Opções)
+    // Dropdown Controllers (Cidades, Lentes & Mais Opções — Modularizados em client/ui/navigation.js)
     function toggleCitiesDropdown() {
+      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.toggleCitiesDropdown();
       const menu = document.getElementById('cities-dropdown-menu');
       if (menu) menu.classList.toggle('hidden');
     }
 
     function closeCitiesDropdown() {
+      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.closeCitiesDropdown();
       const menu = document.getElementById('cities-dropdown-menu');
       if (menu) menu.classList.add('hidden');
     }
 
     function toggleLensesDropdown() {
+      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.toggleLensesDropdown();
       const menu = document.getElementById('lenses-dropdown-menu');
       if (menu) menu.classList.toggle('hidden');
     }
 
     function closeLensesDropdown() {
+      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.closeLensesDropdown();
       const menu = document.getElementById('lenses-dropdown-menu');
       if (menu) menu.classList.add('hidden');
     }
 
     function toggleMoreOptionsMenu() {
+      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.toggleMoreOptionsMenu();
       const menu = document.getElementById('hud-more-options-menu');
       if (menu) menu.classList.toggle('hidden');
     }
 
     function closeMoreOptionsMenu() {
+      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.closeMoreOptionsMenu();
       const menu = document.getElementById('hud-more-options-menu');
       if (menu) menu.classList.add('hidden');
     }
-
-    window.addEventListener('click', (e) => {
-      const cContainer = document.getElementById('cities-dropdown-container');
-      const cMenu = document.getElementById('cities-dropdown-menu');
-      if (cContainer && cMenu && !cContainer.contains(e.target)) {
-        cMenu.classList.add('hidden');
-      }
-
-      const lContainer = document.getElementById('lenses-dropdown-container');
-      const lMenu = document.getElementById('lenses-dropdown-menu');
-      if (lContainer && lMenu && !lContainer.contains(e.target)) {
-        lMenu.classList.add('hidden');
-      }
-
-      const mContainer = document.getElementById('hud-more-options-container');
-      const mMenu = document.getElementById('hud-more-options-menu');
-      if (mContainer && mMenu && !mContainer.contains(e.target)) {
-        mMenu.classList.add('hidden');
-      }
-    });
 
     // ===========================================================================
     // 1. DADOS MESTRES & MÓDULOS GLOBAIS
@@ -2752,7 +2738,11 @@
     const GRID_SIZE = (typeof MAP_WIDTH !== 'undefined') ? MAP_WIDTH : 128;
     const TILE_W = 64, TILE_H = 32;
     const worldGrid = [];
-    if (typeof window !== 'undefined') window.worldGrid = worldGrid;
+    if (typeof window !== 'undefined') {
+      window.TILE_W = TILE_W;
+      window.TILE_H = TILE_H;
+      window.worldGrid = worldGrid;
+    }
 
     function checkCityUnlocks() {
       // 1. Montargis ($500k em ativos) e Várzea (1+ fazenda) via Sparse Index
@@ -3112,6 +3102,7 @@
     const tooltip = document.getElementById('iso-tooltip');
 
     const camera = { panX: 0, panY: 0, zoom: 0.85, isDragging: false, dragStartX: 0, dragStartY: 0 };
+    if (typeof window !== 'undefined') window.camera = camera;
 
     function resizeCanvas() {
       const r = canvas.getBoundingClientRect();
@@ -3126,6 +3117,9 @@
     }
 
     function jumpToCity(cityId) {
+      if (typeof window !== 'undefined' && window.NavigationSystem && typeof window.NavigationSystem.jumpToCity === 'function') {
+        return window.NavigationSystem.jumpToCity(cityId);
+      }
       const r = canvas.getBoundingClientRect();
       let targetX = 40, targetY = 42;
       if (cityId === 'porto_real') { targetX = 86; targetY = 38; }
@@ -3170,6 +3164,9 @@
     }
 
     function focusOnTile(gx, gy) {
+      if (typeof window !== 'undefined' && window.NavigationSystem && typeof window.NavigationSystem.focusOnTile === 'function') {
+        return window.NavigationSystem.focusOnTile(gx, gy);
+      }
       if (typeof gx !== 'number' || typeof gy !== 'number') return;
       const r = canvas.getBoundingClientRect();
       camera.panX = (r.width / 2) - (gx - gy) * (TILE_W / 2) * camera.zoom;
@@ -11130,6 +11127,9 @@
     });
 
     function setHeatmap(mode) {
+      if (typeof window !== 'undefined' && window.NavigationSystem && typeof window.NavigationSystem.setHeatmap === 'function') {
+        return window.NavigationSystem.setHeatmap(mode);
+      }
       currentHeatmap = mode;
       const lensMeta = {
         terrain:     { name: 'Terreno', icon: '⊙' },
@@ -13088,56 +13088,53 @@
     }
 
     function handleGlobalEscapeKey() {
-      // Prioridade 0A: Modal de Reporte de Bugs (F8)
+      if (typeof window !== 'undefined' && window.ModalManager && typeof window.ModalManager.handleGlobalEscape === 'function') {
+        return window.ModalManager.handleGlobalEscape();
+      }
+
+      // Fallback local
       const bugModal = document.getElementById('bug-report-modal');
       if (bugModal && !bugModal.classList.contains('hidden')) {
         closeBugReportModal();
         return;
       }
 
-      // Prioridade 0B: Dev Dashboard (F3)
       const devModal = document.getElementById('dev-dashboard-modal');
       if (devModal && !devModal.classList.contains('hidden')) {
         closeDevDashboard();
         return;
       }
 
-      // Prioridade 0C: Modal de Confirmação de Venda / Demolição
       const facConfirm = document.getElementById('confirm-facility-modal');
       if (facConfirm && !facConfirm.classList.contains('hidden')) {
         closeFacilityConfirmModal();
         return;
       }
 
-      // Prioridade 1: Modal de Confirmação de Saída
       const confirmModal = document.getElementById('confirm-exit-modal');
       if (confirmModal && !confirmModal.classList.contains('hidden')) {
         closeConfirmExitModal();
         return;
       }
 
-      // Prioridade 2: Modal de Configurações
       const setModal = document.getElementById('settings-modal');
       if (setModal && !setModal.classList.contains('hidden')) {
         closeSettingsModal();
         return;
       }
 
-      // Prioridade 3: Modal de Saves
       const saveModal = document.getElementById('save-load-modal');
       if (saveModal && !saveModal.classList.contains('hidden')) {
         closeSaveLoadModal();
         return;
       }
 
-      // Prioridade 4: Wizard de Nova Empresa
       const wizModal = document.getElementById('new-game-modal');
       if (wizModal && !wizModal.classList.contains('hidden')) {
         closeNewGameWizard();
         return;
       }
 
-      // Prioridade 5: Modais em jogo e janelas flutuantes
       const openInGameModals = [
         'floating-facility-window', 'store-modal', 'mine-modal', 'farm-modal',
         'factory-modal', 'factory-recipe-modal', 'port-modal', 'supplier-modal',
@@ -13154,7 +13151,6 @@
       }
       if (closedAny) return;
 
-      // Prioridade 6: Menu de Pausa
       if (currentAppScreen === 'PAUSED') {
         resumeGame();
       } else if (currentAppScreen === 'PLAYING') {
@@ -13162,7 +13158,10 @@
       }
     }
 
-    function closeAllInGameModals() {
+    function closeAllInGameModals(exceptions = []) {
+      if (typeof window !== 'undefined' && window.ModalManager && typeof window.ModalManager.closeAllInGameModals === 'function') {
+        return window.ModalManager.closeAllInGameModals(exceptions);
+      }
       const openInGameModals = [
         'floating-facility-window', 'store-modal', 'mine-modal', 'farm-modal',
         'factory-modal', 'factory-recipe-modal', 'port-modal', 'supplier-modal',
@@ -13478,12 +13477,18 @@
     let _windowZIndexCounter = 70;
 
     function bringWindowToFront(panel) {
+      if (typeof window !== 'undefined' && window.WindowManager && typeof window.WindowManager.bringWindowToFront === 'function') {
+        return window.WindowManager.bringWindowToFront(panel);
+      }
       if (!panel) return;
       _windowZIndexCounter += 2;
       panel.style.zIndex = _windowZIndexCounter;
     }
 
     function makeDraggable(panel, handle, storageKey) {
+      if (typeof window !== 'undefined' && window.WindowManager && typeof window.WindowManager.makeDraggable === 'function') {
+        return window.WindowManager.makeDraggable(panel, handle, storageKey);
+      }
       if (!panel || !handle) return;
 
       // Restaura posição salva no localStorage
@@ -13582,6 +13587,9 @@
     }
 
     function initAllDraggableWindows() {
+      if (typeof window !== 'undefined' && window.WindowManager && typeof window.WindowManager.initAllDraggableWindows === 'function') {
+        return window.WindowManager.initAllDraggableWindows();
+      }
       // 1. Janela de Gestão de Instalação Flutuante & Tutorial
       const facWin = document.getElementById('floating-facility-window');
       if (facWin) {

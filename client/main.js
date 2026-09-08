@@ -116,6 +116,28 @@ import TelemetrySystem, {
 } from './telemetry_system.js';
 import { TELEMETRY_CONFIG } from './telemetry_config.js';
 
+// --- Fase 6.1: UI Shell, Window Manager & Navegação ---
+import WindowManager, { bringWindowToFront, makeDraggable, initAllDraggableWindows } from './ui/window_manager.js';
+import NavigationSystem, {
+  toggleCitiesDropdown,
+  closeCitiesDropdown,
+  toggleLensesDropdown,
+  closeLensesDropdown,
+  toggleMoreOptionsMenu,
+  closeMoreOptionsMenu,
+  jumpToCity,
+  focusOnTile,
+  setHeatmap
+} from './ui/navigation.js';
+import ModalManager, {
+  openModal,
+  closeModal,
+  toggleModal,
+  isModalOpen,
+  closeAllInGameModals,
+  handleGlobalEscape
+} from './ui/modal_manager.js';
+
 // Inicializa captura de erros do Flight Recorder o mais cedo possível
 initTelemetryEngine();
 
@@ -248,6 +270,31 @@ window.dispatchReport = dispatchReport;
 window.downloadReportJson = downloadReportJson;
 window.copyReportToClipboard = copyReportToClipboard;
 window.isSupabaseConfigured = isSupabaseConfigured;
+
+// Re-exposição global (Fase 6.1 — UI Shell, Window Manager & Navegação)
+window.WindowManager = WindowManager;
+window.bringWindowToFront = bringWindowToFront;
+window.makeDraggable = makeDraggable;
+window.initAllDraggableWindows = initAllDraggableWindows;
+
+window.NavigationSystem = NavigationSystem;
+window.toggleCitiesDropdown = toggleCitiesDropdown;
+window.closeCitiesDropdown = closeCitiesDropdown;
+window.toggleLensesDropdown = toggleLensesDropdown;
+window.closeLensesDropdown = closeLensesDropdown;
+window.toggleMoreOptionsMenu = toggleMoreOptionsMenu;
+window.closeMoreOptionsMenu = closeMoreOptionsMenu;
+window.jumpToCity = jumpToCity;
+window.focusOnTile = focusOnTile;
+window.setHeatmap = setHeatmap;
+
+window.ModalManager = ModalManager;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.toggleModal = toggleModal;
+window.isModalOpen = isModalOpen;
+window.closeAllInGameModals = closeAllInGameModals;
+window.handleGlobalEscape = handleGlobalEscape;
 
 // Proxies reativos globais vinculados a GameState (Single Source of Truth)
 const stateProxyProps = [
