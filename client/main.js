@@ -138,6 +138,10 @@ import ModalManager, {
   handleGlobalEscape
 } from './ui/modal_manager.js';
 
+// --- Fase 6.2: HUD Executivo & Ticker ---
+import HUDSystem, { setSpeed, updateHUD, updateAdvisorHUDChip } from './ui/hud.js';
+import TickerUI from './ui/ticker.js';
+
 // Inicializa captura de erros do Flight Recorder o mais cedo possível
 initTelemetryEngine();
 
@@ -295,6 +299,14 @@ window.toggleModal = toggleModal;
 window.isModalOpen = isModalOpen;
 window.closeAllInGameModals = closeAllInGameModals;
 window.handleGlobalEscape = handleGlobalEscape;
+
+// Re-exposição global (Fase 6.2 — TopBar & HUD Executivo)
+window.HUDSystem = HUDSystem;
+window.setSpeed = setSpeed;
+window.updateHUD = updateHUD;
+window.updateUI = updateHUD;
+window.updateAdvisorHUDChip = updateAdvisorHUDChip;
+window.TickerUI = TickerUI;
 
 // Proxies reativos globais vinculados a GameState (Single Source of Truth)
 const stateProxyProps = [
