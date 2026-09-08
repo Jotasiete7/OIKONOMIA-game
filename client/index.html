@@ -4005,6 +4005,9 @@
     // 7. INSPETOR DE TILE & BOTÕES DE CONSTRUÇÃO POLIMÓRFICA
     // ===========================================================================
     function renderTileInspector(tile) {
+      if (window.FacilityPanel && typeof window.FacilityPanel.renderTileInspector === 'function') {
+        return window.FacilityPanel.renderTileInspector(tile);
+      }
       const tileInfoEl = document.getElementById('telemetry-tile-info');
       const distInfoEl = document.getElementById('telemetry-district-info');
       const actionsEl = document.getElementById('telemetry-actions');
@@ -4352,6 +4355,9 @@
     // CONTROLES DE JANELA FLUTUANTE (MODAL DE GESTÃO / DRE / DIÁRIO)
     // ===========================================================================
     function openFloatingFacilityWindow(tile) {
+      if (window.FacilityPanel && typeof window.FacilityPanel.openFloatingFacilityWindow === 'function') {
+        return window.FacilityPanel.openFloatingFacilityWindow(tile);
+      }
       if (!tile) return;
       activeManagedTile = tile;
       renderFacilityPanel(tile);
@@ -4363,6 +4369,9 @@
     }
 
     function closeFloatingFacilityWindow() {
+      if (window.FacilityPanel && typeof window.FacilityPanel.closeFloatingFacilityWindow === 'function') {
+        return window.FacilityPanel.closeFloatingFacilityWindow();
+      }
       const win = document.getElementById('floating-facility-window');
       if (win) win.classList.add('hidden');
       activeManagedTile = null;
@@ -4374,6 +4383,9 @@
     let currentAdvisorTab = 'all'; // 'all', 'CFO', 'COO', 'CMO', 'history'
 
     function toggleExecutiveBoardModal() {
+      if (window.AdvisorPanel && typeof window.AdvisorPanel.toggleExecutiveBoardModal === 'function') {
+        return window.AdvisorPanel.toggleExecutiveBoardModal();
+      }
       const m = document.getElementById('executive-board-modal');
       if (!m) return;
       const isHidden = m.classList.contains('hidden');
@@ -4386,6 +4398,9 @@
     }
 
     function refreshExecutiveBoard() {
+      if (window.AdvisorPanel && typeof window.AdvisorPanel.refreshExecutiveBoard === 'function') {
+        return window.AdvisorPanel.refreshExecutiveBoard();
+      }
       if (window.AdvisorSystem) {
         const pulse = window.AdvisorSystem.evaluateCorporatePulse({
           state: GameState,
@@ -4410,6 +4425,9 @@
     }
 
     function setAdvisorVerbosity(mode) {
+      if (window.AdvisorPanel && typeof window.AdvisorPanel.setAdvisorVerbosity === 'function') {
+        return window.AdvisorPanel.setAdvisorVerbosity(mode);
+      }
       if (!GameState.advisorState) GameState.advisorState = { verbosity: 'novato', activeAlerts: {}, alertHistory: [] };
       GameState.advisorState.verbosity = mode;
 
@@ -4429,6 +4447,9 @@
     }
 
     function setAdvisorActiveTab(tab) {
+      if (window.AdvisorPanel && typeof window.AdvisorPanel.setAdvisorActiveTab === 'function') {
+        return window.AdvisorPanel.setAdvisorActiveTab(tab);
+      }
       currentAdvisorTab = tab;
       const chips = document.querySelectorAll('#advisor-tab-chips .adv-tab-btn');
       chips.forEach(btn => {
@@ -4765,6 +4786,9 @@
     }
 
     function toggleDREModal() {
+      if (window.DREPanel && typeof window.DREPanel.toggleDREModal === 'function') {
+        return window.DREPanel.toggleDREModal();
+      }
       const m = document.getElementById('dre-modal');
       if (m) m.classList.toggle('hidden');
     }
@@ -4775,6 +4799,9 @@
     }
 
     function calculateCorporateNetWorth() {
+      if (window.DREPanel && typeof window.DREPanel.calculateCorporateNetWorth === 'function') {
+        return window.DREPanel.calculateCorporateNetWorth();
+      }
       let landTotal = 0;
       let facilitiesTotal = 0;
       let inventoryTotal = 0;
@@ -4944,6 +4971,9 @@
     window.calcBankingCreditScore = calcBankingCreditScore;
 
     function syncDREValues(gross, cogs, rent, mkt, net, financial = 0, netWorth = 0) {
+      if (window.DREPanel && typeof window.DREPanel.syncDREValues === 'function') {
+        return window.DREPanel.syncDREValues(gross, cogs, rent, mkt, net, financial, netWorth);
+      }
       const gEl = document.getElementById('dre-gross-sales');
       const cEl = document.getElementById('dre-cogs');
       const rEl = document.getElementById('dre-rent');
@@ -4968,6 +4998,9 @@
     }
 
     function openFacilityDREModal() {
+      if (window.DREPanel && typeof window.DREPanel.openFacilityDREModal === 'function') {
+        return window.DREPanel.openFacilityDREModal();
+      }
       const m = document.getElementById('facility-dre-modal');
       if (!m) return;
       renderFacilityDRETable();
@@ -4975,6 +5008,9 @@
     }
 
     function closeFacilityDREModal() {
+      if (window.DREPanel && typeof window.DREPanel.closeFacilityDREModal === 'function') {
+        return window.DREPanel.closeFacilityDREModal();
+      }
       const m = document.getElementById('facility-dre-modal');
       if (m) m.classList.add('hidden');
     }
@@ -5666,6 +5702,9 @@
     }
 
     function renderFacilityPanel(tile) {
+      if (window.FacilityPanel && typeof window.FacilityPanel.renderFacilityPanel === 'function') {
+        return window.FacilityPanel.renderFacilityPanel(tile);
+      }
       if (!tile) { renderIdlePanel(); return; }
       if (tile.store) renderStorePanel(tile);
       else if (tile.mine) renderMinePanel(tile);
@@ -7138,11 +7177,17 @@
 
     /** Abre o modal do Centro de P&D e popula a lista de projetos */
     function openRDCenterModal() {
+      if (window.RDPanel && typeof window.RDPanel.openRDCenterModal === 'function') {
+        return window.RDPanel.openRDCenterModal();
+      }
       document.getElementById('rd-center-modal').classList.remove('hidden');
       renderRDProjectsList();
     }
 
     function closeRDCenterModal() {
+      if (window.RDPanel && typeof window.RDPanel.closeRDCenterModal === 'function') {
+        return window.RDPanel.closeRDCenterModal();
+      }
       document.getElementById('rd-center-modal').classList.add('hidden');
     }
 
@@ -7341,6 +7386,9 @@
     let currentRDTab = 'projects';
 
     function switchRDTab(tab) {
+      if (window.RDPanel && typeof window.RDPanel.switchRDTab === 'function') {
+        return window.RDPanel.switchRDTab(tab);
+      }
       currentRDTab = tab;
       const projBtn = document.getElementById('rd-tab-projects-btn');
       const treeBtn = document.getElementById('rd-tab-techtree-btn');
@@ -7514,6 +7562,9 @@
     let techLineageFilter = 'all'; // 'all' | 'can_unlock' | 'retail' | 'b2b' | 'unlocked'
 
     function isProductUnlocked(productId) {
+      if (window.TechTreePanel && typeof window.TechTreePanel.isProductUnlocked === 'function') {
+        return window.TechTreePanel.isProductUnlocked(productId);
+      }
       if (!productId) return false;
       if (unlockedProducts.has(productId)) return true;
       // Tier 0 (produtos crus de fazendas/minas) são desbloqueados por padrão
@@ -7526,6 +7577,9 @@
     }
 
     function openTechTreeModal(filterCategory = 'all', filterTier = 'all', lineageRoot = null) {
+      if (window.TechTreePanel && typeof window.TechTreePanel.openTechTreeModal === 'function') {
+        return window.TechTreePanel.openTechTreeModal(filterCategory, filterTier, lineageRoot);
+      }
       currentTechTreeTierFilter = filterTier;
       activeTechLineageRoot = lineageRoot;
       techLineageFilter = 'all';
@@ -7535,6 +7589,9 @@
     }
 
     function closeTechTreeModal() {
+      if (window.TechTreePanel && typeof window.TechTreePanel.closeTechTreeModal === 'function') {
+        return window.TechTreePanel.closeTechTreeModal();
+      }
       const modal = document.getElementById('tech-tree-modal');
       if (modal) modal.classList.add('hidden');
       activeTechLineageRoot = null;
@@ -7542,6 +7599,9 @@
     }
 
     function focusTechLineage(prodId) {
+      if (window.TechTreePanel && typeof window.TechTreePanel.focusTechLineage === 'function') {
+        return window.TechTreePanel.focusTechLineage(prodId);
+      }
       activeTechLineageRoot = prodId;
       techLineageFilter = 'all';
       const searchInput = document.getElementById('tt-search-input');
@@ -7550,12 +7610,18 @@
     }
 
     function clearTechLineage() {
+      if (window.TechTreePanel && typeof window.TechTreePanel.clearTechLineage === 'function') {
+        return window.TechTreePanel.clearTechLineage();
+      }
       activeTechLineageRoot = null;
       techLineageFilter = 'all';
       renderTechTree();
     }
 
     function setTechLineageFilter(filter) {
+      if (window.TechTreePanel && typeof window.TechTreePanel.setTechLineageFilter === 'function') {
+        return window.TechTreePanel.setTechLineageFilter(filter);
+      }
       techLineageFilter = filter;
       renderTechTree();
     }
@@ -7567,6 +7633,9 @@
     }
 
     function filterTechTree(tier) {
+      if (window.TechTreePanel && typeof window.TechTreePanel.filterTechTree === 'function') {
+        return window.TechTreePanel.filterTechTree(tier);
+      }
       activeTechLineageRoot = null;
       currentTechTreeTierFilter = tier;
       ['all', '0', '1', '2', '3'].forEach(t => {
@@ -7581,6 +7650,9 @@
     }
 
     function renderTechTree(targetContainerId = 'tech-tree-grid') {
+      if (window.TechTreePanel && typeof window.TechTreePanel.renderTechTree === 'function') {
+        return window.TechTreePanel.renderTechTree(targetContainerId);
+      }
       const container = document.getElementById(targetContainerId);
       if (!container) return;
 
@@ -8000,6 +8072,9 @@
     }
 
     function researchProductTech(productId) {
+      if (window.TechTreePanel && typeof window.TechTreePanel.researchProductTech === 'function') {
+        return window.TechTreePanel.researchProductTech(productId);
+      }
       const prod = PRODUCT_CATALOG[productId];
       if (!prod) return;
 
@@ -8294,6 +8369,9 @@
     }
 
     function openRDNewProjectModal() {
+      if (window.RDPanel && typeof window.RDPanel.openRDNewProjectModal === 'function') {
+        return window.RDPanel.openRDNewProjectModal();
+      }
       const centersCount = getBuiltRDCentersCount();
       const totalCapacity = getRDTotalLabCapacity();
       const usedSlots = getRDUsedLabSlots();
@@ -8375,6 +8453,9 @@
     }
 
     function closeRDNewProjectModal() {
+      if (window.RDPanel && typeof window.RDPanel.closeRDNewProjectModal === 'function') {
+        return window.RDPanel.closeRDNewProjectModal();
+      }
       document.getElementById('rd-new-project-modal').classList.add('hidden');
     }
 
@@ -9042,6 +9123,9 @@
     };
 
     function openEncyclopediaModal(tab = 'products', targetId = null) {
+      if (window.EncyclopediaPanel && typeof window.EncyclopediaPanel.openEncyclopediaModal === 'function') {
+        return window.EncyclopediaPanel.openEncyclopediaModal(tab, targetId);
+      }
       const modal = document.getElementById('encyclopedia-modal');
       if (!modal) return;
       
@@ -9062,11 +9146,17 @@
     }
 
     function closeEncyclopediaModal() {
+      if (window.EncyclopediaPanel && typeof window.EncyclopediaPanel.closeEncyclopediaModal === 'function') {
+        return window.EncyclopediaPanel.closeEncyclopediaModal();
+      }
       const modal = document.getElementById('encyclopedia-modal');
       if (modal) modal.classList.add('hidden');
     }
 
     function toggleEncyclopediaModal() {
+      if (window.EncyclopediaPanel && typeof window.EncyclopediaPanel.toggleEncyclopediaModal === 'function') {
+        return window.EncyclopediaPanel.toggleEncyclopediaModal();
+      }
       const modal = document.getElementById('encyclopedia-modal');
       if (!modal) return;
       if (modal.classList.contains('hidden')) {
@@ -9077,6 +9167,9 @@
     }
 
     function navigateEncyclopedia(tab, targetId = null) {
+      if (window.EncyclopediaPanel && typeof window.EncyclopediaPanel.navigateEncyclopedia === 'function') {
+        return window.EncyclopediaPanel.navigateEncyclopedia(tab, targetId);
+      }
       encyclopediaState.currentTab = tab;
       encyclopediaState.selectedItemId = targetId;
       encyclopediaState.searchQuery = '';
@@ -9174,6 +9267,9 @@
     }
 
     function renderEncyclopediaContent() {
+      if (window.EncyclopediaPanel && typeof window.EncyclopediaPanel.renderEncyclopediaContent === 'function') {
+        return window.EncyclopediaPanel.renderEncyclopediaContent();
+      }
       const container = document.getElementById('encyclopedia-content-container');
       if (!container) return;
 
@@ -13754,6 +13850,9 @@
     let _bankLoanPlan   = 1; // índice em BankingSystem.LOAN_PLANS
 
     function openBankModal() {
+      if (window.BankingPanel && typeof window.BankingPanel.openBankModal === 'function') {
+        return window.BankingPanel.openBankModal();
+      }
       const modal = document.getElementById('bank-modal');
       if (!modal) return;
       modal.classList.remove('hidden');
@@ -13764,6 +13863,9 @@
     }
 
     function closeBankModal() {
+      if (window.BankingPanel && typeof window.BankingPanel.closeBankModal === 'function') {
+        return window.BankingPanel.closeBankModal();
+      }
       const modal = document.getElementById('bank-modal');
       if (!modal) return;
       modal.classList.add('hidden');
@@ -13794,6 +13896,9 @@
 
     /** Troca a aba ativa e renderiza seu conteúdo */
     function renderBankTab(tabId) {
+      if (window.BankingPanel && typeof window.BankingPanel.renderBankTab === 'function') {
+        return window.BankingPanel.renderBankTab(tabId);
+      }
       _bankCurrentTab = tabId;
       // Atualiza estilo das tabs
       ['score', 'new', 'active', 'history'].forEach(t => {

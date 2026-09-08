@@ -148,6 +148,15 @@ import CameraController, { camera, changeZoom, focusOnTile as cameraFocusOnTile,
 import MinimapSystem, { renderMinimap, initMinimapEvents } from './renderer/minimap.js';
 import CanvasRenderer, { renderMap, resizeCanvas, scheduleRender, startRenderLoop, stopRenderLoop, getCurrentFps } from './renderer/canvas_renderer.js';
 
+// --- Fase 6.4: Controladores dos Painéis Modais Especializados ---
+import BankingPanel from './ui/panels/banking_panel.js';
+import AdvisorPanel from './ui/panels/advisor_panel.js';
+import DREPanel from './ui/panels/dre_panel.js';
+import TechTreePanel from './ui/panels/tech_tree_panel.js';
+import RDPanel from './ui/panels/rd_panel.js';
+import EncyclopediaPanel from './ui/panels/encyclopedia_panel.js';
+import FacilityPanel from './ui/panels/facility_panel.js';
+
 // Inicializa captura de erros do Flight Recorder o mais cedo possível
 initTelemetryEngine();
 
@@ -337,6 +346,15 @@ window.scheduleRender = scheduleRender;
 window.startRenderLoop = startRenderLoop;
 window.stopRenderLoop = stopRenderLoop;
 window.getCurrentFps = getCurrentFps;
+
+// Re-exposição global (Fase 6.4 — Controladores dos Painéis Modais Especializados)
+window.BankingPanel = BankingPanel;
+window.AdvisorPanel = AdvisorPanel;
+window.DREPanel = DREPanel;
+window.TechTreePanel = TechTreePanel;
+window.RDPanel = RDPanel;
+window.EncyclopediaPanel = EncyclopediaPanel;
+window.FacilityPanel = FacilityPanel;
 
 // Proxies reativos globais vinculados a GameState (Single Source of Truth)
 const stateProxyProps = [
