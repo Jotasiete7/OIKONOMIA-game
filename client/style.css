@@ -1,1 +1,158 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
+
+/* ==========================================================================
+   OIKONOMIA Design System — Terminal Executivo
+   ========================================================================== */
+:root {
+  --oiko-bg-0:        #080a0d;   /* Fundo obsidian do canvas / base */
+  --oiko-bg-1:        #0d1017;   /* Top bar / painéis mestres */
+  --oiko-bg-2:        #0b0e14;   /* Cards internos e dropdowns */
+  --oiko-bg-3:        #121620;   /* Hover states e superfícies ativas */
+
+  --oiko-gold:        #c9a86a;   /* Cor de destaque exclusiva da holding */
+  --oiko-gold-dim:    rgba(201, 168, 106, 0.12);
+  --oiko-gold-border: rgba(201, 168, 106, 0.32);
+  --oiko-gold-glow:   rgba(201, 168, 106, 0.20);
+
+  --oiko-text-1:      #f1f5f9;   /* Texto primário de alto contraste */
+  --oiko-text-2:      #94a3b8;   /* Texto secundário (cinza neutro) */
+  --oiko-text-3:      #475569;   /* Rótulos e muted */
+
+  --oiko-border:      rgba(255, 255, 255, 0.07);
+  --oiko-border-mid:  rgba(255, 255, 255, 0.12);
+  --oiko-border-high: rgba(255, 255, 255, 0.22);
+
+  --oiko-green:       #10b981;   /* Positivo (lucro, deltas up) */
+  --oiko-green-dim:   rgba(16, 185, 129, 0.12);
+  --oiko-green-border:rgba(16, 185, 129, 0.30);
+
+  --oiko-red:         #f43f5e;   /* Negativo (prejuízo, alertas críticos) */
+  --oiko-red-dim:     rgba(244, 63, 94, 0.12);
+  --oiko-red-border:  rgba(244, 63, 94, 0.30);
+
+  --oiko-blue:        #3884ff;   /* Gráficos e conselheiro executivo */
+  --oiko-blue-dim:    rgba(56, 132, 255, 0.12);
+  --oiko-blue-border: rgba(56, 132, 255, 0.30);
+
+  --oiko-purple:      #818cf8;   /* Badges de trimestre e macro */
+  --oiko-purple-dim:  rgba(129, 140, 248, 0.12);
+  --oiko-purple-border:rgba(129, 140, 248, 0.25);
+
+  --oiko-font-mono:   'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Numerais tabulares para evitar trepidação no layout */
+.font-mono, .tabular-nums, .oiko-tabular-nums {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* Barra Superior Executiva Contínua */
+.oiko-topbar {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background: var(--oiko-bg-1);
+  border-bottom: 1px solid var(--oiko-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 0;
+  font-family: var(--oiko-font-mono);
+  user-select: none;
+}
+
+/* Botões do Terminal */
+.oiko-btn-terminal {
+  font-family: var(--oiko-font-mono);
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--oiko-border);
+  background: transparent;
+  color: var(--oiko-text-2);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.12s ease;
+  white-space: nowrap;
+}
+
+.oiko-btn-terminal:hover {
+  background: var(--oiko-bg-3);
+  color: var(--oiko-text-1);
+  border-color: var(--oiko-border-mid);
+}
+
+.oiko-btn-terminal:active {
+  transform: scale(0.97);
+}
+
+/* Botão em destaque Gold (DRE, Cidade Ativa, Velocidade ativa) */
+.oiko-btn-terminal.oiko-btn-gold,
+.oiko-btn-terminal.active {
+  background: var(--oiko-gold-dim);
+  border-color: var(--oiko-gold-border);
+  color: var(--oiko-gold);
+  font-weight: 600;
+}
+
+.oiko-btn-terminal.oiko-btn-gold:hover,
+.oiko-btn-terminal.active:hover {
+  background: rgba(201, 168, 106, 0.22);
+  border-color: rgba(201, 168, 106, 0.45);
+  box-shadow: 0 0 10px var(--oiko-gold-glow);
+}
+
+/* Dropdown menus do terminal */
+.oiko-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  background: var(--oiko-bg-1);
+  border: 1px solid var(--oiko-border-mid);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.oiko-dropdown-menu.hidden {
+  display: none !important;
+}
+
+.oiko-dropdown-item {
+  width: 100%;
+  font-family: var(--oiko-font-mono);
+  font-size: 10px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--oiko-text-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition: all 0.1s ease;
+}
+
+.oiko-dropdown-item:hover {
+  background: var(--oiko-bg-3);
+  color: var(--oiko-text-1);
+}
+
+.oiko-dropdown-item.active {
+  color: var(--oiko-gold);
+  background: var(--oiko-gold-dim);
+  font-weight: 600;
+}
