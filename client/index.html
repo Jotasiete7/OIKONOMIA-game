@@ -346,7 +346,7 @@
         🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
       </button>
       <span id="telemetry-version-badge" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-bold text-[9px]" title="Versão Oficial do Jogo & Build">
-        🏛️ OIKONOMIA <span class="text-emerald-400">v0.8.5</span> <span class="text-slate-500 text-[8px]">bld.20260906.01</span>
+        🏛️ OIKONOMIA <span class="text-emerald-400">v0.8.5</span> <span class="text-slate-500 text-[8px]">bld.20260908.01</span>
       </span>
     </div>
   </footer>
@@ -1601,7 +1601,7 @@
     <div class="flex justify-between items-center text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-4">
       <div class="flex items-center gap-2">
         <span class="text-slate-400 font-bold">OIKONOMIA PROJECT © 2026</span>
-        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.8.5 Oficial (bld.20260906.01)</span>
+        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.8.5 Oficial (bld.20260908.01)</span>
       </div>
       <div class="flex gap-4">
         <span>Atalho: <strong>F3</strong> (Dev Dashboard)</span>
@@ -2023,7 +2023,7 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Versão Oficial</span>
-              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.8.5 (bld.20260906.01)</span>
+              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.8.5 (bld.20260908.01)</span>
             </div>
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span class="text-[9px] text-slate-500 uppercase block">Schema de Saves</span>
@@ -12018,7 +12018,7 @@
     // (Modularizado em client/save_system.js e exposto em window)
     // ===========================================================================
     var GAME_VERSION_INFO = (typeof window !== 'undefined' && window.GAME_VERSION_INFO) || {
-      major: 0, minor: 8, patch: 4, build: '20260905.02', saveSchema: '0.8.2',
+      major: 0, minor: 8, patch: 5, build: '20260908.01', saveSchema: '0.8.2',
       get version() { return `${this.major}.${this.minor}.${this.patch}`; },
       get fullString() { return `v${this.version} (bld.${this.build})`; }
     };

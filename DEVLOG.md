@@ -2,8 +2,8 @@
 
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
-> **Última Atualização:** 06 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.5 (bld.20260906.01)`  
+> **Última Atualização:** 08 de Setembro de 2026  
+> **Versão Oficial Corrente:** `v0.8.5 (bld.20260908.01)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -23,6 +23,7 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 ## 🧭 Agenda de Desenvolvimento (Próximos Passos & Backlog Priorizado)
 
+- [x] **Redesign Visual do HUD & Menus (Terminal Executivo Obsidian & Gold - v0.8.5)**: TopBar contínua 44px, pílulas companheiras de navegação de cidades/lentes, dropdown Mais Opções balanceado, menu de pausa ESC e Diretoria Executiva integrados à identidade visual dark fintech / Bloomberg terminal.
 - [x] **Diretoria Executiva & Inteligência Estratégica (v0.8.5)**: Painel executivo unificado (CFO, COO, CMO), 6 KPIs semaforizados, diagnóstico causal cruzado, máquina de estados anti-spam (+20%), auto-resolução positiva e deep-links de navegação isométrica.
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
 - [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
@@ -33,6 +34,42 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 17: Redesign Visual do HUD & Menus (Terminal Executivo Obsidian & Gold)
+- **Data:** 08/09/2026 — 00:20
+- **Versão Oficial:** `v0.8.5 (bld.20260908.01)` | **Save Schema:** `v0.8.2`
+- **Branch:** `feat/redesign-hud-terminal`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão (Identidade Visual Dark Terminal & Usabilidade de HUD):
+1. **Design System Terminal Executivo (`client/style.css`):**
+   - Introduzido conjunto completo de design tokens `:root` para o Terminal Executivo: Obsidian Dark (`--oiko-bg-0` até `--oiko-bg-3`), Ouro Executivo (`--oiko-gold: #c9a86a`), Esmeralda (`--oiko-green`), Carmesim (`--oiko-red`) e família mono (`--oiko-font-mono: 'JetBrains Mono', monospace`).
+   - Importação oficial do Google Font `JetBrains Mono` e configuração de numerais tabulares anti-trepidação (`font-variant-numeric: tabular-nums lining-nums`).
+   - Utilitários globais criados: `.oiko-topbar`, `.oiko-btn-terminal`, `.oiko-dropdown-menu`, `.oiko-dropdown-item`.
+2. **Unificação da Barra Superior (TopBar) e Navegação de Cidades:**
+   - Substituição dos 3 blocos flutuantes legados por uma TopBar executiva única e contínua de 44px de altura.
+   - Unificação dos 4 botões longos de cidades no seletor pílula `[ 🏛️ Atenas ▾ ]`, companion do seletor de lentes de dados `[ ⊙ Terreno ▾ ]`.
+   - Dropdown escuro com cidades, especialidades econômicas e travas (`🔒`), atualizando dinamicamente o rótulo da cidade ativa e fechando automaticamente ao selecionar ou clicar fora.
+3. **Distribuição do Dropdown "Mais Opções" & Blindagem do HUD:**
+   - Redesenhado o dropdown `hud-more-options-menu` (`w-56`) com distribuição limpa via `flex justify-between`, atalho `F1` discreto e tag de tutorial compacta `0/7` sem quebras de linha.
+   - Corrigido `updateAdvisorHUDChip()` para manter a classe `.oiko-btn-terminal relative`, sinalizando alertas com bordas sutis e badges numéricos sem estufar a altura ou largura dos botões do HUD.
+4. **Redesign do Menu de Pausa [ESC]:**
+   - Substituído o modal legado por card Obsidian `#0d1017` com bordas suaves `border-white/[0.08]`.
+   - Botão principal `▶ Retomar Jogo` em Ouro Executivo `#c9a86a` de alto contraste com indicador `ESC`.
+   - Seção de mixagem de áudio com sliders dourados (`accent-[#c9a86a]`) e porcentagens mono tabulares.
+   - Botão de saída discreto em perigo atenuado e rodapé com versão e Dev Dashboard (`F3`).
+5. **Redesign da Diretoria Executiva & Inteligência de Negócios:**
+   - Substituição do tema azul royal por Obsidian & Gold.
+   - Semáforos com métricas mono e acentos refinados.
+   - Seletor de verbosidade e abas de personas integradas.
+   - Rodapé com dica sutil e botão de reavaliação de operação estilizado.
+6. **Garantia de Qualidade & Testes E2E:**
+   - 100% dos IDs, atalhos de teclado e eventos do DOM preservados.
+   - Compilação Vite concluída com 0 erros (`npm run build`).
+   - Todos os 6 testes ponta-a-ponta no Chromium/Edge headless aprovados com 100% de êxito (`npm run audit-browser`).
+   - Evidências e screenshots arquivados em `docs/auditoria/screenshots/` e documentados no artefato `walkthrough.md`.
 
 ---
 
