@@ -157,6 +157,11 @@ import RDPanel from './ui/panels/rd_panel.js';
 import EncyclopediaPanel from './ui/panels/encyclopedia_panel.js';
 import FacilityPanel from './ui/panels/facility_panel.js';
 
+// --- Fase 6.5: Input & Ciclo de Vida do Jogo ---
+import { KeyboardSystem } from './input/keyboard.js';
+import { MouseSystem } from './input/mouse.js';
+import { AppLifecycle } from './app/lifecycle.js';
+
 // Inicializa captura de erros do Flight Recorder o mais cedo possível
 initTelemetryEngine();
 
@@ -355,6 +360,53 @@ window.TechTreePanel = TechTreePanel;
 window.RDPanel = RDPanel;
 window.EncyclopediaPanel = EncyclopediaPanel;
 window.FacilityPanel = FacilityPanel;
+
+// Re-exposição global (Fase 6.5 — Input & Ciclo de Vida do Jogo)
+window.KeyboardSystem = KeyboardSystem;
+window.toggleTheaterMode = () => KeyboardSystem.toggleTheaterMode();
+
+window.MouseSystem = MouseSystem;
+
+window.AppLifecycle = AppLifecycle;
+window.showMainMenu = () => AppLifecycle.showMainMenu();
+window.hideMainMenu = () => AppLifecycle.hideMainMenu();
+window.continueLastGame = () => AppLifecycle.continueLastGame();
+window.togglePauseMenu = () => AppLifecycle.togglePauseMenu();
+window.pauseGameAndShowMenu = () => AppLifecycle.pauseGameAndShowMenu();
+window.resumeGame = () => AppLifecycle.resumeGame();
+window.syncPauseMenuVolumes = () => AppLifecycle.syncPauseMenuVolumes();
+window.syncVolumeFromPause = (c, v) => AppLifecycle.syncVolumeFromPause(c, v);
+window.promptExitToMainMenu = () => AppLifecycle.promptExitToMainMenu();
+window.closeConfirmExitModal = () => AppLifecycle.closeConfirmExitModal();
+window.saveAndExitToMainMenu = () => AppLifecycle.saveAndExitToMainMenu();
+window.exitToMainMenuWithoutSaving = () => AppLifecycle.exitToMainMenuWithoutSaving();
+window.openNewGameWizard = () => AppLifecycle.openNewGameWizard();
+window.closeNewGameWizard = () => AppLifecycle.closeNewGameWizard();
+window.randomizePlayerName = () => AppLifecycle.randomizePlayerName();
+window.randomizeCompanyName = () => AppLifecycle.randomizeCompanyName();
+window.regenerateWizLogo = () => AppLifecycle.regenerateWizLogo();
+window.selectWizAvatar = (id) => AppLifecycle.selectWizAvatar(id);
+window.selectWizColor = (id) => AppLifecycle.selectWizColor(id);
+window.selectWizDifficulty = (id) => AppLifecycle.selectWizDifficulty(id);
+window.startNewGameFromWizard = () => AppLifecycle.startNewGameFromWizard();
+window.toggleTutorialWidget = () => AppLifecycle.toggleTutorialWidget();
+window.checkTutorialProgress = () => AppLifecycle.checkTutorialProgress();
+window.renderTutorialGuide = () => AppLifecycle.renderTutorialGuide();
+window.claimTutorialReward = () => AppLifecycle.claimTutorialReward();
+window.loadGameSettings = () => AppLifecycle.loadGameSettings();
+window.saveGameSettings = () => AppLifecycle.saveGameSettings();
+window.openSettingsModal = () => AppLifecycle.openSettingsModal();
+window.closeSettingsModal = () => AppLifecycle.closeSettingsModal();
+window.toggleBgmPlayPause = () => AppLifecycle.toggleBgmPlayPause();
+window.skipBgmTrack = () => AppLifecycle.skipBgmTrack();
+window.updateBgmStatusUI = () => AppLifecycle.updateBgmStatusUI();
+window.initMicroRadio = () => AppLifecycle.initMicroRadio();
+window.updateRadioUI = (s) => AppLifecycle.updateRadioUI(s);
+window.openSaveLoadModal = (m) => AppLifecycle.openSaveLoadModal(m);
+window.closeSaveLoadModal = () => AppLifecycle.closeSaveLoadModal();
+window.renderSavesList = () => AppLifecycle.renderSavesList();
+window.renderSavesCountInMenu = () => AppLifecycle.renderSavesCountInMenu();
+window.updatePlayerProfileHUD = () => AppLifecycle.updatePlayerProfileHUD();
 
 // Proxies reativos globais vinculados a GameState (Single Source of Truth)
 const stateProxyProps = [

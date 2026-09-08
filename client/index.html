@@ -3666,6 +3666,9 @@
     let isTheaterMode = false;
 
     function toggleTheaterMode() {
+      if (window.KeyboardSystem && typeof window.KeyboardSystem.toggleTheaterMode === 'function') {
+        return window.KeyboardSystem.toggleTheaterMode();
+      }
       isTheaterMode = !isTheaterMode;
       const leftCol = document.querySelector('section.col-span-12.lg\\:col-span-8');
       const rightCol = document.querySelector('section.col-span-12.lg\\:col-span-4');
@@ -12617,6 +12620,9 @@
     }
 
     function showMainMenu() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.showMainMenu === 'function') {
+        return window.AppLifecycle.showMainMenu();
+      }
       currentAppScreen = 'MAIN_MENU';
       const menu = document.getElementById('main-menu-screen');
       if (menu) menu.classList.remove('hidden');
@@ -12641,6 +12647,9 @@
     }
 
     function hideMainMenu() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.hideMainMenu === 'function') {
+        return window.AppLifecycle.hideMainMenu();
+      }
       const menu = document.getElementById('main-menu-screen');
       if (menu) menu.classList.add('hidden');
 
@@ -12659,6 +12668,9 @@
     }
 
     function continueLastGame() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.continueLastGame === 'function') {
+        return window.AppLifecycle.continueLastGame();
+      }
       const saves = getSavesIndex();
       if (saves.length > 0) {
         loadGameById(saves[0].id);
@@ -12743,6 +12755,9 @@
     }
 
     function openNewGameWizard() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.openNewGameWizard === 'function') {
+        return window.AppLifecycle.openNewGameWizard();
+      }
       selectedWizAvatarId = 'human_ceo';
       selectedWizColorId = 'emerald';
       selectedWizDifficultyId = 'standard';
@@ -12761,6 +12776,9 @@
     }
 
     function closeNewGameWizard() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.closeNewGameWizard === 'function') {
+        return window.AppLifecycle.closeNewGameWizard();
+      }
       const modal = document.getElementById('new-game-modal');
       if (modal) modal.classList.add('hidden');
     }
@@ -12841,6 +12859,9 @@
     }
 
     function startNewGameFromWizard() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.startNewGameFromWizard === 'function') {
+        return window.AppLifecycle.startNewGameFromWizard();
+      }
       const pName = document.getElementById('wiz-player-name')?.value.trim() || 'Arthur Vance';
       const cName = document.getElementById('wiz-company-name')?.value.trim() || 'OikoCorp Holding';
 
@@ -12996,6 +13017,9 @@
     };
 
     function toggleTutorialWidget() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.toggleTutorialWidget === 'function') {
+        return window.AppLifecycle.toggleTutorialWidget();
+      }
       const el = document.getElementById('tutorial-guide-widget');
       if (!el) return;
       el.classList.toggle('hidden');
@@ -13005,6 +13029,9 @@
     }
 
     function checkTutorialProgress() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.checkTutorialProgress === 'function') {
+        return window.AppLifecycle.checkTutorialProgress();
+      }
       let anyNew = false;
       for (const m of TUTORIAL_MISSIONS) {
         if (!tutorialState.completedSteps[m.id] && m.check()) {
@@ -13021,6 +13048,9 @@
     if (typeof window !== 'undefined') window.checkTutorialProgress = checkTutorialProgress;
 
     function renderTutorialGuide() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.renderTutorialGuide === 'function') {
+        return window.AppLifecycle.renderTutorialGuide();
+      }
       const container = document.getElementById('tutorial-steps-container');
       if (!container) return;
 
@@ -13086,6 +13116,9 @@
     }
 
     function claimTutorialReward() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.claimTutorialReward === 'function') {
+        return window.AppLifecycle.claimTutorialReward();
+      }
       if (tutorialState.rewardClaimed) return;
       tutorialState.rewardClaimed = true;
       cash += 5000;
@@ -13099,6 +13132,9 @@
     }
 
     function updatePlayerProfileHUD() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.updatePlayerProfileHUD === 'function') {
+        return window.AppLifecycle.updatePlayerProfileHUD();
+      }
       const avatarObj = AVATAR_CATALOG.find(a => a.id === playerProfile.avatarId) || AVATAR_CATALOG[0];
       const avEl = document.getElementById('hud-player-avatar');
       const compEl = document.getElementById('hud-company-name');
@@ -13122,6 +13158,9 @@
     // 17. MENU DE PAUSA & CONFIRMAÇÃO DE SAÍDA (ESC)
     // ===========================================================================
     function togglePauseMenu() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.togglePauseMenu === 'function') {
+        return window.AppLifecycle.togglePauseMenu();
+      }
       if (currentAppScreen === 'MAIN_MENU' || currentAppScreen === 'BOOT') return;
 
       if (currentAppScreen === 'PAUSED') {
@@ -13132,6 +13171,9 @@
     }
 
     function pauseGameAndShowMenu() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.pauseGameAndShowMenu === 'function') {
+        return window.AppLifecycle.pauseGameAndShowMenu();
+      }
       previousSpeedBeforePause = gameSpeed || 1;
       setSpeed(0);
       currentAppScreen = 'PAUSED';
@@ -13142,6 +13184,9 @@
     }
 
     function syncPauseMenuVolumes() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.syncPauseMenuVolumes === 'function') {
+        return window.AppLifecycle.syncPauseMenuVolumes();
+      }
       const s = (typeof gameSettings !== 'undefined') ? gameSettings : {};
       const mVol = s.masterVolume !== undefined ? s.masterVolume : 1.0;
       const musVol = s.musicVolume !== undefined ? s.musicVolume : 0.6;
@@ -13170,6 +13215,9 @@
     }
 
     function syncVolumeFromPause(channel, value) {
+      if (window.AppLifecycle && typeof window.AppLifecycle.syncVolumeFromPause === 'function') {
+        return window.AppLifecycle.syncVolumeFromPause(channel, value);
+      }
       const val = parseFloat(value);
       if (channel === 'master') {
         gameSettings.masterVolume = val;
@@ -13205,6 +13253,9 @@
     }
 
     function resumeGame() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.resumeGame === 'function') {
+        return window.AppLifecycle.resumeGame();
+      }
       const modal = document.getElementById('pause-menu-modal');
       if (modal) modal.classList.add('hidden');
       currentAppScreen = 'PLAYING';
@@ -13212,16 +13263,25 @@
     }
 
     function promptExitToMainMenu() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.promptExitToMainMenu === 'function') {
+        return window.AppLifecycle.promptExitToMainMenu();
+      }
       const confirmModal = document.getElementById('confirm-exit-modal');
       if (confirmModal) confirmModal.classList.remove('hidden');
     }
 
     function closeConfirmExitModal() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.closeConfirmExitModal === 'function') {
+        return window.AppLifecycle.closeConfirmExitModal();
+      }
       const confirmModal = document.getElementById('confirm-exit-modal');
       if (confirmModal) confirmModal.classList.add('hidden');
     }
 
     function saveAndExitToMainMenu() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.saveAndExitToMainMenu === 'function') {
+        return window.AppLifecycle.saveAndExitToMainMenu();
+      }
       saveGame();
       closeConfirmExitModal();
       const pauseModal = document.getElementById('pause-menu-modal');
@@ -13230,6 +13290,9 @@
     }
 
     function exitToMainMenuWithoutSaving() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.exitToMainMenuWithoutSaving === 'function') {
+        return window.AppLifecycle.exitToMainMenuWithoutSaving();
+      }
       closeConfirmExitModal();
       const pauseModal = document.getElementById('pause-menu-modal');
       if (pauseModal) pauseModal.classList.add('hidden');
@@ -13330,6 +13393,9 @@
     let currentSaveLoadMode = 'load';
 
     function openSaveLoadModal(mode = 'load') {
+      if (window.AppLifecycle && typeof window.AppLifecycle.openSaveLoadModal === 'function') {
+        return window.AppLifecycle.openSaveLoadModal(mode);
+      }
       currentSaveLoadMode = mode;
       const modal = document.getElementById('save-load-modal');
       const title = document.getElementById('save-load-modal-title');
@@ -13343,11 +13409,17 @@
     }
 
     function closeSaveLoadModal() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.closeSaveLoadModal === 'function') {
+        return window.AppLifecycle.closeSaveLoadModal();
+      }
       const modal = document.getElementById('save-load-modal');
       if (modal) modal.classList.add('hidden');
     }
 
     function renderSavesList() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.renderSavesList === 'function') {
+        return window.AppLifecycle.renderSavesList();
+      }
       const container = document.getElementById('saves-list-container');
       if (!container) return;
 
@@ -13558,12 +13630,18 @@
     }
 
     function openSettingsModal() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.openSettingsModal === 'function') {
+        return window.AppLifecycle.openSettingsModal();
+      }
       loadGameSettings();
       const modal = document.getElementById('settings-modal');
       if (modal) modal.classList.remove('hidden');
     }
 
     function closeSettingsModal() {
+      if (window.AppLifecycle && typeof window.AppLifecycle.closeSettingsModal === 'function') {
+        return window.AppLifecycle.closeSettingsModal();
+      }
       const modal = document.getElementById('settings-modal');
       if (modal) modal.classList.add('hidden');
     }
