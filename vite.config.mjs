@@ -39,6 +39,7 @@ export default defineConfig({
   build: {
     outDir: '../dist',   // saída fora da pasta client
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1600,
     rollupOptions: {
       output: {
         format: 'iife',

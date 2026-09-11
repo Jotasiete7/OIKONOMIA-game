@@ -146,7 +146,7 @@ export function initAllDraggableWindows(customModalList = null) {
     { id: 'mine-modal', key: 'oiko_pos_mine' },
     { id: 'farm-modal', key: 'oiko_pos_farm' },
     { id: 'port-modal', key: 'oiko_pos_port' },
-    { id: 'marketing-central-modal', key: 'oiko_pos_marketing' },
+    { id: 'marketing-modal', key: 'oiko_pos_marketing' },
     { id: 'rd-center-modal', key: 'oiko_pos_rd_center' },
     { id: 'rd-new-project-modal', key: 'oiko_pos_rd_new_project' },
     { id: 'dev-dashboard-modal', key: 'oiko_pos_dev_dashboard' },

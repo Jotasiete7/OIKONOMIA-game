@@ -905,11 +905,6 @@ if (typeof window !== 'undefined') {
   window.removeProductFromStore = (x, y, prodId) => StoreWizard.removeProductFromStore(x, y, prodId);
   window.updateShelfPrice = (x, y, prodId, val) => StoreWizard.updateShelfPrice(x, y, prodId, val);
   window.updateShelfRestock = (x, y, prodId, val) => StoreWizard.updateShelfRestock(x, y, prodId, val);
-  window.updateStepIndicator = (step) => StoreWizard.updateStepIndicator(step);
-  window.renderStoreTypeCards = () => StoreWizard.renderStoreTypeCards();
-  window.updateCostSummary = () => StoreWizard.updateCostSummary();
-  window.filterProductSelectorSearch = (query) => StoreWizard.filterProductSelectorSearch(query);
-  window.renderProductSelector = (container) => StoreWizard.renderProductSelector(container);
   window.buyInstantStock = (x, y, prodId, qty) => StoreWizard.buyInstantStock(x, y, prodId, qty);
 
   try {

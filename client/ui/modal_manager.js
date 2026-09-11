@@ -29,7 +29,6 @@ export const ALL_IN_GAME_MODALS = [
   'dre-modal',
   'diary-modal',
   'executive-board-modal',
-  'marketing-central-modal',
   'marketing-modal',
   'dev-dashboard-modal',
   'save-load-modal',
