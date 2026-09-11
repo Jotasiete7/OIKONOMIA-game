@@ -778,6 +778,224 @@ export const FacilityPanel = {
     const modal = document.getElementById('confirm-facility-modal');
     if (modal) modal.classList.add('hidden');
     this.pendingFacilityAction = null;
+  },
+
+  calculateFacilityValue(tile) {
+    let baseCost = 0;
+    let stockValue = 0;
+    let facilityName = '';
+
+    const storeTypes = (typeof window !== 'undefined' && window.STORE_TYPES) ? window.STORE_TYPES : [];
+
+    if (tile.store) {
+      const sType = storeTypes.find(s => s.id === tile.store.storeTypeId);
+      baseCost = sType ? sType.cost : 25000;
+      facilityName = tile.store.name;
+      if (tile.store.shelves) {
+        for (const shelf of Object.values(tile.store.shelves)) {
+          stockValue += (shelf.stock || 0) * (shelf.landedCost || 1);
+        }
+      }
+    } else if (tile.mine) {
+      baseCost = tile.mine.cost || 40000;
+      facilityName = tile.mine.name;
+      stockValue = (tile.mine.stock || 0) * (tile.mine.unitCost || 1);
+    } else if (tile.farm) {
+      baseCost = tile.farm.cost || 22000;
+      facilityName = tile.farm.name;
+      stockValue = (tile.farm.stock || 0) * (tile.farm.dailyOperatingCost || 0.5);
+    } else if (tile.factory) {
+      baseCost = 48000;
+      facilityName = tile.factory.name;
+      if (tile.factory.lines) {
+        for (const line of Object.values(tile.factory.lines)) {
+          stockValue += (line.finishedStock || 0) * (line.unitCost || 1);
+        }
+      }
+    } else if (tile.rdCenter) {
+      baseCost = tile.rdCenter.constructionCost || 80000;
+      facilityName = tile.rdCenter.name;
+      stockValue = 0;
+    } else if (tile.warehouse) {
+      baseCost = tile.warehouse.cost || 35000;
+      facilityName = tile.warehouse.name;
+      if (tile.warehouse.inventory) {
+        for (const item of Object.values(tile.warehouse.inventory)) {
+          stockValue += (item.stock || 0) * (item.avgUnitCost || 1);
+        }
+      }
+    }
+
+    const sellValue = Math.round(baseCost * 0.70 + stockValue);
+    const salvageValue = Math.round(baseCost * 0.40);
+    return { baseCost, stockValue, sellValue, salvageValue, facilityName };
+  },
+
+  sellFacility(x, y) {
+    const grid = (typeof window !== 'undefined' && window.worldGrid) ? window.worldGrid : [];
+    const tile = grid[x] && grid[x][y];
+    if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter && !tile.warehouse)) return;
+
+    const val = this.calculateFacilityValue(tile);
+    const isStore = !!tile.store;
+    const traffic = tile.district?.trafficIndex || 30;
+    const cityName = tile.city?.cityName || 'Metrópole';
+    const competitorName = traffic > 60 ? 'OmniCorp Retail' : (traffic > 40 ? 'Titan Megastores' : 'Fundo Imobiliário Apex');
+
+    if (isStore && traffic >= 35) {
+      const finalCash = Math.round(val.baseCost * 0.80 + val.stockValue);
+      this.openFacilityConfirmModal({
+        icon: '🤝',
+        title: 'PROPOSTA DE AQUISIÇÃO CORPORATIVA',
+        subtitle: `Comprador Interessado: <strong class="text-amber-300">${competitorName}</strong>`,
+        name: val.facilityName,
+        detailsHtml: `
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-slate-300">
+              <span>• Oferta pelo Imóvel (80% da Obra):</span>
+              <span class="font-bold text-slate-100">$${Math.round(val.baseCost * 0.80).toLocaleString()}</span>
+            </div>
+            <div class="flex justify-between text-slate-300">
+              <span>• Liquidação Integral de Estoque:</span>
+              <span class="font-bold text-slate-100">$${Math.round(val.stockValue).toLocaleString()}</span>
+            </div>
+            <div class="border-t border-slate-700 pt-1.5 flex justify-between text-emerald-400 font-bold text-xs">
+              <span>TOTAL A RECEBER EM CAIXA:</span>
+              <span>+$${finalCash.toLocaleString()}</span>
+            </div>
+            <p class="text-[10px] text-slate-400 pt-1 leading-snug">Se aceitar, a ${competitorName} assumirá a loja e passará a operar como concorrente no lote.</p>
+          </div>
+        `,
+        confirmText: 'Aceitar Proposta (+$$)',
+        confirmClass: 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-950/40',
+        onConfirm: () => {
+          if (typeof window.cash !== 'undefined') window.cash += finalCash;
+          else if (window.GameState) window.GameState.cash += finalCash;
+
+          if (typeof window.addGameLog === 'function') {
+            window.addGameLog(`🤝 ${competitorName} adquiriu ${val.facilityName} por +$${finalCash.toLocaleString()} e assumiu o ponto comercial!`, 'text-purple-400 font-bold');
+          }
+          tile.competitor = {
+            name: `${competitorName} ${cityName}`,
+            shelves: { ...tile.store.shelves },
+            lastShare: 0.5
+          };
+          tile.store = null;
+          tile.buildingHeight = 18;
+          if (typeof window.playSuccessChime === 'function') window.playSuccessChime();
+          if (typeof window._indexTile === 'function') window._indexTile(tile);
+          if (typeof window !== 'undefined') window.activeManagedTile = null;
+          this.renderIdlePanel();
+          this.renderTileInspector(tile);
+          if (typeof window.scheduleRender === 'function') window.scheduleRender();
+          if (typeof window.updateUI === 'function') window.updateUI();
+        }
+      });
+    } else {
+      const finalCash = val.sellValue;
+      this.openFacilityConfirmModal({
+        icon: '🏷️',
+        title: 'VENDER IMÓVEL NO MERCADO',
+        subtitle: `Instalação: <strong class="text-emerald-300">${val.facilityName}</strong>`,
+        name: val.facilityName,
+        detailsHtml: `
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-slate-300">
+              <span>• Obra Recuperada (70%):</span>
+              <span class="font-bold text-slate-100">$${Math.round(val.baseCost * 0.70).toLocaleString()}</span>
+            </div>
+            <div class="flex justify-between text-slate-300">
+              <span>• Liquidação de Estoque Residual:</span>
+              <span class="font-bold text-slate-100">$${Math.round(val.stockValue).toLocaleString()}</span>
+            </div>
+            <div class="border-t border-slate-700 pt-1.5 flex justify-between text-emerald-400 font-bold text-xs">
+              <span>TOTAL A RECEBER EM CAIXA:</span>
+              <span>+$${finalCash.toLocaleString()}</span>
+            </div>
+            <p class="text-[10px] text-slate-400 pt-1 leading-snug">O imóvel será desocupado e o aluguel diário cancelado.</p>
+          </div>
+        `,
+        confirmText: 'Confirmar Venda (+$$)',
+        confirmClass: 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-950/40',
+        onConfirm: () => {
+          if (typeof window.cash !== 'undefined') window.cash += finalCash;
+          else if (window.GameState) window.GameState.cash += finalCash;
+
+          if (typeof window.addGameLog === 'function') {
+            window.addGameLog(`💰 ${val.facilityName} vendida no mercado! Caixa creditado em +$${finalCash.toLocaleString()}`, 'text-emerald-400 font-bold');
+          }
+          tile.store = null;
+          tile.mine = null;
+          tile.farm = null;
+          tile.factory = null;
+          tile.rdCenter = null;
+          tile.warehouse = null;
+          tile.buildingHeight = 0;
+          if (typeof window.playSuccessChime === 'function') window.playSuccessChime();
+          if (typeof window._indexTile === 'function') window._indexTile(tile);
+          if (typeof window !== 'undefined') window.activeManagedTile = null;
+          this.renderIdlePanel();
+          this.renderTileInspector(tile);
+          if (typeof window.scheduleRender === 'function') window.scheduleRender();
+          if (typeof window.updateUI === 'function') window.updateUI();
+        }
+      });
+    }
+  },
+
+  demolishFacility(x, y) {
+    const grid = (typeof window !== 'undefined' && window.worldGrid) ? window.worldGrid : [];
+    const tile = grid[x] && grid[x][y];
+    if (!tile || (!tile.store && !tile.mine && !tile.farm && !tile.factory && !tile.rdCenter && !tile.warehouse)) return;
+
+    const val = this.calculateFacilityValue(tile);
+    this.openFacilityConfirmModal({
+      icon: '🗑️',
+      title: 'DEMOLIR EDIFÍCIO',
+      subtitle: `Instalação: <strong class="text-rose-300">${val.facilityName}</strong>`,
+      name: val.facilityName,
+      detailsHtml: `
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-slate-300">
+            <span>• Recuperação de Sucata (40%):</span>
+            <span class="font-bold text-emerald-400">+$${val.salvageValue.toLocaleString()}</span>
+          </div>
+          <div class="text-rose-400/90 text-[10px]">
+            • Todo o estoque residual no local será descartado.
+          </div>
+          <div class="text-slate-400 text-[10px]">
+            • A cobrança de aluguel diário do lote será cancelada.
+          </div>
+          <p class="text-[10px] text-amber-400/90 pt-1 leading-snug">A estrutura será completamente removida e o lote ficará livre para novas construções.</p>
+        </div>
+      `,
+      confirmText: 'Confirmar Demolição',
+      confirmClass: 'bg-rose-600 hover:bg-rose-500 shadow-rose-950/40',
+      onConfirm: () => {
+        if (typeof window.cash !== 'undefined') window.cash += val.salvageValue;
+        else if (window.GameState) window.GameState.cash += val.salvageValue;
+
+        if (typeof window.SoundEngine !== 'undefined' && typeof window.SoundEngine.playDemolish === 'function') {
+          window.SoundEngine.playDemolish();
+        }
+        if (typeof window.addGameLog === 'function') {
+          window.addGameLog('🗑️ ' + val.facilityName + ' demolida. Recuperado +$' + val.salvageValue.toLocaleString() + ' em sucata.', 'text-rose-400 font-bold');
+        }
+        tile.store = null;
+        tile.mine = null;
+        tile.farm = null;
+        tile.factory = null;
+        tile.rdCenter = null;
+        tile.warehouse = null;
+        tile.buildingHeight = 0;
+        if (typeof window._indexTile === 'function') window._indexTile(tile);
+        if (typeof window !== 'undefined') window.activeManagedTile = null;
+        this.renderIdlePanel();
+        this.renderTileInspector(tile);
+        if (typeof window.scheduleRender === 'function') window.scheduleRender();
+        if (typeof window.updateUI === 'function') window.updateUI();
+      }
+    });
   }
 };
 
@@ -799,6 +1017,9 @@ if (typeof window !== 'undefined') {
   window.confirmBuildRDCenter = FacilityPanel.confirmBuildRDCenter.bind(FacilityPanel);
   window.openFacilityConfirmModal = FacilityPanel.openFacilityConfirmModal.bind(FacilityPanel);
   window.closeFacilityConfirmModal = FacilityPanel.closeFacilityConfirmModal.bind(FacilityPanel);
+  window.calculateFacilityValue = FacilityPanel.calculateFacilityValue.bind(FacilityPanel);
+  window.sellFacility = FacilityPanel.sellFacility.bind(FacilityPanel);
+  window.demolishFacility = FacilityPanel.demolishFacility.bind(FacilityPanel);
 }
 
 export default FacilityPanel;

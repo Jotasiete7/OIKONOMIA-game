@@ -169,6 +169,34 @@ import { AppLifecycle } from './app/lifecycle.js';
 // --- Fase 7.0 A: Assistentes de Construção, Gôndolas & Fornecedores ---
 import { ConstructionWizards, StoreWizard, SupplierPicker } from './ui/wizards/index.js';
 
+// --- Fase 7.0 C: Grid Engine & Depósitos Geológicos ---
+import WorldGridEngine, {
+  GRID_SIZE,
+  TILE_W,
+  TILE_H,
+  worldGrid,
+  activeFacilitySet,
+  _tileKey,
+  _indexTile,
+  IRON_DEPOSITS_LIST,
+  OIL_DEPOSITS_LIST,
+  SILICA_DEPOSITS_LIST,
+  BAUXITE_DEPOSITS_LIST,
+  GOLD_DEPOSITS_LIST,
+  CHEMICAL_DEPOSITS_LIST,
+  isIronTile,
+  isOilTile,
+  isSilicaTile,
+  isBauxiteTile,
+  isGoldTile,
+  isChemicalTile,
+  SEAPORTS_128,
+  getCityForTile,
+  checkCityUnlocks,
+  initWorldGrid,
+  getTile
+} from './engine/world_grid.js';
+
 // Inicializa captura de erros do Flight Recorder o mais cedo possível
 initTelemetryEngine();
 
@@ -195,6 +223,33 @@ window.TILE_WIDTH = TILE_WIDTH;
 window.TILE_HEIGHT = TILE_HEIGHT;
 window.CITY_PROFILES_DATA = CITY_PROFILES_DATA;
 window.TMX_LAYERS = TMX_LAYERS;
+
+// Re-exposição global (Fase 7.0 C — Grid Engine & Depósitos Geológicos)
+window.GRID_SIZE = GRID_SIZE;
+window.TILE_W = TILE_W;
+window.TILE_H = TILE_H;
+window.worldGrid = worldGrid;
+window.activeFacilitySet = activeFacilitySet;
+window._tileKey = _tileKey;
+window._indexTile = _indexTile;
+window.IRON_DEPOSITS_LIST = IRON_DEPOSITS_LIST;
+window.OIL_DEPOSITS_LIST = OIL_DEPOSITS_LIST;
+window.SILICA_DEPOSITS_LIST = SILICA_DEPOSITS_LIST;
+window.BAUXITE_DEPOSITS_LIST = BAUXITE_DEPOSITS_LIST;
+window.GOLD_DEPOSITS_LIST = GOLD_DEPOSITS_LIST;
+window.CHEMICAL_DEPOSITS_LIST = CHEMICAL_DEPOSITS_LIST;
+window.isIronTile = isIronTile;
+window.isOilTile = isOilTile;
+window.isSilicaTile = isSilicaTile;
+window.isBauxiteTile = isBauxiteTile;
+window.isGoldTile = isGoldTile;
+window.isChemicalTile = isChemicalTile;
+window.SEAPORTS_128 = SEAPORTS_128;
+window.getCityForTile = getCityForTile;
+window.checkCityUnlocks = checkCityUnlocks;
+window.initWorldGrid = initWorldGrid;
+window.getTile = getTile;
+window.WorldGridEngine = WorldGridEngine;
 
 // Re-exposição global (Fase 2C)
 window.CITY_DISTRICTS = CITY_DISTRICTS;

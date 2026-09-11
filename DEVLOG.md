@@ -28,8 +28,8 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 - [x] **Overhaul Visual Integral Obsidian & Emojis Semânticos (v0.8.5)**: Padronização de 14 modais e inspetores para o tema executivo obsidian e catálogo completo de emojis para 99 produtos sem fallbacks.
 - [ ] **Fase 7.0 Desacoplamento Total de Wizards & Grid Engine (Fim do Monolito index.html)**:
   - [x] **Fase 7.0 A (Assistentes & Lojas)**: Extração de assistentes de construção (minas, fazendas, fábricas), gestão de lojas (2 etapas, nichos, prateleiras, compra imediata) e fornecedores para `client/ui/wizards/` (-1.466 linhas do monolito).
-  - [x] **Fase 7.0 B (Marketing & Mídia)**: Extração da Central de Mídia & IBOPE para `client/ui/panels/marketing_panel.js` (-183 linhas adicionais, total acumulado: -1.649 linhas).
-  - [ ] **Fase 7.0 C (Grid Engine)**: Extração da matriz procedural, depósitos geológicos e sparse index para `client/engine/world_grid.js` (~1.200 linhas).
+  - [x] **Fase 7.0 B (Marketing & Mídia)**: Extração da Central de Mídia & IBOPE para `client/ui/panels/marketing_panel.js` (-183 linhas adicionais).
+  - [x] **Fase 7.0 C (Grid Engine & Depósitos Geológicos)**: Extração da matriz procedural (128x128), 7 depósitos geológicos, portos especializados, sparse index (`activeFacilitySet`) e rotinas de descarte/venda de instalações para `client/engine/world_grid.js` e `client/ui/panels/facility_panel.js` (-694 linhas adicionais, total acumulado: -2.343 linhas).
   - [ ] **Fase 7.0 D (Simulador & HUD Telemetria)**: Extração do simulador "E se?" e instrumentação de debug/telemetria.
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
 - [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
@@ -40,6 +40,28 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 20: Desacoplamento do Motor de Grid & Depósitos Geológicos (Fase 7.0 C)
+- **Data:** 11/09/2026 — 18:30
+- **Versão Oficial:** `v0.8.5 (bld.20260911.03)` | **Save Schema:** `v0.8.2`
+- **Branch:** `main`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Módulo de Motor de Grid (`client/engine/world_grid.js`):**
+   - Encapsulamento de `GRID_SIZE` (128x128), `TILE_W` (64), `TILE_H` (32) e da matriz procedural de tiles `worldGrid`.
+   - Indexação esparsa (*Sparse Index*): `activeFacilitySet` (Map), `_tileKey(x, y)` e `_indexTile(tile)` para renderização e processamento instantâneo sem varrer 16.384 tiles.
+   - 7 depósitos geológicos naturais (`IRON_DEPOSITS_LIST`, `OIL_DEPOSITS_LIST`, `SILICA_DEPOSITS_LIST`, `BAUXITE_DEPOSITS_LIST`, `GOLD_DEPOSITS_LIST`, `CHEMICAL_DEPOSITS_LIST`) e predicados de vocação (`isIronTile`, `isOilTile`, etc.).
+   - Portos marítimos especializados (`SEAPORTS_128`) e motor de fronteiras municipais (`getCityForTile`, `checkCityUnlocks`).
+   - Inicialização procedural (`initWorldGrid`) a partir dos dados de mapa TMX.
+2. **Consolidação do Ciclo de Vida de Instalações (`client/ui/panels/facility_panel.js`):**
+   - Migradas as rotinas de liquidação e descarte de edifícios: `calculateFacilityValue(tile)`, `renderFacilityFooterActions`, `sellFacility(x, y)` (oferta ao mercado com 70% da obra ou proposta corporativa de concorrente a 80% do valor) e `demolishFacility(x, y)` (recuperação de 40% em sucata com efeitos sonoros).
+3. **Ponte de Compatibilidade Global & Enxugamento do Monolito:**
+   - Redução de **694 linhas** em `client/index.html` (de 8.113 para 7.419 linhas; acumulado de **-2.343 linhas** desde a Fase 7.0 A).
+   - Preservação de 100% dos métodos em `window.*` para simulação e UI.
+   - Validação de compilação de produção (`npm run build`) e bateria completa de testes headless browser E2E (`npm run audit-browser` com 6/6 suítes aprovadas).
 
 ---
 
