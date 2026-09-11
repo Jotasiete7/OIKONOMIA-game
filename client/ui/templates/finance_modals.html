@@ -1,0 +1,346 @@
+  <!-- 6. GAVETA FLUTUANTE DRE (DESIGN EXECUTIVO) -->
+  <div id="dre-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center hidden" onclick="if(event.target===this)toggleDREModal()">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] w-full max-w-lg mx-4 overflow-hidden flex flex-col font-mono" onclick="event.stopPropagation()">
+      <div class="bg-[#0d1017] px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between drag-handle select-none shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="drag-grip-icon text-slate-500 font-mono text-sm" title="Arrastar Janela">⋮⋮</span>
+          <div class="w-8 h-8 rounded-lg bg-[#c9a86a]/10 border border-[#c9a86a]/25 flex items-center justify-center text-sm shadow-inner shrink-0">📊</div>
+          <div>
+            <h3 class="text-xs font-semibold text-[#f1f5f9] tracking-wide flex items-center gap-2">
+              Demonstrativo de Resultados (DRE Consolidada)
+              <span class="text-[9px] bg-[#c9a86a]/15 text-[#c9a86a] font-mono px-1.5 py-0.5 rounded border border-[#c9a86a]/30 font-normal">Holding</span>
+            </h3>
+            <span class="text-[9px] text-slate-400 font-mono block mt-0.5">Visão consolidada de receitas brutas, custos de insumo, fixos e resultado</span>
+          </div>
+        </div>
+        <button onclick="toggleDREModal()" class="w-7 h-7 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-slate-400 hover:text-white text-xs font-mono transition flex items-center justify-center cursor-pointer" title="Fechar [Esc]">✕</button>
+      </div>
+      <div class="p-5 space-y-3 font-mono text-xs bg-[#080a0d]">
+        <div class="flex justify-between items-center text-slate-300 py-1.5 border-b border-white/[0.04]">
+          <span class="text-slate-400 font-medium">(+) Receita Bruta (Varejo):</span>
+          <strong id="dre-gross-sales" class="text-emerald-400 font-bold tracking-tight">+$0.00</strong>
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1.5 border-b border-white/[0.04]">
+          <span>(-) Custo das Mercadorias (CPV + Frete):</span>
+          <strong id="dre-cogs" class="text-rose-400 font-bold tracking-tight">-$0.00</strong>
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1.5 border-b border-white/[0.04]">
+          <span>(-) Aluguéis & Fixos (Lojas + Indústrias):</span>
+          <strong id="dre-rent" class="text-rose-400 font-bold tracking-tight">-$0.00</strong>
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1.5 border-b border-white/[0.04]">
+          <span>(-) Publicidade & Campanhas de Marketing:</span>
+          <strong id="dre-marketing" class="text-rose-400 font-bold tracking-tight">-$0.00</strong>
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1.5 border-b border-white/[0.04]">
+          <span>(-) Despesas Financeiras (Juros de Cheque Especial):</span>
+          <strong id="dre-financial" class="text-rose-400 font-bold tracking-tight">-$0.00</strong>
+        </div>
+        <div class="border border-white/[0.08] bg-[#121620] p-3 rounded-xl flex justify-between items-center text-sm font-bold shadow-sm">
+          <span class="text-slate-200 tracking-wide text-xs uppercase">LUCRO LÍQUIDO CONSOLIDADO:</span>
+          <strong id="dre-net-profit" class="text-emerald-400 text-base font-bold tracking-tight">$0.00</strong>
+        </div>
+        <div class="pt-2 flex items-center justify-between gap-2 border-t border-white/[0.06]">
+          <div class="text-[11px] text-slate-400 font-mono">
+            Patrimônio Líquido: <strong id="dre-net-worth" class="text-[#c9a86a] font-bold">$0.00</strong>
+          </div>
+          <button onclick="openFacilityDREModal()" class="px-3 py-1.5 rounded-lg bg-[#c9a86a]/15 hover:bg-[#c9a86a]/25 border border-[#c9a86a]/40 text-[#c9a86a] text-xs font-mono font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
+            <span>🏢</span> DRE Detalhada por Prédio
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6B. GAVETA FLUTUANTE DRE DETALHADA POR INSTALAÇÃO (DESIGN EXECUTIVO) -->
+  <div id="facility-dre-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center hidden" onclick="if(event.target===this)closeFacilityDREModal()">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] w-full max-w-4xl mx-4 overflow-hidden max-h-[90vh] flex flex-col font-mono" onclick="event.stopPropagation()">
+      <div class="bg-[#0d1017] px-6 py-4 border-b border-white/[0.08] flex items-center justify-between shrink-0 drag-handle select-none">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-[#c9a86a]/10 border border-[#c9a86a]/25 flex items-center justify-center text-sm shadow-inner shrink-0">🏢</div>
+          <div>
+            <h3 class="text-xs font-semibold text-[#f1f5f9] tracking-wide flex items-center gap-2">
+              Auditoria Financeira Detalhada por Instalação
+              <span class="text-[9px] bg-[#c9a86a]/15 text-[#c9a86a] font-mono px-1.5 py-0.5 rounded border border-[#c9a86a]/30 font-normal">Unidades</span>
+            </h3>
+            <p class="text-[10px] text-slate-400 font-mono mt-0.5">Demonstrativo de resultado discriminado unidade por unidade no mês anterior.</p>
+          </div>
+        </div>
+        <button onclick="closeFacilityDREModal()" class="w-7 h-7 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-slate-400 hover:text-white text-xs font-mono transition flex items-center justify-center cursor-pointer" title="Fechar [Esc]">✕</button>
+      </div>
+      <div class="p-6 overflow-y-auto custom-scrollbar flex-1 font-mono text-xs space-y-4 bg-[#080a0d]">
+        <div class="grid grid-cols-4 gap-3 text-center">
+          <div class="bg-[#121620] p-3 rounded-xl border border-white/[0.06]">
+            <div class="text-[9px] text-slate-400 uppercase tracking-wider font-semibold">Receita Total</div>
+            <div id="fdre-total-rev" class="text-sm font-bold text-emerald-400 mt-0.5 tracking-tight">$0.00</div>
+          </div>
+          <div class="bg-[#121620] p-3 rounded-xl border border-white/[0.06]">
+            <div class="text-[9px] text-slate-400 uppercase tracking-wider font-semibold">Custos & CPV</div>
+            <div id="fdre-total-costs" class="text-sm font-bold text-rose-400 mt-0.5 tracking-tight">-$0.00</div>
+          </div>
+          <div class="bg-[#121620] p-3 rounded-xl border border-white/[0.06]">
+            <div class="text-[9px] text-slate-400 uppercase tracking-wider font-semibold">Resultado Operacional</div>
+            <div id="fdre-total-net" class="text-sm font-bold text-emerald-300 mt-0.5 tracking-tight">$0.00</div>
+          </div>
+          <div class="bg-[#121620] p-3 rounded-xl border border-white/[0.06]">
+            <div class="text-[9px] text-slate-400 uppercase tracking-wider font-semibold">Patrimônio Líquido</div>
+            <div id="fdre-net-worth" class="text-sm font-bold text-[#c9a86a] mt-0.5 tracking-tight">$0.00</div>
+          </div>
+        </div>
+
+        <!-- Card do Analista Corporativo (Diagnóstico de Variância & Causalidade) -->
+        <div id="fdre-diagnostic-box" class="bg-[#0d1017] border border-[#c9a86a]/25 rounded-xl p-3 space-y-1.5 hidden shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-[#c9a86a] flex items-center gap-1.5">
+              <span>🧠</span> Diagnóstico do Analista Corporativo
+            </span>
+            <span id="fdre-diag-badge" class="text-[9px] px-2 py-0.5 rounded font-bold bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/30">Análise Mensal</span>
+          </div>
+          <p id="fdre-diag-text" class="text-[11px] text-slate-300 leading-relaxed font-mono">
+            Aguardando fechamento do primeiro ciclo mensal para análise de variância comparativa.
+          </p>
+        </div>
+
+        <!-- Gráfico de Séries Temporais dos Últimos Meses (Sparklines / Barras SVG) -->
+        <div id="fdre-history-container" class="bg-[#121620] p-3.5 rounded-xl border border-white/[0.06] space-y-2 hidden">
+          <div class="flex flex-wrap items-center justify-between text-[11px] gap-2 pb-1 border-b border-white/[0.06] font-mono">
+            <span class="text-slate-200 font-bold flex items-center gap-1.5">
+              <span>📈</span> Evolução Histórica (Últimos Meses)
+            </span>
+            <div id="fdre-history-summary-stats" class="text-[10px] flex items-center gap-3 text-slate-400">
+              <!-- Renderizado dinamicamente: Legenda, Pico, Margem Média -->
+            </div>
+          </div>
+          <div id="fdre-history-bars" class="flex items-end gap-1.5 h-24 pt-3 pb-1 overflow-x-auto custom-scrollbar relative">
+            <!-- Barras renderizadas dinamicamente via JS -->
+          </div>
+        </div>
+
+        <div class="border border-white/[0.08] rounded-xl overflow-hidden bg-[#0b0e14]">
+          <table class="w-full text-left border-collapse text-[11px]">
+            <thead class="bg-[#0d1017] text-slate-400 uppercase text-[10px] border-b border-white/[0.08]">
+              <tr>
+                <th class="p-2.5">Instalação</th>
+                <th class="p-2.5">Localização</th>
+                <th class="p-2.5 text-right">Receita</th>
+                <th class="p-2.5 text-right">CPV / Insumos</th>
+                <th class="p-2.5 text-right">OPEX (Solo+Equipe)</th>
+                <th class="p-2.5 text-right">Lucro Líquido</th>
+                <th class="p-2.5 text-right">Margem</th>
+                <th class="p-2.5 text-center">Ação</th>
+              </tr>
+            </thead>
+            <tbody id="facility-dre-table-body" class="divide-y divide-slate-800 bg-slate-950">
+              <!-- Renderizado dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6B2. MODAL SIMULADOR "E SE?" — SANDBOX DE PRECIFICAÇÃO E ELASTICIDADE -->
+  <div id="price-simulator-modal" class="fixed inset-0 z-[65] bg-black/80 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden flex flex-col font-mono text-xs max-h-[90vh]">
+      <div class="bg-[#0d1017] px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between shrink-0 drag-handle">
+        <div class="flex items-center gap-2.5">
+          <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
+          <div class="w-8 h-8 rounded-xl bg-[#121620] border border-white/[0.08] flex items-center justify-center text-sm shadow-inner">📊</div>
+          <div>
+            <h3 class="text-sm font-bold text-[#c9a86a]">Simulador 'E se?' — Precificação</h3>
+            <p id="sim-product-subtitle" class="text-[10px] text-[#94a3b8]">Projeção matemática em tempo real</p>
+          </div>
+        </div>
+        <button onclick="closePriceSimulatorModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+
+      <div class="bg-[#080a0d] p-5 space-y-4 overflow-y-auto custom-scrollbar flex-1">
+        <!-- Controle de Preço do Sandbox -->
+        <div class="bg-[#0b0e14] p-4 rounded-xl border border-white/[0.08] space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-slate-300 font-bold text-[11px]">Preço Simulado de Venda:</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500 font-normal line-through" id="sim-current-price-label">Atual: $3.50</span>
+              <span class="text-base font-black text-emerald-400" id="sim-price-display">$3.50</span>
+            </div>
+          </div>
+          <input type="range" id="sim-price-slider" min="0.5" max="25" step="0.25" value="3.5"
+            oninput="updatePriceSimulatorLive()"
+            class="w-full accent-[#c9a86a] cursor-pointer">
+          <div class="flex justify-between text-[9px] text-slate-500">
+            <span>Mais Barato (Giro Alto)</span>
+            <span>Preço Padrão de Mercado</span>
+            <span>Premium (Margem Alta)</span>
+          </div>
+        </div>
+
+        <!-- Cards de Projeção em Tempo Real -->
+        <div class="grid grid-cols-2 gap-2.5 text-center">
+          <div class="bg-[#0b0e14] p-2.5 rounded-xl border border-white/[0.08]">
+            <span class="text-[9px] text-slate-400 uppercase block">Vendas Diárias Estimadas</span>
+            <span id="sim-sales-display" class="text-xs font-bold text-[#c9a86a]">0 un/dia</span>
+          </div>
+          <div class="bg-[#0b0e14] p-2.5 rounded-xl border border-white/[0.08]">
+            <span class="text-[9px] text-slate-400 uppercase block">Receita Diária Projetada</span>
+            <span id="sim-revenue-display" class="text-xs font-bold text-emerald-400">$0.00/dia</span>
+          </div>
+          <div class="bg-[#0b0e14] p-2.5 rounded-xl border border-white/[0.08]">
+            <span class="text-[9px] text-slate-400 uppercase block">Margem Bruta Unitária</span>
+            <span id="sim-margin-display" class="text-xs font-bold text-amber-300">+0%</span>
+          </div>
+          <div class="bg-[#0b0e14] p-2.5 rounded-xl border border-white/[0.08]">
+            <span class="text-[9px] text-slate-400 uppercase block">Lucro Líquido Projetado</span>
+            <span id="sim-profit-display" class="text-xs font-bold text-emerald-300">+$0.00/mês</span>
+          </div>
+        </div>
+
+        <!-- Análise da Dinâmica de Mercado -->
+        <div class="bg-[#0b0e14] p-3 rounded-xl border border-white/[0.08] space-y-1.5 text-[10px] text-[#94a3b8] leading-relaxed">
+          <div class="flex justify-between items-center text-slate-300 font-bold border-b border-white/[0.06] pb-1">
+            <span>Análise de Sensibilidade & Elasticidade:</span>
+            <span id="sim-rating-badge" class="text-[9px] px-1.5 py-0.5 rounded bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/30 font-mono">Atratividade 65/100</span>
+          </div>
+          <p id="sim-analysis-text">Calculando impacto nas vendas contra a concorrência do bairro...</p>
+        </div>
+      </div>
+
+      <div class="bg-[#0d1017] border-t border-white/[0.08] px-5 py-3 flex items-center justify-between shrink-0">
+        <button onclick="closePriceSimulatorModal()" class="px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 font-bold text-xs border border-white/[0.08] cursor-pointer transition">
+          Cancelar
+        </button>
+        <button onclick="applyPriceSimulatorResult()" class="px-5 py-1.5 rounded-xl bg-[#c9a86a] hover:bg-[#d8b87a] text-[#080a0d] font-bold text-xs shadow-sm cursor-pointer flex items-center gap-1.5 transition">
+          <span>✓</span> Aplicar Novo Preço
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6C. MODAL DE ALERTA DE INSOLVÊNCIA TÉCNICA (NÍVEL 2) -->
+  <div id="insolvency-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-amber-500/30 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] w-full max-w-xl mx-4 overflow-hidden space-y-0 font-mono">
+      <div class="bg-[#0d1017] px-6 py-4 border-b border-amber-500/20 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-base">🚨</div>
+          <div>
+            <h3 class="text-sm font-bold text-amber-300 uppercase tracking-wider font-sans">Alerta de Insolvência Técnica (Nível 2)</h3>
+            <p class="text-[11px] text-amber-200/70 font-mono">Notificação Financeira & Risco de Recuperação Judicial</p>
+          </div>
+        </div>
+        <button onclick="closeInsolvencyModal()" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-amber-300 border border-white/10 text-xs font-bold flex items-center justify-center cursor-pointer transition">✕</button>
+      </div>
+      <div class="p-6 space-y-4 font-mono text-xs">
+        <div class="bg-amber-950/20 border border-amber-500/20 p-3.5 rounded-xl space-y-2 text-slate-200 text-[11px]">
+          <p>Sua corporação atingiu um nível crítico de endividamento ou Patrimônio Líquido negativo acumulado.</p>
+          <div class="flex justify-between text-xs pt-1 border-t border-amber-800/30">
+            <span>Caixa / Dívida Atual: <strong id="ins-cash-debt" class="text-rose-400">-$0.00</strong></span>
+            <span>Patrimônio Líquido: <strong id="ins-net-worth" class="text-amber-300">$0.00</strong></span>
+          </div>
+          <div class="text-[11px] text-amber-300 font-bold bg-amber-900/30 border border-amber-700/30 p-2 rounded-lg text-center">
+            ⏳ Tolerância Legal: Restam <span id="ins-countdown-months" class="text-white underline">6</span> meses consecutivos para regularizar o Patrimônio Líquido antes da decretação de falência.
+          </div>
+        </div>
+
+        <div id="ins-recommendation-box" class="bg-[#080a0d] p-4 rounded-xl border border-white/[0.06] space-y-2.5">
+          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+            <span>💡</span> Recomendação do Consultor de Reestruturação:
+          </div>
+          <div id="ins-recommended-content" class="text-[11px] text-slate-300">
+            <!-- Preenchido dinamicamente -->
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between gap-3 pt-2">
+          <button onclick="openFacilityDREModal(); closeInsolvencyModal();" class="bg-white/5 hover:bg-white/10 text-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold font-mono cursor-pointer border border-white/10 transition">
+            📊 Abrir DRE Detalhada
+          </button>
+          <button onclick="closeInsolvencyModal()" class="bg-amber-600 hover:bg-amber-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold font-mono cursor-pointer transition shadow-lg shadow-amber-950/50">
+            Entendido, Vou Reestruturar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6D. MODAL DE FALÊNCIA JUDICIAL (NÍVEL 3 - GAME OVER) -->
+  <div id="bankruptcy-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-lg flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-rose-500/30 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] w-full max-w-lg mx-4 overflow-hidden text-center p-8 space-y-5 font-mono">
+      <div class="w-16 h-16 bg-rose-950/40 border border-rose-500/40 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-xl shadow-rose-950/50">
+        ⚖️
+      </div>
+      <div class="space-y-1">
+        <h2 class="text-lg font-black text-rose-400 tracking-wider uppercase font-sans">Decretação de Falência Corporativa</h2>
+        <p class="text-xs text-slate-400">O Tribunal de Justiça decretou a liquidação judicial da sua empresa.</p>
+      </div>
+      <div class="bg-[#080a0d] p-4 rounded-xl border border-white/[0.06] text-xs text-left space-y-2 text-slate-300">
+        <div class="flex justify-between"><span>Empresa:</span><strong id="bk-company-name" class="text-slate-100">OikoCorp</strong></div>
+        <div class="flex justify-between"><span>Tempo de Atividade:</span><strong id="bk-playtime" class="text-slate-100">Ano 4</strong></div>
+        <div class="flex justify-between"><span>Dívida Final Insolvente:</span><strong id="bk-final-debt" class="text-rose-400">-$0.00</strong></div>
+        <div class="flex justify-between"><span>Patrimônio Líquido Final:</span><strong id="bk-final-nw" class="text-rose-400">-$0.00</strong></div>
+      </div>
+      <p class="text-[11px] text-slate-400 italic">"O mercado pune a insolvência persistente, mas todo grande magnata aprende com as quedas."</p>
+      <button onclick="location.reload()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-rose-900/50 transition">
+        🔄 Iniciar Novo Império
+      </button>
+    </div>
+  </div>
+
+  <!-- 7. GAVETA FLUTUANTE DIÁRIO DE BORDO (DESIGN EXECUTIVO) -->
+  <div id="diary-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center hidden" onclick="if(event.target===this)closeDiaryModal()">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] w-full max-w-xl mx-4 overflow-hidden flex flex-col font-mono" onclick="event.stopPropagation()">
+      <div class="bg-[#0d1017] px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between drag-handle select-none shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="drag-grip-icon text-slate-500 font-mono text-sm" title="Arrastar Janela">⋮⋮</span>
+          <div class="w-8 h-8 rounded-lg bg-[#c9a86a]/10 border border-[#c9a86a]/25 flex items-center justify-center text-sm shadow-inner shrink-0">📑</div>
+          <div>
+            <h3 class="text-xs font-semibold text-[#f1f5f9] tracking-wide flex items-center gap-2">
+              Diário de Bordo & Registro de Operações
+              <span class="text-[9px] bg-[#c9a86a]/15 text-[#c9a86a] font-mono px-1.5 py-0.5 rounded border border-[#c9a86a]/30 font-normal">Holding</span>
+            </h3>
+            <span class="text-[9px] text-slate-400 font-mono block mt-0.5">Telemetria de transações, eventos e ocorrências corporativas</span>
+          </div>
+        </div>
+        <button onclick="closeDiaryModal()" class="w-7 h-7 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-slate-400 hover:text-white text-xs font-mono transition flex items-center justify-center cursor-pointer" title="Fechar [Esc]">✕</button>
+      </div>
+      <div class="p-4 bg-[#080a0d]">
+        <div id="game-log-floating" class="space-y-1.5 font-mono text-[11px] max-h-96 overflow-y-auto custom-scrollbar pr-1 divide-y divide-white/[0.03]">
+          <div class="text-slate-400 pb-1">OIKONOMIA v0.8.5 inicializado em modo tela cheia com motor de cadeia produtiva, P&D e Diretoria Executiva completos.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================================= -->
+
+       BANCO CENTRAL DE NOVA ATENAS — Modal Principal
+       ═══════════════════════════════════════════════════════ -->
+  <div id="bank-modal" class="fixed inset-0 z-[70] bg-black/75 backdrop-blur-md hidden items-center justify-center p-3" onclick="if(event.target===this)closeBankModal()">
+    <div class="relative w-full max-w-[720px] bg-gradient-to-b from-slate-950 to-slate-900 border border-amber-900/40 rounded-2xl shadow-2xl flex flex-col overflow-hidden max-h-[92vh]" onclick="event.stopPropagation()">
+
+      <!-- Header do Modal -->
+      <div class="flex items-center gap-3.5 px-5 pt-4 pb-3.5 border-b border-slate-800/80 shrink-0">
+        <div class="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-700/60 flex items-center justify-center text-xl shrink-0">🏦</div>
+        <div class="flex-1 min-w-0">
+          <h2 class="text-base font-bold text-amber-100 font-mono tracking-wide">Banco Central de Nova Atenas</h2>
+          <p class="text-xs text-slate-400 font-mono">Sistema de Crédito Corporativo</p>
+        </div>
+        <!-- Rating badge no header -->
+        <div id="bank-header-rating" class="shrink-0 px-3 py-1 rounded-lg border text-xs md:text-sm font-black font-mono">—</div>
+        <button onclick="closeBankModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center text-base shrink-0">✕</button>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="flex gap-1 px-4 pt-2.5 shrink-0 border-b border-slate-800/60">
+        <button onclick="renderBankTab('score')"    id="bank-tab-score"    class="bank-tab px-4 py-2 text-xs md:text-sm font-mono font-bold rounded-t-lg border-b-2 transition">📊 Score</button>
+        <button onclick="renderBankTab('new')"      id="bank-tab-new"      class="bank-tab px-4 py-2 text-xs md:text-sm font-mono font-bold rounded-t-lg border-b-2 transition">➕ Novo Empréstimo</button>
+        <button onclick="renderBankTab('active')"   id="bank-tab-active"   class="bank-tab px-4 py-2 text-xs md:text-sm font-mono font-bold rounded-t-lg border-b-2 transition">📋 Ativos <span id="bank-tab-active-count" class="ml-1.5 bg-amber-800/70 text-amber-200 text-xs px-2 py-0.5 rounded-full font-bold">0</span></button>
+        <button onclick="renderBankTab('history')"  id="bank-tab-history"  class="bank-tab px-4 py-2 text-xs md:text-sm font-mono font-bold rounded-t-lg border-b-2 transition">🗂 Histórico</button>
+      </div>
+
+      <!-- Conteúdo dinâmico das abas -->
+      <div id="bank-tab-content" class="flex-1 overflow-y-auto custom-scrollbar p-5 min-h-0">
+        <div class="flex items-center justify-center h-32 text-slate-400 text-sm font-mono">Carregando...</div>
+      </div>
+
+    </div>
+  </div>

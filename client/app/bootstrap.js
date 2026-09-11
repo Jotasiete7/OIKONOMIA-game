@@ -26,6 +26,7 @@ import { ConstructionWizards } from '../ui/wizards/construction_wizards.js';
 import { SupplierPicker } from '../ui/wizards/supplier_picker.js';
 import { PriceSimulatorPanel } from '../ui/panels/price_simulator_panel.js';
 import { DevDashboardPanel } from '../ui/panels/dev_dashboard_panel.js';
+import { mountModalTemplates } from '../ui/templates/index.js';
 import TickerSystem from '../ticker_system.js';
 
 // Inicializa variáveis globais de estado de interação de tile no window
@@ -247,6 +248,9 @@ export async function bootEngine(force = false) {
       }, 50);
     });
   }
+
+  // Garante montagem de templates HTML
+  if (typeof mountModalTemplates === 'function') mountModalTemplates();
 
   // Inicializa estado de interação e bindings
   initInteractionState();

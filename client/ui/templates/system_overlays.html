@@ -1,0 +1,734 @@
+  <!-- OVERLAY 2: MENU PRINCIPAL DE ENTRADA (AAA GRADE)                         -->
+  <!-- ======================================================================= -->
+  <div id="main-menu-screen" class="fixed inset-0 z-[90] bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-8 select-none hidden">
+    <!-- Header do Menu -->
+    <div class="flex justify-between items-center text-xs font-mono text-slate-500">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50"></span>
+        <span class="text-slate-300 font-bold">OIKONOMIA GRAND STRATEGY</span>
+      </div>
+      <div class="flex gap-4">
+        <span>4 METRÓPOLES</span>
+        <span>70+ PRODUTOS</span>
+        <span>100% PERSISTENTE</span>
+      </div>
+    </div>
+
+    <!-- Bloco Central: Hero & Opções -->
+    <div class="flex flex-col md:flex-row items-center justify-between max-w-6xl w-full mx-auto gap-12">
+      <!-- Coluna Esquerda: Branding & Lore -->
+      <div class="flex-1 space-y-4 text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-800 text-emerald-400 text-xs font-mono">
+          <span>✨ Simulação Econômica Profunda</span>
+        </div>
+        <h1 class="text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-200 to-sky-300 leading-tight">
+          OIKONOMIA
+        </h1>
+        <p class="text-sm text-slate-400 max-w-md leading-relaxed">
+          Comande redes de suprimentos de ponta a ponta. Extraia matérias-primas, manufacture em escala industrial, domine portos marítimos e conquiste as quatro grandes metrópoles.
+        </p>
+        <div class="flex items-center gap-3 pt-2 text-xs font-mono text-slate-500">
+          <span class="flex items-center gap-1">💾 Saves Locais</span>
+          <span>•</span>
+          <span class="flex items-center gap-1">📦 Exportação .oiko</span>
+          <span>•</span>
+          <span class="flex items-center gap-1">🎮 Teclado + Mouse</span>
+        </div>
+      </div>
+
+      <!-- Coluna Direita: Botões de Ação do Menu -->
+      <div class="w-full md:w-80 flex flex-col gap-3 font-mono">
+        <button id="btn-menu-continue" onclick="continueLastGame()" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-sm shadow-xl shadow-emerald-900/30 flex items-center justify-between group transition transform active:scale-98 disabled:opacity-40 disabled:pointer-events-none">
+          <span class="flex items-center gap-2">▶ Continuar Empresa</span>
+          <span class="text-xs text-emerald-200 group-hover:translate-x-1 transition">➔</span>
+        </button>
+
+        <button onclick="openNewGameWizard()" class="w-full py-3.5 px-6 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500/50 text-slate-100 font-bold text-sm shadow-lg flex items-center justify-between group transition transform active:scale-98">
+          <span class="flex items-center gap-2">🏢 Nova Empresa</span>
+          <span class="text-xs text-slate-400 group-hover:text-emerald-400 group-hover:translate-x-1 transition">➔</span>
+        </button>
+
+        <button onclick="openSaveLoadModal('load')" class="w-full py-3.5 px-6 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-sky-500/50 text-slate-100 font-bold text-sm shadow-lg flex items-center justify-between group transition transform active:scale-98">
+          <span class="flex items-center gap-2">📂 Carregar Jogo (<span id="menu-save-count">0</span>)</span>
+          <span class="text-xs text-slate-400 group-hover:text-sky-400 group-hover:translate-x-1 transition">➔</span>
+        </button>
+
+        <button onclick="openSettingsModal()" class="w-full py-3 px-6 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs flex items-center justify-between group transition">
+          <span class="flex items-center gap-2">⚙️ Configurações</span>
+          <span class="text-xs text-slate-500 group-hover:translate-x-1 transition">➔</span>
+        </button>
+
+        <button onclick="toggleDiaryModal()" class="w-full py-3 px-6 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs flex items-center justify-between group transition">
+          <span class="flex items-center gap-2">📖 Manual & Economia</span>
+          <span class="text-xs text-slate-500 group-hover:translate-x-1 transition">➔</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Rodapé: Créditos, Versão & Atalhos -->
+    <div class="flex justify-between items-center text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-4">
+      <div class="flex items-center gap-2">
+        <span class="text-slate-400 font-bold">OIKONOMIA PROJECT © 2026</span>
+        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.8.5 Oficial (bld.20260911.05)</span>
+      </div>
+      <div class="flex gap-4">
+        <span>Atalho: <strong>F3</strong> (Dev Dashboard)</span>
+        <span>Atalho: <strong>1..5 / ESPAÇO</strong> (Velocidade)</span>
+        <span>Atalho: <strong>ESC</strong> (Menu / Fechar)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 3: WIZARD DE CRIAÇÃO DE NOVA EMPRESA & PERFIL                   -->
+  <!-- ======================================================================= -->
+  <div id="new-game-modal" class="fixed inset-0 z-[95] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+      <!-- Header do Wizard -->
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-[#121620] border border-white/[0.08] flex items-center justify-center text-lg">🚀</div>
+          <div>
+            <h2 class="text-sm font-bold text-[#c9a86a] font-mono">Fundar Nova Corporação</h2>
+            <p class="text-xs text-[#94a3b8]">Configure seu perfil corporativo, identidade visual e capital inicial</p>
+          </div>
+        </div>
+        <button onclick="closeNewGameWizard()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+
+      <!-- Conteúdo do Formulário -->
+      <div class="p-6 space-y-5 overflow-y-auto custom-scrollbar font-mono text-xs bg-[#080a0d]">
+        <!-- Nomes: Jogador & Empresa com Logo Preview Procedural -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-slate-300 font-bold block flex justify-between">
+              <span>👤 Nome do Fundador / CEO:</span>
+              <button type="button" onclick="randomizePlayerName()" class="text-[10px] text-[#c9a86a] hover:underline cursor-pointer">🎲 Sortear</button>
+            </label>
+            <input type="text" id="wiz-player-name" value="Arthur Vance" maxlength="28" class="w-full bg-[#0b0e14] border border-white/[0.08] rounded-xl px-3 py-2.5 text-slate-100 focus:outline-none focus:border-[#c9a86a]/60" placeholder="Ex: Arthur Vance">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-slate-300 font-bold block flex justify-between">
+              <span>🏛️ Razão Social & Logo Corporativo:</span>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="regenerateWizLogo()" class="text-[10px] text-amber-400 hover:underline cursor-pointer font-bold" title="Gerar outra variação de ícone e forma">🔀 Gerar outro</button>
+                <button type="button" onclick="randomizeCompanyName()" class="text-[10px] text-[#c9a86a] hover:underline cursor-pointer">🎲 Sortear</button>
+              </div>
+            </label>
+            <div class="flex items-center gap-2">
+              <div id="wiz-logo-preview" class="w-10 h-10 rounded-xl bg-[#080a0d] border border-white/[0.08] flex items-center justify-center shrink-0 shadow-inner" title="Preview do Logo da Corporação"></div>
+              <input type="text" id="wiz-company-name" value="OikoCorp Holding" maxlength="32" oninput="updateWizLogoPreview()" class="w-full bg-[#0b0e14] border border-white/[0.08] rounded-xl px-3 py-2.5 text-slate-100 focus:outline-none focus:border-[#c9a86a]/60" placeholder="Ex: Apex Industries">
+            </div>
+          </div>
+        </div>
+
+        <!-- Seletor de Avatar (24 Opções em Seletor Compacto) -->
+        <div class="space-y-2">
+          <label class="text-slate-300 font-bold block">🎭 Foto de Perfil / Avatar Corporativo (24 Opções):</label>
+          <div id="wiz-avatar-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 max-h-48 overflow-y-auto custom-scrollbar p-1"></div>
+        </div>
+
+        <!-- Seletor de Cor Corporativa -->
+        <div class="space-y-2">
+          <label class="text-slate-300 font-bold block">🎨 Identidade Visual / Cor da Marca:</label>
+          <div id="wiz-color-selector" class="flex flex-wrap gap-3"></div>
+        </div>
+
+        <!-- Aporte Inicial / Dificuldade -->
+        <div class="space-y-2">
+          <label class="text-slate-300 font-bold block">💰 Aporte de Capital & Dificuldade Macroeconômica:</label>
+          <div id="wiz-difficulty-selector" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+        </div>
+      </div>
+
+      <!-- Rodapé do Wizard -->
+      <div class="bg-[#0d1017] border-t border-white/[0.08] px-6 py-4 flex items-center justify-between font-mono">
+        <button onclick="closeNewGameWizard()" class="px-5 py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border border-white/[0.08] text-xs cursor-pointer transition">Cancelar</button>
+        <button onclick="startNewGameFromWizard()" class="px-7 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-[#c9a86a] hover:brightness-110 text-[#080a0d] font-bold text-xs shadow-sm flex items-center gap-2 cursor-pointer transition">
+          <span>Inaugurar Empresa</span>
+          <span>➔</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 4: GERENCIADOR DE SAVES & CARREGAMENTO (MULTI-SLOT + EXPORT/IMPORT)-->
+  <!-- ======================================================================= -->
+  <div id="save-load-modal" class="fixed inset-0 z-[95] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+      <!-- Header -->
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-[#121620] border border-white/[0.08] flex items-center justify-center text-lg">📂</div>
+          <div>
+            <h2 id="save-load-modal-title" class="text-sm font-bold text-[#c9a86a] font-mono">Histórico de Arquivos Salvos</h2>
+            <p class="text-xs text-[#94a3b8]">Armazenamento local persistente + exportação de backups (.oiko)</p>
+          </div>
+        </div>
+        <button onclick="closeSaveLoadModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+
+      <!-- Barra de Ações Rápidas (Exportar / Importar / Novo Save) -->
+      <div class="bg-[#080a0d] border-b border-white/[0.08] px-6 py-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div class="flex items-center gap-2">
+          <button id="btn-create-new-save-slot" onclick="saveGameInNewSlot()" class="px-3 py-1.5 rounded-lg bg-[#c9a86a] hover:bg-[#d8b87a] text-[#080a0d] font-bold flex items-center gap-1 shadow-sm cursor-pointer transition">
+            💾 Salvar em Novo Slot
+          </button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="exportSaveFile()" class="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.08] flex items-center gap-1 cursor-pointer transition" title="Baixar arquivo .oiko com todo o progresso">
+            ⬇️ Exportar (.oiko)
+          </button>
+          <label class="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.08] flex items-center gap-1 cursor-pointer transition" title="Importar arquivo .oiko ou .json">
+            ⬆️ Importar Backup
+            <input type="file" id="import-save-file-input" accept=".oiko,.json" class="hidden" onchange="handleImportSaveFile(event)">
+          </label>
+        </div>
+      </div>
+
+      <!-- Lista de Saves Rolável -->
+      <div id="saves-list-container" class="p-6 space-y-3 overflow-y-auto custom-scrollbar flex-1 font-mono text-xs bg-[#080a0d]"></div>
+
+      <!-- Rodapé -->
+      <div class="bg-[#0d1017] border-t border-white/[0.08] px-6 py-3 flex justify-between items-center text-xs font-mono text-slate-500">
+        <span>Saves ordenados cronologicamente: Mais recentes no topo</span>
+        <button onclick="closeSaveLoadModal()" class="px-4 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border border-white/[0.08] cursor-pointer transition">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 5: MENU DE PAUSA (ESC)                                          -->
+  <!-- ======================================================================= -->
+  <div id="pause-menu-modal" class="fixed inset-0 z-[85] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 select-none hidden font-mono">
+    <div class="bg-[#0d1017] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col p-6 space-y-5">
+      <div class="text-center space-y-1">
+        <div class="w-11 h-11 rounded-xl bg-[#c9a86a]/15 border border-[#c9a86a]/30 text-[#c9a86a] text-xl flex items-center justify-center mx-auto mb-2 font-mono">
+          ⏸
+        </div>
+        <h2 class="text-base font-bold text-[#e6edf3] tracking-wider uppercase font-mono">Simulação Pausada</h2>
+        <p id="pause-company-tag" class="text-xs text-[#c9a86a] font-mono">OikoCorp Holding • Arthur Vance</p>
+      </div>
+
+      <!-- Ações do Menu de Pausa -->
+      <div class="space-y-2 font-mono text-xs">
+        <button onclick="resumeGame()" class="w-full py-2.5 px-4 rounded-lg bg-[#c9a86a] hover:bg-[#dfba76] text-slate-950 font-bold flex items-center justify-between shadow-lg shadow-[#c9a86a]/10 transition cursor-pointer">
+          <span>▶ Retomar Jogo</span>
+          <span class="text-[10px] text-slate-950/70 font-mono">ESC</span>
+        </button>
+
+        <button onclick="quickSaveGame()" class="w-full py-2.5 px-4 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-[#c9a86a]/40 text-slate-200 flex items-center justify-between transition cursor-pointer">
+          <span>💾 Salvar Progresso Rápido</span>
+          <span id="quicksave-status-badge" class="text-[10px] text-[#c9a86a]"></span>
+        </button>
+
+        <button onclick="openSaveLoadModal('save')" class="w-full py-2.5 px-4 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.15] text-slate-300 hover:text-slate-100 flex items-center justify-between transition cursor-pointer">
+          <span>📂 Gerenciar Slots de Salvar / Carregar</span>
+          <span class="text-slate-500">➔</span>
+        </button>
+
+        <button onclick="openSettingsModal()" class="w-full py-2.5 px-4 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.15] text-slate-300 hover:text-slate-100 flex items-center justify-between transition cursor-pointer">
+          <span>⚙️ Todas as Configurações</span>
+          <span class="text-slate-500">➔</span>
+        </button>
+
+        <!-- Controles Diretos de Volume no Menu de Pausa -->
+        <div class="bg-[#060809] p-3.5 rounded-xl border border-white/[0.06] space-y-2 mt-1">
+          <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+            <span class="flex items-center gap-1.5">🎧 <span>Áudio & Mixagem</span></span>
+            <span class="text-[#c9a86a] text-[9px] font-mono">Terminal Mix</span>
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px] text-slate-300 font-medium">
+              <span>🔊 Master Geral</span>
+              <span id="pause-master-label" class="text-[#c9a86a] font-mono">100%</span>
+            </div>
+            <input type="range" id="pause-master-volume" min="0" max="1" step="0.05" value="1.0" oninput="syncVolumeFromPause('master', this.value)" class="w-full accent-[#c9a86a] cursor-pointer h-1.5 bg-white/[0.08] rounded-lg">
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px] text-slate-300 font-medium">
+              <span>🎵 Música (BGM)</span>
+              <span id="pause-music-label" class="text-[#c9a86a] font-mono">60%</span>
+            </div>
+            <input type="range" id="pause-music-volume" min="0" max="1" step="0.05" value="0.6" oninput="syncVolumeFromPause('music', this.value)" class="w-full accent-[#c9a86a] cursor-pointer h-1.5 bg-white/[0.08] rounded-lg">
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px] text-slate-300 font-medium">
+              <span>🏙 Sons Ambiente (Cidade)</span>
+              <span id="pause-ambience-label" class="text-[#c9a86a] font-mono">50%</span>
+            </div>
+            <input type="range" id="pause-ambience-volume" min="0" max="1" step="0.05" value="0.5" oninput="syncVolumeFromPause('ambience', this.value)" class="w-full accent-[#c9a86a] cursor-pointer h-1.5 bg-white/[0.08] rounded-lg">
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px] text-slate-300 font-medium">
+              <span>⚡ Efeitos (SFX)</span>
+              <span id="pause-sfx-label" class="text-[#c9a86a] font-mono">70%</span>
+            </div>
+            <input type="range" id="pause-sfx-volume" min="0" max="1" step="0.05" value="0.7" oninput="syncVolumeFromPause('sfx', this.value)" class="w-full accent-[#c9a86a] cursor-pointer h-1.5 bg-white/[0.08] rounded-lg">
+          </div>
+        </div>
+
+        <button onclick="promptExitToMainMenu()" class="w-full py-2.5 px-4 rounded-lg bg-rose-950/30 hover:bg-rose-900/50 border border-rose-800/50 text-rose-300 font-bold flex items-center justify-between transition mt-2 cursor-pointer">
+          <span>🚪 Sair para o Menu Principal</span>
+          <span>✕</span>
+        </button>
+      </div>
+
+      <div class="flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-white/[0.06] pt-3">
+        <span>OIKONOMIA <strong id="pause-version-tag" class="text-[#c9a86a]">v0.8.5</strong></span>
+        <button onclick="openDevDashboard()" class="text-slate-400 hover:text-[#c9a86a] transition font-mono">🛠️ Dev Dashboard [F3]</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 6: MODAL DE CONFIRMAÇÃO DE SAÍDA (SEGURANÇA CONTRA PERDAS)      -->
+  <!-- ======================================================================= -->
+  <div id="confirm-exit-modal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] w-full max-w-md overflow-hidden flex flex-col p-6 space-y-4 font-mono text-xs">
+      <div class="text-center space-y-2">
+        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-2xl flex items-center justify-center mx-auto shadow-inner">
+          ⚠️
+        </div>
+        <h3 class="text-base font-bold text-slate-100 font-sans">Deseja sair para o Menu Principal?</h3>
+        <p class="text-slate-400 text-xs">Qualquer progresso não salvo desde o último salvamento poderá ser perdido.</p>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <button onclick="saveAndExitToMainMenu()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2 transition cursor-pointer">
+          💾 Salvar e Sair
+        </button>
+        <button onclick="exitToMainMenuWithoutSaving()" class="w-full py-2.5 rounded-xl bg-rose-950/60 hover:bg-rose-900 border border-rose-800/60 text-rose-300 font-bold transition cursor-pointer">
+          🚪 Sair Sem Salvar
+        </button>
+        <button onclick="closeConfirmExitModal()" class="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 transition cursor-pointer">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 6B: MODAL DE CONFIRMAÇÃO DE VENDA & DEMOLIÇÃO (INTERFACE JOGO)  -->
+  <!-- ======================================================================= -->
+  <div id="confirm-facility-modal" class="fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] w-full max-w-md overflow-hidden flex flex-col p-6 space-y-4 font-mono text-xs">
+      <div class="text-center space-y-2">
+        <div id="fac-confirm-icon-box" class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-2xl flex items-center justify-center mx-auto shadow-inner">
+          🗑️
+        </div>
+        <h3 id="fac-confirm-title" class="text-base font-bold text-slate-100 font-sans tracking-wide">DEMOLIR EDIFÍCIO</h3>
+        <p id="fac-confirm-subtitle" class="text-xs text-slate-400">Instalação: <strong id="fac-confirm-name" class="text-slate-200">Centro de P&D</strong></p>
+      </div>
+
+      <div id="fac-confirm-details" class="bg-[#080a0d] rounded-xl p-4 border border-white/[0.06] space-y-2 text-left text-slate-300 leading-relaxed text-[11px]">
+        <!-- Conteúdo inserido dinamicamente via JS -->
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-2">
+        <button id="fac-confirm-btn-cancel" onclick="closeFacilityConfirmModal()" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-bold text-slate-300 transition text-center cursor-pointer">
+          Cancelar
+        </button>
+        <button id="fac-confirm-btn-execute" class="py-3 rounded-xl bg-rose-600 hover:bg-rose-500 font-bold text-white transition text-center shadow-lg shadow-rose-950/40 cursor-pointer">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 7: MODAL DE CONFIGURAÇÕES (ÁUDIO, AUTOSAVE, INTERFACE)          -->
+  <!-- ======================================================================= -->
+  <div id="settings-modal" class="fixed inset-0 z-[96] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] w-full max-w-lg overflow-hidden flex flex-col font-mono text-xs">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
+        <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">⚙️ Configurações do Jogo</h3>
+        <button onclick="closeSettingsModal()" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/10 text-xs font-bold flex items-center justify-center transition cursor-pointer">✕</button>
+      </div>
+
+      <div class="p-6 space-y-5">
+        <!-- Frequência de Auto-Save -->
+        <div class="space-y-1.5">
+          <label class="text-slate-300 font-bold block">💾 Salvamento Automático (Auto-Save):</label>
+          <select id="setting-autosave" onchange="saveGameSettings()" class="w-full bg-[#080a0d] border border-white/10 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-[#c9a86a] transition">
+            <option value="monthly">Ao final de cada mês (Recomendado)</option>
+            <option value="yearly">Apenas ao final de cada ano fiscal</option>
+            <option value="disabled">Desativado (Apenas manual)</option>
+          </select>
+        </div>
+
+        <!-- Configurações de Áudio & Trilha Sonora -->
+        <div class="space-y-3 pt-2 border-t border-white/[0.06]">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <span>🎧 Áudio e Trilha Sonora</span>
+          </div>
+
+          <!-- Volume Geral (Master) -->
+          <div class="space-y-1">
+            <div class="flex justify-between items-center text-xs">
+              <label class="text-slate-300 font-semibold">🔊 Volume Geral (Master):</label>
+              <span id="setting-master-label" class="text-[#c9a86a] font-mono">100%</span>
+            </div>
+            <input type="range" id="setting-master-volume" min="0" max="1" step="0.05" value="1.0" oninput="saveGameSettings()" class="w-full accent-[#c9a86a] cursor-pointer">
+          </div>
+
+          <!-- Música de Fundo (BGM) -->
+          <div class="space-y-1 bg-[#080a0d] p-3 rounded-xl border border-white/[0.06]">
+            <div class="flex justify-between items-center text-xs">
+              <label class="text-slate-300 font-semibold flex items-center gap-1.5">
+                <span>🎵 Música de Fundo (BGM):</span>
+              </label>
+              <span id="setting-music-label" class="text-[#c9a86a] font-mono">60%</span>
+            </div>
+            <input type="range" id="setting-music-volume" min="0" max="1" step="0.05" value="0.6" oninput="saveGameSettings()" class="w-full accent-[#c9a86a] cursor-pointer">
+            <div class="flex justify-between items-center pt-1 text-[11px]">
+              <span id="setting-bgm-status" class="text-slate-400 italic">Trilha Corporativa</span>
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="toggleBgmPlayPause()" id="btn-toggle-bgm" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 font-medium cursor-pointer transition">⏸ Pausar</button>
+                <button type="button" onclick="skipBgmTrack()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 font-medium cursor-pointer transition">⏭ Pular</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sons Ambiente -->
+          <div class="space-y-1">
+            <div class="flex justify-between items-center text-xs">
+              <label class="text-slate-300 font-semibold">🏙 Sons Ambiente (Cidade & Zonas):</label>
+              <span id="setting-ambience-label" class="text-[#c9a86a] font-mono">50%</span>
+            </div>
+            <input type="range" id="setting-ambience-volume" min="0" max="1" step="0.05" value="0.5" oninput="saveGameSettings()" class="w-full accent-[#c9a86a] cursor-pointer">
+          </div>
+
+          <!-- Volume de Efeitos Sonoros (SFX) -->
+          <div class="space-y-1">
+            <div class="flex justify-between items-center text-xs">
+              <label class="text-slate-300 font-semibold">⚡ Efeitos Sonoros (SFX):</label>
+              <span id="setting-sfx-label" class="text-[#c9a86a] font-mono">70%</span>
+            </div>
+            <input type="range" id="setting-sfx-volume" min="0" max="1" step="0.05" value="0.7" oninput="saveGameSettings()" class="w-full accent-[#c9a86a] cursor-pointer">
+          </div>
+        </div>
+
+        <!-- Terminal de Notícias (Ticker Bar) -->
+        <div class="space-y-3 pt-2 border-t border-white/[0.06]">
+          <div class="flex justify-between items-center">
+            <label class="text-slate-300 font-bold flex items-center gap-1.5">
+              <span>📰 Diário Corporativo / Ticker Superior:</span>
+            </label>
+            <input type="checkbox" id="setting-ticker-enabled" onchange="TickerSystem.toggleEnabled(this.checked)" class="accent-[#c9a86a] w-4 h-4 cursor-pointer">
+          </div>
+
+          <!-- Velocidade do Ticker -->
+          <div class="space-y-1.5 bg-[#080a0d] p-3 rounded-xl border border-white/[0.06]">
+            <div class="flex justify-between items-center">
+              <label class="text-slate-300 text-[11px] font-bold">⚡ Velocidade da Fita:</label>
+              <span id="setting-ticker-speed-label" class="text-[#c9a86a] font-bold text-[11px]">Normal (55 px/s)</span>
+            </div>
+            <input type="range" id="setting-ticker-speed" min="30" max="90" step="5" value="55" oninput="TickerSystem.setSpeed(Number(this.value))" class="w-full accent-[#c9a86a] cursor-pointer">
+            <div class="flex justify-between text-[9px] text-slate-500 font-mono">
+              <span>Lento (30 px/s)</span>
+              <span>Normal (55 px/s)</span>
+              <span>Rápido (90 px/s)</span>
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-400">💡 Dica: Você pode <strong>arrastar com o mouse</strong> a fita para ler notícias passadas ou clicar no badge para reiniciar no presente.</p>
+        </div>
+
+        <!-- Guia de Teclado e Acessibilidade -->
+        <div class="bg-[#080a0d] p-4 rounded-xl border border-white/[0.06] space-y-2 text-[11px] text-slate-400">
+          <span class="text-slate-200 font-bold block">🎮 Guia Rápido de Teclas & Acessibilidade:</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div><strong class="text-[#c9a86a]">WASD / Setas</strong>: Mover Câmera</div>
+            <div><strong class="text-[#c9a86a]">Q / E ou Scroll</strong>: Zoom In/Out</div>
+            <div><strong class="text-[#c9a86a]">ESPAÇO</strong>: Pausar / Continuar</div>
+            <div><strong class="text-[#c9a86a]">ESC</strong>: Fechar Janela / Pausa</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-[#0d1017] border-t border-white/[0.08] px-6 py-3.5 flex justify-end">
+        <button onclick="closeSettingsModal()" class="px-6 py-2 rounded-xl bg-[#c9a86a] hover:bg-[#dfbe80] text-slate-950 font-bold shadow-md shadow-[#c9a86a]/10 transition cursor-pointer">Pronto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 8: DASHBOARD DE DESENVOLVIMENTO, TELEMETRIA & DEBUG (F3)        -->
+  <!-- ======================================================================= -->
+  <div id="dev-dashboard-modal" class="fixed inset-0 z-[97] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] w-full max-w-3xl overflow-hidden flex flex-col font-mono text-xs max-h-[90vh]">
+      <!-- Header -->
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-3.5 flex items-center justify-between drag-handle">
+        <div class="flex items-center gap-2.5">
+          <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
+          <div class="w-8 h-8 rounded-xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-sm">🛠️</div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">Painel de Desenvolvimento & Diagnóstico</h3>
+            <span id="dev-header-version" class="text-[10px] text-indigo-400">OIKONOMIA v0.8.5 · Build 20260906.01 (Oficial)</span>
+          </div>
+        </div>
+        <button onclick="closeDevDashboard()" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/10 text-xs font-bold flex items-center justify-center transition cursor-pointer">✕</button>
+      </div>
+
+      <!-- Abas de Navegação -->
+      <div class="bg-[#080a0d] border-b border-white/[0.08] px-6 py-2 flex items-center gap-2 text-[11px] flex-wrap">
+        <button id="dev-tab-btn-diag" onclick="switchDevTab('diag')" class="px-3 py-1 rounded-lg font-bold bg-indigo-600 text-white transition">🏷️ Diagnóstico</button>
+        <button id="dev-tab-btn-assets" onclick="switchDevTab('assets')" class="px-3 py-1 rounded-lg font-bold text-slate-400 hover:bg-white/5 hover:text-slate-200 transition">🎨 Sprites & Assets</button>
+        <button id="dev-tab-btn-logs" onclick="switchDevTab('logs')" class="px-3 py-1 rounded-lg font-bold text-slate-400 hover:bg-white/5 hover:text-slate-200 transition">📜 Logs de Debug (<span id="dev-logs-count">0</span>)</button>
+        <button id="dev-tab-btn-tools" onclick="switchDevTab('tools')" class="px-3 py-1 rounded-lg font-bold text-slate-400 hover:bg-white/5 hover:text-slate-200 transition">⚡ Sandbox / Testes</button>
+        <button id="dev-tab-btn-replayer" onclick="switchDevTab('replayer')" class="px-3 py-1 rounded-lg font-bold text-slate-400 hover:bg-white/5 hover:text-slate-200 transition">🕹️ Bug Replayer</button>
+      </div>
+
+      <!-- Conteúdo das Abas -->
+      <div class="p-6 overflow-y-auto space-y-4 flex-1">
+        <!-- ABA 1: DIAGNÓSTICO -->
+        <div id="dev-tab-diag" class="space-y-4">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Versão Oficial</span>
+              <span id="dev-card-version" class="text-xs font-bold text-emerald-400">v0.8.5 (bld.20260911.05)</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Schema de Saves</span>
+              <span id="dev-card-save-schema" class="text-xs font-bold text-amber-400">v0.8.2 (Compatível)</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Sparse Index</span>
+              <span id="dev-stat-sparse-tiles" class="text-xs font-bold text-sky-400">0 tiles ativos</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Renderizador</span>
+              <span class="text-xs font-bold text-slate-200">Canvas 2D + SpriteManager (60 FPS)</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Módulo Matemático</span>
+              <span class="text-xs font-bold text-purple-400">CoreMath v1.0 [Ativo]</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[9px] text-slate-500 uppercase block">Ambiente</span>
+              <span id="dev-stat-protocol" class="text-xs font-bold text-slate-300">file://</span>
+            </div>
+          </div>
+
+          <!-- Informações da Sessão Atual -->
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-[11px]">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+              <span class="text-slate-400">Empresa / Jogador:</span>
+              <span id="dev-session-company" class="font-bold text-slate-200">--</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+              <span class="text-slate-400">Data da Simulação:</span>
+              <span id="dev-session-date" class="font-bold text-amber-400">Dia 01 / Mês 01 / Ano 1</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+              <span class="text-slate-400">Caixa Atual:</span>
+              <span id="dev-session-cash" class="font-bold text-emerald-400">$100,000.00</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">Cidades Desbloqueadas:</span>
+              <span id="dev-session-cities" class="font-bold text-sky-400">2 / 4</span>
+            </div>
+          </div>
+
+          <!-- Botão Copiar Relatório -->
+          <div class="flex justify-between items-center pt-2">
+            <span id="dev-copy-feedback" class="text-[10px] text-emerald-400 font-bold hidden">✅ Relatório copiado para a Área de Transferência!</span>
+            <button onclick="copyDiagnosticReport()" class="ml-auto px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold flex items-center gap-1.5 shadow">
+              📋 Copiar Relatório de Diagnóstico
+            </button>
+          </div>
+        </div>
+
+        <!-- ABA 2: SPRITES & ASSETS GALLERY -->
+        <div id="dev-tab-assets" class="space-y-4 hidden">
+          <div class="flex justify-between items-center text-[10px]">
+            <span class="text-slate-400">Galeria de assets e sprites categorizados em <code class="text-emerald-400">client/assets/</code>:</span>
+            <span id="dev-assets-status" class="text-emerald-400 font-bold">57 Sprites Carregados</span>
+          </div>
+          <div id="dev-assets-gallery-grid" class="space-y-4 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
+        </div>
+
+        <!-- ABA 3: LOGS DE DEBUG -->
+        <div id="dev-tab-logs" class="space-y-3 hidden">
+          <div class="flex justify-between items-center text-[10px]">
+            <span class="text-slate-400">Histórico de eventos internos do motor (limite de 300 entradas):</span>
+            <button onclick="clearDebugLogs()" class="text-rose-400 hover:text-rose-300 font-bold">🧹 Limpar Logs</button>
+          </div>
+          <div id="dev-logs-terminal" class="bg-slate-950 p-3 rounded-2xl border border-slate-800 font-mono text-[10px] text-slate-300 h-64 overflow-y-auto space-y-1 select-text">
+            <!-- Entradas de Log injetadas aqui -->
+          </div>
+        </div>
+
+        <!-- ABA 4: SANDBOX & FERRAMENTAS DE TESTE -->
+        <div id="dev-tab-tools" class="space-y-3 hidden">
+          <span class="text-slate-400 block text-[11px]">Ferramentas de sandbox para testes rápidos de balanceamento e mecânicas:</span>
+          <div class="grid grid-cols-2 gap-2.5">
+            <button onclick="devAddCash(100000)" class="bg-slate-950 hover:bg-slate-800 border border-slate-700 text-emerald-400 p-3 rounded-xl font-bold flex items-center gap-2">
+              💵 +$100.000 no Caixa
+            </button>
+            <button onclick="devAdvanceMonth()" class="bg-slate-950 hover:bg-slate-800 border border-slate-700 text-amber-400 p-3 rounded-xl font-bold flex items-center gap-2">
+              ⏩ Avançar 30 Dias (1 Mês)
+            </button>
+            <button onclick="devUnlockAllCities()" class="bg-slate-950 hover:bg-slate-800 border border-slate-700 text-sky-400 p-3 rounded-xl font-bold flex items-center gap-2">
+              🔓 Desbloquear Todas as Cidades
+            </button>
+            <button onclick="devDumpGameState()" class="bg-slate-950 hover:bg-slate-800 border border-slate-700 text-purple-400 p-3 rounded-xl font-bold flex items-center gap-2">
+              📦 Exportar Dump GameState JSON
+            </button>
+          </div>
+        </div>
+
+        <!-- ABA 5: BUG REPLAYER (REPRODUÇÃO DE SAVES DE REPORTES) -->
+        <div id="dev-tab-replayer" class="space-y-3 hidden">
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🕹️</span>
+              <div>
+                <h4 class="text-xs font-bold text-slate-200">Reprodutor de Saves de Reportes (Bug Replayer)</h4>
+                <p class="text-[10px] text-slate-400">Cole abaixo o payload JSON recebido de qualquer relatório no Supabase ou Discord. O jogo carregará o estado exato da partida reportada pelo jogador com 1 clique.</p>
+              </div>
+            </div>
+            <textarea id="dev-replayer-json-input" rows="6" placeholder="Cole o JSON completo do reporte ou o objeto save_snapshot aqui..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-[10px] font-mono text-slate-200 placeholder-slate-600 focus:border-indigo-500 focus:outline-none resize-none select-text"></textarea>
+            <div class="flex items-center justify-between">
+              <button onclick="clearReplayerInput()" class="text-[10px] text-slate-500 hover:text-slate-400 font-bold cursor-pointer">Limpar Campo</button>
+              <button onclick="loadReportSaveFromReplayer()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold flex items-center gap-1.5 shadow transition cursor-pointer">
+                🚀 Carregar & Reproduzir Partida
+              </button>
+            </div>
+            <div id="dev-replayer-feedback" class="hidden text-[10px] p-2.5 rounded-xl font-bold"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="bg-slate-950 border-t border-slate-800 px-6 py-3 flex justify-between items-center">
+        <span class="text-[9px] text-slate-500">Pressione <strong>F3</strong> ou <strong>ESC</strong> a qualquer momento para fechar este painel.</span>
+        <button onclick="closeDevDashboard()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold cursor-pointer">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- OVERLAY 8B: MODAL DE REPORTE DE BUGS & TELEMETRIA AVANÇADA (F8)        -->
+  <!-- ======================================================================= -->
+  <div id="bug-report-modal" class="fixed inset-0 z-[98] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 select-none hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] w-full max-w-2xl overflow-hidden flex flex-col font-sans text-xs max-h-[92vh] text-slate-200">
+      <!-- Header -->
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-5 py-3.5 flex items-center justify-between drag-handle">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-rose-950/50 border border-rose-500/30 flex items-center justify-center text-sm">🐛</div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">Reportar Bug / Feedback Técnico</h3>
+            <span class="text-[10px] text-rose-400 font-mono">Flight Recorder & Telemetria OIKONOMIA</span>
+          </div>
+        </div>
+        <button onclick="closeBugReportModal()" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/10 text-xs font-bold flex items-center justify-center cursor-pointer transition">✕</button>
+      </div>
+
+      <!-- Corpo do Formulário -->
+      <div class="p-5 overflow-y-auto space-y-4 flex-1 custom-scrollbar">
+        <!-- Linha 1: Categoria e Opções de Anexo -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Categoria -->
+          <div class="space-y-1.5">
+            <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wide">Tipo de Reporte:</label>
+            <select id="bug-report-category" onchange="onBugReportCategoryChange()" class="w-full bg-[#080a0d] border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-100 font-medium focus:border-rose-500 focus:outline-none transition">
+              <option value="bug">🐛 Bug / Travamento / Falha Técnica</option>
+              <option value="balance">⚖️ Desbalanceamento Econômico / Lucro Irreal</option>
+              <option value="exploit">🚨 Suspeita de Exploit / Abuso</option>
+              <option value="suggestion">💡 Sugestão / Melhoria de Jogabilidade</option>
+            </select>
+          </div>
+
+          <!-- Opções de Telemetria Automática -->
+          <div class="bg-[#080a0d] p-3 rounded-xl border border-white/[0.06] space-y-1.5 text-[11px]">
+            <span class="text-slate-400 font-bold block">Anexos de Diagnóstico:</span>
+            <label class="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white">
+              <input type="checkbox" id="bug-report-include-screen" checked class="rounded accent-rose-500">
+              <span>Incluir Captura de Tela (Print ~40KB)</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white">
+              <input type="checkbox" id="bug-report-include-save" checked class="rounded accent-rose-500">
+              <span>Incluir Savegame para Reprodução (~25KB)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Miniatura do Print Capturado -->
+        <div id="bug-report-screenshot-container" class="space-y-1.5">
+          <div class="flex justify-between items-center text-[10px] text-slate-400">
+            <span class="flex items-center gap-1.5">
+              <span>📷 Captura da Tela:</span>
+              <span id="bug-report-screenshot-status" class="text-indigo-400 font-medium"></span>
+            </span>
+            <button type="button" onclick="retakeScreenshotFromGame()" class="text-indigo-400 hover:text-indigo-300 hover:underline cursor-pointer font-medium flex items-center gap-1">
+              <span>🔄 Tirar novo print</span>
+            </button>
+          </div>
+          <div class="relative bg-[#080a0d] rounded-xl border border-white/[0.06] overflow-hidden flex items-center justify-center min-h-[110px] max-h-44 group">
+            <!-- Loading / Placeholder elegante quando não há print ou enquanto carrega -->
+            <div id="bug-report-screenshot-placeholder" class="py-6 flex flex-col items-center justify-center text-slate-500 gap-1.5 text-center px-4">
+              <span class="text-xl animate-pulse">📷</span>
+              <span class="text-[11px] text-slate-400 font-medium">Capturando imagem do jogo...</span>
+              <span class="text-[9px] text-slate-600">Dica: Você também pode colar um print do clipboard com <kbd class="px-1 py-0.5 bg-white/5 border border-white/10 rounded text-slate-300 font-mono">Ctrl + V</kbd></span>
+            </div>
+            <img id="bug-report-screenshot-preview" src="" alt="Screenshot" class="hidden w-full h-auto object-contain max-h-44 transition duration-200">
+          </div>
+        </div>
+
+        <!-- Título do Reporte -->
+        <div class="space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wide">Título / Resumo Curto <span class="text-rose-400">*</span>:</label>
+          <input type="text" id="bug-report-title" placeholder="Ex: Armazém parou de entregar trigo para a fábrica após o 2º ano" class="w-full bg-[#080a0d] border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:border-rose-500 focus:outline-none transition">
+        </div>
+
+        <!-- Descrição -->
+        <div class="space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wide">O que você estava fazendo? O que aconteceu de errado?</label>
+          <textarea id="bug-report-desc" rows="3" placeholder="Descreva os passos para reproduzir, o que você esperava que acontecesse e o que aconteceu..." class="w-full bg-[#080a0d] border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:border-rose-500 focus:outline-none resize-none transition"></textarea>
+        </div>
+
+        <!-- Acordeão Transparência: Diagnóstico Técnico e Heurísticas -->
+        <details class="bg-[#080a0d] rounded-xl border border-white/[0.06] p-3 text-[11px] group">
+          <summary class="font-bold text-slate-400 cursor-pointer flex justify-between items-center select-none group-open:text-indigo-400">
+            <span>👁️ Ver Diagnóstico Técnico e Dados de Voo</span>
+            <span class="text-[10px] text-slate-500 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <div class="mt-3 space-y-2 text-slate-300 font-mono text-[10px] border-t border-white/[0.06] pt-2">
+            <div id="bug-report-tech-summary">Carregando dados de voo...</div>
+          </div>
+        </details>
+
+        <!-- Feedback de Envio / Alertas -->
+        <div id="bug-report-feedback" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+      </div>
+
+      <!-- Rodapé com Botões de Ação -->
+      <div class="bg-[#0d1017] border-t border-white/[0.08] px-5 py-3.5 flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <button onclick="copyBugReportToClipboard()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-bold text-[11px] flex items-center gap-1.5 border border-white/10 transition cursor-pointer" title="Copiar relatório formatado em JSON para colar no Discord ou suporte">
+            📋 Copiar Pacote
+          </button>
+          <button onclick="downloadBugReportFile()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-bold text-[11px] flex items-center gap-1.5 border border-white/10 transition cursor-pointer" title="Baixar arquivo .json com print e save">
+            💾 Baixar .json
+          </button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="closeBugReportModal()" class="px-3 py-1.5 rounded-xl text-slate-400 hover:text-white text-[11px] font-medium transition cursor-pointer">
+            Cancelar
+          </button>
+          <button id="bug-report-submit-btn" onclick="submitBugReport()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold text-[11px] flex items-center gap-1.5 shadow-lg shadow-rose-950/40 transition cursor-pointer">
+            <span>🚀 Enviar para a Equipe OIKONOMIA</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+<!-- ═══════════════════════════════════════════════════════

@@ -183,6 +183,9 @@ import { AppLifecycle } from './app/lifecycle.js';
 // --- Fase 7.0 A: Assistentes de Construção, Gôndolas & Fornecedores ---
 import { ConstructionWizards, StoreWizard, SupplierPicker } from './ui/wizards/index.js';
 
+// --- Fase 7.0 K: Componentização de Templates HTML ---
+import { mountModalTemplates } from './ui/templates/index.js';
+
 // --- Fase 7.0 I: Bootstrap & Inicialização da Engine ---
 import {
   initInteractionState,
@@ -688,9 +691,11 @@ if (typeof window !== 'undefined') {
   if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
+        mountModalTemplates();
         bootEngine();
       });
     } else {
+      mountModalTemplates();
       bootEngine();
     }
   }

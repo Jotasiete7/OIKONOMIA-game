@@ -1,0 +1,559 @@
+  <!-- CENTRO DE DISTRIBUIÇÃO & ARMAZÉM LOGÍSTICO — MODAL DEDICADO -->
+  <div id="warehouse-modal" class="fixed inset-0 z-[60] bg-black/75 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-4xl mx-4 overflow-hidden flex flex-col max-h-[92vh] transition-all duration-200">
+      <!-- Header Arrastável -->
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-5 py-3 flex items-center justify-between drag-handle">
+        <div class="flex items-center gap-2.5">
+          <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
+          <div class="w-9 h-9 rounded-xl bg-[#121620] border border-white/[0.08] flex items-center justify-center text-lg shadow">🏢</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="wh-modal-title" class="text-sm font-bold text-[#c9a86a]">Centro de Distribuição Central</h3>
+              <button onclick="renameWarehouse()" class="text-[#94a3b8] hover:text-[#c9a86a] text-xs cursor-pointer transition" title="Renomear Armazém">✏️</button>
+              <span id="wh-modal-level-badge" class="text-[9px] bg-[#c9a86a]/15 text-[#c9a86a] font-bold px-2 py-0.5 rounded border border-[#c9a86a]/30">Nível 1</span>
+            </div>
+            <span id="wh-modal-subtitle" class="text-[10px] text-[#94a3b8] font-mono">Metrópole Central (10, 10) · Hub Multimodal de Estocagem</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div id="wh-modal-upgrade-slot"></div>
+          <button onclick="closeWarehouseModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center cursor-pointer transition border border-white/[0.08]">✕</button>
+        </div>
+      </div>
+
+      <!-- Barra de Métricas em Tempo Real -->
+      <div class="bg-[#080a0d] border-b border-white/[0.06] px-5 py-2.5 flex items-center justify-between text-xs font-mono flex-wrap gap-3">
+        <!-- Ocupação Geral do Galpão -->
+        <div class="flex-1 min-w-[240px]">
+          <div class="flex items-center justify-between text-[11px] mb-1">
+            <span class="text-slate-400">📊 Ocupação Geral:</span>
+            <span id="wh-modal-stock-summary" class="font-bold text-sky-300">0 / 25.000 un (0%)</span>
+          </div>
+          <div class="h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+            <div id="wh-modal-stock-bar" class="h-full bg-sky-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+          <div class="flex items-center justify-between text-[9px] text-slate-400 mt-0.5">
+            <span id="wh-modal-free-space">Livre: 25.000 un</span>
+            <span id="wh-modal-daily-cost" class="text-amber-400">-$75/dia (Solo $15 + Logística $60)</span>
+          </div>
+        </div>
+
+        <!-- Valuation e Insumos -->
+        <div class="flex items-center gap-4 text-right border-l border-slate-800 pl-4">
+          <div>
+            <div class="text-[10px] text-slate-400">Valor em Estoque:</div>
+            <div id="wh-modal-valuation" class="text-xs font-bold text-emerald-400">$0.00</div>
+          </div>
+          <div>
+            <div class="text-[10px] text-slate-400">Baias Ativas:</div>
+            <div id="wh-modal-slots-count" class="text-xs font-bold text-cyan-300">0 insumos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Abas e Ações Rápidas -->
+      <div class="bg-[#080a0d] border-b border-white/[0.08] px-5 py-2 flex items-center justify-between text-xs font-mono flex-wrap gap-2">
+        <div class="flex items-center gap-1.5">
+          <button id="wh-tab-inventory-btn" onclick="switchWarehouseTab('inventory')"
+            class="px-3 py-1.5 rounded-lg font-bold bg-[#c9a86a] text-[#080a0d] border border-[#c9a86a] shadow-sm text-[10px] cursor-pointer transition">
+            📦 Inventário & Cotas
+          </button>
+          <button id="wh-tab-flow-btn" onclick="switchWarehouseTab('flow')"
+            class="px-3 py-1.5 rounded-lg font-bold bg-[#0b0e14] hover:bg-white/[0.05] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] text-[10px] cursor-pointer transition">
+            🔄 Radar de Fluxo (In / Out)
+          </button>
+          <button id="wh-tab-anticyclic-btn" onclick="switchWarehouseTab('anticyclic')"
+            class="px-3 py-1.5 rounded-lg font-bold bg-[#0b0e14] hover:bg-white/[0.05] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] text-[10px] cursor-pointer transition">
+            📉 Compras Portuárias & Ciclos
+          </button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="syncOwnProductionProducts()"
+            class="bg-amber-600/20 hover:bg-amber-600/30 text-[#c9a86a] border border-[#c9a86a]/40 font-bold px-3 py-1.5 rounded-lg text-[10px] shadow-sm cursor-pointer transition flex items-center gap-1.5"
+            title="Detecta e aloca automaticamente todos os produtos produzidos nas suas fazendas, minas e fábricas">
+            ⚡ Sincronizar Produção Própria
+          </button>
+          <button onclick="openAddWarehouseProductModal()"
+            class="bg-[#c9a86a] hover:bg-[#d8b87a] text-[#080a0d] font-bold px-3 py-1.5 rounded-lg text-[10px] shadow-sm cursor-pointer transition flex items-center gap-1">
+            ➕ Alocar Produto
+          </button>
+        </div>
+      </div>
+
+      <!-- Conteúdo da Aba 1: Inventário & Sliders de Cotas -->
+      <div id="wh-tab-inventory-content" class="p-4 space-y-3 flex-1 overflow-y-auto custom-scrollbar">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+
+      <!-- Conteúdo da Aba 2: Radar de Fluxo Inbound / Outbound -->
+      <div id="wh-tab-flow-content" class="p-4 space-y-4 flex-1 overflow-y-auto custom-scrollbar hidden">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+
+      <!-- Conteúdo da Aba 3: Compras Portuárias & Modo Anticíclico -->
+      <div id="wh-tab-anticyclic-content" class="p-4 space-y-4 flex-1 overflow-y-auto custom-scrollbar hidden">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- P&D — MODAL DO CENTRO DE PESQUISA & DESENVOLVIMENTO -->
+  <div id="rd-center-modal" class="fixed inset-0 z-[60] bg-black/75 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden flex flex-col max-h-[90vh] transition-all duration-200">
+      <!-- Header -->
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-5 py-3 flex items-center justify-between drag-handle">
+        <div class="flex items-center gap-2.5">
+          <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
+          <div class="w-8 h-8 rounded-xl bg-[#121620] border border-white/[0.08] flex items-center justify-center text-sm shadow-inner">🔬</div>
+          <div>
+            <h3 class="text-sm font-bold text-[#c9a86a]">Centro de Pesquisa & Desenvolvimento</h3>
+            <span id="rd-header-subtitle" class="text-[10px] text-[#94a3b8]">Carregando projetos...</span>
+          </div>
+        </div>
+        <button onclick="closeRDCenterModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+
+      <!-- Orçamento Total & Navegação de Abas -->
+      <div class="bg-[#080a0d] border-b border-white/[0.08] px-5 py-2 flex items-center justify-between text-xs font-mono flex-wrap gap-2">
+        <div class="flex items-center gap-1.5">
+          <button id="rd-tab-projects-btn" onclick="switchRDTab('projects')"
+            class="px-2.5 py-1 rounded-lg font-bold bg-[#c9a86a] text-[#080a0d] border border-[#c9a86a] shadow-sm text-[10px] cursor-pointer">
+            🔬 Projetos Ativos
+          </button>
+          <button id="rd-tab-techtree-btn" onclick="switchRDTab('techtree')"
+            class="px-2.5 py-1 rounded-lg font-bold bg-[#0b0e14] hover:bg-white/[0.05] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] text-[10px] cursor-pointer">
+            🧬 Árvore Tecnológica
+          </button>
+          <button id="rd-tab-market-btn" onclick="switchRDTab('market')"
+            class="px-2.5 py-1 rounded-lg font-bold bg-[#0b0e14] hover:bg-white/[0.05] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] text-[10px] cursor-pointer">
+            📜 Mercado de Patentes
+          </button>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="hidden sm:flex items-center gap-1 text-[11px]">
+            <span class="text-[#94a3b8]">Orçamento:</span>
+            <span id="rd-total-budget-display" class="text-[#c9a86a] font-bold">$0 / mês</span>
+          </div>
+          <button onclick="openRDNewProjectModal()"
+            class="bg-[#c9a86a] hover:bg-[#d8b87a] text-[#080a0d] font-bold px-3 py-1 rounded-lg text-[10px] shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+            ➕ Novo Projeto
+          </button>
+        </div>
+      </div>
+
+      <!-- Conteúdo da Aba 1: Lista de Projetos Ativos -->
+      <div id="rd-projects-list" class="p-4 space-y-3 flex-1 overflow-y-auto custom-scrollbar">
+        <p class="text-xs text-slate-500 text-center py-8 font-mono">Nenhum projeto de pesquisa ativo.<br>Clique em "Novo Projeto" para iniciar.</p>
+      </div>
+
+      <!-- Conteúdo da Aba 2: Árvore Tecnológica embutida -->
+      <div id="rd-techtree-list" class="p-4 space-y-3 flex-1 overflow-y-auto custom-scrollbar hidden">
+        <div id="rd-embedded-tech-tree" class="space-y-3 font-mono"></div>
+      </div>
+
+      <!-- Conteúdo da Aba 3: Mercado de Patentes & Compra de Tecnologia -->
+      <div id="rd-market-list" class="p-4 space-y-3 flex-1 overflow-y-auto custom-scrollbar hidden">
+        <p class="text-xs text-slate-500 text-center py-8 font-mono">Carregando tecnologias do mercado...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- P&D — MODAL DEDICADO DA ÁRVORE TECNOLÓGICA (TECH TREE) -->
+  <div id="tech-tree-modal" class="fixed inset-0 z-[62] bg-black/80 backdrop-blur-md flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-4xl mx-4 overflow-hidden flex flex-col max-h-[92vh] font-mono transition-all">
+      <!-- Header -->
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-5 py-3 flex items-center justify-between drag-handle">
+        <div class="flex items-center gap-3">
+          <span class="drag-grip-icon text-slate-500" title="Arrastar Janela">⋮⋮</span>
+          <div class="w-9 h-9 rounded-xl bg-[#121620] border border-white/[0.08] flex items-center justify-center text-lg shadow-inner">🧬</div>
+          <div>
+            <h3 class="text-sm font-bold text-[#c9a86a] flex items-center gap-2">
+              Árvore Tecnológica & P&D Industrial
+              <span id="tech-tree-unlocked-count" class="text-[10px] bg-[#c9a86a]/15 text-[#c9a86a] px-2 py-0.5 rounded-full border border-[#c9a86a]/30">0/0 Desbloqueadas</span>
+            </h3>
+            <span class="text-[10px] text-[#94a3b8]">Pesquise insumos e tecnologias intermediárias para desbloquear produtos avançados</span>
+          </div>
+        </div>
+        <button onclick="closeTechTreeModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center cursor-pointer transition border border-white/[0.08]">✕</button>
+      </div>
+
+      <!-- Filtros de Tier & Categorias -->
+      <div class="bg-[#080a0d] border-b border-white/[0.06] px-5 py-2.5 flex items-center justify-between flex-wrap gap-2 text-xs">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-[10px] text-[#94a3b8] font-bold mr-1">Tiers:</span>
+          <button id="tt-filter-all" onclick="filterTechTree('all')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-[#c9a86a]/20 text-[#c9a86a] border border-[#c9a86a]/50 shadow-sm cursor-pointer">Todos</button>
+          <button id="tt-filter-0" onclick="filterTechTree('0')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-[#121620] hover:bg-white/[0.04] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] cursor-pointer">Tier 0 (Extração)</button>
+          <button id="tt-filter-1" onclick="filterTechTree('1')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-[#121620] hover:bg-white/[0.04] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] cursor-pointer">Tier 1 (Insumos)</button>
+          <button id="tt-filter-2" onclick="filterTechTree('2')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-[#121620] hover:bg-white/[0.04] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] cursor-pointer">Tier 2 (Bens Básicos)</button>
+          <button id="tt-filter-3" onclick="filterTechTree('3')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-[#121620] hover:bg-white/[0.04] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] cursor-pointer">Tier 3 (Automotivo & Avançado)</button>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="text" id="tt-search-input" oninput="renderTechTree()" placeholder="Buscar tecnologia..."
+            class="bg-[#121620] border border-white/[0.08] rounded-lg px-2.5 py-1 text-[#f1f5f9] text-xs focus:outline-none focus:border-[#c9a86a]/60 w-44">
+        </div>
+      </div>
+
+      <!-- Grid de Tecnologias -->
+      <div id="tech-tree-grid" class="p-4 space-y-4 flex-1 overflow-y-auto custom-scrollbar">
+        <!-- Renderizado dinamicamente por renderTechTree() -->
+      </div>
+    </div>
+  </div>
+
+  <!-- P&D — WIZARD DE NOVO PROJETO (MODAL INTELIGENTE) -->
+  <div id="rd-new-project-modal" class="fixed inset-0 z-[65] bg-black/75 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-xl mx-4 max-h-[92vh] flex flex-col overflow-hidden">
+      <!-- Header -->
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-5 py-3 flex items-center justify-between shrink-0">
+        <div>
+          <h3 class="text-sm font-bold text-[#c9a86a] flex items-center gap-2">⚗️ Iniciar Projeto de Pesquisa (P&D)</h3>
+          <span id="rd-wizard-slots-info" class="text-[10px] text-[#94a3b8] block mt-0.5">Bancadas Livres: 4/4</span>
+        </div>
+        <button onclick="closeRDNewProjectModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+
+      <!-- Corpo Scrollável -->
+      <div class="p-5 space-y-3.5 font-mono text-xs overflow-y-auto max-h-[calc(92vh-115px)] pr-2 custom-scrollbar bg-[#080a0d]">
+        <!-- Seleção de Produto Inteligente -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-slate-300 font-bold flex items-center gap-1.5">
+              <span>1. Selecionar Produto para P&D:</span>
+              <span id="rd-wizard-selected-prod-title" class="text-[#c9a86a] font-normal">--</span>
+            </label>
+            <span id="rd-product-category-badge" class="text-[10px] text-[#c9a86a] px-2 py-0.5 rounded bg-[#c9a86a]/10 border border-[#c9a86a]/30 hidden"></span>
+          </div>
+
+          <!-- Barra de Busca Instantânea -->
+          <div class="relative">
+            <input type="text" id="rd-wizard-search-input" oninput="onRDWizardSearchInput(this.value)" placeholder="🔍 Buscar por nome, produto ou categoria..."
+              class="w-full bg-[#0b0e14] border border-white/[0.08] focus:border-[#c9a86a]/60 rounded-xl px-3 py-2 text-slate-200 placeholder-slate-500 text-xs focus:outline-none transition pl-8">
+            <span class="absolute left-2.5 top-2 text-slate-500 text-xs">🔍</span>
+            <button type="button" id="rd-wizard-clear-search-btn" onclick="clearRDWizardSearch()" class="absolute right-2.5 top-2 text-slate-500 hover:text-slate-300 text-xs hidden">✕</button>
+          </div>
+
+          <!-- Chips de Filtros Rápidos (Escopo & Categorias) -->
+          <div class="flex items-center gap-1 overflow-x-auto pb-1 custom-scrollbar text-[10px]" id="rd-wizard-filter-chips">
+            <button type="button" onclick="setRDWizardFilter('scope', 'all')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#c9a86a] text-[#080a0d] border-[#c9a86a] shadow-sm" data-filter="all">Todos</button>
+            <button type="button" onclick="setRDWizardFilter('scope', 'manufacturing')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#0b0e14] text-slate-400 border-white/[0.08] hover:text-white" data-filter="manufacturing">🏭 Minha Produção</button>
+            <button type="button" onclick="setRDWizardFilter('scope', 'selling')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#0b0e14] text-slate-400 border-white/[0.08] hover:text-white" data-filter="selling">🏪 Meu Varejo</button>
+            <button type="button" onclick="setRDWizardFilter('scope', 'researching')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#0b0e14] text-slate-400 border-white/[0.08] hover:text-white" data-filter="researching">🔬 Em Pesquisa</button>
+            <span class="text-slate-600 px-0.5">|</span>
+            <button type="button" onclick="setRDWizardFilter('category', 'Agro')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#0b0e14] text-slate-400 border-white/[0.08] hover:text-white" data-filter="Agro">🌾 Agro/Alimentos</button>
+            <button type="button" onclick="setRDWizardFilter('category', 'Farma')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#0b0e14] text-slate-400 border-white/[0.08] hover:text-white" data-filter="Farma">🧪 Farma/Química</button>
+            <button type="button" onclick="setRDWizardFilter('category', 'Industria')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#0b0e14] text-slate-400 border-white/[0.08] hover:text-white" data-filter="Industria">⚙️ Indústria</button>
+            <button type="button" onclick="setRDWizardFilter('category', 'Consumo')" class="rd-filter-chip px-2.5 py-1 rounded-lg font-bold border transition shrink-0 bg-[#0b0e14] text-slate-400 border-white/[0.08] hover:text-white" data-filter="Consumo">✨ Consumo/Tech</button>
+          </div>
+
+          <!-- Container de Cards Clicáveis dos Produtos -->
+          <div id="rd-wizard-products-list" class="max-h-44 overflow-y-auto space-y-1.5 p-1 bg-[#0b0e14] rounded-xl border border-white/[0.08] custom-scrollbar">
+            <!-- Renderizado via renderRDWizardProductList() -->
+          </div>
+
+          <!-- Input Oculto de Controle para manter compatibilidade universal -->
+          <input type="hidden" id="rd-product-select" value="">
+        </div>
+
+        <!-- Card de Destaque Visual de Qualidade (QR Atual vs Alvo) -->
+        <div id="rd-quality-hero-card" class="bg-gradient-to-r from-amber-950/30 via-[#0d1017] to-amber-950/20 p-3.5 rounded-xl border border-[#c9a86a]/30 shadow-inner flex items-center justify-between">
+          <div class="text-center flex-1">
+            <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">Qualidade Inicial</span>
+            <div class="flex items-baseline justify-center gap-1 mt-0.5">
+              <span id="rd-hero-current-qr" class="text-2xl font-extrabold text-amber-400 font-mono">50</span>
+              <span class="text-[10px] text-slate-500 font-mono">/ 100</span>
+            </div>
+            <span id="rd-hero-current-status" class="text-[9px] text-amber-300 font-medium">Padrão Inicial</span>
+          </div>
+
+          <div class="px-2 flex flex-col items-center justify-center shrink-0">
+            <div class="w-7 h-7 rounded-full bg-[#c9a86a]/15 border border-[#c9a86a]/40 flex items-center justify-center text-[#c9a86a] font-bold text-xs shadow">➔</div>
+            <span id="rd-hero-qr-gain-badge" class="text-[9px] text-emerald-400 font-bold font-mono mt-0.5">+30 pts</span>
+          </div>
+
+          <div class="text-center flex-1">
+            <span class="text-[9px] text-[#c9a86a] font-bold uppercase tracking-wider block">Qualidade Alvo</span>
+            <div class="flex items-baseline justify-center gap-1 mt-0.5">
+              <span id="rd-hero-target-qr" class="text-2xl font-extrabold text-[#c9a86a] font-mono">80</span>
+              <span class="text-[10px] text-[#c9a86a]/60 font-mono">/ 100</span>
+            </div>
+            <span id="rd-hero-target-status" class="text-[9px] text-[#c9a86a] font-medium">Grau Superior</span>
+          </div>
+        </div>
+
+        <!-- Alocação de Bancadas de Laboratório -->
+        <div>
+          <label class="text-slate-400 block mb-1">2. Bancadas Laboratoriais Dedicadas:</label>
+          <div class="flex items-center gap-1.5" id="rd-labs-count-selector">
+            <button type="button" onclick="setRDLabsCount(1)" id="rd-lab-btn-1" class="flex-1 py-1.5 rounded-lg bg-[#c9a86a] text-[#080a0d] font-bold border border-[#c9a86a] text-[11px] cursor-pointer shadow-sm">1 Lab</button>
+            <button type="button" onclick="setRDLabsCount(2)" id="rd-lab-btn-2" class="flex-1 py-1.5 rounded-lg bg-[#0b0e14] text-slate-400 border border-white/[0.08] text-[11px] cursor-pointer hover:text-white">2 Labs</button>
+            <button type="button" onclick="setRDLabsCount(3)" id="rd-lab-btn-3" class="flex-1 py-1.5 rounded-lg bg-[#0b0e14] text-slate-400 border border-white/[0.08] text-[11px] cursor-pointer hover:text-white">3 Labs</button>
+            <button type="button" onclick="setRDLabsCount(4)" id="rd-lab-btn-4" class="flex-1 py-1.5 rounded-lg bg-[#0b0e14] text-slate-400 border border-white/[0.08] text-[11px] cursor-pointer hover:text-white">4 Labs</button>
+          </div>
+          <p class="text-[9px] text-slate-500 mt-1">Alocar mais bancadas no mesmo produto acelera proporcionalmente a taxa de avanço mensal.</p>
+        </div>
+
+        <!-- QR Alvo -->
+        <div>
+          <label class="text-slate-400 block mb-1">3. QR Alvo: <span id="rd-target-qr-display" class="text-[#c9a86a] font-bold">80</span></label>
+          <input type="range" id="rd-target-qr-slider" min="60" max="100" step="1" value="80"
+            oninput="updateRDWizardPreview()"
+            class="w-full accent-[#c9a86a] cursor-pointer">
+          <div class="flex justify-between text-[9px] text-slate-600 mt-0.5"><span>QR 60</span><span>QR 80</span><span>QR 100</span></div>
+        </div>
+
+        <!-- Verba Mensal -->
+        <div>
+          <label class="text-slate-400 block mb-1">4. Verba Mensal de Pesquisa:</label>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500">$</span>
+            <input type="number" id="rd-budget-input" min="0" step="500" value="5000"
+              oninput="updateRDWizardPreview()"
+              class="flex-1 bg-[#0b0e14] border border-white/[0.08] rounded-lg px-3 py-2 text-emerald-400 font-bold text-xs focus:outline-none focus:border-[#c9a86a]/60">
+            <span class="text-slate-500 text-[10px]">/mês</span>
+          </div>
+
+          <!-- Caixa Explicativa do Custo da Equipe Científica -->
+          <div id="rd-budget-status-box" class="bg-[#0b0e14] p-2.5 rounded-lg border border-white/[0.08] text-[10px] space-y-1 mt-2">
+            <div class="flex justify-between text-slate-400"><span>Custo de Manutenção da Equipe:</span><strong id="rd-team-cost-display" class="text-slate-200">$0/mês</strong></div>
+            <div class="flex justify-between text-slate-400"><span>Verba Extra de Aceleração:</span><strong id="rd-extra-budget-display" class="text-emerald-400">+$0/mês</strong></div>
+            <div id="rd-budget-warning-msg" class="text-amber-400 text-[9px] pt-1 border-t border-white/[0.06] hidden">
+              ℹ️ A verba mensal está abaixo do custo mínimo da equipe. Cientistas precisam de verba suficiente para operar instrumentos e gerar avanço mensal.
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview / ETA -->
+        <div id="rd-wizard-preview" class="bg-[#0b0e14] border border-white/[0.08] rounded-xl p-3 space-y-1 text-[11px] hidden">
+          <div class="flex justify-between"><span class="text-slate-400">Progresso atual do produto:</span><span id="rd-prev-current-qr" class="text-amber-300 font-bold">--</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Ganho estimado / mês:</span><span id="rd-prev-gain" class="text-emerald-400 font-bold">--</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Tempo Estimado (ETA):</span><span id="rd-prev-eta" class="text-[#c9a86a] font-bold">--</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Taxa de Instrumentação (Setup Inicial):</span><span id="rd-prev-setup-cost" class="text-amber-400 font-bold">--</span></div>
+          <div class="flex justify-between border-t border-white/[0.08] pt-1 mt-1"><span class="text-slate-400">Custo Total Estimado (Setup + Mensalidades):</span><span id="rd-prev-total-cost" class="text-slate-100 font-bold">--</span></div>
+        </div>
+
+        <!-- 5. CALCULADORA DE RETORNO & PAYBACK DE P&D (ROI) -->
+        <div id="rd-roi-calculator-box" class="bg-[#0b0e14] p-3.5 rounded-xl border border-white/[0.08] space-y-2 text-[10px] hidden font-mono">
+          <div class="flex items-center justify-between border-b border-white/[0.08] pb-1.5">
+            <span class="font-bold text-[#c9a86a] flex items-center gap-1.5">
+              <span>📈</span> Calculadora de Retorno & Payback
+            </span>
+            <span id="rd-roi-verdict-badge" class="text-[9px] px-1.5 py-0.2 rounded font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">Alta Escala</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-slate-300">
+            <div>Volume na Rede: <strong id="rd-calc-volume" class="text-slate-100">0 un/mês</strong></div>
+            <div>Lojas Ativas: <strong id="rd-calc-stores" class="text-sky-300">0 filiais</strong></div>
+            <div>Ganho Mensal Est.: <strong id="rd-calc-gain" class="text-emerald-400">+$0/mês</strong></div>
+            <div>Payback do P&D: <strong id="rd-calc-payback" class="text-amber-300">0 meses</strong></div>
+          </div>
+
+          <div id="rd-calc-explanation" class="text-[9px] text-slate-400 bg-[#080a0d] p-2 rounded-lg border border-white/[0.08] leading-relaxed">
+            Calculando viabilidade comercial da patente com base no volume da rede...
+          </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="flex gap-2 pt-1">
+          <button onclick="closeRDNewProjectModal()" class="flex-1 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 font-bold text-xs border border-white/[0.08] cursor-pointer transition">Cancelar</button>
+          <button id="rd-start-btn" onclick="startRDProject()" disabled
+            class="flex-1 py-2 rounded-xl bg-[#c9a86a] hover:bg-[#d8b87a] text-[#080a0d] font-bold text-xs shadow-sm cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition">
+            ✅ Iniciar Pesquisa
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DA DIRETORIA EXECUTIVA & CONSELHEIRO INTELIGENTE (CFO, COO & CMO) -->
+  <div id="executive-board-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="bg-[#0d1017] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[92vh] flex flex-col overflow-hidden font-mono text-xs">
+      <!-- Header -->
+      <div class="bg-[#060809] border-b border-white/[0.08] px-5 py-3 flex items-center justify-between shrink-0 drag-handle">
+        <div class="flex items-center gap-2.5">
+          <span class="drag-grip-icon text-slate-600 font-mono" title="Arrastar Janela">⋮⋮</span>
+          <div class="w-8 h-8 rounded-lg bg-[#c9a86a]/15 border border-[#c9a86a]/30 flex items-center justify-center text-base">👔</div>
+          <div>
+            <h3 class="text-sm font-bold text-[#e6edf3] flex items-center gap-2">
+              Diretoria Executiva & Inteligência
+            </h3>
+            <span class="text-[10px] text-slate-400 block font-mono">Briefing Estratégico · CFO, COO & CMO</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <!-- Seletor de Verbosidade -->
+          <div class="flex items-center bg-[#0d1017] border border-white/[0.08] rounded-lg p-0.5 text-[9px] gap-0.5">
+            <button type="button" onclick="setAdvisorVerbosity('novato')" id="btn-adv-mode-novato" class="px-2 py-0.5 rounded font-bold transition bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/30" title="Explicações detalhadas e contexto educativo">Novato</button>
+            <button type="button" onclick="setAdvisorVerbosity('expert')" id="btn-adv-mode-expert" class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 border border-transparent transition" title="Resumido e focado em números/causa-raiz">Expert</button>
+            <button type="button" onclick="setAdvisorVerbosity('silencioso')" id="btn-adv-mode-silencioso" class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 border border-transparent transition" title="Apenas alertas críticos de falência">Silencioso</button>
+          </div>
+          <button onclick="toggleExecutiveBoardModal()" class="w-7 h-7 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-slate-400 hover:text-slate-200 border border-white/[0.08] text-xs font-bold flex items-center justify-center cursor-pointer transition">✕</button>
+        </div>
+      </div>
+
+      <!-- Corpo com Scroll -->
+      <div class="p-5 space-y-4 overflow-y-auto max-h-[calc(92vh-120px)] custom-scrollbar">
+        <!-- 1. PULSO DE SAÚDE CORPORATIVA (6 SEMÁFOROS) -->
+        <div class="bg-[#060809] p-3.5 rounded-xl border border-white/[0.06] space-y-2.5">
+          <div class="flex items-center justify-between border-b border-white/[0.06] pb-2">
+            <span class="font-bold text-[#e6edf3] flex items-center gap-1.5 font-mono">
+              <span>🩺</span> Pulso de Saúde Corporativa
+            </span>
+            <span id="advisor-health-score-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-mono">Índice: 85/100 (Saudável)</span>
+          </div>
+
+          <!-- Grid dos 6 Semáforos -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="advisor-pulse-grid">
+            <!-- Renderizado dinamicamente via renderExecutiveBoardModal() -->
+          </div>
+        </div>
+
+        <!-- 2. NAVEGAÇÃO DE ABAS (PERSONAS & HISTÓRICO) -->
+        <div class="flex items-center justify-between border-b border-white/[0.06] pb-1 text-[11px]">
+          <div class="flex items-center gap-1" id="advisor-tab-chips">
+            <button type="button" onclick="setAdvisorActiveTab('all')" class="adv-tab-btn px-2.5 py-1 rounded-lg font-bold transition bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/30" data-tab="all">🏢 Todos</button>
+            <button type="button" onclick="setAdvisorActiveTab('CFO')" class="adv-tab-btn px-2.5 py-1 rounded-lg font-bold transition bg-white/[0.03] text-slate-400 border border-white/[0.06] hover:text-slate-200" data-tab="CFO">💼 CFO</button>
+            <button type="button" onclick="setAdvisorActiveTab('COO')" class="adv-tab-btn px-2.5 py-1 rounded-lg font-bold transition bg-white/[0.03] text-slate-400 border border-white/[0.06] hover:text-slate-200" data-tab="COO">🚚 COO</button>
+            <button type="button" onclick="setAdvisorActiveTab('CMO')" class="adv-tab-btn px-2.5 py-1 rounded-lg font-bold transition bg-white/[0.03] text-slate-400 border border-white/[0.06] hover:text-slate-200" data-tab="CMO">📈 CMO</button>
+          </div>
+          <button type="button" onclick="setAdvisorActiveTab('history')" class="adv-tab-btn text-[10px] text-slate-400 hover:text-[#c9a86a] transition underline cursor-pointer" data-tab="history">
+            📜 Histórico de Resoluções
+          </button>
+        </div>
+
+        <!-- 3. FEED DE ALERTAS & RECOMENDAÇÕES DA DIRETORIA -->
+        <div id="advisor-feed-container" class="space-y-2.5">
+          <!-- Renderizado dinamicamente -->
+        </div>
+      </div>
+
+      <!-- Footer com Botão de Ação Rápida -->
+      <div class="bg-[#060809] px-5 py-2.5 border-t border-white/[0.06] flex items-center justify-between shrink-0 text-[10px] text-slate-500 font-mono">
+        <span>Dica: Clique nos botões de ação para navegar diretamente ao problema.</span>
+        <button type="button" onclick="refreshExecutiveBoard()" class="px-3 py-1 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-[#e6edf3] font-bold border border-white/[0.08] cursor-pointer transition font-mono">
+          🔄 Reavaliar Operação
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL 8: CENTRAL DE MÍDIA & MARKETING                                   -->
+  <!-- ======================================================================= -->
+  <div id="marketing-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden font-mono">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 id="marketing-modal-title" class="text-sm font-bold text-[#c9a86a] flex items-center gap-2">
+            <span>📢 Central de Mídia & Publicidade</span>
+          </h2>
+          <p id="marketing-modal-subtitle" class="text-xs text-[#94a3b8] font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closeMarketingModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="bg-[#121620] p-3.5 rounded-xl border border-white/[0.06] flex flex-wrap items-center justify-between text-xs font-mono gap-3">
+          <div>
+            <span class="text-[#94a3b8] block text-[10px]">Contratos Ativos:</span>
+            <span id="mkt-summary-contracts" class="text-[#c9a86a] font-bold text-sm">0 campanhas</span>
+          </div>
+          <div>
+            <span class="text-[#94a3b8] block text-[10px]">Custo Mensal de Mídia:</span>
+            <span id="mkt-summary-monthly-cost" class="text-rose-400 font-bold text-sm">$0.00/mês</span>
+          </div>
+          <div>
+            <span class="text-[#94a3b8] block text-[10px]">Débito Diário na DRE:</span>
+            <span id="mkt-summary-daily-cost" class="text-amber-400 font-bold text-sm">$0.00/dia</span>
+          </div>
+        </div>
+
+        <div id="media-outlets-list" class="space-y-3 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
+
+        <div class="pt-3 border-t border-white/[0.06] flex justify-end">
+          <button onclick="closeMarketingModal()" class="px-5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-mono transition cursor-pointer">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL: ENCICLOPÉDIA CORPORATIVA & WIKI INTERATIVA                       -->
+  <!-- ======================================================================= -->
+  <div id="encyclopedia-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[65] flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-5xl h-[88vh] mx-4 flex flex-col overflow-hidden font-mono">
+      <!-- Header com Drag Handle e Título -->
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-5 py-3 flex items-center justify-between shrink-0 drag-handle">
+        <div class="flex items-center gap-3">
+          <span class="drag-grip-icon text-slate-500 font-mono text-sm" title="Arrastar">⋮⋮</span>
+          <div class="flex items-center gap-2">
+            <span class="text-lg">📖</span>
+            <div>
+              <h2 class="text-sm font-bold text-[#c9a86a]">Enciclopédia Corporativa OIKONOMIA</h2>
+              <p class="text-[10px] text-[#94a3b8] font-mono">Guia de Produção, Comércio, Cadeias de Suprimento & Geografia</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="wiki-history-back" onclick="encyclopediaHistoryBack()" class="px-2 py-1 bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] rounded text-xs font-mono disabled:opacity-40 disabled:cursor-not-allowed transition" title="Voltar (Histórico)" disabled>◄ Voltar</button>
+          <button id="wiki-history-forward" onclick="encyclopediaHistoryForward()" class="px-2 py-1 bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] border border-white/[0.08] rounded text-xs font-mono disabled:opacity-40 disabled:cursor-not-allowed transition" title="Avançar (Histórico)" disabled>Avançar ►</button>
+          <button onclick="closeEncyclopediaModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+        </div>
+      </div>
+
+      <!-- Barra de Busca & Navegação por Abas -->
+      <div class="bg-[#080a0d] px-5 py-2.5 border-b border-white/[0.06] flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <!-- Abas -->
+        <div class="flex items-center gap-1 overflow-x-auto custom-scrollbar text-xs font-mono">
+          <button onclick="switchEncyclopediaTab('products')" id="wiki-tab-products" class="px-3 py-1.5 rounded-lg font-bold transition bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/40 shadow-sm">📦 Produtos</button>
+          <button onclick="switchEncyclopediaTab('factories')" id="wiki-tab-factories" class="px-3 py-1.5 rounded-lg text-[#94a3b8] hover:text-[#f1f5f9] hover:bg-white/[0.04] transition border border-transparent">🏭 Fábricas</button>
+          <button onclick="switchEncyclopediaTab('stores')" id="wiki-tab-stores" class="px-3 py-1.5 rounded-lg text-[#94a3b8] hover:text-[#f1f5f9] hover:bg-white/[0.04] transition border border-transparent">🏪 Varejo</button>
+          <button onclick="switchEncyclopediaTab('resources')" id="wiki-tab-resources" class="px-3 py-1.5 rounded-lg text-[#94a3b8] hover:text-[#f1f5f9] hover:bg-white/[0.04] transition border border-transparent">🌾 Fazendas & Minas</button>
+          <button onclick="switchEncyclopediaTab('cities')" id="wiki-tab-cities" class="px-3 py-1.5 rounded-lg text-[#94a3b8] hover:text-[#f1f5f9] hover:bg-white/[0.04] transition border border-transparent">🏙️ Cidades & Portos</button>
+          <button onclick="switchEncyclopediaTab('calculator')" id="wiki-tab-calculator" class="px-3 py-1.5 rounded-lg text-[#94a3b8] hover:text-[#f1f5f9] hover:bg-white/[0.04] transition border border-transparent">📐 Calculadora</button>
+          <button onclick="switchEncyclopediaTab('concepts')" id="wiki-tab-concepts" class="px-3 py-1.5 rounded-lg text-[#94a3b8] hover:text-[#f1f5f9] hover:bg-white/[0.04] transition border border-transparent">📚 Fórmulas</button>
+        </div>
+
+        <!-- Campo de Busca Rápida -->
+        <div class="relative min-w-[240px] flex-1 max-w-sm">
+          <input type="text" id="wiki-search-input" oninput="onEncyclopediaSearch(this.value)"
+            placeholder="🔍 Buscar produto, receita, mina..."
+            class="w-full bg-[#121620] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs text-[#f1f5f9] placeholder-[#94a3b8]/50 font-mono focus:border-[#c9a86a]/60 focus:outline-none">
+          <button onclick="clearEncyclopediaSearch()" id="wiki-search-clear" class="absolute right-2.5 top-2 text-xs text-[#94a3b8] hover:text-[#f1f5f9] hidden">✕</button>
+        </div>
+      </div>
+
+      <!-- Container do Conteúdo Dinâmico com Scroll -->
+      <div id="encyclopedia-content-container" class="flex-1 overflow-y-auto custom-scrollbar p-5 font-mono">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 10: ATIVAÇÃO DE LINHA DE MONTAGEM NA FÁBRICA                      -->
+  <!-- ======================================================================= -->
+  <div id="factory-recipe-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden flex flex-col max-h-[85vh] font-mono">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 flex items-center justify-between shrink-0">
+        <div>
+          <h2 class="text-sm font-bold text-[#c9a86a] flex items-center gap-2">⚙️ Ativar Linha de Montagem Industrial</h2>
+          <p class="text-xs text-[#94a3b8] font-mono mt-0.5">Selecione o produto intermediário ou manufaturado final a ser produzido nesta fábrica:</p>
+        </div>
+        <button onclick="closeFactoryRecipeModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+
+      <!-- Barra de Pesquisa e Filtros de Categoria -->
+      <div class="bg-[#080a0d] border-b border-white/[0.06] px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 shrink-0">
+        <div class="relative flex-1 min-w-[200px]">
+          <input id="factory-recipe-search-input" type="text" placeholder="🔍 Buscar receita, produto final ou insumo..." oninput="renderFactoryRecipesList()"
+            class="w-full bg-[#121620] border border-white/[0.08] rounded-xl px-3 py-1.5 text-xs text-[#f1f5f9] font-mono focus:outline-none focus:border-[#c9a86a]/60 placeholder-[#94a3b8]/50">
+        </div>
+        <div id="factory-recipe-category-tabs" class="flex items-center gap-1 overflow-x-auto text-[10px] font-mono">
+          <!-- Abas de categoria geradas dinamicamente -->
+        </div>
+      </div>
+
+      <div class="p-6 space-y-3 overflow-y-auto custom-scrollbar flex-1" id="factory-available-recipes-list"></div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->

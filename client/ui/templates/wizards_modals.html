@@ -1,0 +1,239 @@
+  <!-- MODAL 1: WIZARD DE ABERTURA DE LOJA ESPECIALIZADA                       -->
+  <!-- ======================================================================= -->
+  <div id="store-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-3xl mx-4 max-h-[90vh] flex flex-col overflow-hidden font-mono">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 shrink-0">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 id="modal-title" class="text-sm font-bold text-[#c9a86a]">Inaugurar Estabelecimento Comercial</h2>
+            <p id="modal-subtitle" class="text-xs text-[#94a3b8] font-mono mt-0.5"></p>
+          </div>
+          <button onclick="closeModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+        </div>
+        <div class="flex items-center gap-2 mt-3">
+          <div id="step-dot-1" class="w-2.5 h-2.5 rounded-full bg-[#c9a86a]"></div>
+          <div id="step-line"   class="flex-1 h-0.5 bg-white/[0.08]"><div id="step-line-fill" class="h-full bg-[#c9a86a] transition-all w-0"></div></div>
+          <div id="step-dot-2" class="w-2.5 h-2.5 rounded-full bg-white/[0.15]"></div>
+          <span id="step-label" class="text-[10px] font-mono text-[#94a3b8] ml-2">Etapa 1/2</span>
+        </div>
+      </div>
+
+      <div id="wizard-step1" class="p-6 flex flex-col flex-1 overflow-hidden min-h-0">
+        <p class="text-xs text-[#94a3b8] mb-3 font-mono shrink-0">Escolha o formato comercial de loja especializada para atender a este distrito:</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2.5 flex-1 overflow-y-auto custom-scrollbar pr-1" id="store-type-cards"></div>
+        <div class="flex justify-end mt-4 shrink-0">
+          <button onclick="advanceToStep2()" id="btn-to-step2" disabled class="px-5 py-2 rounded-xl bg-[#c9a86a] hover:bg-[#dfba76] text-[#080a0d] text-xs font-bold font-mono disabled:opacity-40 disabled:cursor-not-allowed transition shadow-md cursor-pointer">
+            Próximo: Escolher Produtos & Fornecedores →
+          </button>
+        </div>
+      </div>
+
+      <div id="wizard-step2" class="flex flex-col flex-1 overflow-hidden min-h-0 hidden">
+        <div id="cost-summary-bar" class="px-6 py-3 bg-[#080a0d] border-b border-white/[0.06] text-[11px] font-mono flex flex-wrap gap-3 items-center shrink-0"></div>
+        <div class="px-6 pt-3 pb-1 flex items-center justify-between gap-3 shrink-0">
+          <div id="category-tabs" class="flex gap-1 flex-wrap"></div>
+          <input type="text" id="prod-search-input" onkeyup="filterProductSelectorSearch(this.value)" placeholder="🔍 Buscar produto..." class="bg-[#121620] border border-white/[0.08] rounded-lg px-2.5 py-1 text-xs font-mono text-[#f1f5f9] focus:outline-none focus:border-[#c9a86a]/60 w-40">
+        </div>
+        <div id="product-list" class="px-6 py-3 flex-1 overflow-y-auto custom-scrollbar space-y-1.5 min-h-[160px]"></div>
+        <div class="px-6 py-4 border-t border-white/[0.06] flex items-center justify-between bg-[#080a0d] shrink-0">
+          <button onclick="backToStep1()" class="px-4 py-2 rounded-xl border border-white/[0.08] text-[#94a3b8] text-xs font-mono hover:border-white/[0.2] hover:text-[#f1f5f9] transition cursor-pointer">← Voltar</button>
+          <button onclick="confirmOpenStore()" id="btn-confirm-store" disabled class="px-6 py-2 rounded-xl bg-[#c9a86a] hover:bg-[#dfba76] text-[#080a0d] text-xs font-bold font-mono disabled:opacity-40 disabled:cursor-not-allowed transition shadow-md cursor-pointer">
+            Confirmar e Abrir Loja
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 2: WIZARD DE CONSTRUÇÃO DE MINA / RECURSO NATURAL                 -->
+  <!-- ======================================================================= -->
+  <div id="mine-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden font-mono">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-[#c9a86a] flex items-center gap-2">⛏️ Extração de Recursos Naturais & Mineração</h2>
+          <p id="mine-modal-subtitle" class="text-xs text-[#94a3b8] font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closeMineModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+      <div class="p-6 space-y-3">
+        <p class="text-xs text-[#94a3b8] font-mono">Construa minas e poços de extração para abastecer usinas siderúrgicas, petroquímicas e indústrias de base:</p>
+        <div id="mine-types-list" class="space-y-2 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 3: WIZARD DE CONSTRUÇÃO DE FAZENDA                                -->
+  <!-- ======================================================================= -->
+  <div id="farm-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden font-mono">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-[#c9a86a] flex items-center gap-2">🌾 Construir Propriedade Agropecuária</h2>
+          <p id="farm-modal-subtitle" class="text-xs text-[#94a3b8] font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closeFarmModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+      <div class="p-6 space-y-3">
+        <div class="flex items-center justify-between gap-3">
+          <p class="text-xs text-[#94a3b8] font-mono">Escolha o tipo de cultivo agrícola ou criação de animais para esta fazenda:</p>
+        </div>
+        <div>
+          <input type="text" id="farm-search-input" oninput="filterFarmTypes(this.value)" placeholder="🔍 Buscar tipo de fazenda, produto ou cultura (ex: Trigo, Leite, Gado, Silvicultura)..." class="w-full bg-[#121620] border border-white/[0.08] rounded-xl px-3 py-2 text-xs font-mono text-[#f1f5f9] focus:outline-none focus:border-[#c9a86a]/60 placeholder:text-[#94a3b8]/50 shadow-inner">
+        </div>
+        <div id="farm-types-list" class="space-y-2 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 4: WIZARD DE CONSTRUÇÃO DE FÁBRICA                                -->
+  <!-- ======================================================================= -->
+  <div id="factory-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden font-mono">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-[#c9a86a] flex items-center gap-2">🏭 Construir Complexo Fabril Industrial</h2>
+          <p id="factory-modal-subtitle" class="text-xs text-[#94a3b8] font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closeFactoryModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="bg-[#121620] p-3.5 rounded-xl border border-white/[0.08] text-xs font-mono flex items-center gap-4">
+          <div class="w-16 h-16 rounded-xl bg-[#0b0e14] border border-white/[0.08] p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
+            <img src="assets/industrial/factory_default.png" class="w-full h-full object-contain" onerror="this.outerHTML='🏭'">
+          </div>
+          <div class="space-y-1">
+            <div class="text-[#f1f5f9] font-bold text-sm">Complexo Fabril & Manufatura Industrial</div>
+            <div class="text-[#94a3b8]">Capacidade: <strong class="text-emerald-400">Até 4 Linhas de Montagem</strong></div>
+            <div class="text-[#94a3b8]">Custo de Obra: <strong class="text-rose-400 font-mono">$48,000.00</strong></div>
+          </div>
+        </div>
+        <p class="text-xs text-[#94a3b8] font-mono">Após a construção, ative receitas para produzir bens intermediários (Aço, Alumínio, Chips, Plástico, Tecidos) ou bens finais de consumo (Automóveis, Eletrônicos, Moda, Alimentos, Joias e Móveis).</p>
+        <div class="flex justify-end gap-2 pt-3 border-t border-white/[0.06]">
+          <button onclick="closeFactoryModal()" class="px-4 py-2 rounded-xl border border-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] hover:border-white/[0.2] text-xs font-mono transition cursor-pointer">Cancelar</button>
+          <button onclick="confirmBuildFactory()" id="btn-confirm-factory" class="px-5 py-2 rounded-xl bg-[#c9a86a] hover:bg-[#dfba76] text-[#080a0d] text-xs font-bold font-mono transition shadow-md cursor-pointer">
+            Confirmar Construção (-$48,000)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL: ALOCAR PRODUTO AO CENTRO DE DISTRIBUIÇÃO / ARMAZÉM               -->
+  <!-- ======================================================================= -->
+  <div id="warehouse-add-product-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-xl mx-4 overflow-hidden font-mono">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-[#c9a86a] flex items-center gap-2">📦 Alocar Produto no Armazém</h2>
+          <p id="warehouse-add-subtitle" class="text-xs text-[#94a3b8] font-mono mt-0.5">Selecione o produto ou matéria-prima para estocar nesta instalação</p>
+        </div>
+        <button onclick="closeAddWarehouseProductModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+      <div class="p-5 space-y-3">
+        <input type="text" id="warehouse-add-search-input" oninput="renderWarehouseAddProductList(this.value)" placeholder="🔍 Buscar insumo, grão, minério ou mercadoria (ex: Trigo, Frango, Aço, Chips)..." class="w-full bg-[#121620] border border-white/[0.08] rounded-xl px-3 py-2 text-xs font-mono text-[#f1f5f9] focus:outline-none focus:border-[#c9a86a]/60 placeholder:text-[#94a3b8]/50 shadow-inner">
+        <div id="warehouse-add-products-list" class="space-y-1.5 max-h-80 overflow-y-auto custom-scrollbar pr-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 5: INSPEÇÃO DO TERMINAL PORTUÁRIO                                 -->
+  <!-- ======================================================================= -->
+  <div id="port-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden font-mono">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 id="port-modal-title" class="text-sm font-bold text-[#c9a86a] flex items-center gap-2">⚓ Terminal Portuário</h2>
+          <p id="port-modal-subtitle" class="text-xs text-[#94a3b8] font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closePortModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+      <div class="p-6">
+        <p class="text-xs text-[#94a3b8] mb-3 font-mono">Remessas marítimas internacionais atracadas no cais disponíveis para compra no atacado:</p>
+        <div id="port-cargo-list" class="max-h-72 overflow-y-auto custom-scrollbar space-y-2 pr-1"></div>
+        <div class="mt-4 pt-3 border-t border-white/[0.06] flex justify-end">
+          <button onclick="closePortModal()" class="px-5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-mono transition cursor-pointer">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 6: SELETOR DE FORNECEDOR (PORTOS OU FÁBRICAS PRÓPRIAS)            -->
+  <!-- ======================================================================= -->
+  <div id="supplier-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden font-mono">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-5 py-3.5 flex items-center justify-between">
+        <div>
+          <h2 id="supplier-modal-title" class="text-xs font-bold text-[#c9a86a]">🔗 Selecionar Fornecedor</h2>
+          <p id="supplier-modal-subtitle" class="text-[11px] text-[#94a3b8] font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closeSupplierModal()" class="w-6 h-6 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+      <div class="p-5">
+        <p class="text-[11px] text-[#94a3b8] mb-3 font-mono">Escolha a origem do insumo. Fornecedores próprios da sua holding operam com custo fabril direto e zero margem de terceiros:</p>
+        <div id="supplier-options-list" class="space-y-2.5 max-h-96 overflow-y-auto custom-scrollbar pr-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 7: ADICIONAR PRODUTO À LOJA EXISTENTE                             -->
+  <!-- ======================================================================= -->
+  <div id="add-product-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden font-mono">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 id="add-prod-modal-title" class="text-sm font-bold text-[#c9a86a]">📦 Adicionar Produto às Gôndolas</h2>
+          <p id="add-prod-modal-subtitle" class="text-xs text-[#94a3b8] font-mono mt-0.5"></p>
+        </div>
+        <button onclick="closeAddProductModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+      <div class="p-5">
+        <div id="add-prod-category-tabs" class="flex gap-1 mb-3 border-b border-white/[0.06] pb-2 flex-wrap"></div>
+        <div id="add-prod-available-list" class="space-y-2 max-h-72 overflow-y-auto custom-scrollbar pr-1"></div>
+        <div class="mt-4 pt-3 border-t border-white/[0.06] flex justify-end">
+          <button onclick="closeAddProductModal()" class="px-5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-mono transition cursor-pointer">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL: CONFIRMAÇÃO ESTILIZADA DE EMPREENDIMENTO & AÇÕES                   -->
+  <!-- ======================================================================= -->
+  <div id="custom-confirm-modal" class="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-center justify-center hidden">
+    <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden flex flex-col font-mono animate-in fade-in zoom-in-95 duration-150">
+      <div class="bg-[#0d1017] border-b border-white/[0.08] px-5 py-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div id="confirm-modal-icon-badge" class="w-9 h-9 rounded-xl bg-[#121620] border border-white/[0.08] flex items-center justify-center text-lg shadow-inner">
+            <span id="confirm-modal-icon">🔬</span>
+          </div>
+          <div>
+            <h3 id="confirm-modal-title" class="text-sm font-bold text-[#c9a86a]">Confirmação de Empreendimento</h3>
+            <span id="confirm-modal-subtitle" class="text-[10px] text-[#94a3b8] block">Lote Urbano</span>
+          </div>
+        </div>
+        <button onclick="closeCustomConfirmModal(true)" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+      </div>
+      <div class="p-5 space-y-4">
+        <div id="confirm-modal-description" class="text-xs text-[#94a3b8] leading-relaxed"></div>
+        <div id="confirm-modal-details-grid" class="bg-[#121620] p-3.5 rounded-xl border border-white/[0.06] space-y-2 text-[11px]"></div>
+      </div>
+      <div class="p-4 bg-[#080a0d] border-t border-white/[0.06] flex items-center justify-end gap-2.5">
+        <button id="confirm-modal-cancel-btn" onclick="closeCustomConfirmModal(true)" class="px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold border border-white/[0.08] cursor-pointer transition">
+          Cancelar
+        </button>
+        <button id="confirm-modal-action-btn" onclick="executeCustomConfirmModal()" class="px-4 py-2 rounded-xl bg-[#c9a86a] hover:bg-[#dfba76] text-[#080a0d] text-xs font-bold shadow-md cursor-pointer transition flex items-center gap-1.5">
+          <span>Confirmar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
