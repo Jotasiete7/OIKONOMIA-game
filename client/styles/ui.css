@@ -1,0 +1,164 @@
+/* ==========================================================================
+   OIKONOMIA — UI & Componentes Globais (client/styles/ui.css)
+   Fase 7.0 J: Modularização dos estilos de interface, canvas e janelas
+   ========================================================================== */
+
+/* Escudo Crítico Anti-FOUC: previne vazamento de menus, modais e imagens antes do carregamento completo */
+.hidden {
+  display: none !important;
+}
+
+#loading-screen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: #020617 !important;
+  z-index: 99999 !important;
+}
+
+canvas {
+  image-rendering: auto;
+}
+
+/* Scrollbars customizadas elegantes */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Cards de Loja e Produtos */
+.store-type-card {
+  transition: all 0.15s ease;
+}
+
+.store-type-card:hover {
+  transform: translateY(-2px);
+}
+
+.product-card {
+  transition: all 0.1s ease;
+}
+
+.product-card:hover {
+  background-color: #1e293b;
+}
+
+.stock-bar-fill {
+  transition: width 0.3s ease;
+}
+
+@keyframes stockout-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.stockout-alert {
+  animation: stockout-pulse 0.8s infinite ease-in-out;
+}
+
+/* Ticker de Notícias Estilo Nasdaq / Diário Corporativo */
+@keyframes tickerScroll {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+.ticker-scroll-track {
+  width: max-content;
+  will-change: transform;
+  animation: tickerScroll 45s linear infinite;
+}
+
+.ticker-scroll-track:hover {
+  animation-play-state: paused;
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+}
+
+/* Janelas e painéis arrastáveis (Draggable Windows) */
+.draggable-panel {
+  touch-action: none;
+}
+
+.draggable-window {
+  touch-action: none;
+  max-height: calc(100vh - 24px);
+}
+
+.draggable-window .drag-handle,
+.drag-handle {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.drag-handle:active,
+.is-dragging .drag-handle {
+  cursor: grabbing !important;
+}
+
+.is-dragging {
+  transition: none !important;
+  user-select: none !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75) !important;
+}
+
+.drag-grip-icon {
+  opacity: 0.45;
+  transition: opacity 0.15s;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: -2px;
+  cursor: grab;
+}
+
+.drag-handle:hover .drag-grip-icon {
+  opacity: 0.95;
+}
+
+/* Responsividade adaptativa universal do Top HUD (1080p, Laptops 1366px, 1280px, Janelas F12) */
+#clock-date,
+#corp-cash,
+#month-profit,
+.telemetry-chip {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  flex-shrink: 0 !important;
+}
+
+@media (max-width: 1680px) {
+  .city-btn-name { display: none !important; }
+  .hud-btn-text { display: none !important; }
+  #hud-company-name, #hud-player-name { max-width: 80px; }
+}
+
+@media (max-width: 1366px) {
+  #hud-corp-badge { display: none !important; }
+  #month-profit-box { display: none !important; }
+}
+
+@media (max-width: 1024px) {
+  .lenses-text-label { display: none; }
+  #floating-lenses-bar { top: 4.6rem; transform: translateX(-50%) scale(0.85); }
+}
+
+@media (max-width: 768px) {
+  #floating-lenses-bar { display: none; }
+}
