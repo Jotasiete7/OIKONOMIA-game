@@ -183,6 +183,14 @@ import { AppLifecycle } from './app/lifecycle.js';
 // --- Fase 7.0 A: Assistentes de Construção, Gôndolas & Fornecedores ---
 import { ConstructionWizards, StoreWizard, SupplierPicker } from './ui/wizards/index.js';
 
+// --- Fase 7.0 I: Bootstrap & Inicialização da Engine ---
+import {
+  initInteractionState,
+  bindGlobalPanelMethods,
+  initMasterData,
+  bootEngine
+} from './app/bootstrap.js';
+
 // --- Fase 7.0 C: Grid Engine & Depósitos Geológicos ---
 import WorldGridEngine, {
   GRID_SIZE,
@@ -669,6 +677,22 @@ if (typeof window !== 'undefined') {
 
 // Notifica que todos os módulos foram carregados e vinculados com sucesso
 if (typeof window !== 'undefined') {
+  window.bootEngine = bootEngine;
+  window.initMasterData = initMasterData;
+  window.initInteractionState = initInteractionState;
+  window.bindGlobalPanelMethods = bindGlobalPanelMethods;
+
   window.__OIKO_MODULES_READY__ = true;
   window.dispatchEvent(new CustomEvent('oiko:ready'));
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        bootEngine();
+      });
+    } else {
+      bootEngine();
+    }
+  }
 }
+
