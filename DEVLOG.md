@@ -2,8 +2,8 @@
 
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
-> **Última Atualização:** 08 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.5 (bld.20260908.02)`  
+> **Última Atualização:** 11 de Setembro de 2026  
+> **Versão Oficial Corrente:** `v0.8.5 (bld.20260911.04)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -26,11 +26,11 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 - [x] **Redesign Visual do HUD & Menus (Terminal Executivo Obsidian & Gold - v0.8.5)**: TopBar contínua 44px, pílulas companheiras de navegação de cidades/lentes, dropdown Mais Opções balanceado, menu de pausa ESC e Diretoria Executiva integrados à identidade visual dark fintech / Bloomberg terminal.
 - [x] **Alinhamento Preciso de Coordenadas do Mouse & Minimapa HiDPI (v0.8.5)**: Unificação da instância singleton da câmera, remoção de 307 linhas de listeners legados e validação de 21.504 pontos de projeção isométrica.
 - [x] **Overhaul Visual Integral Obsidian & Emojis Semânticos (v0.8.5)**: Padronização de 14 modais e inspetores para o tema executivo obsidian e catálogo completo de emojis para 99 produtos sem fallbacks.
-- [ ] **Fase 7.0 Desacoplamento Total de Wizards & Grid Engine (Fim do Monolito index.html)**:
+- [x] **Fase 7.0 Desacoplamento Total de Wizards, Grid Engine & Telemetria (Fim do Monolito index.html)**:
   - [x] **Fase 7.0 A (Assistentes & Lojas)**: Extração de assistentes de construção (minas, fazendas, fábricas), gestão de lojas (2 etapas, nichos, prateleiras, compra imediata) e fornecedores para `client/ui/wizards/` (-1.466 linhas do monolito).
   - [x] **Fase 7.0 B (Marketing & Mídia)**: Extração da Central de Mídia & IBOPE para `client/ui/panels/marketing_panel.js` (-183 linhas adicionais).
   - [x] **Fase 7.0 C (Grid Engine & Depósitos Geológicos)**: Extração da matriz procedural (128x128), 7 depósitos geológicos, portos especializados, sparse index (`activeFacilitySet`) e rotinas de descarte/venda de instalações para `client/engine/world_grid.js` e `client/ui/panels/facility_panel.js` (-694 linhas adicionais, total acumulado: -2.343 linhas).
-  - [ ] **Fase 7.0 D (Simulador & HUD Telemetria)**: Extração do simulador "E se?" e instrumentação de debug/telemetria.
+  - [x] **Fase 7.0 D (Simulador & HUD Telemetria)**: Extração do simulador "E se?", painel de desenvolvedor F3, flight recorder F8, telemetria e bug replayer para `price_simulator_panel.js` e `dev_dashboard_panel.js` (-899 linhas adicionais, total acumulado: **-3.242 linhas**).
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
 - [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
 - [ ] **Fase 5 Mercado Financeiro, Ações & M&A**: Ações corporativas, IPO, distribuição de dividendos, participações cruzadas e aquisições hostis (*Hostile Takeovers*).
@@ -40,6 +40,30 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 21: Desacoplamento do Simulador "E se?", Dev Dashboard, Telemetria & Flight Recorder (Fase 7.0 D)
+- **Data:** 11/09/2026 — 19:15
+- **Versão Oficial:** `v0.8.5 (bld.20260911.04)` | **Save Schema:** `v0.8.2`
+- **Branch:** `main`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Módulo do Simulador de Precificação e Elasticidade "E se?" (`client/ui/panels/price_simulator_panel.js`):**
+   - Extraído cálculo de elasticidade preço/demanda, rating competitivo e projeções de market share com concorrência local.
+   - Encapsulados `priceSimTarget`, `openPriceSimulatorModal(x, y, prodId)`, `closePriceSimulatorModal()`, `updatePriceSimulatorLive()`, e `applyPriceSimulatorResult()`.
+   - Integração com `CoreMath` determinístico e ponte retrocompatível em `window.*`.
+2. **Módulo do Painel de Desenvolvedor, Telemetria e Flight Recorder (`client/ui/panels/dev_dashboard_panel.js`):**
+   - Buffer circular de 300 logs de diagnóstico em memória com formatação ISO e categorização por subsistema (`logDebug`, `clearDebugLogs`).
+   - Dev Dashboard (F3): Abas de diagnóstico, galeria de tiles e assets, telemetria de performance e comandos de Sandbox executivo (`devAddCash`, `devAdvanceMonth`, `devUnlockAllCities`, `devDumpGameState`, `copyDiagnosticReport`).
+   - Flight Recorder & Bug Reporter (F8): Captura instantânea de canvas em alta resolução com crop para payload de bug, listener de paste de prints da área de transferência, metadados de telemetria da holding e serialização/download de `.oiko` anexo.
+   - Bug Replayer: Injeção de saves de bug reports para reprodução e depuração rápida.
+3. **Ponte de Compatibilidade Global & Enxugamento do Monolito:**
+   - Redução de **899 linhas** em `client/index.html` (de 7.419 para 6.520 linhas).
+   - Total acumulado de redução na Fase 7.0: **-3.242 linhas** eliminadas do monolito (mais de 33% do código do arquivo original extraído com sucesso).
+   - Eliminação do bloco redundante de fallback de `updateUI()` em favor do singleton `window.HUDSystem.updateHUD()`.
+   - Validação de compilação Vite de produção (`npm run build`) em 841ms e testes E2E em Edge Headless (`tools/test_dev_and_simulator_e2e.cjs`) 100% aprovados.
 
 ---
 

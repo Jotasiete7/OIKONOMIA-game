@@ -160,6 +160,8 @@ import RDPanel from './ui/panels/rd_panel.js';
 import EncyclopediaPanel from './ui/panels/encyclopedia_panel.js';
 import FacilityPanel from './ui/panels/facility_panel.js';
 import MarketingPanel from './ui/panels/marketing_panel.js';
+import PriceSimulatorPanel from './ui/panels/price_simulator_panel.js';
+import DevDashboardPanel from './ui/panels/dev_dashboard_panel.js';
 
 // --- Fase 6.5: Input & Ciclo de Vida do Jogo ---
 import { KeyboardSystem } from './input/keyboard.js';
@@ -549,6 +551,43 @@ window.applyFarmFeedSupplierChange = (s, g) => SupplierPicker.applyFarmFeedSuppl
 window.disconnectFarmFeed = (x, y) => SupplierPicker.disconnectFarmFeed(x, y);
 window.openPortModal = (port) => SupplierPicker.openPortModal(port);
 window.closePortModal = () => SupplierPicker.closePortModal();
+
+// --- Fase 7.0 D: Simulador "E se?", Dev Dashboard & Telemetria ---
+window.PriceSimulatorPanel = PriceSimulatorPanel;
+window.openPriceSimulatorModal = (x, y, id) => PriceSimulatorPanel.openPriceSimulatorModal(x, y, id);
+window.closePriceSimulatorModal = () => PriceSimulatorPanel.closePriceSimulatorModal();
+window.updatePriceSimulatorLive = () => PriceSimulatorPanel.updatePriceSimulatorLive();
+window.applyPriceSimulatorResult = () => PriceSimulatorPanel.applyPriceSimulatorResult();
+
+window.DevDashboardPanel = DevDashboardPanel;
+window.systemDebugLogs = DevDashboardPanel.systemDebugLogs;
+window.logDebug = (msg, cat) => DevDashboardPanel.logDebug(msg, cat);
+window.clearDebugLogs = () => DevDashboardPanel.clearDebugLogs();
+window.toggleDevDashboard = () => DevDashboardPanel.toggleDevDashboard();
+window.openDevDashboard = () => DevDashboardPanel.openDevDashboard();
+window.closeDevDashboard = () => DevDashboardPanel.closeDevDashboard();
+window.switchDevTab = (tab) => DevDashboardPanel.switchDevTab(tab);
+window.renderDevAssetsGallery = () => DevDashboardPanel.renderDevAssetsGallery();
+window.copyDiagnosticReport = () => DevDashboardPanel.copyDiagnosticReport();
+window.showCopyFeedback = () => DevDashboardPanel.showCopyFeedback();
+window.devAddCash = (amt) => DevDashboardPanel.devAddCash(amt);
+window.devAdvanceMonth = () => DevDashboardPanel.devAdvanceMonth();
+window.devUnlockAllCities = () => DevDashboardPanel.devUnlockAllCities();
+window.devDumpGameState = () => DevDashboardPanel.devDumpGameState();
+window.toggleBugReportModal = () => DevDashboardPanel.toggleBugReportModal();
+window.openBugReportModal = () => DevDashboardPanel.openBugReportModal();
+window.closeBugReportModal = () => DevDashboardPanel.closeBugReportModal();
+window.onBugReportCategoryChange = () => DevDashboardPanel.onBugReportCategoryChange();
+window.retakeScreenshotFromGame = () => DevDashboardPanel.retakeScreenshotFromGame();
+window.refreshBugReportScreenshot = () => DevDashboardPanel.refreshBugReportScreenshot();
+window.optimizePastedImage = (url, cb) => DevDashboardPanel.optimizePastedImage(url, cb);
+window.updateBugReportTechSummary = () => DevDashboardPanel.updateBugReportTechSummary();
+window.prepareCurrentReportPayload = () => DevDashboardPanel.prepareCurrentReportPayload();
+window.submitBugReport = () => DevDashboardPanel.submitBugReport();
+window.copyBugReportToClipboard = () => DevDashboardPanel.copyBugReportToClipboard();
+window.downloadBugReportFile = () => DevDashboardPanel.downloadBugReportFile();
+window.clearReplayerInput = () => DevDashboardPanel.clearReplayerInput();
+window.loadReportSaveFromReplayer = () => DevDashboardPanel.loadReportSaveFromReplayer();
 
 // Proxies reativos globais vinculados a GameState (Single Source of Truth)
 const stateProxyProps = [

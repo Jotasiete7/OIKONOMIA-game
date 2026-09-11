@@ -641,4 +641,5 @@ const CoreMath = {
 };
 
 // Exporta para ambiente de módulos e navegador global
+export { CoreMath };
 export default CoreMath;
