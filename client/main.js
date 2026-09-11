@@ -656,6 +656,15 @@ if (typeof window !== 'undefined') {
       });
     } catch (e) {}
   }
+  window.gameSettings = GameState.gameSettings;
+  window.playerBrandRating = GameState.playerBrandRating;
+  window.historicalLedger = GameState.historicalLedger;
+  window.activeMarketingContracts = GameState.activeMarketingContracts;
+  window.rdLabs = GameState.rdLabs;
+  window.unlockedProducts = GameState.unlockedProducts;
+  window.unlockedCities = GameState.unlockedCities;
+  window.acquiredLicenses = GameState.acquiredLicenses;
+  window.getManhattanDist = (p1, p2) => CoreMath ? CoreMath.calculateManhattanDistance(p1, p2) : (Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y));
 }
 
 // Notifica que todos os módulos foram carregados e vinculados com sucesso

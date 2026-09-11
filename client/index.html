@@ -2405,82 +2405,12 @@
     function closeMoreOptionsMenu() { return window.NavigationSystem ? window.NavigationSystem.closeMoreOptionsMenu() : undefined; }
 
     // ===========================================================================
-    // 1. DADOS MESTRES & MÓDULOS GLOBAIS
-    // (Carregados modularmente a partir de main.js e expostos em window)
+    // 1. DADOS MESTRES & MÓDULOS GLOBAIS (Carregados via main.js e expostos em window)
     // ===========================================================================
-    var SpriteManager = (typeof window !== 'undefined' && window.SpriteManager) ? window.SpriteManager : null;
-    var CoreMath = (typeof window !== 'undefined' && window.CoreMath) ? window.CoreMath : null;
-    var SoundEngine = (typeof window !== 'undefined' && window.SoundEngine) ? window.SoundEngine : null;
-    var MacroCycleSystem = (typeof window !== 'undefined' && window.MacroCycleSystem) ? window.MacroCycleSystem : null;
-    var TickerSystem = (typeof window !== 'undefined' && window.TickerSystem) ? window.TickerSystem : null;
-    var MAP_WIDTH = (typeof window !== 'undefined' && window.MAP_WIDTH) ? window.MAP_WIDTH : 128;
-    var MAP_HEIGHT = (typeof window !== 'undefined' && window.MAP_HEIGHT) ? window.MAP_HEIGHT : 128;
-    var TILE_WIDTH = (typeof window !== 'undefined' && window.TILE_WIDTH) ? window.TILE_WIDTH : 64;
-    var TILE_HEIGHT = (typeof window !== 'undefined' && window.TILE_HEIGHT) ? window.TILE_HEIGHT : 32;
-    var CITY_PROFILES_DATA = (typeof window !== 'undefined' && window.CITY_PROFILES_DATA) ? window.CITY_PROFILES_DATA : {};
-    var CITY_DISTRICTS = (typeof window !== 'undefined' && window.CITY_DISTRICTS) ? window.CITY_DISTRICTS : {};
-    var STORE_TYPES = (typeof window !== 'undefined' && window.STORE_TYPES) ? window.STORE_TYPES : {};
-    var STORE_NICHE_LICENSES = (typeof window !== 'undefined' && window.STORE_NICHE_LICENSES) ? window.STORE_NICHE_LICENSES : {};
-    var STORE_CATEGORY_WHITELIST = (typeof window !== 'undefined' && window.STORE_CATEGORY_WHITELIST) ? window.STORE_CATEGORY_WHITELIST : {};
-    var NATURAL_MINES = (typeof window !== 'undefined' && window.NATURAL_MINES) ? window.NATURAL_MINES : {};
-    var FARM_TYPES = (typeof window !== 'undefined' && window.FARM_TYPES) ? window.FARM_TYPES : {};
-    var RD_CATEGORIES = (typeof window !== 'undefined' && window.RD_CATEGORIES) ? window.RD_CATEGORIES : {};
-    var AVATAR_CATALOG = (typeof window !== 'undefined' && window.AVATAR_CATALOG) ? window.AVATAR_CATALOG : [];
-    var COLOR_PALETTES = (typeof window !== 'undefined' && window.COLOR_PALETTES) ? window.COLOR_PALETTES : {};
-    var DIFFICULTY_PRESETS = (typeof window !== 'undefined' && window.DIFFICULTY_PRESETS) ? window.DIFFICULTY_PRESETS : {};
-    var ECONOMIC_TIPS = (typeof window !== 'undefined' && window.ECONOMIC_TIPS) ? window.ECONOMIC_TIPS : [];
-    var LOGO_ICONS = (typeof window !== 'undefined' && window.LOGO_ICONS) ? window.LOGO_ICONS : {};
-    var THEME_COLOR_PALETTES = (typeof window !== 'undefined' && window.THEME_COLOR_PALETTES) ? window.THEME_COLOR_PALETTES : {};
-    var generateCompanyLogo = (typeof window !== 'undefined' && window.generateCompanyLogo) ? window.generateCompanyLogo : () => null;
-    var getCompanyLogoSvg = (typeof window !== 'undefined' && window.getCompanyLogoSvg) ? window.getCompanyLogoSvg : () => '';
-    var drawCanvasCompanyLogoBadge = (typeof window !== 'undefined' && window.drawCanvasCompanyLogoBadge) ? window.drawCanvasCompanyLogoBadge : () => {};
-    var PRODUCT_CATALOG = (typeof window !== 'undefined' && window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : {};
-    var FACTORY_RECIPES = (typeof window !== 'undefined' && window.FACTORY_RECIPES) ? window.FACTORY_RECIPES : [];
-    var RECIPE_GRAPH = (typeof window !== 'undefined' && window.RECIPE_GRAPH) ? window.RECIPE_GRAPH : {};
-    var MEDIA_OUTLETS = (typeof window !== 'undefined' && window.MEDIA_OUTLETS) ? window.MEDIA_OUTLETS : [];
-    var SEAPORTS = (typeof window !== 'undefined' && window.SEAPORTS) ? window.SEAPORTS : [];
-
-    function syncGlobalModuleBindings() {
-      if (typeof window === 'undefined') return;
-      if (window.SpriteManager) SpriteManager = window.SpriteManager;
-      if (window.CoreMath) CoreMath = window.CoreMath;
-      if (window.SoundEngine) SoundEngine = window.SoundEngine;
-      if (window.MacroCycleSystem) MacroCycleSystem = window.MacroCycleSystem;
-      if (window.TickerSystem) TickerSystem = window.TickerSystem;
-      if (window.MAP_WIDTH) MAP_WIDTH = window.MAP_WIDTH;
-      if (window.MAP_HEIGHT) MAP_HEIGHT = window.MAP_HEIGHT;
-      if (window.TILE_WIDTH) TILE_WIDTH = window.TILE_WIDTH;
-      if (window.TILE_HEIGHT) TILE_HEIGHT = window.TILE_HEIGHT;
-      if (window.CITY_PROFILES_DATA) CITY_PROFILES_DATA = window.CITY_PROFILES_DATA;
-      if (window.CITY_DISTRICTS) CITY_DISTRICTS = window.CITY_DISTRICTS;
-      if (window.STORE_TYPES) STORE_TYPES = window.STORE_TYPES;
-      if (window.STORE_NICHE_LICENSES) STORE_NICHE_LICENSES = window.STORE_NICHE_LICENSES;
-      if (window.STORE_CATEGORY_WHITELIST) STORE_CATEGORY_WHITELIST = window.STORE_CATEGORY_WHITELIST;
-      if (window.NATURAL_MINES) NATURAL_MINES = window.NATURAL_MINES;
-      if (window.FARM_TYPES) FARM_TYPES = window.FARM_TYPES;
-      if (window.RD_CATEGORIES) RD_CATEGORIES = window.RD_CATEGORIES;
-      if (window.AVATAR_CATALOG) AVATAR_CATALOG = window.AVATAR_CATALOG;
-      if (window.COLOR_PALETTES) COLOR_PALETTES = window.COLOR_PALETTES;
-      if (window.DIFFICULTY_PRESETS) DIFFICULTY_PRESETS = window.DIFFICULTY_PRESETS;
-      if (window.ECONOMIC_TIPS) ECONOMIC_TIPS = window.ECONOMIC_TIPS;
-      if (window.LOGO_ICONS) LOGO_ICONS = window.LOGO_ICONS;
-      if (window.THEME_COLOR_PALETTES) THEME_COLOR_PALETTES = window.THEME_COLOR_PALETTES;
-      if (window.generateCompanyLogo) generateCompanyLogo = window.generateCompanyLogo;
-      if (window.getCompanyLogoSvg) getCompanyLogoSvg = window.getCompanyLogoSvg;
-      if (window.drawCanvasCompanyLogoBadge) drawCanvasCompanyLogoBadge = window.drawCanvasCompanyLogoBadge;
-      if (window.PRODUCT_CATALOG) PRODUCT_CATALOG = window.PRODUCT_CATALOG;
-      if (window.FACTORY_RECIPES) FACTORY_RECIPES = window.FACTORY_RECIPES;
-      if (window.RECIPE_GRAPH) RECIPE_GRAPH = window.RECIPE_GRAPH;
-      if (window.MEDIA_OUTLETS) MEDIA_OUTLETS = window.MEDIA_OUTLETS;
-      if (window.SEAPORTS) SEAPORTS = window.SEAPORTS;
-    }
-    if (typeof window !== 'undefined') {
-      window.addEventListener('oiko:ready', syncGlobalModuleBindings);
-    }
-
     function getManhattanDist(p1, p2) {
-      return CoreMath ? CoreMath.calculateManhattanDistance(p1, p2) : (Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y));
+      return window.CoreMath ? window.CoreMath.calculateManhattanDistance(p1, p2) : (Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y));
     }
+    if (typeof window !== 'undefined') window.getManhattanDist = getManhattanDist;
 
     // ===========================================================================
     // 2. BUSCA DE FORNECEDORES (PORTOS + FÁBRICAS PRÓPRIAS)
@@ -2494,96 +2424,14 @@
     // 3. ESTADO CENTRALIZADO DO JOGO (GAME STATE CONTAINER)
     // (Modularizado em client/game_state.js e exposto em window.GameState)
     // ===========================================================================
-    const GameState = (typeof window !== 'undefined' && window.GameState) || (typeof window !== 'undefined' && window.createInitialGameState && window.createInitialGameState()) || {
-      currentAppScreen: 'BOOT',
-      day: 1, month: 1, year: 1,
-      cash: 100000.00,
-      monthRevenue: 0, monthCogs: 0, monthFixedExpenses: 0, monthMarketingExpenses: 0, monthFinancialExpenses: 0,
-      consecutiveInsolventMonths: 0,
-      insolvencyLevel2Triggered: false,
-      insolvencyCountdownMonths: 6,
-      gameSpeed: 0, timerInterval: null,
-      previousSpeedBeforePause: 1,
-      playtimeSeconds: 0,
-      playerProfile: {
-        playerName: 'Arthur Vance',
-        companyName: 'OikoCorp Holding',
-        avatarId: 'human_ceo',
-        themeColor: 'emerald',
-        difficulty: 'standard',
-        logoRegenSeed: 0
-      },
-      currentSaveSlotId: null,
-      lastSavedStateSnapshot: null,
-      gameSettings: {
-        autoSave: 'monthly',
-        masterVolume: 1.0,
-        musicVolume: 0.6,
-        ambienceVolume: 0.5,
-        sfxVolume: 0.7
-      },
-      playerBrandRating: {},
-      activeMarketingContracts: new Set(),
-      rdLabs: {},
-      unlockedProducts: new Set([
-        'wheat', 'corn', 'cotton', 'sugar_cane', 'cocoa', 'coffee_beans', 'grapes', 'tobacco', 'rubber',
-        'cattle', 'raw_milk', 'poultry', 'pigs', 'wool', 'iron_ore', 'bauxite', 'crude_oil', 'silica',
-        'timber', 'gold_ore', 'chemical_minerals', 'eggs',
-        'bread', 'milk'
-      ]),
-      unlockedCities: {
-        nova_atenas: true,
-        porto_real: true,
-        montargis: false,
-        varzea: false
-      },
-      acquiredLicenses: new Set(['kombini']),
-      historicalLedger: [],
-      tutorialState: {
-        completedSteps: {},
-        rewardClaimed: false
-      }
-    };
-    if (typeof window !== 'undefined') {
-      window.GameState = GameState;
-    }
-
-    // Aliases globais reativos com Single Source of Truth em GameState
-    const stateProxyProps = [
-      'currentAppScreen', 'day', 'month', 'year', 'cash',
-      'monthRevenue', 'monthCogs', 'monthFixedExpenses', 'monthMarketingExpenses',
-      'monthFinancialExpenses', 'consecutiveInsolventMonths', 'insolvencyLevel2Triggered',
-      'insolvencyCountdownMonths', 'gameSpeed', 'timerInterval', 'previousSpeedBeforePause',
-      'playtimeSeconds', 'playerProfile', 'currentSaveSlotId', 'lastSavedStateSnapshot', 'gameSettings'
-    ];
-    if (typeof window !== 'undefined') {
-      for (const prop of stateProxyProps) {
-        if (!(prop in window)) {
-          Object.defineProperty(window, prop, {
-            get() { return GameState[prop]; },
-            set(val) { GameState[prop] = val; },
-            configurable: true
-          });
-        }
-      }
-      window.gameSettings = GameState.gameSettings;
-    }
-    const playerBrandRating = GameState.playerBrandRating;
-    const historicalLedger = GameState.historicalLedger;
-    const activeMarketingContracts = GameState.activeMarketingContracts;
-    const rdLabs = GameState.rdLabs;
-    const unlockedProducts = GameState.unlockedProducts;
-    const unlockedCities = GameState.unlockedCities;
-    const acquiredLicenses = GameState.acquiredLicenses;
-    if (typeof window !== 'undefined') {
-      window.playerBrandRating = playerBrandRating;
-      window.historicalLedger = historicalLedger;
-      window.activeMarketingContracts = activeMarketingContracts;
-      window.rdLabs = rdLabs;
-      window.unlockedProducts = unlockedProducts;
-      window.unlockedCities = unlockedCities;
-      window.acquiredLicenses = acquiredLicenses;
-    }
+    const GameState = (typeof window !== 'undefined' && window.GameState) ? window.GameState : {};
+    const playerBrandRating = (typeof window !== 'undefined' && window.playerBrandRating) ? window.playerBrandRating : (GameState.playerBrandRating || {});
+    const historicalLedger = (typeof window !== 'undefined' && window.historicalLedger) ? window.historicalLedger : (GameState.historicalLedger || []);
+    const activeMarketingContracts = (typeof window !== 'undefined' && window.activeMarketingContracts) ? window.activeMarketingContracts : (GameState.activeMarketingContracts || new Set());
+    const rdLabs = (typeof window !== 'undefined' && window.rdLabs) ? window.rdLabs : (GameState.rdLabs || {});
+    const unlockedProducts = (typeof window !== 'undefined' && window.unlockedProducts) ? window.unlockedProducts : (GameState.unlockedProducts || new Set());
+    const unlockedCities = (typeof window !== 'undefined' && window.unlockedCities) ? window.unlockedCities : (GameState.unlockedCities || {});
+    const acquiredLicenses = (typeof window !== 'undefined' && window.acquiredLicenses) ? window.acquiredLicenses : (GameState.acquiredLicenses || new Set());
 
     function hasNicheLicense(typeId) {
       return window.StoreWizard ? window.StoreWizard.hasNicheLicense(typeId) : (typeId === 'kombini');
@@ -2634,22 +2482,12 @@
     // ===========================================================================
     // 4. MOTOR DO MAPA ISOMÉTRICO 128x128 & CIDADES (Delegado para WorldGridEngine)
     // ===========================================================================
-    const activeFacilitySet = (typeof window !== 'undefined' && window.WorldGridEngine) ? window.WorldGridEngine.activeFacilitySet : ((typeof window !== 'undefined' && window.activeFacilitySet) ? window.activeFacilitySet : new Map());
-    if (typeof window !== 'undefined') window.activeFacilitySet = activeFacilitySet;
+    const activeFacilitySet = (typeof window !== 'undefined' && window.activeFacilitySet) || (window.WorldGridEngine?.activeFacilitySet) || new Map();
+    const GRID_SIZE = (typeof window !== 'undefined' && window.GRID_SIZE) || 128;
+    const TILE_W = 64, TILE_H = 32;
+    const worldGrid = (typeof window !== 'undefined' && window.worldGrid) || (window.WorldGridEngine?.worldGrid) || [];
     function _tileKey(x, y) { return window.WorldGridEngine ? window.WorldGridEngine._tileKey(x, y) : `${x},${y}`; }
     function _indexTile(tile) { return window.WorldGridEngine ? window.WorldGridEngine._indexTile(tile) : undefined; }
-    if (typeof window !== 'undefined') window._indexTile = _indexTile;
-
-    const GRID_SIZE = (typeof window !== 'undefined' && window.WorldGridEngine) ? window.WorldGridEngine.GRID_SIZE : 128;
-    const TILE_W = 64, TILE_H = 32;
-    const worldGrid = (typeof window !== 'undefined' && window.WorldGridEngine) ? window.WorldGridEngine.worldGrid : ((typeof window !== 'undefined' && window.worldGrid) ? window.worldGrid : []);
-    if (typeof window !== 'undefined') {
-      window.GRID_SIZE = GRID_SIZE;
-      window.TILE_W = TILE_W;
-      window.TILE_H = TILE_H;
-      window.worldGrid = worldGrid;
-    }
-
     function checkCityUnlocks() { return window.WorldGridEngine ? window.WorldGridEngine.checkCityUnlocks() : undefined; }
     function isIronTile(x, y) { return window.WorldGridEngine ? window.WorldGridEngine.isIronTile(x, y) : false; }
     function isOilTile(x, y) { return window.WorldGridEngine ? window.WorldGridEngine.isOilTile(x, y) : false; }
@@ -2659,20 +2497,6 @@
     function isChemicalTile(x, y) { return window.WorldGridEngine ? window.WorldGridEngine.isChemicalTile(x, y) : false; }
     function getCityForTile(x, y) { return window.WorldGridEngine ? window.WorldGridEngine.getCityForTile(x, y) : { cityId: 'nova_atenas', cityName: 'Nova Atenas' }; }
     function initWorldGrid() { return window.WorldGridEngine ? window.WorldGridEngine.initWorldGrid() : undefined; }
-
-    window.checkCityUnlocks = checkCityUnlocks;
-    window.isIronTile = isIronTile;
-    window.isOilTile = isOilTile;
-    window.isSilicaTile = isSilicaTile;
-    window.isBauxiteTile = isBauxiteTile;
-    window.isGoldTile = isGoldTile;
-    window.isChemicalTile = isChemicalTile;
-    window.getCityForTile = getCityForTile;
-    window.initWorldGrid = initWorldGrid;
-
-    if (worldGrid.length === 0 && window.WorldGridEngine) {
-      window.WorldGridEngine.initWorldGrid();
-    }
 
     // ===========================================================================
     // 5. MOTOR DE RENDERIZAÇÃO ISOMÉTRICO (128x128 COM RADAR MINIMAP & FOG OF WAR)
@@ -2700,18 +2524,6 @@
     function drawBuilding(sx, sy, w, h, hPx, topC, leftC, rightC) { return window.IsoMath ? window.IsoMath.drawBuilding(ctx, sx, sy, w, h, hPx, topC, leftC, rightC) : undefined; }
     function renderMinimap() { return window.MinimapSystem ? window.MinimapSystem.renderMinimap() : undefined; }
     function renderMap() { return window.CanvasRenderer ? window.CanvasRenderer.renderMap() : undefined; }
-
-    window.resizeCanvas = resizeCanvas;
-    window.resetCamera = resetCamera;
-    window.jumpToCity = jumpToCity;
-    window.focusOnTile = focusOnTile;
-    window.changeZoom = changeZoom;
-    window.gridToScreen = gridToScreen;
-    window.screenToGrid = screenToGrid;
-    window.drawDiamond = drawDiamond;
-    window.drawBuilding = drawBuilding;
-    window.renderMinimap = renderMinimap;
-    window.renderMap = renderMap;
 
     // ===========================================================================
     
@@ -2750,17 +2562,6 @@
     function executeAdvisorDeepLink(action) { return window.AdvisorPanel ? window.AdvisorPanel.executeAdvisorDeepLink(action) : undefined; }
     function renderExecutiveBoardModal() { return window.AdvisorPanel ? window.AdvisorPanel.renderExecutiveBoardModal() : undefined; }
 
-    window.toggleExecutiveBoardModal = toggleExecutiveBoardModal;
-    window.openExecutiveBoardModal = openExecutiveBoardModal;
-    window.closeExecutiveBoardModal = closeExecutiveBoardModal;
-    window.refreshExecutiveBoard = refreshExecutiveBoard;
-    window.setAdvisorVerbosity = setAdvisorVerbosity;
-    window.setAdvisorActiveTab = setAdvisorActiveTab;
-    window.dismissAdvisorAlert = dismissAdvisorAlert;
-    window.snoozeAdvisorAlert = snoozeAdvisorAlert;
-    window.executeAdvisorDeepLink = executeAdvisorDeepLink;
-    window.renderExecutiveBoardModal = renderExecutiveBoardModal;
-
     function syncDREValues(g, c, r, m, n, f, nw) { return window.DREPanel ? window.DREPanel.syncDREValues(g, c, r, m, n, f, nw) : undefined; }
     function openFacilityDREModal() { return window.DREPanel ? window.DREPanel.openFacilityDREModal() : undefined; }
     function closeFacilityDREModal() { return window.DREPanel ? window.DREPanel.closeFacilityDREModal() : undefined; }
@@ -2768,22 +2569,9 @@
     function calculateCorporateNetWorth() { return window.DREPanel ? window.DREPanel.calculateCorporateNetWorth() : { liquidCash: 0, landTotal: 0, facilitiesTotal: 0, inventoryTotal: 0, totalAssets: 0, totalDebt: 0, overdraftDebt: 0, bankingDebt: 0, netWorth: 0 }; }
     function renderFacilityDRETable() { return window.DREPanel ? window.DREPanel.renderFacilityDRETable() : undefined; }
 
-    window.syncDREValues = syncDREValues;
-    window.openFacilityDREModal = openFacilityDREModal;
-    window.closeFacilityDREModal = closeFacilityDREModal;
-    window.toggleDREModal = toggleDREModal;
-    window.calculateCorporateNetWorth = calculateCorporateNetWorth;
-    window.renderFacilityDRETable = renderFacilityDRETable;
-
     function openInsolvencyModal(nwObj) { return window.DREPanel ? window.DREPanel.openInsolvencyModal(nwObj) : undefined; }
     function closeInsolvencyModal() { return window.DREPanel ? window.DREPanel.closeInsolvencyModal() : undefined; }
     function showBankruptcyModal(nwObj) { return window.DREPanel ? window.DREPanel.showBankruptcyModal(nwObj) : undefined; }
-
-    if (typeof window !== 'undefined') {
-      window.openInsolvencyModal = openInsolvencyModal;
-      window.closeInsolvencyModal = closeInsolvencyModal;
-      window.showBankruptcyModal = showBankruptcyModal;
-    }
 
     // ═══════════════════════════════════════════════════════════
     // SISTEMA BANCÁRIO CORPORATIVO — Funções Auxiliares de Score (Delegadas para BankingPanel)
@@ -2792,13 +2580,6 @@
     function calcAverageBrandRating() { return window.BankingPanel ? window.BankingPanel.calcAverageBrandRating() : 20; }
     function calcBankingCreditScore() { return window.BankingPanel ? window.BankingPanel.calcBankingCreditScore() : null; }
     function processBankingInstallments() { return window.BankingPanel ? window.BankingPanel.processBankingInstallments() : undefined; }
-
-    window.calcAverageQRAllResearched = calcAverageQRAllResearched;
-    window.calcAverageBrandRating = calcAverageBrandRating;
-    window.calcBankingCreditScore = calcBankingCreditScore;
-    window.processBankingInstallments = processBankingInstallments;
-
-    
 
     // ===========================================================================
     // 8. INSPETORES DE INSTALAÇÕES & GESTÃO DE LOTES (Delegados para FacilityPanel)
@@ -2818,22 +2599,6 @@
     function executeCustomConfirmModal() { return window.FacilityPanel ? window.FacilityPanel.executeCustomConfirmModal() : undefined; }
     function checkWorkingCapitalSafety(cost, onProceed, name) { return window.FacilityPanel ? window.FacilityPanel.checkWorkingCapitalSafety(cost, onProceed, name) : undefined; }
     function confirmBuildRDCenter(x, y) { return window.FacilityPanel ? window.FacilityPanel.confirmBuildRDCenter(x, y) : undefined; }
-
-    window.renderFacilityPanel = renderFacilityPanel;
-    window.renderIdlePanel = renderIdlePanel;
-    window.renderEmptyLotPanel = renderEmptyLotPanel;
-    window.renderMinePanel = renderMinePanel;
-    window.renderFarmPanel = renderFarmPanel;
-    window.renderFactoryPanel = renderFactoryPanel;
-    window.setFactoryFacade = setFactoryFacade;
-    window.renderStorePanel = renderStorePanel;
-    window.renderRDCenterPanel = renderRDCenterPanel;
-    window.toggleRDPatentsExpanded = toggleRDPatentsExpanded;
-    window.showCustomConfirmModal = showCustomConfirmModal;
-    window.closeCustomConfirmModal = closeCustomConfirmModal;
-    window.executeCustomConfirmModal = executeCustomConfirmModal;
-    window.checkWorkingCapitalSafety = checkWorkingCapitalSafety;
-    window.confirmBuildRDCenter = confirmBuildRDCenter;
 
     // ===========================================================================
     // 9. WIZARDS DE CONSTRUÇÃO DE MINAS, FAZENDAS E FÁBRICAS (Delegados para ConstructionWizards)
@@ -2905,38 +2670,6 @@
     function propagateQualityRD(id, qr) { return window.RDPanel ? window.RDPanel.propagateQualityRD(id, qr) : undefined; }
     function updateRDChip() { return window.RDPanel ? window.RDPanel.updateRDChip() : undefined; }
 
-    window.openRDCenterModal = openRDCenterModal;
-    window.closeRDCenterModal = closeRDCenterModal;
-    window.getBuiltRDCentersCount = getBuiltRDCentersCount;
-    window.getRDTotalLabCapacity = getRDTotalLabCapacity;
-    window.getRDUsedLabSlots = getRDUsedLabSlots;
-    window.getProductBestRDQuality = getProductBestRDQuality;
-    window.setRDProjectsFilter = setRDProjectsFilter;
-    window.renderRDProjectsList = renderRDProjectsList;
-    window.switchRDTab = switchRDTab;
-    window.renderRDMarketList = renderRDMarketList;
-    window.buyCompetitorTech = buyCompetitorTech;
-    window.setRDLabsCount = setRDLabsCount;
-    window.setRDWizardFilter = setRDWizardFilter;
-    window.onRDWizardSearchInput = onRDWizardSearchInput;
-    window.clearRDWizardSearch = clearRDWizardSearch;
-    window.selectRDWizardProduct = selectRDWizardProduct;
-    window.renderRDWizardProductList = renderRDWizardProductList;
-    window.onRDProductSelectChange = onRDProductSelectChange;
-    window.openRDNewProjectModal = openRDNewProjectModal;
-    window.closeRDNewProjectModal = closeRDNewProjectModal;
-    window.updateRDWizardPreview = updateRDWizardPreview;
-    window.getRDCurrentQR = getRDCurrentQR;
-    window.startRDProject = startRDProject;
-    window.pauseRDProject = pauseRDProject;
-    window.resumeRDProject = resumeRDProject;
-    window.cancelRDProject = cancelRDProject;
-    window.adjustRDBudget = adjustRDBudget;
-    window.processRDProgress = processRDProgress;
-    window.updateAllFactoryLinesQR = updateAllFactoryLinesQR;
-    window.propagateQualityRD = propagateQualityRD;
-    window.updateRDChip = updateRDChip;
-
     function openTechTreeModal(cat, tier, root) { return window.TechTreePanel ? window.TechTreePanel.openTechTreeModal(cat, tier, root) : undefined; }
     function closeTechTreeModal() { return window.TechTreePanel ? window.TechTreePanel.closeTechTreeModal() : undefined; }
     function focusTechLineage(id) { return window.TechTreePanel ? window.TechTreePanel.focusTechLineage(id) : undefined; }
@@ -2947,25 +2680,10 @@
     function researchProductTech(id) { return window.TechTreePanel ? window.TechTreePanel.researchProductTech(id) : undefined; }
     function isProductUnlocked(id) { return window.TechTreePanel ? window.TechTreePanel.isProductUnlocked(id) : false; }
 
-    window.openTechTreeModal = openTechTreeModal;
-    window.closeTechTreeModal = closeTechTreeModal;
-    window.focusTechLineage = focusTechLineage;
-    window.clearTechLineage = clearTechLineage;
-    window.setTechLineageFilter = setTechLineageFilter;
-    window.filterTechTree = filterTechTree;
-    window.renderTechTree = renderTechTree;
-    window.researchProductTech = researchProductTech;
-    window.isProductUnlocked = isProductUnlocked;
-
     function openMarketingCentralModal(filterOutletId) { return window.MarketingPanel ? window.MarketingPanel.openMarketingCentralModal(filterOutletId) : undefined; }
     function toggleMarketingContract(outletId, prodId) { return window.MarketingPanel ? window.MarketingPanel.toggleMarketingContract(outletId, prodId) : undefined; }
     function closeMarketingModal() { return window.MarketingPanel ? window.MarketingPanel.closeMarketingModal() : undefined; }
     function toggleMarketingModal(filterOutletId) { return window.MarketingPanel ? window.MarketingPanel.toggleMarketingModal(filterOutletId) : undefined; }
-
-    window.openMarketingCentralModal = openMarketingCentralModal;
-    window.toggleMarketingContract = toggleMarketingContract;
-    window.closeMarketingModal = closeMarketingModal;
-    window.toggleMarketingModal = toggleMarketingModal;
 
     // ===========================================================================
     // 10.5 MOTOR DA ENCICLOPÉDIA CORPORATIVA & WIKI INTERATIVA
@@ -3007,30 +2725,6 @@
     function updateEncyclopediaCalcProduct(p) { return window.EncyclopediaPanel ? window.EncyclopediaPanel.updateEncyclopediaCalcProduct(p) : undefined; }
     function updateEncyclopediaCalcAmount(a) { return window.EncyclopediaPanel ? window.EncyclopediaPanel.updateEncyclopediaCalcAmount(a) : undefined; }
     function renderEncyclopediaConceptsView() { return window.EncyclopediaPanel ? window.EncyclopediaPanel.renderEncyclopediaConceptsView() : undefined; }
-
-    window.openEncyclopediaModal = openEncyclopediaModal;
-    window.closeEncyclopediaModal = closeEncyclopediaModal;
-    window.toggleEncyclopediaModal = toggleEncyclopediaModal;
-    window.navigateEncyclopedia = navigateEncyclopedia;
-    window.encyclopediaHistoryBack = encyclopediaHistoryBack;
-    window.encyclopediaHistoryForward = encyclopediaHistoryForward;
-    window.updateEncyclopediaHistoryButtons = updateEncyclopediaHistoryButtons;
-    window.switchEncyclopediaTab = switchEncyclopediaTab;
-    window.updateEncyclopediaTabButtons = updateEncyclopediaTabButtons;
-    window.onEncyclopediaSearch = onEncyclopediaSearch;
-    window.clearEncyclopediaSearch = clearEncyclopediaSearch;
-    window.renderEncyclopediaContent = renderEncyclopediaContent;
-    window.renderEncyclopediaProductsView = renderEncyclopediaProductsView;
-    window.setEncyclopediaCategoryFilter = setEncyclopediaCategoryFilter;
-    window.setEncyclopediaTierFilter = setEncyclopediaTierFilter;
-    window.renderEncyclopediaFactoriesView = renderEncyclopediaFactoriesView;
-    window.renderEncyclopediaStoresView = renderEncyclopediaStoresView;
-    window.renderEncyclopediaResourcesView = renderEncyclopediaResourcesView;
-    window.renderEncyclopediaCitiesView = renderEncyclopediaCitiesView;
-    window.renderEncyclopediaCalculatorView = renderEncyclopediaCalculatorView;
-    window.updateEncyclopediaCalcProduct = updateEncyclopediaCalcProduct;
-    window.updateEncyclopediaCalcAmount = updateEncyclopediaCalcAmount;
-    window.renderEncyclopediaConceptsView = renderEncyclopediaConceptsView;
 
     // ===========================================================================
     // 11. WIZARDS DE LOJA, GÔNDOLAS & FORNECEDORES (Delegados para StoreWizard & SupplierPicker)
@@ -3097,18 +2791,6 @@
     function closeMonthEnd() { return window._engineCloseMonthEnd ? window._engineCloseMonthEnd() : undefined; }
     function setSpeed(s) { return window.HUDSystem ? window.HUDSystem.setSpeed(s) : undefined; }
     function setHeatmap(mode) { return window.NavigationSystem ? window.NavigationSystem.setHeatmap(mode) : undefined; }
-
-    if (typeof window !== 'undefined') {
-      window.calcPriceRating = calcPriceRating;
-      window.calcProductRating = calcProductRating;
-      window.calcElasticity = calcElasticity;
-      window.addLog = addLog;
-      window.addGameLog = addGameLog;
-      window.simulateDay = simulateDay;
-      window.closeMonthEnd = closeMonthEnd;
-      window.setSpeed = setSpeed;
-      window.setHeatmap = setHeatmap;
-    }
 
     // ===========================================================================
     // 12.1 TELEMETRIA, DEBUG & DEV DASHBOARD (Delegados para DevDashboardPanel)
@@ -3202,29 +2884,14 @@
     function handleImportSaveFile(e) { return (window._saveSystem && window._saveSystem.handleImportSaveFile) ? window._saveSystem.handleImportSaveFile(e) : undefined; }
     function checkAutoSave() { return (window._saveSystem && window._saveSystem.checkAutoSave) ? window._saveSystem.checkAutoSave() : undefined; }
 
-    window.extractBuiltTiles = extractBuiltTiles;
-    window.applyBuiltTiles = applyBuiltTiles;
-    window.serializeCurrentGame = serializeCurrentGame;
-    window.saveGame = saveGame;
-    window.saveGameInNewSlot = saveGameInNewSlot;
-    window.quickSaveGame = quickSaveGame;
-    window.loadGameFromData = loadGameFromData;
-    window.loadGameById = loadGameById;
-    window.deleteSaveById = deleteSaveById;
-    window.exportSaveFile = exportSaveFile;
-    window.handleImportSaveFile = handleImportSaveFile;
-    window.checkAutoSave = checkAutoSave;
-
     // ===========================================================================
     // ===========================================================================
     // 15. GERENCIADOR DE TELAS: BOOT LOADER & MAIN MENU
     // ===========================================================================
     // Sequência de Boot & Dicas Econômicas (Delegadas para AppLifecycle)
+    // ===========================================================================
     function startBootSequence() { return window.AppLifecycle ? window.AppLifecycle.startBootSequence() : undefined; }
     function rotateLoadingTip() { return window.AppLifecycle ? window.AppLifecycle.rotateLoadingTip() : undefined; }
-
-    window.startBootSequence = startBootSequence;
-    window.rotateLoadingTip = rotateLoadingTip;
 
     // ===========================================================================
     // 16. CICLO DE VIDA, MENU, TUTORIAL, SETTINGS & SAVES (Delegado para AppLifecycle)
@@ -3284,49 +2951,6 @@
     function makeDraggable(w, h) { return window.WindowManager ? window.WindowManager.makeDraggable(w, h) : undefined; }
     function initAllDraggableWindows() { return window.WindowManager ? window.WindowManager.initAllDraggableWindows() : undefined; }
 
-    window.showMainMenu = showMainMenu;
-    window.hideMainMenu = hideMainMenu;
-    window.continueLastGame = continueLastGame;
-    window.openNewGameWizard = openNewGameWizard;
-    window.closeNewGameWizard = closeNewGameWizard;
-    window.randomizePlayerName = randomizePlayerName;
-    window.randomizeCompanyName = randomizeCompanyName;
-    window.regenerateWizLogo = regenerateWizLogo;
-    window.selectWizAvatar = selectWizAvatar;
-    window.selectWizColor = selectWizColor;
-    window.selectWizDifficulty = selectWizDifficulty;
-    window.startNewGameFromWizard = startNewGameFromWizard;
-    window.toggleTutorialWidget = toggleTutorialWidget;
-    window.checkTutorialProgress = checkTutorialProgress;
-    window.renderTutorialGuide = renderTutorialGuide;
-    window.claimTutorialReward = claimTutorialReward;
-    window.togglePauseMenu = togglePauseMenu;
-    window.pauseGameAndShowMenu = pauseGameAndShowMenu;
-    window.resumeGame = resumeGame;
-    window.syncPauseMenuVolumes = syncPauseMenuVolumes;
-    window.syncVolumeFromPause = syncVolumeFromPause;
-    window.promptExitToMainMenu = promptExitToMainMenu;
-    window.closeConfirmExitModal = closeConfirmExitModal;
-    window.saveAndExitToMainMenu = saveAndExitToMainMenu;
-    window.exitToMainMenuWithoutSaving = exitToMainMenuWithoutSaving;
-    window.loadGameSettings = loadGameSettings;
-    window.saveGameSettings = saveGameSettings;
-    window.openSettingsModal = openSettingsModal;
-    window.closeSettingsModal = closeSettingsModal;
-    window.toggleBgmPlayPause = toggleBgmPlayPause;
-    window.skipBgmTrack = skipBgmTrack;
-    window.updateBgmStatusUI = updateBgmStatusUI;
-    window.initMicroRadio = initMicroRadio;
-    window.updateRadioUI = updateRadioUI;
-    window.openSaveLoadModal = openSaveLoadModal;
-    window.closeSaveLoadModal = closeSaveLoadModal;
-    window.renderSavesList = renderSavesList;
-    window.renderSavesCountInMenu = renderSavesCountInMenu;
-    window.updatePlayerProfileHUD = updatePlayerProfileHUD;
-    window.bringWindowToFront = bringWindowToFront;
-    window.makeDraggable = makeDraggable;
-    window.initAllDraggableWindows = initAllDraggableWindows;
-
     window.addEventListener('resize', () => { resizeCanvas(); scheduleRender(); });
 
     async function bootEngine() {
@@ -3360,6 +2984,9 @@
 
       loadGameSettings();
       await initMasterData();
+      if ((!window.worldGrid || window.worldGrid.length === 0) && typeof window.initWorldGrid === 'function') {
+        window.initWorldGrid();
+      }
       resizeCanvas();
       resetCamera();
       renderTileInspector(null);
@@ -3395,11 +3022,6 @@
     function closeBankModal() { return window.BankingPanel ? window.BankingPanel.closeBankModal() : undefined; }
     function updateBankHUDBadge() { return window.BankingPanel ? window.BankingPanel.updateBankHUDBadge() : undefined; }
     function renderBankTab(tabId) { return window.BankingPanel ? window.BankingPanel.renderBankTab(tabId) : undefined; }
-
-    window.openBankModal = openBankModal;
-    window.closeBankModal = closeBankModal;
-    window.renderBankTab = renderBankTab;
-    window.updateBankHUDBadge = updateBankHUDBadge;
 
     bootEngine();
   </script>
