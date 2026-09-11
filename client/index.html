@@ -2396,42 +2396,13 @@
     // (Modularizado em client/logo_generator.js e exposto em window)
     // ===========================================================================
 
-    // Dropdown Controllers (Cidades, Lentes & Mais Opções — Modularizados em client/ui/navigation.js)
-    function toggleCitiesDropdown() {
-      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.toggleCitiesDropdown();
-      const menu = document.getElementById('cities-dropdown-menu');
-      if (menu) menu.classList.toggle('hidden');
-    }
-
-    function closeCitiesDropdown() {
-      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.closeCitiesDropdown();
-      const menu = document.getElementById('cities-dropdown-menu');
-      if (menu) menu.classList.add('hidden');
-    }
-
-    function toggleLensesDropdown() {
-      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.toggleLensesDropdown();
-      const menu = document.getElementById('lenses-dropdown-menu');
-      if (menu) menu.classList.toggle('hidden');
-    }
-
-    function closeLensesDropdown() {
-      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.closeLensesDropdown();
-      const menu = document.getElementById('lenses-dropdown-menu');
-      if (menu) menu.classList.add('hidden');
-    }
-
-    function toggleMoreOptionsMenu() {
-      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.toggleMoreOptionsMenu();
-      const menu = document.getElementById('hud-more-options-menu');
-      if (menu) menu.classList.toggle('hidden');
-    }
-
-    function closeMoreOptionsMenu() {
-      if (typeof window !== 'undefined' && window.NavigationSystem) return window.NavigationSystem.closeMoreOptionsMenu();
-      const menu = document.getElementById('hud-more-options-menu');
-      if (menu) menu.classList.add('hidden');
-    }
+    // Dropdown Controllers (Cidades, Lentes & Mais Opções — Delegados para NavigationSystem)
+    function toggleCitiesDropdown() { return window.NavigationSystem ? window.NavigationSystem.toggleCitiesDropdown() : undefined; }
+    function closeCitiesDropdown() { return window.NavigationSystem ? window.NavigationSystem.closeCitiesDropdown() : undefined; }
+    function toggleLensesDropdown() { return window.NavigationSystem ? window.NavigationSystem.toggleLensesDropdown() : undefined; }
+    function closeLensesDropdown() { return window.NavigationSystem ? window.NavigationSystem.closeLensesDropdown() : undefined; }
+    function toggleMoreOptionsMenu() { return window.NavigationSystem ? window.NavigationSystem.toggleMoreOptionsMenu() : undefined; }
+    function closeMoreOptionsMenu() { return window.NavigationSystem ? window.NavigationSystem.closeMoreOptionsMenu() : undefined; }
 
     // ===========================================================================
     // 1. DADOS MESTRES & MÓDULOS GLOBAIS
@@ -2745,41 +2716,10 @@
     // ===========================================================================
     
     // ===========================================================================
-    // CONTROLES DE TECLADO (WASD + SETAS + ATALHOS DE ZOOM & TELA CHEIA)
+    // CONTROLES DE TECLADO & MODO TEATRO (Delegado para window.KeyboardSystem)
     // ===========================================================================
-    const activeKeys = new Set();
-    let isTheaterMode = false;
-
-    function toggleTheaterMode() {
-      if (window.KeyboardSystem && typeof window.KeyboardSystem.toggleTheaterMode === 'function') {
-        return window.KeyboardSystem.toggleTheaterMode();
-      }
-      isTheaterMode = !isTheaterMode;
-      const leftCol = document.querySelector('section.col-span-12.lg\\:col-span-8');
-      const rightCol = document.querySelector('section.col-span-12.lg\\:col-span-4');
-      const canvasEl = document.getElementById('iso-canvas');
-      const btn = document.getElementById('btn-theater-mode');
-
-      if (isTheaterMode) {
-        if (leftCol) { leftCol.classList.remove('lg:col-span-8'); leftCol.classList.add('lg:col-span-12'); }
-        if (rightCol) { rightCol.classList.add('hidden'); }
-        if (canvasEl && canvasEl.parentElement) {
-          canvasEl.parentElement.classList.remove('min-h-[520px]', 'max-h-[660px]');
-          canvasEl.parentElement.classList.add('min-h-[740px]', 'max-h-[860px]');
-        }
-        if (btn) btn.innerHTML = '⛶ Restaurar Painéis';
-      } else {
-        if (leftCol) { leftCol.classList.remove('lg:col-span-12'); leftCol.classList.add('lg:col-span-8'); }
-        if (rightCol) { rightCol.classList.remove('hidden'); }
-        if (canvasEl && canvasEl.parentElement) {
-          canvasEl.parentElement.classList.remove('min-h-[740px]', 'max-h-[860px]');
-          canvasEl.parentElement.classList.add('min-h-[520px]', 'max-h-[660px]');
-        }
-        if (btn) btn.innerHTML = '⛶ Expandir Mapa';
-      }
-      setTimeout(() => { resizeCanvas();
-    window.addEventListener('resize', resizeCanvas); scheduleRender(); }, 50);
-    }
+    function toggleTheaterMode() { return window.KeyboardSystem ? window.KeyboardSystem.toggleTheaterMode() : undefined; }
+    if (typeof window !== 'undefined') window.toggleTheaterMode = toggleTheaterMode;
 
 
     // ===========================================================================
@@ -3146,162 +3086,28 @@
     function updateShelfRestock(x, y, prodId, val) { return window.StoreWizard ? window.StoreWizard.updateShelfRestock(x, y, prodId, val) : undefined; }
 
     // ===========================================================================
-    // 12. MOTOR ECONÔMICO & SIMULAÇÃO DIÁRIA
+    // 12. MOTOR ECONÔMICO & SIMULAÇÃO DIÁRIA (Delegados para CoreMath, simulation.js, HUDSystem & NavigationSystem)
     // ===========================================================================
-    function calcPriceRating(standardPrice, price) {
-      return CoreMath.calculatePriceRating(standardPrice, price);
-    }
-
-    function calcProductRating(prod, price, quality, brand) {
-      return CoreMath.calculateProductRating(prod, price, quality, brand);
-    }
-
-    function calcElasticity(necessityIndex, standardPrice, price, quality = 50) {
-      return CoreMath.calculatePriceElasticityFactor(necessityIndex, standardPrice, price, quality);
-    }
-
-    function addLog(text, color = 'text-slate-300', options = {}) {
-      const logs = document.getElementById('game-log-floating') || document.getElementById('game-logs');
-      if (logs) {
-        const item = document.createElement('div');
-        item.className = color;
-        item.innerText = `[${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')}/A${year}] ${text}`;
-        logs.prepend(item);
-        while (logs.children.length > 80) logs.removeChild(logs.lastChild);
-      }
-
-      // Espelha no Ticker (reaproveita o mesmo evento com filtragem interna por cor)
-      const ticker = (typeof window !== 'undefined' && window.TickerSystem) ? window.TickerSystem : (typeof TickerSystem !== 'undefined' && TickerSystem ? TickerSystem : null);
-      if (ticker && typeof ticker.pushFromLog === 'function') {
-        ticker.pushFromLog(text, color, options);
-      }
-
-      // Registra no Flight Recorder de Telemetria
-      if (typeof trackPlayerAction === 'function') {
-        trackPlayerAction(options.category || 'EVENT', text, options);
-      }
-    }
+    function calcPriceRating(standardPrice, price) { return window.CoreMath ? window.CoreMath.calculatePriceRating(standardPrice, price) : 0; }
+    function calcProductRating(prod, price, quality, brand) { return window.CoreMath ? window.CoreMath.calculateProductRating(prod, price, quality, brand) : 0; }
+    function calcElasticity(necessityIndex, standardPrice, price, quality = 50) { return window.CoreMath ? window.CoreMath.calculatePriceElasticityFactor(necessityIndex, standardPrice, price, quality) : 0; }
+    function addLog(text, color = 'text-slate-300', options = {}) { return window.HUDSystem ? window.HUDSystem.addLog(text, color, options) : undefined; }
     const addGameLog = addLog;
+    function simulateDay() { return window._engineSimulateDay ? window._engineSimulateDay() : undefined; }
+    function closeMonthEnd() { return window._engineCloseMonthEnd ? window._engineCloseMonthEnd() : undefined; }
+    function setSpeed(s) { return window.HUDSystem ? window.HUDSystem.setSpeed(s) : undefined; }
+    function setHeatmap(mode) { return window.NavigationSystem ? window.NavigationSystem.setHeatmap(mode) : undefined; }
+
     if (typeof window !== 'undefined') {
+      window.calcPriceRating = calcPriceRating;
+      window.calcProductRating = calcProductRating;
+      window.calcElasticity = calcElasticity;
       window.addLog = addLog;
       window.addGameLog = addGameLog;
-    }
-
-    function simulateDay() {
-      if (typeof window !== 'undefined' && window._engineSimulateDay) {
-        return window._engineSimulateDay();
-      }
-    }
-
-    function closeMonthEnd() {
-      if (typeof window !== 'undefined' && window._engineCloseMonthEnd) {
-        return window._engineCloseMonthEnd();
-      }
-    }
-
-    let lastActiveSpeed = 2;
-
-    function setSpeed(s) {
-      if (typeof window !== 'undefined' && window.HUDSystem && typeof window.HUDSystem.setSpeed === 'function') {
-        if (s > 0) lastActiveSpeed = s;
-        return window.HUDSystem.setSpeed(s);
-      }
-      if (s > 0) lastActiveSpeed = s;
-      gameSpeed = s;
-      if (timerInterval) clearInterval(timerInterval);
-      const map = { 0:'btn-p', 1:'btn-1x', 2:'btn-2x', 3:'btn-3x', 4:'btn-4x', 5:'btn-5x' };
-      for (const [spd, id] of Object.entries(map)) {
-        const btn = document.getElementById(id);
-        if (!btn) continue;
-        btn.className = parseInt(spd) === s
-          ? 'oiko-btn-terminal active px-1.5 py-0.5 text-[9px]'
-          : 'oiko-btn-terminal px-1.5 py-0.5 text-[9px]';
-      }
-      if (s === 0) return;
-      const speedIntervals = { 1: 650, 2: 300, 3: 170, 4: 100, 5: 55 };
-      timerInterval = setInterval(simulateDay, speedIntervals[s] || 250);
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'F1') {
-        e.preventDefault();
-        toggleEncyclopediaModal();
-        return;
-      }
-
-      if (e.key === 'F3') {
-        e.preventDefault();
-        toggleDevDashboard();
-        return;
-      }
-
-      if (e.key === 'F8') {
-        e.preventDefault();
-        toggleBugReportModal();
-        return;
-      }
-
-      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
-        if (e.key === 'Escape') document.activeElement.blur();
-        return;
-      }
-
-      if (e.code === 'Space') {
-        e.preventDefault();
-        if (currentAppScreen === 'PLAYING') {
-          const lastSpd = (window.HUDSystem && typeof window.HUDSystem.getLastActiveSpeed === 'function')
-            ? window.HUDSystem.getLastActiveSpeed()
-            : (lastActiveSpeed || 2);
-          setSpeed(gameSpeed === 0 ? lastSpd : 0);
-        }
-        return;
-      }
-
-      if (currentAppScreen === 'PLAYING') {
-        if (['Digit1', 'Numpad1'].includes(e.code)) { e.preventDefault(); setSpeed(1); return; }
-        if (['Digit2', 'Numpad2'].includes(e.code)) { e.preventDefault(); setSpeed(2); return; }
-        if (['Digit3', 'Numpad3'].includes(e.code)) { e.preventDefault(); setSpeed(3); return; }
-        if (['Digit4', 'Numpad4'].includes(e.code)) { e.preventDefault(); setSpeed(4); return; }
-        if (['Digit5', 'Numpad5'].includes(e.code)) { e.preventDefault(); setSpeed(5); return; }
-      }
-
-      if (e.key === 'Escape') {
-        handleGlobalEscapeKey();
-      }
-    });
-
-    function setHeatmap(mode) {
-      if (typeof window !== 'undefined' && window.NavigationSystem && typeof window.NavigationSystem.setHeatmap === 'function') {
-        return window.NavigationSystem.setHeatmap(mode);
-      }
-      currentHeatmap = mode;
-      const lensMeta = {
-        terrain:     { name: 'Terreno', icon: '⊙' },
-        opportunity: { name: 'Oportunidade', icon: '🎯' },
-        traffic:     { name: 'Tráfego', icon: '⬥' },
-        pop:         { name: 'População', icon: '⬥' },
-        comp:        { name: 'Varejo', icon: '⬥' },
-        ports:       { name: 'Portos', icon: '⬥' },
-        ind:         { name: 'Indústria', icon: '⬥' },
-        media:       { name: 'Mídia', icon: '⬥' }
-      };
-
-      const meta = lensMeta[mode] || lensMeta.terrain;
-      const iconEl = document.getElementById('current-lens-icon');
-      const labelEl = document.getElementById('current-lens-label');
-      if (iconEl) iconEl.textContent = meta.icon;
-      if (labelEl) labelEl.textContent = meta.name;
-
-      const btns = { terrain:'hm-terrain', opportunity:'hm-opportunity', traffic:'hm-traffic', pop:'hm-pop', comp:'hm-comp', ports:'hm-ports', ind:'hm-ind', media:'hm-media' };
-      for (const [m, id] of Object.entries(btns)) {
-        const btn = document.getElementById(id);
-        if (!btn) continue;
-        btn.className = m === mode
-          ? 'oiko-dropdown-item active'
-          : 'oiko-dropdown-item';
-      }
-      closeLensesDropdown();
-      scheduleRender();
+      window.simulateDay = simulateDay;
+      window.closeMonthEnd = closeMonthEnd;
+      window.setSpeed = setSpeed;
+      window.setHeatmap = setHeatmap;
     }
 
     // ===========================================================================
@@ -3351,46 +3157,18 @@
     // 13. INICIALIZAÇÃO ASSÍNCRONA E CARGA DE DADOS
     // ===========================================================================
     async function initMasterData() {
-      // Sincroniza dados mestres providos por data_catalogs.js via main.js
       if (typeof window !== 'undefined') {
-        if (window.PRODUCT_CATALOG && Object.keys(window.PRODUCT_CATALOG).length > 0) {
-          PRODUCT_CATALOG = window.PRODUCT_CATALOG;
-        }
-        if (window.FACTORY_RECIPES && window.FACTORY_RECIPES.length > 0) {
-          FACTORY_RECIPES = window.FACTORY_RECIPES;
-        }
+        if (window.PRODUCT_CATALOG && Object.keys(window.PRODUCT_CATALOG).length > 0) PRODUCT_CATALOG = window.PRODUCT_CATALOG;
+        if (window.FACTORY_RECIPES && window.FACTORY_RECIPES.length > 0) FACTORY_RECIPES = window.FACTORY_RECIPES;
         if (window.RECIPE_GRAPH) RECIPE_GRAPH = window.RECIPE_GRAPH;
         if (window.MEDIA_OUTLETS) MEDIA_OUTLETS = window.MEDIA_OUTLETS;
         if (window.SEAPORTS) SEAPORTS = window.SEAPORTS;
       }
-
-      if (window.location.protocol.startsWith('http')) {
-        try {
-          const catRes = await fetch('../data/products/catalog.json');
-          if (catRes.ok) {
-            const catData = await catRes.json();
-            if (catData && catData.products) {
-              PRODUCT_CATALOG = catData.products;
-              if (typeof window !== 'undefined') window.PRODUCT_CATALOG = catData.products;
-            }
-          }
-          const recRes = await fetch('../data/production/recipes.json');
-          if (recRes.ok) {
-            const recData = await recRes.json();
-            if (recData && recData.recipes) {
-              FACTORY_RECIPES = recData.recipes;
-              if (typeof window !== 'undefined') window.FACTORY_RECIPES = recData.recipes;
-            }
-          }
-        } catch (e) {}
-      }
-
       const catalog = (typeof PRODUCT_CATALOG !== 'undefined' && PRODUCT_CATALOG)
         ? PRODUCT_CATALOG
         : ((typeof window !== 'undefined' && window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : {});
-
-      Object.keys(catalog).forEach(id => {
-        if (!playerBrandRating[id]) playerBrandRating[id] = 20;
+      Object.keys(catalog || {}).forEach(id => {
+        if (playerBrandRating && !playerBrandRating[id]) playerBrandRating[id] = 20;
       });
     }
 

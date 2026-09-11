@@ -72,10 +72,18 @@ export class KeyboardController {
   }
 
   handleKeyDown(e) {
-    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+      if (e.key === 'Escape' || e.code === 'Escape') {
+        document.activeElement.blur();
+      }
+      return;
+    }
 
     const k = e.key ? e.key.toLowerCase() : '';
     const code = e.code || '';
+    const isPlaying = (typeof window !== 'undefined')
+      ? ((window.currentAppScreen || window.GameState?.currentAppScreen) === 'PLAYING')
+      : true;
 
     // Teclas de Movimentação Contínua (WASD & Setas)
     if (['w', 'a', 's', 'd', 'arrowup', 'arrowleft', 'arrowdown', 'arrowright'].includes(k)) {
@@ -96,7 +104,7 @@ export class KeyboardController {
     }
 
     // Alternar modo teatro (F)
-    if (k === 'f') {
+    if (k === 'f' && !e.ctrlKey && !e.altKey && !e.metaKey) {
       this.toggleTheaterMode();
       return;
     }
@@ -104,22 +112,23 @@ export class KeyboardController {
     // Tecla Espaço (Pausar / Retomar Simulação)
     if (k === ' ' || code === 'Space') {
       e.preventDefault();
+      if (!isPlaying) return;
       const curSpeed = typeof window.gameSpeed !== 'undefined' ? window.gameSpeed : (window.GameState?.gameSpeed || 0);
       const setSpeedFn = window.HUDSystem?.setSpeed || window.setSpeed;
+      const lastSpd = (window.HUDSystem && typeof window.HUDSystem.getLastActiveSpeed === 'function')
+        ? window.HUDSystem.getLastActiveSpeed()
+        : (window.lastActiveSpeed || window.previousSpeedBeforePause || 2);
       if (typeof setSpeedFn === 'function') {
-        if (curSpeed > 0) {
-          window.previousSpeedBeforePause = curSpeed;
-          setSpeedFn(0);
-        } else {
-          setSpeedFn(window.previousSpeedBeforePause || 1);
-        }
+        setSpeedFn(curSpeed === 0 ? lastSpd : 0);
       }
       return;
     }
 
-    // Teclas 1 a 5 (Velocidade de Simulação)
-    if (['1', '2', '3', '4', '5'].includes(k) && !e.ctrlKey && !e.altKey && !e.metaKey) {
-      const spd = parseInt(k, 10);
+    // Teclas 1 a 5 & Numpad 1 a 5 (Velocidade de Simulação)
+    const numMatch = code.match(/^(?:Digit|Numpad)([1-5])$/) || (['1', '2', '3', '4', '5'].includes(k) && !e.ctrlKey && !e.altKey && !e.metaKey ? [null, k] : null);
+    if (numMatch && isPlaying) {
+      e.preventDefault();
+      const spd = parseInt(numMatch[1], 10);
       const setSpeedFn = window.HUDSystem?.setSpeed || window.setSpeed;
       if (typeof setSpeedFn === 'function') {
         setSpeedFn(spd);
@@ -128,7 +137,8 @@ export class KeyboardController {
     }
 
     // Tecla 0 (Pausa direta)
-    if (k === '0') {
+    if ((k === '0' || code === 'Digit0' || code === 'Numpad0') && isPlaying) {
+      e.preventDefault();
       const setSpeedFn = window.HUDSystem?.setSpeed || window.setSpeed;
       if (typeof setSpeedFn === 'function') {
         setSpeedFn(0);
@@ -147,28 +157,34 @@ export class KeyboardController {
       return;
     }
 
-    // Atalhos Executivos F1 a F4
+    // Atalhos Executivos de Função (F1 a F4 & F8)
     if (k === 'f1') {
       e.preventDefault();
-      const fn = window.EncyclopediaPanel?.renderEncyclopediaModal || window.openEncyclopediaModal;
+      const fn = window.toggleEncyclopediaModal || window.openEncyclopediaModal || window.EncyclopediaPanel?.renderEncyclopediaModal;
       if (typeof fn === 'function') fn();
       return;
     }
     if (k === 'f2') {
       e.preventDefault();
-      const fn = window.TechTreePanel?.renderTechTreeModal || window.openTechTreeModal;
+      const fn = window.toggleTechTreeModal || window.openTechTreeModal || window.TechTreePanel?.renderTechTreeModal;
       if (typeof fn === 'function') fn();
       return;
     }
     if (k === 'f3') {
       e.preventDefault();
-      const fn = window.AdvisorPanel?.renderExecutiveBoardModal || window.openExecutiveBoardModal;
+      const fn = window.toggleDevDashboard || window.openDevDashboard || window.DevDashboardPanel?.toggleDevDashboard;
       if (typeof fn === 'function') fn();
       return;
     }
     if (k === 'f4') {
       e.preventDefault();
-      const fn = window.DREPanel?.renderDREModal || window.openDREModal;
+      const fn = window.toggleDREModal || window.openDREModal || window.DREPanel?.renderDREModal;
+      if (typeof fn === 'function') fn();
+      return;
+    }
+    if (k === 'f8') {
+      e.preventDefault();
+      const fn = window.toggleBugReportModal || window.openBugReportModal || window.DevDashboardPanel?.toggleBugReportModal;
       if (typeof fn === 'function') fn();
       return;
     }

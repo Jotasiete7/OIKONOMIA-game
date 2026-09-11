@@ -154,7 +154,7 @@ import ModalManager, {
 } from './ui/modal_manager.js';
 
 // --- Fase 6.2: HUD Executivo & Ticker ---
-import HUDSystem, { setSpeed, updateHUD, updateAdvisorHUDChip } from './ui/hud.js';
+import HUDSystem, { setSpeed, updateHUD, updateAdvisorHUDChip, addLog, addGameLog } from './ui/hud.js';
 import TickerUI from './ui/ticker.js';
 
 // --- Fase 6.3: Motor de Renderização Canvas & Isometria ---
@@ -443,6 +443,8 @@ window.handleGlobalEscape = handleGlobalEscape;
 // Re-exposição global (Fase 6.2 — TopBar & HUD Executivo)
 window.HUDSystem = HUDSystem;
 window.setSpeed = setSpeed;
+window.addLog = addLog;
+window.addGameLog = addGameLog;
 window.updateHUD = updateHUD;
 window.updateUI = updateHUD;
 window.updateAdvisorHUDChip = updateAdvisorHUDChip;

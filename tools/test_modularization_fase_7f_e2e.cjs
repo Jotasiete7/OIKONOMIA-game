@@ -78,7 +78,7 @@ async function run() {
       }).on('error', reject);
     });
 
-    const pageTarget = targets.find(t => t.type === 'page');
+    const pageTarget = targets.find(t => t.type === 'page' && (t.url.includes(String(VITE_PORT)) || !t.url.startsWith('about:'))) || targets.find(t => t.type === 'page');
     if (!pageTarget || !pageTarget.webSocketDebuggerUrl) {
       throw new Error('Página do jogo não encontrada no CDP: ' + JSON.stringify(targets));
     }
@@ -128,6 +128,7 @@ async function run() {
 
     await sendCdp('Runtime.enable');
     await sendCdp('Page.enable');
+    await sendCdp('Page.navigate', { url: 'http://localhost:' + VITE_PORT + '/' });
 
     async function evaluate(expression) {
       const res = await sendCdp('Runtime.evaluate', {
@@ -139,7 +140,7 @@ async function run() {
     }
 
     console.log('✓ Sessão CDP conectada. Aguardando inicialização completa do Oikonomia...');
-    await sleep(2000);
+    await sleep(3500);
 
     // Teste 1: Validação do SupplierPicker e getSupplierOffersForProduct
     const supplierTest = await evaluate(`

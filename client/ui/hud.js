@@ -332,9 +332,40 @@ export function updateHUD() {
   }
 }
 
+export function addLog(text, color = 'text-slate-300', options = {}) {
+  const isBrowser = typeof document !== 'undefined';
+  const logs = isBrowser ? (document.getElementById('game-log-floating') || document.getElementById('game-logs')) : null;
+  const state = getActiveState();
+  const d = (typeof window !== 'undefined' && window.day !== undefined) ? window.day : (state.day || 1);
+  const m = (typeof window !== 'undefined' && window.month !== undefined) ? window.month : (state.month || 1);
+  const y = (typeof window !== 'undefined' && window.year !== undefined) ? window.year : (state.year || 1);
+
+  if (logs) {
+    const item = document.createElement('div');
+    item.className = color;
+    item.innerText = `[${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/A${y}] ${text}`;
+    logs.prepend(item);
+    while (logs.children.length > 80) logs.removeChild(logs.lastChild);
+  }
+
+  // Espelha no Ticker (reaproveita o mesmo evento com filtragem interna por cor)
+  const ticker = (typeof window !== 'undefined' && window.TickerSystem) ? window.TickerSystem : (typeof TickerSystem !== 'undefined' && TickerSystem ? TickerSystem : null);
+  if (ticker && typeof ticker.pushFromLog === 'function') {
+    ticker.pushFromLog(text, color, options);
+  }
+
+  // Registra no Flight Recorder de Telemetria
+  if (typeof window !== 'undefined' && typeof window.trackPlayerAction === 'function') {
+    window.trackPlayerAction(options.category || 'EVENT', text, options);
+  }
+}
+export const addGameLog = addLog;
+
 export const HUDSystem = {
   setSpeed,
   getLastActiveSpeed,
+  addLog,
+  addGameLog,
   updateClock,
   updateQuarterBadge,
   updateCash,
@@ -352,6 +383,8 @@ export const HUDSystem = {
 if (typeof window !== 'undefined') {
   window.HUDSystem = HUDSystem;
   window.setSpeed = setSpeed;
+  window.addLog = addLog;
+  window.addGameLog = addGameLog;
   window.updateHUD = updateHUD;
   window.updateUI = updateHUD;
   window.updateAdvisorHUDChip = updateAdvisorHUDChip;

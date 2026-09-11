@@ -4,7 +4,8 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const VITE_PORT = 5179;
+const VITE_PORT = 5199;
+const CDP_PORT = 9239;
 
 const viteProcess = spawn('npx.cmd', ['vite', '--port', String(VITE_PORT), '--strictPort'], {
   cwd: path.resolve(__dirname, '..'),
@@ -78,7 +79,7 @@ async function run() {
       }).on('error', reject);
     });
 
-    const pageTarget = targets.find(t => t.type === 'page');
+    const pageTarget = targets.find(t => t.type === 'page' && (t.url.includes(String(VITE_PORT)) || !t.url.startsWith('about:'))) || targets.find(t => t.type === 'page');
     if (!pageTarget || !pageTarget.webSocketDebuggerUrl) {
       throw new Error('Página do jogo não encontrada no CDP: ' + JSON.stringify(targets));
     }
@@ -113,9 +114,10 @@ async function run() {
 
     await sendCdp('Runtime.enable');
     await sendCdp('Page.enable');
+    await sendCdp('Page.navigate', { url: 'http://localhost:' + VITE_PORT + '/' });
 
     console.log('✓ Conectado ao CDP da engine.');
-    await sleep(1500);
+    await sleep(3500);
 
     console.log('\n--- Teste 1: Exposição Global dos Métodos ---');
     const checkGlobals = await sendCdp('Runtime.evaluate', {
