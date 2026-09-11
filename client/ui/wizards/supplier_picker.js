@@ -9,7 +9,10 @@
  * - Terminais Portuários (inspeção de cargas e frete marítimo internacional)
  */
 
-import { PRODUCT_CATALOG } from '../../data_catalogs.js';
+import { PRODUCT_CATALOG, SEAPORTS } from '../../data_catalogs.js';
+import { SEAPORTS_128 } from '../../engine/world_grid.js';
+import CoreMath from '../../core_math.js';
+import { LOGO_ICONS, generateCompanyLogo } from '../../logo_generator.js';
 
 export const SupplierPicker = {
   supplierTargetShelf: null,
@@ -28,10 +31,214 @@ export const SupplierPicker = {
   },
 
   getSupplierOffers(prodId, tile) {
-    if (typeof window !== 'undefined' && typeof window.getSupplierOffersForProduct === 'function') {
-      return window.getSupplierOffersForProduct(prodId, tile);
+    return this.getSupplierOffersForProduct(prodId, tile);
+  },
+
+  getSupplierOffersForProduct(prodId, storeTile) {
+    const offers = [];
+    const playerProfile = (typeof window !== 'undefined' && window.playerProfile) ? window.playerProfile : null;
+    const pName = playerProfile?.companyName || 'OikoCorp Holding';
+    const pSeed = playerProfile?.logoRegenSeed || 0;
+    const playerLogo = (typeof generateCompanyLogo === 'function')
+      ? generateCompanyLogo(pName, pSeed, false)
+      : ((typeof window !== 'undefined' && typeof window.generateCompanyLogo === 'function') ? window.generateCompanyLogo(pName, pSeed, false) : null);
+    const logoIcons = (typeof LOGO_ICONS !== 'undefined' && LOGO_ICONS) || (typeof window !== 'undefined' ? window.LOGO_ICONS : null);
+    const portLogo = { shape: 'hexagon', color: '#38bdf8', iconDef: (logoIcons ? logoIcons.anchor : null) };
+
+    const math = (typeof CoreMath !== 'undefined' && CoreMath) || (typeof window !== 'undefined' ? window.CoreMath : null);
+    const getDist = (p1, p2) => math ? math.calculateManhattanDistance(p1, p2) : (Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y));
+    const getFreight = (dist, rate, min) => math ? math.calculateUnitFreight(dist, rate, min) : Math.max(min, dist * rate);
+    const getLanded = (price, freight) => math ? math.calculateLandedCost(price, freight) : Number((price + freight).toFixed(2));
+
+    // 1. Portos Marítimos
+    const seaportList = (typeof SEAPORTS_128 !== 'undefined' && SEAPORTS_128 && SEAPORTS_128.length > 0)
+      ? SEAPORTS_128
+      : ((typeof SEAPORTS !== 'undefined' && SEAPORTS) ? SEAPORTS : ((typeof window !== 'undefined' && window.SEAPORTS) ? window.SEAPORTS : []));
+
+    for (const port of seaportList) {
+      if (port.supplies && port.supplies[prodId]) {
+        const sup = port.supplies[prodId];
+        const dist = getDist(port.tile, storeTile);
+        const freight = getFreight(dist, port.freightRatePerTile || 0.010, 0.02);
+        const landed = getLanded(sup.wholesalePrice, freight);
+        offers.push({
+          type: 'port',
+          supplierId: port.id,
+          supplierName: `⚓ ${port.name}`,
+          facilityName: port.name,
+          ownerName: 'Autoridade Portuária & Alfândega',
+          ownerLogo: portLogo,
+          ownerTag: '🚢 Importação Marítima',
+          activitySummary: 'Terminal alfandegado de suprimentos globais a granel',
+          stockLabel: `Cota: ${sup.quota || 500} un/dia`,
+          wholesalePrice: sup.wholesalePrice,
+          quality: sup.quality || 50,
+          quota: sup.quota || 500,
+          origin: sup.origin || 'Importação Internacional',
+          distance: dist,
+          freight,
+          landedCost: landed
+        });
+      }
     }
-    return [];
+
+    const prodCatalog = (typeof PRODUCT_CATALOG !== 'undefined' && PRODUCT_CATALOG) || (typeof window !== 'undefined' ? window.PRODUCT_CATALOG : {});
+
+    // Se nenhum porto tiver o produto explicitamente mapeado, gera oferta de importação marítima
+    if (offers.filter(o => o.type === 'port').length === 0 && seaportList.length > 0) {
+      const prod = prodCatalog[prodId] || { name: prodId, baseCost: 1.0, standardPrice: 2.0 };
+      const primaryPort = seaportList[0];
+      const dist = getDist(primaryPort.tile, storeTile);
+      const wholesalePrice = prod.baseCost ? Number((prod.baseCost * 1.25).toFixed(2)) : 1.00;
+      const freight = getFreight(dist, primaryPort.freightRatePerTile || 0.010, 0.02);
+      const landed = getLanded(wholesalePrice, freight);
+      offers.push({
+        type: 'port',
+        supplierId: primaryPort.id,
+        supplierName: `⚓ ${primaryPort.name}`,
+        facilityName: primaryPort.name,
+        ownerName: 'Autoridade Portuária & Alfândega',
+        ownerLogo: portLogo,
+        ownerTag: '🚢 Importação Marítima',
+        activitySummary: 'Terminal alfandegado de suprimentos globais a granel',
+        stockLabel: 'Cota: 500 un/dia',
+        wholesalePrice,
+        quality: 50,
+        quota: 500,
+        origin: 'Importação Internacional',
+        distance: dist,
+        freight,
+        landedCost: landed
+      });
+    }
+
+    // 2. Fábricas, Fazendas, Minas e Armazéns Próprios (via activeFacilitySet)
+    const activeSet = (typeof window !== 'undefined' && window.activeFacilitySet)
+      ? window.activeFacilitySet
+      : (window.WorldGridEngine ? window.WorldGridEngine.activeFacilitySet : new Map());
+
+    for (const tile of activeSet.values()) {
+      if (tile.factory && tile.factory.lines) {
+        for (const [recipeId, line] of Object.entries(tile.factory.lines)) {
+          if (line.outputProductId === prodId) {
+            const dist = getDist(tile, storeTile);
+            const freight = getFreight(dist, 0.010, 0.01);
+            const landed = getLanded(line.unitCost, freight);
+            offers.push({
+              type: 'internal_factory',
+              supplierId: `factory_${tile.x}_${tile.y}_${recipeId}`,
+              supplierName: `🏭 ${tile.factory.name} (${line.recipeName})`,
+              facilityName: `${tile.factory.name} — ${line.recipeName}`,
+              ownerName: pName,
+              ownerLogo: playerLogo,
+              ownerTag: '🏛️ Produção Própria',
+              activitySummary: `Linha de manufatura e refino industrial no lote (${tile.x}, ${tile.y})`,
+              stockLabel: `Armazém: ${line.finishedStock || 0} / ${line.maxStock || 500} un (${line.dailyCapacity || 100} un/dia)`,
+              wholesalePrice: line.unitCost,
+              quality: line.outputQuality,
+              quota: line.dailyCapacity,
+              origin: `Fabricação Própria (${tile.x}, ${tile.y})`,
+              distance: dist,
+              freight,
+              landedCost: landed
+            });
+          }
+        }
+      }
+      if (tile.farm) {
+        const isDirectCrop = (tile.farm.cropId === prodId);
+        const isPoultryEggs = ((tile.farm.cropId === 'poultry' || tile.farm.farmTypeId === 'farm_poultry') && prodId === 'eggs');
+
+        if (isDirectCrop || isPoultryEggs) {
+          const dist = getDist(tile, storeTile);
+          const freight = getFreight(dist, 0.008, 0.01);
+          const farmCost = typeof tile.farm.unitCost === 'number' ? tile.farm.unitCost : (tile.farm.dailyOperatingCost || 0.45);
+          const landed = getLanded(farmCost, freight);
+          const effYield = tile.farm.effectiveYield || tile.farm.dailyYield || 500;
+          const effQuality = tile.farm.effectiveQuality || tile.farm.quality || 60;
+          const isEggs = isPoultryEggs;
+
+          offers.push({
+            type: 'internal_farm',
+            supplierId: isEggs ? `farm_${tile.x}_${tile.y}_eggs` : `farm_${tile.x}_${tile.y}`,
+            supplierName: isEggs ? `🌾 ${tile.farm.name} (Ovos Frescos)` : `🌾 ${tile.farm.name}`,
+            facilityName: isEggs ? `${tile.farm.name} — Postura de Ovos` : tile.farm.name,
+            ownerName: pName,
+            ownerLogo: playerLogo,
+            ownerTag: '🏛️ Produção Própria',
+            activitySummary: isEggs
+              ? `Postura e coleta diária de ovos frescos de granja no lote (${tile.x}, ${tile.y})`
+              : `Cultivo rural direto de ${tile.farm.cropName || 'grãos'} no lote (${tile.x}, ${tile.y})`,
+            stockLabel: `Silo: ${tile.farm.stock || 0} / ${tile.farm.maxCapacity || 5000} un (${effYield} un/dia)`,
+            wholesalePrice: farmCost,
+            quality: effQuality,
+            quota: effYield,
+            origin: `Produção Agrícola (${tile.x}, ${tile.y})`,
+            distance: dist,
+            freight,
+            landedCost: landed
+          });
+        }
+      }
+      if (tile.mine && tile.mine.resourceId === prodId) {
+        const dist = getDist(tile, storeTile);
+        const freight = getFreight(dist, 0.012, 0.01);
+        const landed = getLanded(tile.mine.unitCost, freight);
+        offers.push({
+          type: 'internal_mine',
+          supplierId: `mine_${tile.x}_${tile.y}`,
+          supplierName: `⛏️ ${tile.mine.name}`,
+          facilityName: tile.mine.name,
+          ownerName: pName,
+          ownerLogo: playerLogo,
+          ownerTag: '🏛️ Produção Própria',
+          activitySummary: `Extração e refino primário de ${tile.mine.resourceName || 'minério'} no lote (${tile.x}, ${tile.y})`,
+          stockLabel: `Pátio: ${tile.mine.stock || 0} / ${tile.mine.maxCapacity || 500} un (${tile.mine.dailyYield || 60} un/dia)`,
+          wholesalePrice: tile.mine.unitCost,
+          quality: tile.mine.quality,
+          quota: tile.mine.dailyYield,
+          origin: `Extração Mineral (${tile.x}, ${tile.y})`,
+          distance: dist,
+          freight,
+          landedCost: landed
+        });
+      }
+      if (tile.warehouse && tile.warehouse.inventory && tile.warehouse.inventory[prodId]) {
+        const inv = tile.warehouse.inventory[prodId];
+        if (inv.stock > 0 || inv.safetyStock > 0 || inv.targetStock > 0 || (inv.maxCapacity && inv.maxCapacity > 0)) {
+          const dist = getDist(tile, storeTile);
+          const freight = getFreight(dist, 0.008, 0.01);
+          const unitPrice = typeof inv.avgUnitCost === 'number' && inv.avgUnitCost > 0 ? inv.avgUnitCost : (prodCatalog[prodId]?.baseCost || 1.0);
+          const landed = getLanded(unitPrice, freight);
+          const pNameStr = prodCatalog[prodId]?.name || prodId;
+          offers.push({
+            type: 'internal_warehouse',
+            supplierId: `warehouse_${tile.x}_${tile.y}`,
+            supplierName: `🏢 ${tile.warehouse.name}`,
+            facilityName: `${tile.warehouse.name} — Hub Logístico`,
+            ownerName: pName,
+            ownerLogo: playerLogo,
+            ownerTag: '📦 Armazém Central',
+            activitySummary: `Estoque consolidado e buffer estratégico de ${pNameStr} no lote (${tile.x}, ${tile.y})`,
+            stockLabel: `Armazém: ${inv.stock.toLocaleString()} un (Custo Médio: $${unitPrice.toFixed(2)})`,
+            wholesalePrice: unitPrice,
+            quality: inv.quality || 60,
+            quota: inv.stock || inv.maxCapacity || 5000,
+            origin: `Armazém Central (${tile.x}, ${tile.y})`,
+            distance: dist,
+            freight,
+            landedCost: landed
+          });
+        }
+      }
+    }
+
+    return offers.sort((a, b) => {
+      const aInternal = a.type?.startsWith('internal_') ? 1 : 0;
+      const bInternal = b.type?.startsWith('internal_') ? 1 : 0;
+      if (aInternal !== bInternal) return bInternal - aInternal;
+      return a.landedCost - b.landedCost;
+    });
   },
 
   addLog(msg, cls) {
@@ -412,5 +619,21 @@ export const SupplierPicker = {
     if (modal) modal.classList.add('hidden');
   }
 };
+
+if (typeof window !== 'undefined') {
+  window.SupplierPicker = SupplierPicker;
+  window.getSupplierOffersForProduct = (prodId, storeTile) => SupplierPicker.getSupplierOffersForProduct(prodId, storeTile);
+  window.renderSupplierOptionCard = (...args) => SupplierPicker.renderSupplierOptionCard(...args);
+  window.openSupplierModal = (...args) => SupplierPicker.openSupplierModal(...args);
+  window.applySupplierChange = (...args) => SupplierPicker.applySupplierChange(...args);
+  window.closeSupplierModal = () => SupplierPicker.closeSupplierModal();
+  window.openFactoryInputSupplierModal = (...args) => SupplierPicker.openFactoryInputSupplierModal(...args);
+  window.applyFactoryInputSupplierChange = (...args) => SupplierPicker.applyFactoryInputSupplierChange(...args);
+  window.openFarmFeedSupplierModal = (...args) => SupplierPicker.openFarmFeedSupplierModal(...args);
+  window.applyFarmFeedSupplierChange = (...args) => SupplierPicker.applyFarmFeedSupplierChange(...args);
+  window.disconnectFarmFeed = (...args) => SupplierPicker.disconnectFarmFeed(...args);
+  window.openPortModal = (...args) => SupplierPicker.openPortModal(...args);
+  window.closePortModal = () => SupplierPicker.closePortModal();
+}
 
 export default SupplierPicker;

@@ -96,7 +96,19 @@ import {
   deleteSaveSlot,
   generateExportDataUri,
   saveSlotWithBackup,
-  loadSlotWithFallback
+  loadSlotWithFallback,
+  extractBuiltTiles,
+  applyBuiltTiles,
+  serializeCurrentGame,
+  saveGame,
+  saveGameInNewSlot,
+  quickSaveGame,
+  loadGameFromData,
+  loadGameById,
+  deleteSaveById,
+  exportSaveFile,
+  handleImportSaveFile,
+  checkAutoSave
 } from './save_system.js';
 
 // --- Sistema de Armazém Logístico & CDs ---
@@ -315,13 +327,45 @@ window.migrateSaveData = migrateSaveData;
 window.getSavesIndex = getSavesIndex;
 window.saveSavesIndex = saveSavesIndex;
 window.reconcileSavesIndex = reconcileSavesIndex;
-window._saveSystem = { getSavesIndex, saveSavesIndex, reconcileSavesIndex, migrateSaveData, saveSlotWithBackup, loadSlotWithFallback };
+window._saveSystem = {
+  getSavesIndex,
+  saveSavesIndex,
+  reconcileSavesIndex,
+  migrateSaveData,
+  saveSlotWithBackup,
+  loadSlotWithFallback,
+  extractBuiltTiles,
+  applyBuiltTiles,
+  serializeCurrentGame,
+  saveGame,
+  saveGameInNewSlot,
+  quickSaveGame,
+  loadGameFromData,
+  loadGameById,
+  deleteSaveById,
+  exportSaveFile,
+  handleImportSaveFile,
+  checkAutoSave
+};
+window.SaveSystem = window._saveSystem;
 window.serializeGameState = serializeGameState;
 window.createSaveMetadata = createSaveMetadata;
 window.deleteSaveSlot = deleteSaveSlot;
 window.generateExportDataUri = generateExportDataUri;
 window.saveSlotWithBackup = saveSlotWithBackup;
 window.loadSlotWithFallback = loadSlotWithFallback;
+window.extractBuiltTiles = extractBuiltTiles;
+window.applyBuiltTiles = applyBuiltTiles;
+window.serializeCurrentGame = serializeCurrentGame;
+window.saveGame = saveGame;
+window.saveGameInNewSlot = saveGameInNewSlot;
+window.quickSaveGame = quickSaveGame;
+window.loadGameFromData = loadGameFromData;
+window.loadGameById = loadGameById;
+window.deleteSaveById = deleteSaveById;
+window.exportSaveFile = exportSaveFile;
+window.handleImportSaveFile = handleImportSaveFile;
+window.checkAutoSave = checkAutoSave;
 
 // Re-exposição global (Warehouse System)
 window.WarehouseSystem = WarehouseSystem;

@@ -15,7 +15,8 @@ const fs = require('fs');
 const path = require('path');
 
 const EDGE_PATH = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
-const HTML_FILE_URL = "file:///D:/OIKONOMIA%20PROJETO/dist/index.html";
+const HTTP_PORT = 5185;
+const HTML_FILE_URL = "http://127.0.0.1:" + HTTP_PORT + "/";
 const SCREENSHOT_DIR = path.resolve(__dirname, '../docs/auditoria/screenshots');
 
 function sleep(ms) {
@@ -62,7 +63,8 @@ class CDPClient {
       awaitPromise: true
     });
     if (res.exceptionDetails) {
-      throw new Error(`Eval error: ${JSON.stringify(res.exceptionDetails)}`);
+      const desc = res.exceptionDetails.exception?.description || res.exceptionDetails.text;
+      throw new Error(`Eval error: ${desc} (line ${res.exceptionDetails.lineNumber}:${res.exceptionDetails.columnNumber})`);
     }
     return res.result ? res.result.value : undefined;
   }
@@ -81,6 +83,29 @@ async function runBrowserAudit() {
   console.log('================================================================');
   console.log('   AUDITORIA REAL DE INTERFACE E2E (HEADLESS CHROMIUM BROWSER)   ');
   console.log('================================================================\n');
+
+  let staticServer = null;
+  staticServer = http.createServer((req, res) => {
+    let reqPath = req.url.split('?')[0];
+    let filePath = path.join(__dirname, '../dist', reqPath === '/' ? 'index.html' : reqPath);
+    if (!fs.existsSync(filePath)) {
+      res.statusCode = 404;
+      return res.end('Not found');
+    }
+    const ext = path.extname(filePath);
+    const mime = {
+      '.html': 'text/html; charset=utf-8',
+      '.js': 'application/javascript; charset=utf-8',
+      '.css': 'text/css; charset=utf-8',
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.svg': 'image/svg+xml',
+      '.json': 'application/json'
+    }[ext] || 'application/octet-stream';
+    res.setHeader('Content-Type', mime);
+    fs.createReadStream(filePath).pipe(res);
+  });
+  await new Promise(resolve => staticServer.listen(HTTP_PORT, resolve));
 
   console.log('1. Iniciando Microsoft Edge Chromium Headless...');
   const tmpDir = path.join(require('os').tmpdir(), 'edge_audit_' + Date.now());
@@ -133,7 +158,11 @@ async function runBrowserAudit() {
 
     console.log(`3. Navegando para o jogo: ${HTML_FILE_URL}`);
     await cdp.send('Page.navigate', { url: HTML_FILE_URL });
-    await sleep(1500);
+    for (let i = 0; i < 30; i++) {
+      await sleep(300);
+      const isReady = await cdp.eval('typeof window.updateUI === "function" && (window.__OIKO_MODULES_READY__ || typeof window.StoreWizard !== "undefined")').catch(() => false);
+      if (isReady) break;
+    }
 
     const title = await cdp.eval('document.title');
     console.log(`   Página carregada com sucesso! Título: "${title}"`);
@@ -158,6 +187,9 @@ async function runBrowserAudit() {
         }
         currentAppScreen = 'PLAYING';
         cash = 1000000;
+        if (typeof initWorldGrid === 'function' && (!window.worldGrid || window.worldGrid.length === 0)) {
+          initWorldGrid();
+        }
         updateUI();
         if (typeof renderGameLoop === 'function') renderGameLoop();
       })()
@@ -557,6 +589,9 @@ async function runBrowserAudit() {
     if (edgeProc) {
       edgeProc.kill();
       console.log('Navegador headless encerrado.');
+    }
+    if (staticServer) {
+      staticServer.close();
     }
   }
 }

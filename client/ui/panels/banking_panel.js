@@ -82,6 +82,15 @@ export function renderBankTab(tabId) {
   }
 }
 
+export function calcAverageQRAllResearched() {
+  const rdLabs = (typeof window !== 'undefined' && window.rdLabs) ? window.rdLabs : (GameState.rdLabs || {});
+  const projects = Object.values(rdLabs || {});
+  if (projects.length === 0) return 0;
+  const qrList = projects.map(p => p.currentQR || p.targetQR || 0).filter(q => q > 0);
+  if (qrList.length === 0) return 0;
+  return qrList.reduce((s, q) => s + q, 0) / qrList.length;
+}
+
 export function calcAverageBrandRating() {
   const ratings = (typeof window !== 'undefined' && window.playerBrandRating) ? window.playerBrandRating : GameState.playerBrandRating;
   const brands = Object.values(ratings || {}).filter(b => b > 10);
@@ -102,16 +111,16 @@ export function calcBankingCreditScore() {
     if (cityInfo && cityInfo.cityId) citiesSet.add(cityInfo.cityId);
   }
 
-  const nwObj = (typeof window !== 'undefined' && typeof window.calculateCorporateNetWorth === 'function')
-    ? window.calculateCorporateNetWorth()
-    : { totalAssets: 0 };
+  const nwObj = (typeof window !== 'undefined' && window.DREPanel && typeof window.DREPanel.calculateCorporateNetWorth === 'function')
+    ? window.DREPanel.calculateCorporateNetWorth()
+    : ((typeof window !== 'undefined' && typeof window.calculateCorporateNetWorth === 'function')
+      ? window.calculateCorporateNetWorth()
+      : { totalAssets: 0 });
   const currentCash = GameState.cash ?? ((typeof window !== 'undefined') ? window.cash : 0);
-  const facilityAssets = nwObj.totalAssets - (currentCash > 0 ? currentCash : 0);
+  const facilityAssets = (nwObj.totalAssets || 0) - (currentCash > 0 ? currentCash : 0);
   const unlocked = (typeof window !== 'undefined' && window.unlockedProducts) ? window.unlockedProducts : GameState.unlockedProducts;
 
-  const avgQR = (typeof window !== 'undefined' && typeof window.calcAverageQRAllResearched === 'function')
-    ? window.calcAverageQRAllResearched()
-    : 0;
+  const avgQR = calcAverageQRAllResearched();
 
   return bs.calcCreditScore({
     cash:                  currentCash,
@@ -631,6 +640,8 @@ export const BankingPanel = {
   renderBankTab,
   calcBankingCreditScore,
   processBankingInstallments,
+  calcAverageQRAllResearched,
+  calcAverageBrandRating,
   _onBankSlider,
   _onBankPlanSelect,
   _confirmNewLoan,
@@ -646,6 +657,8 @@ if (typeof window !== 'undefined') {
   window.updateBankHUDBadge = updateBankHUDBadge;
   window.calcBankingCreditScore = calcBankingCreditScore;
   window.processBankingInstallments = processBankingInstallments;
+  window.calcAverageQRAllResearched = calcAverageQRAllResearched;
+  window.calcAverageBrandRating = calcAverageBrandRating;
   window._onBankSlider = _onBankSlider;
   window._onBankPlanSelect = _onBankPlanSelect;
   window._confirmNewLoan = _confirmNewLoan;

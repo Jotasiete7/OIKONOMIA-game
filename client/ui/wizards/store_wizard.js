@@ -27,11 +27,10 @@ export const StoreWizard = {
   activeAddProductCategoryTab: 'Alimentos',
 
   get pendingTile() {
-    return this.pendingStoreTile || (typeof window !== 'undefined' ? window.pendingTile : null);
+    return this.pendingStoreTile;
   },
   set pendingTile(tile) {
     this.pendingStoreTile = tile;
-    if (typeof window !== 'undefined') window.pendingTile = tile;
   },
 
   get cash() {
@@ -69,17 +68,11 @@ export const StoreWizard = {
   },
 
   hasNicheLicense(typeId) {
-    if (typeof window !== 'undefined' && typeof window.hasNicheLicense === 'function') {
-      return window.hasNicheLicense(typeId);
-    }
     if (typeId === 'kombini') return true;
     return this.acquiredLicenses.has(typeId);
   },
 
   getNicheLicenseCost(typeId) {
-    if (typeof window !== 'undefined' && typeof window.getNicheLicenseCost === 'function') {
-      return window.getNicheLicenseCost(typeId);
-    }
     if (this.hasNicheLicense(typeId)) return 0;
     const licenses = (typeof STORE_NICHE_LICENSES !== 'undefined' ? STORE_NICHE_LICENSES : window.STORE_NICHE_LICENSES) || {};
     return licenses[typeId]?.cost || 0;
@@ -891,5 +884,46 @@ export const StoreWizard = {
     this.updateUI();
   }
 };
+
+if (typeof window !== 'undefined') {
+  window.StoreWizard = StoreWizard;
+  window.hasNicheLicense = (typeId) => StoreWizard.hasNicheLicense(typeId);
+  window.getNicheLicenseCost = (typeId) => StoreWizard.getNicheLicenseCost(typeId);
+  window.openStoreModal = (tile) => StoreWizard.openStoreWizard(tile);
+  window.openStoreWizard = (tile) => StoreWizard.openStoreWizard(tile);
+  window.selectStoreType = (typeId) => StoreWizard.selectStoreType(typeId);
+  window.advanceToStep2 = () => StoreWizard.advanceToStep2();
+  window.backToStep1 = () => StoreWizard.backToStep1();
+  window.setCategoryTab = (cat) => StoreWizard.setCategoryTab(cat);
+  window.toggleProductInWizard = (prodId) => StoreWizard.toggleProductInWizard(prodId);
+  window.confirmOpenStore = () => StoreWizard.confirmOpenStore();
+  window.closeStoreWizard = () => StoreWizard.closeStoreWizard();
+  window.openAddProductModal = (x, y) => StoreWizard.openAddProductModal(x, y);
+  window.setAddProductCategoryTab = (cat) => StoreWizard.setAddProductCategoryTab(cat);
+  window.confirmAddNewProductToStore = (prodId) => StoreWizard.confirmAddNewProductToStore(prodId);
+  window.closeAddProductModal = () => StoreWizard.closeAddProductModal();
+  window.removeProductFromStore = (x, y, prodId) => StoreWizard.removeProductFromStore(x, y, prodId);
+  window.updateShelfPrice = (x, y, prodId, val) => StoreWizard.updateShelfPrice(x, y, prodId, val);
+  window.updateShelfRestock = (x, y, prodId, val) => StoreWizard.updateShelfRestock(x, y, prodId, val);
+  window.buyInstantStock = (x, y, prodId, qty) => StoreWizard.buyInstantStock(x, y, prodId, qty);
+
+  try {
+    Object.defineProperty(window, 'selectedProductsMap', {
+      get() { return StoreWizard.selectedProductsMap; },
+      set(v) { StoreWizard.selectedProductsMap = v; },
+      configurable: true
+    });
+    Object.defineProperty(window, 'pendingStoreType', {
+      get() { return StoreWizard.pendingStoreType; },
+      set(v) { StoreWizard.pendingStoreType = v; },
+      configurable: true
+    });
+    Object.defineProperty(window, 'pendingTile', {
+      get() { return StoreWizard.pendingTile; },
+      set(v) { StoreWizard.pendingTile = v; },
+      configurable: true
+    });
+  } catch (e) {}
+}
 
 export default StoreWizard;

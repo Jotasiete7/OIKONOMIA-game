@@ -3,7 +3,7 @@
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
 > **Última Atualização:** 11 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.5 (bld.20260911.05)`  
+> **Versão Oficial Corrente:** `v0.8.5 (bld.20260911.06)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -26,12 +26,13 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 - [x] **Redesign Visual do HUD & Menus (Terminal Executivo Obsidian & Gold - v0.8.5)**: TopBar contínua 44px, pílulas companheiras de navegação de cidades/lentes, dropdown Mais Opções balanceado, menu de pausa ESC e Diretoria Executiva integrados à identidade visual dark fintech / Bloomberg terminal.
 - [x] **Alinhamento Preciso de Coordenadas do Mouse & Minimapa HiDPI (v0.8.5)**: Unificação da instância singleton da câmera, remoção de 307 linhas de listeners legados e validação de 21.504 pontos de projeção isométrica.
 - [x] **Overhaul Visual Integral Obsidian & Emojis Semânticos (v0.8.5)**: Padronização de 14 modais e inspetores para o tema executivo obsidian e catálogo completo de emojis para 99 produtos sem fallbacks.
-- [x] **Fase 7.0 Desacoplamento Total de Wizards, Grid Engine & Telemetria (Fim do Monolito index.html)**:
+- [x] **Fase 7.0 Desacoplamento Total de Wizards, Grid Engine, Canvas, Saves & Telemetria (Fim do Monolito index.html)**:
   - [x] **Fase 7.0 A (Assistentes & Lojas)**: Extração de assistentes de construção (minas, fazendas, fábricas), gestão de lojas (2 etapas, nichos, prateleiras, compra imediata) e fornecedores para `client/ui/wizards/` (-1.466 linhas do monolito).
   - [x] **Fase 7.0 B (Marketing & Mídia)**: Extração da Central de Mídia & IBOPE para `client/ui/panels/marketing_panel.js` (-183 linhas adicionais).
   - [x] **Fase 7.0 C (Grid Engine & Depósitos Geológicos)**: Extração da matriz procedural (128x128), 7 depósitos geológicos, portos especializados, sparse index (`activeFacilitySet`) e rotinas de descarte/venda de instalações para `client/engine/world_grid.js` e `client/ui/panels/facility_panel.js` (-694 linhas adicionais, total acumulado: -2.343 linhas).
   - [x] **Fase 7.0 D (Simulador & HUD Telemetria)**: Extração do simulador "E se?", painel de desenvolvedor F3, flight recorder F8, telemetria e bug replayer para `price_simulator_panel.js` e `dev_dashboard_panel.js` (-899 linhas adicionais, total acumulado: -3.242 linhas).
-  - [x] **Fase 7.0 E (Inspetores de Instalações & Limpeza de DRE/Saves)**: Extração de inspetores de instalações (minas, fazendas, fábricas com seletor de fachada, lojas com simulador integrado, P&D com patentes e confirmação com checagem de capital de giro), insolvência e quebra para `client/ui/panels/facility_panel.js` e `client/ui/panels/dre_panel.js`, limpeza de DRE legada e delegação de saves (-1.685 linhas adicionais, **monolito reduzido de 9.762 para 4.835 linhas, total acumulado: -4.927 linhas / >50% de redução**).
+  - [x] **Fase 7.0 E (Inspetores de Instalações & Limpeza de DRE/Saves)**: Extração de inspetores de instalações (minas, fazendas, fábricas com seletor de fachada, lojas com simulador integrado, P&D com patentes e confirmação com checagem de capital de giro), insolvência e quebra para `client/ui/panels/facility_panel.js` e `client/ui/panels/dre_panel.js`, limpeza de DRE legada e delegação de saves (-1.685 linhas adicionais).
+  - [x] **Fase 7.0 F (Renderizador Canvas, Saves/Slots, Sistema Bancário & Sequência de Boot)**: Desacoplamento total do renderizador isométrico (`IsoMath`, `CanvasRenderer`, `CameraController`), fornecedores (`SupplierPicker`), licenças (`StoreWizard`), score bancário (`BankingPanel`), saves/sparse index (`SaveSystem`) e boot loader (`AppLifecycle`). Monolito `client/index.html` reduzido de 4.835 para **3.632 linhas** (-1.203 linhas nesta fase, **total acumulado: -6.130 linhas / 63% de redução total**).
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
 - [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
 - [ ] **Fase 5 Mercado Financeiro, Ações & M&A**: Ações corporativas, IPO, distribuição de dividendos, participações cruzadas e aquisições hostis (*Hostile Takeovers*).
@@ -41,6 +42,37 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 23: Desacoplamento de Canvas Renderer, Fornecedores, Saves/Slots, Sistema Bancário e Sequência de Boot (Fase 7.0 F)
+- **Data:** 11/09/2026 — 22:30
+- **Versão Oficial:** `v0.8.5 (bld.20260911.06)` | **Save Schema:** `v0.8.2`
+- **Branch:** `main`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Desacoplamento do Motor de Renderização Canvas & Câmera (`client/renderer/`):**
+   - Eliminação de 377 linhas de render loop legadas, desenho de terreno, marcadores de cidades e radar minimapa de `client/index.html`.
+   - Substituição por delegações ultra-concisas para `window.CanvasRenderer`, `window.CameraController`, `window.IsoMath` e `window.MinimapSystem`.
+2. **Desacoplamento do Sistema de Fornecedores (`client/ui/wizards/supplier_picker.js`):**
+   - Centralização canônica de `getSupplierOffersForProduct(prodId, storeTile)` no `SupplierPicker`.
+   - Exposição completa em `window.SupplierPicker` e `window.getSupplierOffersForProduct`.
+3. **Desacoplamento de Licenças de Nicho & Controles de Loja (`client/ui/wizards/store_wizard.js`):**
+   - Centralização de `hasNicheLicense`, `getNicheLicenseCost`, `selectStoreType`, `advanceToStep2`, `backToStep1` e propriedades reativas (`selectedProductsMap`, `pendingStoreType`, `pendingTile`).
+4. **Desacoplamento do Sistema Bancário Corporativo (`client/ui/panels/banking_panel.js`):**
+   - Centralização de `calcAverageQRAllResearched`, `calcAverageBrandRating`, `calcBankingCreditScore` e `processBankingInstallments` no `BankingPanel`.
+5. **Desacoplamento Integral do Sistema de Saves (`client/save_system.js`):**
+   - Centralização canônica de `extractBuiltTiles`, `applyBuiltTiles`, `serializeCurrentGame`, `saveGame`, `saveGameInNewSlot`, `quickSaveGame`, `loadGameFromData`, `loadGameById`, `deleteSaveById`, `exportSaveFile`, `handleImportSaveFile`, e `checkAutoSave`.
+   - Economia e persistência de lotes via Sparse Index mantendo 100% de integridade com o schema `v0.8.2`.
+6. **Desacoplamento do Boot Loader & Lifecycle (`client/app/lifecycle.js`):**
+   - Centralização de `startBootSequence` e `rotateLoadingTip` no `AppLifecycle`.
+7. **Redução Maciça do Monolito `client/index.html`:**
+   - Reduzido de 4.835 para **3.632 linhas** (-1.203 linhas na fase, acumulando **-6.130 linhas / 63% de redução total** em relação ao monolito original).
+8. **Validação & Testes E2E Automatizados:**
+   - Criação da suíte `tools/test_modularization_fase_7f_e2e.cjs` testando via Chrome DevTools Protocol (CDP) todos os subsistemas com 0 erros de console.
+   - Suíte de auditoria real de interface (`npm run audit-browser`) validada e 100% aprovada com screenshots registradas.
+   - Build de produção (`npm run build`) concluído com sucesso em 741ms.
 
 ---
 

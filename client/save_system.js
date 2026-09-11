@@ -489,3 +489,418 @@ export function loadSlotWithFallback(slotId) {
   return { data: null, fromBackup: false };
 }
 
+export function extractBuiltTiles() {
+  const built = [];
+  const activeSet = (typeof window !== 'undefined' && window.activeFacilitySet)
+    ? window.activeFacilitySet
+    : (window.WorldGridEngine?.activeFacilitySet || new Map());
+  for (const t of activeSet.values()) {
+    if (t.store || t.mine || t.farm || t.factory || t.rdCenter || t.warehouse || t.competitor) {
+      built.push({
+        x: t.x, y: t.y,
+        store: t.store,
+        mine: t.mine,
+        farm: t.farm,
+        factory: t.factory,
+        rdCenter: t.rdCenter,
+        warehouse: t.warehouse,
+        competitor: t.competitor
+      });
+    }
+  }
+  return built;
+}
+
+export function applyBuiltTiles(builtArray) {
+  if (!Array.isArray(builtArray)) return;
+  const activeSet = (typeof window !== 'undefined' && window.activeFacilitySet)
+    ? window.activeFacilitySet
+    : (window.WorldGridEngine?.activeFacilitySet || new Map());
+  const grid = (typeof window !== 'undefined' && window.worldGrid)
+    ? window.worldGrid
+    : (window.WorldGridEngine?.worldGrid || []);
+  const indexFn = (typeof window !== 'undefined' && typeof window._indexTile === 'function')
+    ? window._indexTile
+    : (window.WorldGridEngine?._indexTile || (() => {}));
+
+  activeSet.clear();
+  for (const b of builtArray) {
+    if (grid[b.x] && grid[b.x][b.y]) {
+      const t = grid[b.x][b.y];
+      t.store = b.store || null;
+      t.mine = b.mine || null;
+      t.farm = b.farm || null;
+      t.factory = b.factory || null;
+      t.rdCenter = b.rdCenter || null;
+      t.warehouse = b.warehouse || null;
+      t.competitor = b.competitor || null;
+      if (t.store) t.buildingHeight = 16;
+      else if (t.mine) t.buildingHeight = 20;
+      else if (t.farm) t.buildingHeight = 18;
+      else if (t.factory) t.buildingHeight = 22;
+      else if (t.rdCenter) t.buildingHeight = 24;
+      else if (t.warehouse) t.buildingHeight = 20;
+      else if (t.competitor) t.buildingHeight = 18;
+      indexFn(t);
+    }
+  }
+}
+
+export function serializeCurrentGame() {
+  const g = (typeof window !== 'undefined' && window.GameState) ? window.GameState : {};
+  const prof = (typeof window !== 'undefined' && window.playerProfile) ? window.playerProfile : (g.playerProfile || {});
+  const cCash = (typeof window !== 'undefined' && window.cash !== undefined) ? window.cash : (g.cash || 0);
+  const cDay = (typeof window !== 'undefined' && window.day !== undefined) ? window.day : (g.day || 1);
+  const cMonth = (typeof window !== 'undefined' && window.month !== undefined) ? window.month : (g.month || 1);
+  const cYear = (typeof window !== 'undefined' && window.year !== undefined) ? window.year : (g.year || 1);
+  const cPlaytime = (typeof window !== 'undefined' && window.playtimeSeconds !== undefined) ? window.playtimeSeconds : (g.playtimeSeconds || 0);
+  const cSettings = (typeof window !== 'undefined' && window.gameSettings) ? window.gameSettings : (g.gameSettings || {});
+  const brand = (typeof window !== 'undefined' && window.playerBrandRating) ? window.playerBrandRating : (g.playerBrandRating || {});
+  const mkt = (typeof window !== 'undefined' && window.activeMarketingContracts) ? window.activeMarketingContracts : (g.activeMarketingContracts || new Set());
+  const rd = (typeof window !== 'undefined' && window.rdLabs) ? window.rdLabs : (g.rdLabs || {});
+  const prods = (typeof window !== 'undefined' && window.unlockedProducts) ? window.unlockedProducts : (g.unlockedProducts || new Set());
+  const lics = (typeof window !== 'undefined' && window.acquiredLicenses) ? window.acquiredLicenses : (g.acquiredLicenses || new Set());
+  const ledger = (typeof window !== 'undefined' && window.historicalLedger) ? window.historicalLedger : (g.historicalLedger || []);
+  const tut = (typeof window !== 'undefined' && window.tutorialState) ? window.tutorialState : (g.tutorialState || {});
+  const cities = (typeof window !== 'undefined' && window.unlockedCities) ? window.unlockedCities : (g.unlockedCities || {});
+
+  return {
+    saveVersion: CURRENT_SAVE_VERSION,
+    timestamp: new Date().toISOString(),
+    playerProfile: { ...prof },
+    cash: cCash,
+    day: cDay,
+    month: cMonth,
+    year: cYear,
+    unlockedCities: { ...cities },
+    playerBrandRating: { ...brand },
+    activeMarketingContracts: Array.from(mkt),
+    rdLabs: { ...rd },
+    unlockedProducts: Array.from(prods),
+    acquiredLicenses: Array.from(lics),
+    historicalLedger: [...ledger],
+    tutorialState: { ...tut },
+    builtTiles: extractBuiltTiles(),
+    playtimeSeconds: cPlaytime,
+    banking: g.banking
+      ? {
+          activeLoans: (g.banking.activeLoans || []).map(l => ({ ...l })),
+          totalDebt:   g.banking.totalDebt || 0,
+          loanHistory: (g.banking.loanHistory || []).map(l => ({ ...l })),
+        }
+      : { activeLoans: [], totalDebt: 0, loanHistory: [] },
+    settings: {
+      autoSave: cSettings.autoSave || 'monthly',
+      masterVolume: cSettings.masterVolume !== undefined ? cSettings.masterVolume : 1.0,
+      musicVolume: cSettings.musicVolume !== undefined ? cSettings.musicVolume : 0.6,
+      ambienceVolume: cSettings.ambienceVolume !== undefined ? cSettings.ambienceVolume : 0.5,
+      sfxVolume: cSettings.sfxVolume !== undefined ? cSettings.sfxVolume : 0.7,
+      isMusicMuted: Boolean(cSettings.isMusicMuted),
+      repeatMode: cSettings.repeatMode || 'playlist',
+      currentBgmKey: cSettings.currentBgmKey || 'bgm_1'
+    }
+  };
+}
+
+export function saveGame(customSlotId = null, isSilent = false) {
+  const state = serializeCurrentGame();
+  const currentSlot = (typeof window !== 'undefined' && window.currentSaveSlotId) ? window.currentSaveSlotId : null;
+  const slotId = customSlotId || currentSlot || (`slot_${Date.now()}`);
+  if (typeof window !== 'undefined') window.currentSaveSlotId = slotId;
+
+  const metadata = {
+    id: slotId,
+    companyName: state.playerProfile.companyName,
+    playerName: state.playerProfile.playerName,
+    avatarId: state.playerProfile.avatarId,
+    themeColor: state.playerProfile.themeColor,
+    cash: state.cash,
+    gameDate: `${String(state.day).padStart(2,'0')}/${String(state.month).padStart(2,'0')} · Ano ${state.year}`,
+    dateISO: state.timestamp,
+    builtCount: state.builtTiles.length
+  };
+
+  try {
+    if (typeof window !== 'undefined' && window.SimulationGuard && typeof window.SimulationGuard.validateEconomySnapshot === 'function') {
+      window.SimulationGuard.validateEconomySnapshot(state);
+    }
+
+    const serialized = JSON.stringify(state);
+    saveSlotWithBackup(slotId, serialized);
+
+    let index = getSavesIndex().filter(s => s.id !== slotId);
+    index.unshift(metadata);
+    saveSavesIndex(index);
+
+    if (typeof window !== 'undefined') {
+      window.lastSavedStateSnapshot = state;
+      if (!isSilent && typeof window.playSuccessChime === 'function') {
+        window.playSuccessChime();
+      }
+      if (typeof window.addLog === 'function') {
+        window.addLog(`💾 JOGO SALVO: [${metadata.companyName}] registrado com sucesso.`, 'text-emerald-400 font-bold', { category: 'system' });
+      }
+      if (typeof window.renderSavesCountInMenu === 'function') {
+        window.renderSavesCountInMenu();
+      }
+    }
+    return true;
+  } catch (e) {
+    if (typeof alert === 'function') alert('Aviso: Espaço de armazenamento local cheio ou indisponível.');
+    return false;
+  }
+}
+
+export function saveGameInNewSlot() {
+  const newId = `slot_${Date.now()}`;
+  if (saveGame(newId)) {
+    if (typeof window !== 'undefined' && typeof window.renderSavesList === 'function') {
+      window.renderSavesList();
+    }
+  }
+}
+
+export function quickSaveGame() {
+  if (saveGame()) {
+    const badge = document.getElementById('quicksave-status-badge');
+    if (badge) {
+      badge.textContent = 'Salvo agora!';
+      badge.className = 'text-[10px] text-emerald-400 font-bold';
+      setTimeout(() => { if (badge) badge.textContent = ''; }, 3000);
+    }
+  }
+}
+
+export function loadGameFromData(rawSaveData) {
+  const saveData = migrateSaveData(rawSaveData);
+  if (!saveData) {
+    if (typeof alert === 'function') alert('Arquivo de save inválido ou incompatível.');
+    return false;
+  }
+
+  const g = (typeof window !== 'undefined' && window.GameState) ? window.GameState : {};
+  g.playerProfile = { ...saveData.playerProfile };
+  g.cash = saveData.cash;
+  g.day = saveData.day;
+  g.month = saveData.month;
+  g.year = saveData.year;
+  g.playtimeSeconds = saveData.playtimeSeconds;
+
+  if (typeof window !== 'undefined') {
+    window.cash = saveData.cash;
+    window.day = saveData.day;
+    window.month = saveData.month;
+    window.year = saveData.year;
+    window.playerProfile = { ...saveData.playerProfile };
+    window.playtimeSeconds = saveData.playtimeSeconds;
+    if (window.unlockedCities) Object.assign(window.unlockedCities, saveData.unlockedCities);
+    if (window.playerBrandRating) {
+      Object.keys(window.playerBrandRating).forEach(k => delete window.playerBrandRating[k]);
+      Object.assign(window.playerBrandRating, saveData.playerBrandRating);
+    }
+    if (window.activeMarketingContracts) {
+      window.activeMarketingContracts.clear();
+      (saveData.activeMarketingContracts || []).forEach(c => window.activeMarketingContracts.add(c));
+    }
+    if (window.rdLabs) {
+      Object.keys(window.rdLabs).forEach(k => delete window.rdLabs[k]);
+      if (saveData.rdLabs && typeof saveData.rdLabs === 'object') {
+        Object.assign(window.rdLabs, saveData.rdLabs);
+      }
+    }
+    if (window.unlockedProducts) {
+      window.unlockedProducts.clear();
+      if (saveData.unlockedProducts && Array.isArray(saveData.unlockedProducts)) {
+        saveData.unlockedProducts.forEach(p => window.unlockedProducts.add(p));
+      }
+    }
+    if (window.acquiredLicenses) {
+      window.acquiredLicenses.clear();
+      window.acquiredLicenses.add('kombini');
+      if (saveData.acquiredLicenses && Array.isArray(saveData.acquiredLicenses)) {
+        saveData.acquiredLicenses.forEach(l => window.acquiredLicenses.add(l));
+      }
+    }
+    if (window.historicalLedger && Array.isArray(saveData.historicalLedger)) {
+      window.historicalLedger.length = 0;
+      window.historicalLedger.push(...saveData.historicalLedger);
+    }
+  }
+
+  // Restaurar estado bancário
+  if (saveData.banking && typeof saveData.banking === 'object') {
+    g.banking = {
+      activeLoans: Array.isArray(saveData.banking.activeLoans) ? saveData.banking.activeLoans.map(l => ({ ...l })) : [],
+      totalDebt: typeof saveData.banking.totalDebt === 'number' ? saveData.banking.totalDebt : 0,
+      loanHistory: Array.isArray(saveData.banking.loanHistory) ? saveData.banking.loanHistory.map(l => ({ ...l })) : [],
+    };
+    g.banking.totalDebt = g.banking.activeLoans.reduce((s, l) => s + (l.remainingBalance || 0), 0);
+  } else {
+    g.banking = { activeLoans: [], totalDebt: 0, loanHistory: [] };
+  }
+
+  if (typeof window !== 'undefined') {
+    if (window.AppLifecycle && typeof window.AppLifecycle.renderTutorialGuide === 'function') {
+      window.AppLifecycle.renderTutorialGuide();
+    } else if (typeof window.renderTutorialGuide === 'function') {
+      window.renderTutorialGuide();
+    }
+
+    if (typeof window.initWorldGrid === 'function') window.initWorldGrid();
+    applyBuiltTiles(saveData.builtTiles);
+
+    if (typeof window.updatePlayerProfileHUD === 'function') window.updatePlayerProfileHUD();
+    if (typeof window.checkCityUnlocks === 'function') window.checkCityUnlocks();
+    if (typeof window.updateUI === 'function') window.updateUI();
+
+    if (saveData.settings && typeof saveData.settings === 'object') {
+      if (window.gameSettings) Object.assign(window.gameSettings, saveData.settings);
+      try {
+        localStorage.setItem('oikonomia_settings_v1', JSON.stringify(saveData.settings));
+      } catch (e) {}
+      if (window.SoundEngine && typeof window.SoundEngine.syncVolumesFromSettings === 'function') {
+        window.SoundEngine.syncVolumesFromSettings();
+      }
+      if (typeof window.syncPauseMenuVolumes === 'function') window.syncPauseMenuVolumes();
+    }
+
+    window.currentAppScreen = 'PLAYING';
+    if (typeof window.hideMainMenu === 'function') window.hideMainMenu();
+    if (typeof window.closeAllInGameModals === 'function') window.closeAllInGameModals();
+    if (typeof window.setSpeed === 'function') window.setSpeed(1);
+    if (typeof window.updateUI === 'function') window.updateUI();
+    if (typeof window.jumpToCity === 'function') window.jumpToCity('nova_atenas');
+
+    const verInfo = saveData.migratedFromVersion && saveData.migratedFromVersion !== CURRENT_SAVE_VERSION
+      ? ` (migrado de v${saveData.migratedFromVersion})`
+      : '';
+    if (typeof window.addLog === 'function') {
+      window.addLog(`📂 SAVE CARREGADO: Empresa [${saveData.playerProfile.companyName}] iniciada${verInfo}.`, 'text-sky-300 font-bold', { category: 'system' });
+    }
+  }
+
+  return true;
+}
+
+export function loadGameById(slotId) {
+  try {
+    const loadRes = loadSlotWithFallback(slotId);
+    const state = loadRes.data;
+    const isBackup = loadRes.fromBackup;
+
+    if (!state) {
+      if (typeof alert === 'function') alert('Save não encontrado ou arquivo corrompido.');
+      return;
+    }
+
+    if (typeof window !== 'undefined') {
+      window.currentSaveSlotId = slotId;
+      if (typeof window.closeSaveLoadModal === 'function') window.closeSaveLoadModal();
+    }
+    loadGameFromData(state);
+
+    if (isBackup && typeof window !== 'undefined' && typeof window.addLog === 'function') {
+      window.addLog(`⚠ AVISO: Save corrompido recuperado com sucesso da geração anterior (Backup)!`, 'text-amber-300 font-bold', { category: 'system' });
+    }
+  } catch (e) {
+    if (typeof alert === 'function') alert('Erro ao carregar o arquivo salvo.');
+  }
+}
+
+export function deleteSaveById(slotId, e) {
+  if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+  if (typeof confirm === 'function' && !confirm('Tem certeza que deseja excluir permanentemente este save?')) return;
+
+  deleteSaveSlot(slotId);
+  try {
+    localStorage.removeItem(`oiko_save_${slotId}_backup`);
+  } catch (err) {}
+
+  if (typeof window !== 'undefined') {
+    if (window.currentSaveSlotId === slotId) window.currentSaveSlotId = null;
+    if (typeof window.renderSavesList === 'function') window.renderSavesList();
+    if (typeof window.renderSavesCountInMenu === 'function') window.renderSavesCountInMenu();
+  }
+}
+
+export function exportSaveFile() {
+  const state = serializeCurrentGame();
+  const dataStr = generateExportDataUri(state);
+  const downloadAnchor = document.createElement('a');
+  const d = state.day, m = state.month, y = state.year;
+  const dateStr = `${y}_M${String(m).padStart(2,'0')}_D${String(d).padStart(2,'0')}`;
+  const safeName = (state.playerProfile?.companyName || 'OikoCorp').replace(/[^a-z0-9_-]/gi, '_');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", `Oikonomia_${safeName}_${dateStr}.oiko`);
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+  if (typeof window !== 'undefined' && typeof window.addLog === 'function') {
+    window.addLog(`📦 BACKUP EXPORTADO: Arquivo .oiko salvo no seu computador.`, 'text-amber-300', { category: 'system' });
+  }
+}
+
+export function handleImportSaveFile(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const state = JSON.parse(e.target.result);
+      if (loadGameFromData(state)) {
+        saveGame();
+      }
+    } catch (err) {
+      if (typeof alert === 'function') alert('Arquivo de save corrompido ou formato não suportado.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+export function checkAutoSave() {
+  const settings = (typeof window !== 'undefined' && window.gameSettings) ? window.gameSettings : {};
+  const month = (typeof window !== 'undefined' && window.month) ? window.month : 1;
+  if (settings.autoSave === 'disabled') return;
+  if (settings.autoSave === 'yearly' && month !== 12) return;
+  saveGame(null, true);
+}
+
+if (typeof window !== 'undefined') {
+  const saveSys = {
+    getSavesIndex,
+    saveSavesIndex,
+    reconcileSavesIndex,
+    migrateSaveData,
+    saveSlotWithBackup,
+    loadSlotWithFallback,
+    extractBuiltTiles,
+    applyBuiltTiles,
+    serializeCurrentGame,
+    saveGame,
+    saveGameInNewSlot,
+    quickSaveGame,
+    loadGameFromData,
+    loadGameById,
+    deleteSaveById,
+    exportSaveFile,
+    handleImportSaveFile,
+    checkAutoSave
+  };
+  window._saveSystem = saveSys;
+  window.SaveSystem = saveSys;
+  window.extractBuiltTiles = extractBuiltTiles;
+  window.applyBuiltTiles = applyBuiltTiles;
+  window.serializeCurrentGame = serializeCurrentGame;
+  window.saveGame = saveGame;
+  window.saveGameInNewSlot = saveGameInNewSlot;
+  window.quickSaveGame = quickSaveGame;
+  window.loadGameFromData = loadGameFromData;
+  window.loadGameById = loadGameById;
+  window.deleteSaveById = deleteSaveById;
+  window.exportSaveFile = exportSaveFile;
+  window.handleImportSaveFile = handleImportSaveFile;
+  window.checkAutoSave = checkAutoSave;
+}
+

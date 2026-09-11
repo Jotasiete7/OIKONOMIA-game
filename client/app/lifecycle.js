@@ -1054,12 +1054,94 @@ export class LifecycleManager {
     const pauseTag = document.getElementById('pause-company-tag');
     if (pauseTag) pauseTag.textContent = `${profile.companyName} • ${profile.playerName}`;
   }
+
+  startBootSequence() {
+    if (typeof window !== 'undefined') window.currentAppScreen = 'BOOT';
+
+    const verInfo = (typeof window !== 'undefined' && window.GAME_VERSION_INFO)
+      ? window.GAME_VERSION_INFO
+      : { fullString: 'v0.8.5', saveSchema: '0.8.2' };
+
+    console.log(
+      `%c🏛️ OIKONOMIA ENGINE ${verInfo.fullString}\n%c📦 CoreMath v1.0 | Sparse Index O(k) | Save Schema v${verInfo.saveSchema}\n🌐 Protocolo: ${window.location.protocol} | 60 FPS Canvas Renderer\n🛠️ Pressione F3 a qualquer momento para abrir o Painel de Desenvolvimento.`,
+      "font-weight: bold; font-size: 13px; color: #10b981;",
+      "font-size: 11px; color: #38bdf8;"
+    );
+
+    if (typeof window !== 'undefined' && typeof window.logDebug === 'function') {
+      window.logDebug('Iniciando sequência de Boot da simulação.', 'BOOT');
+      window.logDebug(`Versão Oficial: ${verInfo.fullString} | Schema: v${verInfo.saveSchema} | Protocolo: ${window.location.protocol}`, 'VERSION');
+    }
+
+    const loadingScreen = document.getElementById('loading-screen');
+    const barFill = document.getElementById('loading-bar-fill');
+    const pctText = document.getElementById('loading-pct-text');
+    const statusText = document.getElementById('loading-status-text');
+
+    if (!loadingScreen) return;
+    loadingScreen.classList.remove('hidden', 'opacity-0');
+
+    let progress = 0;
+    this.rotateLoadingTip();
+    if (this._loadingTipTimer) clearInterval(this._loadingTipTimer);
+    this._loadingTipTimer = setInterval(() => this.rotateLoadingTip(), 2600);
+
+    // Carregamento imersivo de ~6.5 segundos (65 passos de 100ms)
+    const interval = setInterval(() => {
+      progress += (Math.random() * 1.3) + 1.1;
+      if (progress > 100) progress = 100;
+
+      const currentPct = Math.floor(progress);
+      if (barFill) barFill.style.width = `${currentPct}%`;
+      if (pctText) pctText.textContent = `${currentPct}%`;
+
+      if (progress < 20 && statusText) statusText.textContent = 'Carregando malha metropolitana e distritos...';
+      else if (progress < 45 && statusText) statusText.textContent = 'Compilando catálogo de 70+ produtos & fórmulas econômicas...';
+      else if (progress < 70 && statusText) statusText.textContent = 'Simulando redes logísticas, portos e fretes...';
+      else if (progress < 90 && statusText) statusText.textContent = 'Indexando dados corporativos e saves locais...';
+      else if (statusText) statusText.textContent = 'Sincronizando mercado financeiro... Tudo pronto!';
+
+      if (progress >= 100) {
+        clearInterval(interval);
+        if (this._loadingTipTimer) {
+          clearInterval(this._loadingTipTimer);
+          this._loadingTipTimer = null;
+        }
+
+        // Revela o Menu Principal ANTES do fade-out para evitar que o mapa apareça no fundo
+        this.showMainMenu();
+
+        setTimeout(() => {
+          loadingScreen.classList.add('opacity-0');
+          setTimeout(() => {
+            loadingScreen.classList.add('hidden');
+          }, 750);
+        }, 450);
+      }
+    }, 100);
+  }
+
+  rotateLoadingTip() {
+    const el = document.getElementById('loading-tip-text');
+    if (!el) return;
+    el.style.opacity = '0';
+    setTimeout(() => {
+      const tips = (typeof window !== 'undefined' && window.ECONOMIC_TIPS && window.ECONOMIC_TIPS.length > 0)
+        ? window.ECONOMIC_TIPS
+        : ['Diversifique sua carteira comercial entre produtos básicos e de luxo.'];
+      const tip = tips[Math.floor(Math.random() * tips.length)];
+      el.textContent = tip;
+      el.style.opacity = '1';
+    }, 200);
+  }
 }
 
 export const AppLifecycle = new LifecycleManager();
 
 if (typeof window !== 'undefined') {
   window.AppLifecycle = AppLifecycle;
+  window.startBootSequence = () => AppLifecycle.startBootSequence();
+  window.rotateLoadingTip = () => AppLifecycle.rotateLoadingTip();
   window.showMainMenu = () => AppLifecycle.showMainMenu();
   window.hideMainMenu = () => AppLifecycle.hideMainMenu();
   window.continueLastGame = () => AppLifecycle.continueLastGame();
