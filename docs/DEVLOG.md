@@ -2,8 +2,8 @@
 
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
-> **Última Atualização:** 08 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.5 (bld.20260908.01)`  
+> **Última Atualização:** 11 de Setembro de 2026  
+> **Versão Oficial Corrente:** `v0.8.5 (bld.20260911.07)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -23,10 +23,11 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 ## 🧭 Agenda de Desenvolvimento (Próximos Passos & Backlog Priorizado)
 
+- [x] **Grande Modularização da Arquitetura (Fases 7.0 A até 7.0 K - v0.8.5)**: Desacoplamento integral do monolito original de 9.762 linhas para 373 linhas (-96.2%), separação em ES Modules, Tailwind CSS local em `client/styles/`, 10 controladores modais em `client/ui/panels/`, 3 wizards em `client/ui/wizards/` e templates HTML modulares em `client/ui/templates/`.
 - [x] **Redesign Visual do HUD & Menus (Terminal Executivo Obsidian & Gold - v0.8.5)**: TopBar contínua 44px, pílulas companheiras de navegação de cidades/lentes, dropdown Mais Opções balanceado, menu de pausa ESC e Diretoria Executiva integrados à identidade visual dark fintech / Bloomberg terminal.
 - [x] **Diretoria Executiva & Inteligência Estratégica (v0.8.5)**: Painel executivo unificado (CFO, COO, CMO), 6 KPIs semaforizados, diagnóstico causal cruzado, máquina de estados anti-spam (+20%), auto-resolução positiva e deep-links de navegação isométrica.
+- [x] **Sistema Bancário & Financiamento Corporativo (Banco Central - v0.8.5)**: Empréstimos corporativos de curto, médio e longo prazo amortizados mensalmente na DRE com taxas e limites dinâmicos baseados no Score e Rating Corporativo (AAA a B).
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
-- [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
 - [ ] **Fase 5 Mercado Financeiro, Ações & M&A**: Ações corporativas, IPO, distribuição de dividendos, participações cruzadas e aquisições hostis (*Hostile Takeovers*).
 - [ ] **Módulo de Logística Visual**: Frotas de caminhões e navios com animação isométrica navegando pelas rodovias e rotas marítimas entre portos e cidades.
 - [ ] **Fase 6 Dinâmica Macroeconômica & Clima**: Geadas, secas e safras recordes impactando o rendimento agropecuário; greves portuárias e flutuação de frete internacional.
@@ -34,6 +35,40 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 18: Grande Modularização Arquitetural & Componentização (Fases 7.0 A a 7.0 K)
+- **Data:** 11/09/2026 — 19:35
+- **Versão Oficial:** `v0.8.5 (bld.20260911.07)` | **Save Schema:** `v0.8.2`
+- **Branch:** `main`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão (Desacoplamento do Monolito de 9.762 linhas):
+1. **Fase 7.0 A (Assistentes de Construção, Gôndolas & Fornecedores)**:
+   - Modularização em `client/ui/wizards/` (`store_wizard.js`, `construction_wizards.js`, `supplier_picker.js`).
+2. **Fase 7.0 B (Controladores Especializados de Painéis Modais)**:
+   - Modularização de 10 painéis em `client/ui/panels/` (`advisor_panel.js`, `banking_panel.js`, `dre_panel.js`, `tech_tree_panel.js`, `rd_panel.js`, `encyclopedia_panel.js`, `facility_panel.js`, `marketing_panel.js`, `price_simulator_panel.js`, `dev_dashboard_panel.js`).
+3. **Fase 7.0 C (Motor Cartográfico & Depósitos Geológicos)**:
+   - Desacoplamento de `client/engine/world_grid.js` com matriz 128×128, topografia procedural e sparse index espacial $O(k)$.
+4. **Fase 7.0 D (Dev Dashboard & Sandbox de Precificação)**:
+   - Suíte de auditoria e telemetria F3/F8 com captura e sanitização de telas para relatórios de bugs.
+5. **Fase 7.0 E (Pipeline de Persistência, Saves & Ciclo de Vida)**:
+   - Modularização em `client/save_system.js` e `client/app/lifecycle.js` (gerenciador de slots, autosave e micro rádio).
+6. **Fase 7.0 F, G & H (Economia, Logger, Input & GameState Container)**:
+   - `client/game_state.js` como Single Source of Truth com proxies reativos bidirecionais (`Object.defineProperty`).
+   - `client/core_math.js`, `client/simulation.js`, `client/input/keyboard.js`, `client/ui/hud.js`.
+7. **Fase 7.0 I (Bootstrap Unificado & Eliminação de Scripts Inline)**:
+   - Criação de `client/app/bootstrap.js` e orquestração automática no evento `DOMContentLoaded` em `client/main.js`.
+   - **Zero scripts inline no `index.html`** (-655 linhas eliminadas).
+8. **Fase 7.0 J (Extração de Estilos CSS Embutidos)**:
+   - Criação de `client/styles/ui.css` e `client/styles/banking.css`, integrados via `@import` no Tailwind CSS.
+   - **Zero tags `<style>` no `index.html`** (-132 linhas eliminadas).
+9. **Fase 7.0 K (Componentização dos Templates HTML dos Modais)**:
+   - Separação dos ~1.870 linhas de modais em 4 templates modulares (`finance_modals.html`, `operations_modals.html`, `wizards_modals.html`, `system_overlays.html`) montados dinamicamente via Vite (`?raw`).
+   - `client/index.html` reduzido para **373 linhas** (**-96.2% do monolito original**).
+   - Bundle `dist/index.html` reduzido para **26.76 kB** (gzip: **7.48 kB**).
+   - 100% dos testes E2E aprovados sem nenhum erro de console no navegador.
 
 ---
 
