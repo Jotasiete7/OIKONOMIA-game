@@ -159,6 +159,7 @@ import TechTreePanel from './ui/panels/tech_tree_panel.js';
 import RDPanel from './ui/panels/rd_panel.js';
 import EncyclopediaPanel from './ui/panels/encyclopedia_panel.js';
 import FacilityPanel from './ui/panels/facility_panel.js';
+import MarketingPanel from './ui/panels/marketing_panel.js';
 
 // --- Fase 6.5: Input & Ciclo de Vida do Jogo ---
 import { KeyboardSystem } from './input/keyboard.js';
@@ -378,6 +379,12 @@ window.TechTreePanel = TechTreePanel;
 window.RDPanel = RDPanel;
 window.EncyclopediaPanel = EncyclopediaPanel;
 window.FacilityPanel = FacilityPanel;
+window.MarketingPanel = MarketingPanel;
+window.openMarketingCentralModal = (filterOutletId) => MarketingPanel.openMarketingCentralModal(filterOutletId);
+window.closeMarketingModal = () => MarketingPanel.closeMarketingModal();
+window.toggleMarketingModal = (filterOutletId) => MarketingPanel.toggleMarketingModal(filterOutletId);
+window.toggleMarketingContract = (outletId, prodId) => MarketingPanel.toggleMarketingContract(outletId, prodId);
+window.getTotalMonthlyMarketingBudget = () => MarketingPanel.getTotalMonthlyMarketingBudget();
 
 // Re-exposição global (Fase 6.5 — Input & Ciclo de Vida do Jogo)
 window.KeyboardSystem = KeyboardSystem;

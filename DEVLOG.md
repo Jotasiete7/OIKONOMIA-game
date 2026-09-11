@@ -28,7 +28,7 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 - [x] **Overhaul Visual Integral Obsidian & Emojis Semânticos (v0.8.5)**: Padronização de 14 modais e inspetores para o tema executivo obsidian e catálogo completo de emojis para 99 produtos sem fallbacks.
 - [ ] **Fase 7.0 Desacoplamento Total de Wizards & Grid Engine (Fim do Monolito index.html)**:
   - [x] **Fase 7.0 A (Assistentes & Lojas)**: Extração de assistentes de construção (minas, fazendas, fábricas), gestão de lojas (2 etapas, nichos, prateleiras, compra imediata) e fornecedores para `client/ui/wizards/` (-1.466 linhas do monolito).
-  - [ ] **Fase 7.0 B (Marketing & Mídia)**: Extração da Central de Mídia & IBOPE para `client/ui/panels/marketing_panel.js` (~500 linhas).
+  - [x] **Fase 7.0 B (Marketing & Mídia)**: Extração da Central de Mídia & IBOPE para `client/ui/panels/marketing_panel.js` (-183 linhas adicionais, total acumulado: -1.649 linhas).
   - [ ] **Fase 7.0 C (Grid Engine)**: Extração da matriz procedural, depósitos geológicos e sparse index para `client/engine/world_grid.js` (~1.200 linhas).
   - [ ] **Fase 7.0 D (Simulador & HUD Telemetria)**: Extração do simulador "E se?" e instrumentação de debug/telemetria.
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
@@ -43,9 +43,9 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 ---
 
-### 📅 Sessão 19: Desacoplamento de Wizards de Construção, Lojas e Fornecedores (Fase 7.0 A)
-- **Data:** 11/09/2026 — 17:30
-- **Versão Oficial:** `v0.8.5 (bld.20260911.01)` | **Save Schema:** `v0.8.2`
+### 📅 Sessão 19: Desacoplamento de Wizards de Construção, Lojas e Central de Mídia (Fases 7.0 A & 7.0 B)
+- **Data:** 11/09/2026 — 17:45
+- **Versão Oficial:** `v0.8.5 (bld.20260911.02)` | **Save Schema:** `v0.8.2`
 - **Branch:** `main`
 - **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
 
@@ -60,11 +60,17 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 3. **Extração dos Seletores de Fornecedores e Rotas (`client/ui/wizards/supplier_picker.js`):**
    - Renderização modular de cards de fornecedores locais e portuários.
    - Seleção de fornecedores para gôndolas, insumos industriais, ração pecuária (milho/trigo vs pastagem livre) e importação marítima.
-4. **Ponte de Compatibilidade Global (`client/main.js`):**
-   - Exportação unificada via `client/ui/wizards/index.js` e binding de mais de 40 métodos legados no objeto `window.*` para preservar 100% dos botões com manipuladores inline no DOM.
-5. **Redução e Verificação do Monolito:**
-   - Redução de **1.466 linhas** em `client/index.html` (de 9.762 para 8.296 linhas).
-   - Validação bem-sucedida de build (`npm run build`) e bateria completa de testes de regressão E2E em navegador headless (`npm run audit-browser` com 6/6 suítes aprovadas).
+4. **Extração da Central de Mídia & IBOPE (`client/ui/panels/marketing_panel.js`):**
+   - Central de campanhas publicitárias corporativas (marca institucional da rede) e de produtos individuais.
+   - Métricas no estilo Capitalism II: IBOPE rating, penetração e audiência estimada na metrópole, CPRP (Custo por Ponto de IBOPE) e régua visual de *Share of Voice* (SOV) contra concorrência IA.
+   - Cálculo dinâmico do orçamento mensal (`getTotalMonthlyMarketingBudget`), débito diário na DRE e fechamento unificado via `closeMarketingModal` e tecla `ESC`.
+5. **Ponte de Compatibilidade Global (`client/main.js`):**
+   - Exportação unificada via `client/ui/wizards/index.js` e `client/ui/panels/marketing_panel.js`.
+   - Binding de dezenas de métodos legados no objeto `window.*` para preservar 100% dos botões com manipuladores inline no DOM e cliques contextuais do mapa.
+6. **Redução e Verificação do Monolito:**
+   - Redução acumulada de **1.649 linhas** em `client/index.html` (de 9.762 para 8.113 linhas).
+   - Validação de build Vite (`npm run build`) em ~1s.
+   - Bateria completa de testes de regressão E2E em navegador headless (`npm run audit-browser` com 6/6 suítes aprovadas) e teste automatizado dedicado via Chrome DevTools Protocol (`test_marketing_e2e.cjs` com 6/6 testes aprovados).
 
 ---
 
