@@ -3,7 +3,7 @@
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
 > **Última Atualização:** 11 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.5 (bld.20260911.04)`  
+> **Versão Oficial Corrente:** `v0.8.5 (bld.20260911.05)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -30,7 +30,8 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
   - [x] **Fase 7.0 A (Assistentes & Lojas)**: Extração de assistentes de construção (minas, fazendas, fábricas), gestão de lojas (2 etapas, nichos, prateleiras, compra imediata) e fornecedores para `client/ui/wizards/` (-1.466 linhas do monolito).
   - [x] **Fase 7.0 B (Marketing & Mídia)**: Extração da Central de Mídia & IBOPE para `client/ui/panels/marketing_panel.js` (-183 linhas adicionais).
   - [x] **Fase 7.0 C (Grid Engine & Depósitos Geológicos)**: Extração da matriz procedural (128x128), 7 depósitos geológicos, portos especializados, sparse index (`activeFacilitySet`) e rotinas de descarte/venda de instalações para `client/engine/world_grid.js` e `client/ui/panels/facility_panel.js` (-694 linhas adicionais, total acumulado: -2.343 linhas).
-  - [x] **Fase 7.0 D (Simulador & HUD Telemetria)**: Extração do simulador "E se?", painel de desenvolvedor F3, flight recorder F8, telemetria e bug replayer para `price_simulator_panel.js` e `dev_dashboard_panel.js` (-899 linhas adicionais, total acumulado: **-3.242 linhas**).
+  - [x] **Fase 7.0 D (Simulador & HUD Telemetria)**: Extração do simulador "E se?", painel de desenvolvedor F3, flight recorder F8, telemetria e bug replayer para `price_simulator_panel.js` e `dev_dashboard_panel.js` (-899 linhas adicionais, total acumulado: -3.242 linhas).
+  - [x] **Fase 7.0 E (Inspetores de Instalações & Limpeza de DRE/Saves)**: Extração de inspetores de instalações (minas, fazendas, fábricas com seletor de fachada, lojas com simulador integrado, P&D com patentes e confirmação com checagem de capital de giro), insolvência e quebra para `client/ui/panels/facility_panel.js` e `client/ui/panels/dre_panel.js`, limpeza de DRE legada e delegação de saves (-1.685 linhas adicionais, **monolito reduzido de 9.762 para 4.835 linhas, total acumulado: -4.927 linhas / >50% de redução**).
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
 - [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
 - [ ] **Fase 5 Mercado Financeiro, Ações & M&A**: Ações corporativas, IPO, distribuição de dividendos, participações cruzadas e aquisições hostis (*Hostile Takeovers*).
@@ -40,6 +41,33 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 22: Desacoplamento de Inspetores de Instalações, Modais de Insolvência e Limpeza Estrutural (Fase 7.0 E)
+- **Data:** 11/09/2026 — 21:15
+- **Versão Oficial:** `v0.8.5 (bld.20260911.05)` | **Save Schema:** `v0.8.2`
+- **Branch:** `main`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Módulo de Inspetores de Instalações (`client/ui/panels/facility_panel.js`):**
+   - Implementação integral de `renderMinePanel`, `renderFarmPanel`, `renderFactoryPanel`, `setFactoryFacade`, `renderStorePanel`, `renderRDCenterPanel`, `toggleRDPatentsExpanded`, `showCustomConfirmModal`, `checkWorkingCapitalSafety`, e `confirmBuildRDCenter`.
+   - Remoção de 1.322 linhas duplicadas do `client/index.html`, substituídas por delegação concisa `window.FacilityPanel`.
+   - Exposição global de todos os métodos e rotinas com 100% de retrocompatibilidade para callbacks inline e eventos DOM.
+2. **Módulo Financeiro & Insolvência (`client/ui/panels/dre_panel.js`):**
+   - Migração e centralização de `openInsolvencyModal`, `closeInsolvencyModal`, e `showBankruptcyModal` no `DREPanel`.
+   - Eliminação de ~370 linhas de DRE legada/duplicada que ainda residiam no script principal de `client/index.html`.
+3. **Refatoração de Persistência & Saves:**
+   - Funções de persistência e indexação (`migrateSaveData`, `getSavesIndex`, `deleteSaveGame`, etc.) condensadas para delegação direta ao singleton `window._saveSystem`.
+4. **Métricas Finais de Modularização da Fase 7.0 E:**
+   - Redução de `client/index.html` de **6.520 linhas para 4.835 linhas** (**-1.685 linhas** nesta fase).
+   - Acumulado da Fase 7.0: redução de **9.762 para 4.835 linhas** (**-4.927 linhas / redução de mais de 50% do monolito original!**).
+   - `dist/index.html` compilado no Vite encolheu de **425.32 kB para 316.59 kB** (-108.73 kB).
+5. **Validação & Auditoria:**
+   - 7/7 suítes E2E em navegador headless Edge (`tools/test_facility_inspectors_e2e.cjs`) aprovadas com sucesso.
+   - Auditoria completa `npm run audit-browser` (6 suítes E2E com capturas de tela) aprovada sem nenhuma regressão.
+   - Build de produção (`npm run build`) concluído com sucesso e zero erros.
 
 ---
 

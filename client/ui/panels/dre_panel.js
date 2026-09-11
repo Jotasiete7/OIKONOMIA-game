@@ -321,13 +321,100 @@ export function renderFacilityDRETable() {
   }
 }
 
+export function openInsolvencyModal(nwObj) {
+  const modal = document.getElementById('insolvency-modal');
+  if (!modal) return;
+
+  const currentCash = (typeof window !== 'undefined' && typeof window.cash === 'number') ? window.cash : (GameState.cash || 0);
+  const countdown = (typeof window !== 'undefined' && typeof window.insolvencyCountdownMonths === 'number') ? window.insolvencyCountdownMonths : (GameState.insolvencyCountdownMonths || 0);
+  const facilitySet = (typeof window !== 'undefined' && window.activeFacilitySet) ? window.activeFacilitySet : new Map();
+
+  const debtEl = document.getElementById('ins-cash-debt');
+  const nwEl = document.getElementById('ins-net-worth');
+  const countEl = document.getElementById('ins-countdown-months');
+  const recContent = document.getElementById('ins-recommended-content');
+
+  if (debtEl) debtEl.textContent = currentCash < 0 ? `-$${Math.abs(currentCash).toLocaleString('en-US', { maximumFractionDigits: 0 })}` : `$${currentCash.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+  if (nwEl && nwObj) nwEl.textContent = (nwObj.netWorth >= 0 ? '$' : '-$') + Math.abs(nwObj.netWorth).toLocaleString('en-US', { maximumFractionDigits: 0 });
+  if (countEl) countEl.textContent = countdown;
+
+  // Localiza a instalação de pior resultado financeiro para recomendar venda
+  let worstFacility = null;
+  let worstNet = Infinity;
+
+  for (const tile of facilitySet.values()) {
+    const metrics = tile.lastMonthMetrics || tile.monthlyMetrics || { netProfit: 0 };
+    const net = (metrics.revenue || 0) - (metrics.cogs || 0) - (metrics.opex || 0);
+    if (net < worstNet) {
+      worstNet = net;
+      worstFacility = tile;
+    }
+  }
+
+  if (worstFacility && recContent) {
+    const calcVal = (typeof window !== 'undefined' && typeof window.calculateFacilityValue === 'function') 
+      ? window.calculateFacilityValue 
+      : ((t) => ({ facilityName: 'Instalação', sellValue: 10000 }));
+    const val = calcVal(worstFacility);
+    recContent.innerHTML = `
+      <div class="space-y-2">
+        <p>Identificamos que <strong class="text-amber-300">${val.facilityName}</strong> (${worstFacility.district?.name || ''}) está gerando um impacto negativo de <strong class="text-rose-400">-$${Math.abs(worstNet).toLocaleString('en-US', { maximumFractionDigits: 0 })}/mês</strong>.</p>
+        <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] text-slate-400">Valor de Liquidação Rápida:</div>
+            <div class="text-sm font-bold text-emerald-400">+$${val.sellValue.toLocaleString('en-US')}</div>
+          </div>
+          <button onclick="closeInsolvencyModal(); sellFacility(${worstFacility.x}, ${worstFacility.y});" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold font-mono cursor-pointer shadow">
+            🏷️ Vender Esta Instalação
+          </button>
+        </div>
+      </div>
+    `;
+  } else if (recContent) {
+    recContent.innerHTML = `<p class="text-slate-400">Corte orçamentos de P&D ativos ou reduza custos fixos fechando linhas ociosas para restaurar a lucratividade.</p>`;
+  }
+
+  modal.classList.remove('hidden');
+}
+
+export function closeInsolvencyModal() {
+  const modal = document.getElementById('insolvency-modal');
+  if (modal) modal.classList.add('hidden');
+}
+
+export function showBankruptcyModal(nwObj) {
+  const modal = document.getElementById('bankruptcy-modal');
+  if (!modal) return;
+
+  const currentCash = (typeof window !== 'undefined' && typeof window.cash === 'number') ? window.cash : (GameState.cash || 0);
+  const profile = (typeof window !== 'undefined' && window.playerProfile) ? window.playerProfile : (GameState.playerProfile || {});
+  const yr = (typeof window !== 'undefined' && typeof window.year === 'number') ? window.year : (GameState.year || 1);
+  const mo = (typeof window !== 'undefined' && typeof window.month === 'number') ? window.month : (GameState.month || 1);
+  const playSec = (typeof window !== 'undefined' && typeof window.playtimeSeconds === 'number') ? window.playtimeSeconds : (GameState.playtimeSeconds || 0);
+
+  const bkCompany = document.getElementById('bk-company-name');
+  if (bkCompany) bkCompany.textContent = profile.companyName || 'Sua Corporação';
+  const bkPlaytime = document.getElementById('bk-playtime');
+  if (bkPlaytime) bkPlaytime.textContent = `Ano ${yr} · Mês ${mo} (${playSec > 60 ? `${Math.floor(playSec / 60)} min` : `${playSec}s`})`;
+  const bkDebt = document.getElementById('bk-final-debt');
+  if (bkDebt) bkDebt.textContent = `-$${Math.abs(currentCash < 0 ? currentCash : (nwObj ? nwObj.totalDebt || 0 : 0)).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+  const bkNW = document.getElementById('bk-final-nw');
+  if (bkNW) bkNW.textContent = `-$${Math.abs(nwObj ? nwObj.netWorth || 0 : 0).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+
+  modal.classList.remove('hidden');
+  if (typeof window !== 'undefined') window.gameSpeed = 0;
+}
+
 export const DREPanel = {
   syncDREValues,
   openFacilityDREModal,
   closeFacilityDREModal,
   toggleDREModal,
   calculateCorporateNetWorth,
-  renderFacilityDRETable
+  renderFacilityDRETable,
+  openInsolvencyModal,
+  closeInsolvencyModal,
+  showBankruptcyModal
 };
 
 if (typeof window !== 'undefined') {
@@ -338,6 +425,9 @@ if (typeof window !== 'undefined') {
   window.toggleDREModal = toggleDREModal;
   window.calculateCorporateNetWorth = calculateCorporateNetWorth;
   window.renderFacilityDRETable = renderFacilityDRETable;
+  window.openInsolvencyModal = openInsolvencyModal;
+  window.closeInsolvencyModal = closeInsolvencyModal;
+  window.showBankruptcyModal = showBankruptcyModal;
 }
 
 export default DREPanel;

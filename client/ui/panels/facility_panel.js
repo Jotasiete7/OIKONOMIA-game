@@ -144,7 +144,13 @@ export const FacilityPanel = {
   },
 
   renderEmptyLotPanel(tile) {
-    const d = tile.district || { name: 'Distrito Central', landRentDaily: 10, trafficIndex: 50, population: 5000 };
+    const rawD = tile.district || {};
+    const d = {
+      name: rawD.name || 'Distrito Central',
+      landRentDaily: rawD.landRentDaily != null ? rawD.landRentDaily : 10,
+      trafficIndex: rawD.trafficIndex != null ? rawD.trafficIndex : 50,
+      population: rawD.population != null ? rawD.population : 5000
+    };
     const cityName = tile.city ? (tile.city.cityName || tile.city.name || 'Metrópole') : 'Zona Rural';
     const cash = typeof window.cash !== 'undefined' ? window.cash : (window.GameState?.cash || 0);
 
@@ -497,33 +503,813 @@ export const FacilityPanel = {
   },
 
   renderMinePanel(tile) {
-    if (typeof window !== 'undefined' && typeof window.renderMinePanel === 'function' && window.renderMinePanel !== this.renderMinePanel) {
-      return window.renderMinePanel(tile);
+    if (!tile || !tile.mine) return;
+    const m = tile.mine;
+    const res = m.resourceId || '';
+    const isTimber = res === 'timber';
+    const isSilica = res === 'silica';
+    const isOil = res === 'crude_oil';
+    const isBauxite = res === 'bauxite';
+    const isGold = res === 'gold_ore';
+    const isChem = res === 'chemical_minerals';
+
+    const iconEl = document.getElementById('facility-icon');
+    const defaultSprite = isTimber ? 'minas/mine_timber' 
+      : (isSilica ? 'minas/mine_silica' 
+      : (isOil ? 'minas/mine_oil'
+      : (isBauxite ? 'minas/mine_bauxite'
+      : (isGold ? 'minas/mine_gold'
+      : (isChem ? 'minas/mine_chemicals' : 'minas/mine_iron')))));
+
+    const sm = (typeof window !== 'undefined' && window.SpriteManager) ? window.SpriteManager : null;
+    const spriteKey = (sm && typeof sm.getMineSpriteKey === 'function') 
+      ? sm.getMineSpriteKey(m.mineTypeId || defaultSprite) 
+      : defaultSprite;
+    const defaultIcon = isTimber ? '🪵' : (isSilica ? '🏖️' : (isOil ? '🛢️' : (isBauxite ? '🪨' : (isGold ? '🥇' : (isChem ? '🧪' : '⛏️')))));
+    if (iconEl) iconEl.innerHTML = `<img src="assets/${spriteKey}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='${defaultIcon}'">`;
+    
+    const title = isTimber ? '🪵 Serraria & Silvicultura Florestal' 
+      : (isSilica ? '🏖️ Jazida de Sílica & Quartzo Industrial' 
+      : (isOil ? '🛢️ Campo Petrolífero Terrestre'
+      : (isBauxite ? '🪨 Mina de Bauxita (Alumínio)'
+      : (isGold ? '🥇 Mina de Ouro Nobre'
+      : (isChem ? '🧪 Depósito de Minerais Químicos' : m.name)))));
+
+    const distName = tile.district ? tile.district.name : 'Metrópole';
+    const subtitle = isTimber 
+      ? `${distName} · Unidade de Manejo & Extração Florestal`
+      : (isSilica ? `${distName} · Bacia Geológica de Sílica Continental` 
+      : (isOil ? `${distName} · Bacia Sedimentar de Óleo Bruto`
+      : (isBauxite ? `${distName} · Formação Laterítica de Bauxita`
+      : (isGold ? `${distName} · Veio Aurífero de Alta Montanha`
+      : (isChem ? `${distName} · Bacia Evaporítica de Sais Minerais`
+      : `${distName} · Instalação Extrativista de Recursos`)))));
+
+    const titleEl = document.getElementById('facility-title');
+    if (titleEl) titleEl.textContent = title;
+    const subtitleEl = document.getElementById('facility-subtitle');
+    if (subtitleEl) subtitleEl.textContent = subtitle;
+
+    const badge = document.getElementById('facility-rent-badge');
+    const landRent = tile.district ? tile.district.landRentDaily : 10;
+    const mineDailyOpex = isTimber ? 140 : (isSilica ? 150 : (isOil ? 220 : (isBauxite ? 160 : (isGold ? 350 : (isChem ? 160 : 180)))));
+    const totalMineDaily = landRent + mineDailyOpex;
+    const opexLabel = isTimber ? 'Manejo $140' : (isSilica ? 'Lavagem $150' : (isOil ? 'Bombeamento $220' : (isBauxite ? 'Lavra $160' : (isGold ? 'Beneficiamento $350' : (isChem ? 'Refino $160' : 'Extração $180')))));
+    if (badge) {
+      badge.textContent = `-$${totalMineDaily}/dia (Solo $${landRent} + ${opexLabel})`;
+      badge.classList.remove('hidden');
     }
+
+    const textClass = isTimber ? 'text-amber-300' : (isSilica ? 'text-stone-200' : (isOil ? 'text-slate-200' : (isBauxite ? 'text-orange-300' : (isGold ? 'text-yellow-300' : (isChem ? 'text-teal-300' : 'text-sky-300')))));
+    const storageLabel = isTimber ? 'Pátio de Toras / Madeira' 
+      : (isSilica ? 'Silo de Areia de Sílica' 
+      : (isOil ? 'Parque de Tanques de Petróleo'
+      : (isBauxite ? 'Pátio de Minério de Bauxita'
+      : (isGold ? 'Cofre de Minério de Ouro'
+      : (isChem ? 'Silos & Reatores Químicos' : 'Armazém de Minério')))));
+
+    const tipText = isTimber
+      ? '💡 Fornece toras nativas para serrarias de chapas estruturais (lumber), celulose e marcenarias.'
+      : (isSilica 
+          ? '💡 Fornece sílica pura (SiO₂ > 99%) para fundição de vidro plano (glass) e fábricas de semicondutores (chips).'
+          : (isOil
+              ? '💡 Fornece petróleo bruto pesado diretamente para refinarias de plástico sintético e petroquímica.'
+              : (isBauxite
+                  ? '💡 Fornece bauxita para fornos de laminação de alumínio leve (aluminum_sheets), latinhas e fuselagens.'
+                  : (isGold
+                      ? '💡 Fornece ouro bruto nobre para alta joalheria de luxo e componentes eletrônicos finos.'
+                      : (isChem
+                          ? '💡 Fornece sais e compostos para indústrias farmacêuticas, fertilizantes e reagentes industriais.'
+                          : '💡 Fornece matérias-primas pesadas diretamente para usinas siderúrgicas e indústria pesada.')))));
+
+    let resEmoji = '⛏️ ';
+    if (isTimber) resEmoji = '🪵 ';
+    else if (isSilica) resEmoji = '🏖️ ';
+    else if (isOil) resEmoji = '🛢️ ';
+    else if (isBauxite) resEmoji = '🪨 ';
+    else if (isGold) resEmoji = '🥇 ';
+    else if (isChem) resEmoji = '🧪 ';
+
+    const contentEl = document.getElementById('facility-content-panel');
+    if (contentEl) {
+      contentEl.innerHTML = `
+        <div class="bg-[#0b0e14] p-4 rounded-xl border border-white/[0.08] space-y-3 font-mono text-xs shadow-lg">
+          <div class="flex items-center justify-between border-b border-white/[0.06] pb-2">
+            <span class="font-bold ${textClass} text-sm flex items-center gap-1.5">${resEmoji}<span>${m.resourceName}</span></span>
+            <span class="text-[10px] bg-[#c9a86a]/15 text-[#c9a86a] px-2 py-0.5 rounded border border-[#c9a86a]/30 font-bold">QR: ${m.quality}/100</span>
+          </div>
+          <div class="bg-[#0d1017] p-3 rounded-lg border border-white/[0.06] space-y-1.5 text-slate-300 text-[11px]">
+            <div class="flex justify-between"><span>Extração Diária:</span> <strong class="text-emerald-400">${m.dailyYield} un/dia</strong></div>
+            <div class="flex justify-between"><span>Custo Unitário:</span> <strong class="text-rose-400">$${m.unitCost.toFixed(2)}/un</strong></div>
+            <div class="flex justify-between"><span>${storageLabel}:</span> <strong class="text-slate-100">${m.stock} / ${m.maxCapacity} un</strong></div>
+          </div>
+          <div class="bg-[#080a0d] p-2.5 rounded-lg border border-white/[0.04] text-[10px] text-slate-400 leading-relaxed">
+            ${tipText}
+          </div>
+        </div>
+      `;
+    }
+    this.renderFacilityFooterActions(tile);
   },
 
   renderFarmPanel(tile) {
-    if (typeof window !== 'undefined' && typeof window.renderFarmPanel === 'function' && window.renderFarmPanel !== this.renderFarmPanel) {
-      return window.renderFarmPanel(tile);
+    if (!tile || !tile.farm) return;
+    const farm = tile.farm;
+    const iconEl = document.getElementById('facility-icon');
+    const sm = (typeof window !== 'undefined' && window.SpriteManager) ? window.SpriteManager : null;
+    const spriteKey = (sm && typeof sm.getFarmSpriteKey === 'function') ? sm.getFarmSpriteKey(farm.farmTypeId) : 'agro/farm_wheat';
+    if (iconEl) iconEl.innerHTML = `<img src="assets/${spriteKey}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🌾'">`;
+    
+    const titleEl = document.getElementById('facility-title');
+    if (titleEl) titleEl.textContent = farm.name;
+    const distName = tile.district ? tile.district.name : 'Metrópole';
+    const subtitleEl = document.getElementById('facility-subtitle');
+    if (subtitleEl) subtitleEl.textContent = `${distName} · Propriedade Agropecuária`;
+    
+    const badge = document.getElementById('facility-rent-badge');
+    const landRent = tile.district ? tile.district.landRentDaily : 10;
+    const totalFarmDaily = landRent + 120;
+    if (badge) {
+      badge.textContent = `-$${totalFarmDaily}/dia (Solo $${landRent} + Mão de Obra $120)`;
+      badge.classList.remove('hidden');
     }
+
+    const isLivestock = ['poultry', 'raw_milk', 'cattle', 'pigs', 'wool'].includes(farm.cropId) || ['farm_poultry', 'farm_dairy', 'farm_cattle', 'farm_pigs', 'farm_sheep', 'poultry'].includes(farm.farmTypeId);
+    let feedHtml = '';
+
+    if (isLivestock) {
+      const hasFeed = !!(farm.feedConfig && farm.feedConfig.active);
+      const effYield = hasFeed ? Math.round(farm.dailyYield * 1.5) : (farm.effectiveYield || farm.dailyYield);
+      const effQR = hasFeed ? Math.min(100, (farm.quality || 60) + 15) : (farm.effectiveQuality || farm.quality || 60);
+      const feedNeeded = Math.ceil(farm.dailyYield * 0.20);
+
+      let stockMonitorHtml = '';
+      if (hasFeed) {
+        const isInternal = farm.feedConfig.supplierId?.startsWith('farm_');
+        if (isInternal) {
+          const parts = farm.feedConfig.supplierId.split('_');
+          const fx = Number(parts[1]), fy = Number(parts[2]);
+          const grid = (typeof window !== 'undefined' && window.worldGrid) ? window.worldGrid : null;
+          const feedFarmTile = (grid && grid[fx]) ? grid[fx][fy] : null;
+          const supplierStock = feedFarmTile?.farm ? (feedFarmTile.farm.stock || 0) : 0;
+          const daysAutonomy = feedNeeded > 0 ? Math.floor(supplierStock / feedNeeded) : 0;
+
+          let autonomyBadge = '';
+          let barColor = 'bg-emerald-500';
+          let alertMsg = '';
+
+          if (supplierStock < feedNeeded) {
+            autonomyBadge = '<span class="text-rose-400 bg-rose-950/80 px-2 py-0.5 rounded border border-rose-800 font-bold text-[9px] animate-pulse">🔴 Ruptura (0 dias)</span>';
+            barColor = 'bg-rose-600';
+            alertMsg = '<div class="text-[9px] text-rose-400 bg-rose-950/40 border border-rose-900/60 rounded px-1.5 py-0.5 mt-1 font-bold">⚠ Estoque esgotado! Os animais voltarão ao ritmo básico de pasto sem ração suplementar.</div>';
+          } else if (daysAutonomy <= 3) {
+            autonomyBadge = `<span class="text-rose-300 bg-rose-950/80 px-2 py-0.5 rounded border border-rose-800 font-bold text-[9px]">🔴 Risco (${daysAutonomy}d)</span>`;
+            barColor = 'bg-rose-500';
+            alertMsg = `<div class="text-[9px] text-rose-300 bg-rose-950/30 border border-rose-800/50 rounded px-1.5 py-0.5 mt-1">⚠ Apenas ${daysAutonomy} dias de ração restantes. Amplie o plantio ou conecte outro fornecedor.</div>`;
+          } else if (daysAutonomy <= 7) {
+            autonomyBadge = `<span class="text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800 font-bold text-[9px]">🟡 Atenção (${daysAutonomy}d)</span>`;
+            barColor = 'bg-amber-500';
+          } else {
+            autonomyBadge = `<span class="text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800 font-bold text-[9px]">🟢 Seguro (${daysAutonomy}d)</span>`;
+            barColor = 'bg-emerald-500';
+          }
+
+          const stockPercent = Math.min(100, Math.max(5, Math.round((supplierStock / (feedNeeded * 14)) * 100)));
+
+          stockMonitorHtml = `
+            <div class="bg-[#080a0d] p-2.5 rounded-xl border border-white/[0.06] space-y-1.5 mt-2">
+              <div class="flex items-center justify-between text-[10px]">
+                <span class="text-slate-400 flex items-center gap-1 font-bold">📊 Autonomia de Ração:</span>
+                ${autonomyBadge}
+              </div>
+              <div class="h-1.5 bg-[#0b0e14] rounded-full overflow-hidden border border-white/[0.06]">
+                <div class="${barColor} h-full rounded-full transition-all duration-300" style="width:${stockPercent}%"></div>
+              </div>
+              <div class="flex items-center justify-between text-[9px] text-slate-400 pt-0.5">
+                <span>Consumo: <strong class="text-amber-300">${feedNeeded} un/dia</strong></span>
+                <span>Estoque no Silo: <strong class="${supplierStock < feedNeeded ? 'text-rose-400 font-bold' : 'text-slate-200'}">${supplierStock.toLocaleString()} un</strong></span>
+              </div>
+              ${alertMsg}
+            </div>
+          `;
+        } else if (farm.feedConfig.supplierId?.startsWith('port_') || farm.feedConfig.supplierId?.startsWith('primary_') || farm.feedConfig.supplierId?.startsWith('port')) {
+          const feedDailyCost = feedNeeded * (farm.feedConfig.landedCost || 0.60);
+          stockMonitorHtml = `
+            <div class="bg-[#080a0d] p-2.5 rounded-xl border border-white/[0.06] space-y-1 mt-2 text-[10px]">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400 font-bold">Origem: Importação Portuária</span>
+                <span class="text-[#c9a86a] bg-[#c9a86a]/15 px-2 py-0.5 rounded border border-[#c9a86a]/30 font-bold text-[9px]">🚢 Abastecimento Contínuo</span>
+              </div>
+              <div class="flex items-center justify-between text-[9px] text-slate-400 pt-0.5">
+                <span>Consumo: <strong class="text-amber-300">${feedNeeded} un/dia</strong></span>
+                <span>Custo Diário: <strong class="text-emerald-400 font-bold">-$${feedDailyCost.toFixed(2)}/dia</strong></span>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      feedHtml = `
+        <div class="bg-[#0d1017] p-3 rounded-xl border ${hasFeed ? 'border-[#c9a86a]/40 bg-[#c9a86a]/5' : 'border-white/[0.06]'} space-y-2 font-mono mt-3">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="font-bold text-slate-200 flex items-center gap-1.5">
+              <span>🌽</span> Nutrição & Ração Pecuária:
+            </span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded font-bold ${hasFeed ? 'bg-[#c9a86a]/20 text-[#c9a86a] border border-[#c9a86a]/40' : 'bg-white/[0.04] text-slate-400 border border-white/[0.08]'}">
+              ${hasFeed ? '⚡ Suplementado (+50% / +15 QR)' : 'Pasto Natural (Básico)'}
+            </span>
+          </div>
+
+          <div class="text-[10px] text-slate-300 space-y-1">
+            ${hasFeed ? `
+              <div class="flex items-center justify-between text-slate-300">
+                <span>Grão: <strong class="text-amber-300">${farm.feedConfig.grainProdId === 'corn' ? '🌽 Milho Agrícola' : '🌾 Trigo & Cereais'}</strong></span>
+                <span>Custo Ração: <strong class="text-emerald-400">$${(farm.feedConfig.landedCost || 0.40).toFixed(2)}/un</strong></span>
+              </div>
+              <div class="text-[9px] text-slate-400">Fornecedor: <strong class="text-slate-200">${farm.feedConfig.supplierName || 'Fazenda Própria'}</strong></div>
+              <div class="text-[9px] text-[#c9a86a] font-bold pt-0.5">🚀 Rendimento: ${effYield} un/dia · Qualidade: QR ${effQR}</div>
+              ${stockMonitorHtml}
+            ` : `
+              <div class="text-[10px] text-slate-400 italic">
+                Alimente as criações com Milho ou Trigo para acelerar o rendimento em +50% e elevar a Qualidade (QR).
+              </div>
+            `}
+          </div>
+
+          <div class="flex items-center justify-between gap-2 pt-1 border-t border-white/[0.06]">
+            <button onclick="openFarmFeedSupplierModal(${tile.x}, ${tile.y})" class="bg-[#c9a86a] hover:bg-[#d8b779] text-[#080a0d] px-3 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition shadow">
+              ${hasFeed ? '⚙️ Alterar Ração' : '🌽 Conectar Ração (Milho/Trigo)'}
+            </button>
+            ${hasFeed ? `
+              <button onclick="disconnectFarmFeed(${tile.x}, ${tile.y})" class="text-[10px] text-rose-400 hover:text-rose-300 font-bold cursor-pointer">Desativar</button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    const effDisplayYield = farm.effectiveYield || farm.dailyYield;
+    const effDisplayQR = farm.effectiveQuality || farm.quality || 60;
+
+    const contentEl = document.getElementById('facility-content-panel');
+    if (contentEl) {
+      contentEl.innerHTML = `
+        <div class="bg-[#0b0e14] p-4 rounded-xl border border-white/[0.08] space-y-3 font-mono text-xs shadow-lg">
+          <div class="flex items-center justify-between border-b border-white/[0.06] pb-2">
+            <span class="font-bold text-[#c9a86a] text-sm">${farm.cropName}</span>
+            <span class="text-[10px] bg-[#c9a86a]/15 text-[#c9a86a] px-2 py-0.5 rounded border border-[#c9a86a]/30 font-bold">QR: ${effDisplayQR}/100</span>
+          </div>
+          <div class="bg-[#0d1017] p-3 rounded-lg border border-white/[0.06] space-y-1.5 text-slate-300 text-[11px]">
+            <div class="flex justify-between"><span>Produção Diária:</span> <span><strong class="text-emerald-400">${effDisplayYield} un/dia</strong> ${effDisplayYield > farm.dailyYield ? '<span class="text-[9px] text-[#c9a86a] font-bold">(+50% Ração)</span>' : ''}</span></div>
+            <div class="flex justify-between"><span>Custo Operacional:</span> <strong class="text-rose-400">$${farm.dailyOperatingCost.toFixed(2)}/un</strong></div>
+            <div class="flex justify-between"><span>Silo / Estoque:</span> <strong class="text-slate-100">${farm.stock} / ${farm.maxCapacity} un</strong></div>
+          </div>
+          ${feedHtml}
+          <div class="bg-[#080a0d] p-2.5 rounded-lg border border-white/[0.04] text-[10px] text-slate-400 mt-2 leading-relaxed">
+            💡 Fornece matérias-primas e insumos agropecuários de baixo custo para o varejo e fábricas da corporação.
+          </div>
+        </div>
+      `;
+    }
+    this.renderFacilityFooterActions(tile);
   },
 
   renderFactoryPanel(tile) {
-    if (typeof window !== 'undefined' && typeof window.renderFactoryPanel === 'function' && window.renderFactoryPanel !== this.renderFactoryPanel) {
-      return window.renderFactoryPanel(tile);
+    if (!tile || !tile.factory) return;
+    const factory = tile.factory;
+    const sm = (typeof window !== 'undefined' && window.SpriteManager) ? window.SpriteManager : null;
+    const factorySprite = (sm && typeof sm.getFactorySprite === 'function') ? sm.getFactorySprite(factory.lines, factory.customSkin) : 'industrial/factory_default';
+    const iconEl = document.getElementById('facility-icon');
+    if (iconEl) iconEl.innerHTML = `<img src="assets/${factorySprite}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🏭'">`;
+    
+    const titleEl = document.getElementById('facility-title');
+    if (titleEl) titleEl.textContent = factory.name;
+    
+    const skinVal = factory.customSkin || 'auto';
+    const distName = tile.district ? tile.district.name : 'Distrito Industrial';
+    const subtitleEl = document.getElementById('facility-subtitle');
+    if (subtitleEl) {
+      subtitleEl.innerHTML = `
+        <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
+          <span>${distName} · Complexo Fabril</span>
+          <span class="text-slate-600">•</span>
+          <span class="text-[10px] text-[#c9a86a] font-medium">🎨 Fachada:</span>
+          <select onchange="setFactoryFacade(${tile.x}, ${tile.y}, this.value)" class="bg-[#0b0e14] text-slate-200 border border-white/[0.12] hover:border-[#c9a86a] rounded px-1.5 py-0.5 text-[10px] focus:outline-none focus:border-[#c9a86a] cursor-pointer shadow-sm">
+            <option value="auto" ${skinVal === 'auto' ? 'selected' : ''}>⚙️ Automática (Por Produção)</option>
+            <option value="food_processing" ${skinVal === 'food_processing' ? 'selected' : ''}>🥫 Alimentos & Frigorífico</option>
+            <option value="steel_mill" ${skinVal === 'steel_mill' ? 'selected' : ''}>⚙️ Siderúrgica & Metais</option>
+            <option value="electronics_factory" ${skinVal === 'electronics_factory' ? 'selected' : ''}>💻 Chips & Eletrônicos</option>
+            <option value="auto_plant" ${skinVal === 'auto_plant' ? 'selected' : ''}>🚗 Montadora de Veículos</option>
+            <option value="textile_mill" ${skinVal === 'textile_mill' ? 'selected' : ''}>🧵 Indústria Têxtil</option>
+            <option value="refinery" ${skinVal === 'refinery' ? 'selected' : ''}>🛢️ Refinaria Petroquímica</option>
+            <option value="factory_default" ${skinVal === 'factory_default' ? 'selected' : ''}>📦 Galpão Geral</option>
+          </select>
+        </div>
+      `;
+    }
+    const badge = document.getElementById('facility-rent-badge');
+    const landRent = tile.district ? tile.district.landRentDaily : 10;
+    const linesCount = factory.lines ? Object.keys(factory.lines).length : 0;
+    const factoryWages = linesCount * 200;
+    const totalFactoryDaily = landRent + factoryWages;
+    if (badge) {
+      badge.textContent = `-$${totalFactoryDaily}/dia (Solo $${landRent} + $${factoryWages} Linhas)`;
+      badge.classList.remove('hidden');
+    }
+
+    const panel = document.getElementById('facility-content-panel');
+    if (!panel) return;
+    panel.innerHTML = '';
+
+    const lines = Object.entries(factory.lines || {});
+    if (lines.length === 0) {
+      panel.innerHTML = `<p class="text-xs text-slate-500 font-mono text-center py-6">Nenhuma linha de produção ativa. Ative uma linha abaixo.</p>`;
+    } else {
+      const labs = (typeof window !== 'undefined' && window.rdLabs) ? window.rdLabs : {};
+      const catalog = (typeof window !== 'undefined' && window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : {};
+      const recipes = (typeof window !== 'undefined' && window.FACTORY_RECIPES) ? window.FACTORY_RECIPES : [];
+      const math = (typeof window !== 'undefined' && window.CoreMath) ? window.CoreMath : null;
+
+      for (const [recipeId, line] of lines) {
+        const rdProj = Object.values(labs).find(p => p.productId === line.outputProductId);
+        const techLvl = (math && typeof math.getTechLevelLabel === 'function') ? math.getTechLevelLabel(line.outputQuality || 60) : { level: 1, label: 'Padrão', icon: '🥉', color: 'text-slate-300 border-white/[0.08] bg-white/[0.04]' };
+        const rdBadge = rdProj
+          ? `<button onclick="openRDCenterModal()" class="text-[9px] bg-[#c9a86a]/15 text-[#c9a86a] px-1.5 py-0.5 rounded border border-[#c9a86a]/30 font-mono ml-1 hover:bg-[#c9a86a]/25 cursor-pointer" title="P&D: ${rdProj.status === 'completed' ? 'Concluído' : 'Pesquisando'} QR ${rdProj.targetQR} (Atual: ${rdProj.currentQR.toFixed(1)})">🔬 P&D: ${rdProj.currentQR.toFixed(0)}</button>`
+          : '';
+
+        const rec = recipes.find(r => r.id === line.recipeId);
+        line.inputsConfig = line.inputsConfig || {};
+
+        let inputsHtml = '';
+        if (rec && rec.inputs && Object.keys(rec.inputs).length > 0) {
+          const items = Object.entries(rec.inputs).map(([inpId, qty]) => {
+            if (!line.inputsConfig[inpId] && typeof window.getDefaultSupplierForInput === 'function') {
+              line.inputsConfig[inpId] = window.getDefaultSupplierForInput(inpId, tile);
+            }
+            const cfg = line.inputsConfig[inpId] || {};
+            const inpProd = catalog[inpId] || { name: inpId };
+            const isInternal = cfg.supplierId?.startsWith('farm_') || cfg.supplierId?.startsWith('mine_') || cfg.supplierId?.startsWith('factory_');
+
+            return `
+              <div class="bg-[#0d1017] p-1.5 rounded-lg border ${isInternal ? 'border-amber-500/40 bg-amber-950/10' : 'border-white/[0.06]'} flex items-center justify-between gap-1.5 text-[10px]">
+                <div class="truncate max-w-[170px]">
+                  <span class="${isInternal ? 'text-amber-400 font-bold' : 'text-slate-300 font-bold'}">${qty}x ${inpProd.name}</span>
+                  <span class="text-[9px] text-slate-400 block truncate">Origem: <strong class="${isInternal ? 'text-amber-300' : 'text-[#c9a86a]'}">${isInternal ? '🏛️ Própria' : '🚢 Porto'}: ${cfg.supplierName ? cfg.supplierName.split('(')[0].trim() : 'Porto'}</strong> (QR ${cfg.quality || 50})</span>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <span class="text-[9px] text-emerald-400 font-bold">$${cfg.landedCost ? cfg.landedCost.toFixed(2) : '0.00'}</span>
+                  <button onclick="openFactoryInputSupplierModal(${tile.x}, ${tile.y}, '${recipeId}', '${inpId}')" class="bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 px-1.5 py-0.5 rounded text-[9px] font-bold border border-white/[0.08] cursor-pointer">Trocar</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          inputsHtml = `
+            <div class="pt-1.5 border-t border-white/[0.06] space-y-1">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Matérias-Primas & Fornecedores:</div>
+              ${items}
+            </div>
+          `;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'bg-[#0b0e14] p-3 rounded-xl border border-white/[0.08] space-y-2 font-mono text-xs shadow-md';
+        card.innerHTML = `
+          <div class="flex items-center justify-between border-b border-white/[0.06] pb-1.5">
+            <div class="flex items-center flex-wrap gap-1">
+              <span class="font-bold text-[#c9a86a]">${line.recipeName}</span>
+              <button onclick="openEncyclopediaModal('products', '${line.outputProductId}')" class="text-[9px] bg-white/[0.04] text-slate-300 px-1 py-0.2 rounded border border-white/[0.08] font-mono hover:bg-white/[0.08] cursor-pointer" title="Ver na Enciclopédia">📖 Wiki</button>
+              <span class="text-[9px] bg-white/[0.04] text-slate-400 px-1.5 py-0.5 rounded">${catalog[line.outputProductId]?.category || 'Insumo'}</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded border font-bold ${techLvl.color}">${techLvl.icon} Lvl ${techLvl.level}</span>
+              ${rdBadge}
+            </div>
+            <button onclick="removeFactoryLine(${tile.x}, ${tile.y}, '${recipeId}')" class="text-slate-500 hover:text-rose-400 font-mono text-sm px-1 cursor-pointer">✕</button>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[10px] text-slate-300 bg-[#0d1017] p-2 rounded-lg border border-white/[0.04]">
+            <div>Custo Unitário: <strong class="text-emerald-400">$${line.unitCost.toFixed(2)}/un</strong></div>
+            <div>Qualidade (QR): <strong class="text-cyan-300">${line.outputQuality}/100</strong></div>
+            <div>Capacidade: <strong class="text-slate-100">${line.dailyCapacity} un/dia</strong></div>
+            <div>Estoque Fabril: <strong class="text-amber-400">${line.finishedStock} un</strong></div>
+          </div>
+          ${inputsHtml}
+        `;
+        panel.appendChild(card);
+      }
+    }
+
+    const freeLines = (factory.maxLines || 4) - lines.length;
+    let extraBtn = '';
+    if (freeLines > 0) {
+      extraBtn = `
+        <button onclick="openFactoryRecipeModal(${tile.x}, ${tile.y})"
+          class="w-full text-center text-xs font-bold text-[#080a0d] bg-[#c9a86a] hover:bg-[#d8b779] font-mono py-2 rounded-xl shadow-lg transition cursor-pointer flex items-center justify-center gap-1">
+          <span>➕ Ativar Linha de Produção</span>
+          <span class="text-[10px] opacity-80">(${freeLines} livre${freeLines > 1 ? 's' : ''})</span>
+        </button>
+      `;
+    }
+    this.renderFacilityFooterActions(tile, extraBtn);
+  },
+
+  setFactoryFacade(x, y, skin) {
+    const grid = (typeof window !== 'undefined' && window.worldGrid) ? window.worldGrid : null;
+    const tile = grid && grid[x] && grid[x][y];
+    if (tile && tile.factory) {
+      tile.factory.customSkin = skin;
+      this.renderFactoryPanel(tile);
+      if (typeof window !== 'undefined' && typeof window.renderMap === 'function') window.renderMap();
+      if (typeof window !== 'undefined' && typeof window.addGameLog === 'function') {
+        window.addGameLog(`🎨 Fachada da ${tile.factory.name} alterada para: ${skin === 'auto' ? 'Automática por Produção' : skin}`, 'text-amber-300');
+      }
     }
   },
 
   renderStorePanel(tile) {
-    if (typeof window !== 'undefined' && typeof window.renderStorePanel === 'function' && window.renderStorePanel !== this.renderStorePanel) {
-      return window.renderStorePanel(tile);
+    if (!tile || !tile.store) return;
+    const store = tile.store;
+    const d = tile.district || { landRentDaily: 10, population: 50000, trafficIndex: 50 };
+
+    const titleEl = document.getElementById('facility-title');
+    if (titleEl) titleEl.textContent = store.name;
+    const subtitleEl = document.getElementById('facility-subtitle');
+    if (subtitleEl) subtitleEl.textContent = `${d?.name || 'Comércio'} · Lote (${tile.x}, ${tile.y})`;
+
+    const iconEl = document.getElementById('facility-icon');
+    if (iconEl) iconEl.innerHTML = `<img src="assets/lojas/${store.storeTypeId}.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🏪'">`;
+    const badge = document.getElementById('facility-rent-badge');
+    const shelvesCount = Object.keys(store.shelves || {}).length;
+    const clerkCost = shelvesCount * 40;
+    const totalStoreDaily = (store.dailyRent || d.landRentDaily) + clerkCost;
+    if (badge) {
+      badge.textContent = `-$${totalStoreDaily.toFixed(0)}/dia (Solo $${(store.dailyRent || d.landRentDaily).toFixed(0)} + $${clerkCost} Equipe)`;
+      badge.classList.remove('hidden');
     }
+
+    const panel = document.getElementById('facility-content-panel');
+    if (!panel) return;
+    panel.innerHTML = '';
+
+    const catalog = (typeof window !== 'undefined' && window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : {};
+    const labs = (typeof window !== 'undefined' && window.rdLabs) ? window.rdLabs : {};
+    const brandRating = (typeof window !== 'undefined' && window.playerBrandRating) ? window.playerBrandRating : {};
+    const math = (typeof window !== 'undefined' && window.CoreMath) ? window.CoreMath : null;
+    const macroCycle = (typeof window !== 'undefined' && window.MacroCycleSystem) ? window.MacroCycleSystem : null;
+    const yr = (typeof window !== 'undefined' && typeof window.year === 'number') ? window.year : 1;
+
+    for (const [prodId, shelf] of Object.entries(store.shelves || {})) {
+      const prod = catalog[prodId];
+      if (!prod) continue;
+
+      const rdProj = Object.values(labs).find(p => p.productId === prodId);
+      const rdBadge = rdProj
+        ? `<button onclick="openRDCenterModal()" class="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-800 font-mono hover:bg-purple-900 cursor-pointer" title="P&D: ${rdProj.status === 'completed' ? 'Concluído' : 'Pesquisando'} QR ${rdProj.targetQR} (Atual: ${rdProj.currentQR.toFixed(1)})">🔬 P&D: ${rdProj.currentQR.toFixed(0)}</button>`
+        : '';
+
+      const brand = brandRating[prodId] || 20;
+      const elast = (math && typeof math.calculatePriceElasticityFactor === 'function') 
+        ? math.calculatePriceElasticityFactor(prod.necessityIndex, prod.standardPrice, shelf.price, shelf.quality)
+        : 1;
+      const rawDailySales = d.population * prod.perCapitaDailyDemand * (d.trafficIndex / 100) * 0.45 * elast;
+      const estSales = Math.max(0.05, rawDailySales);
+      const daysCover = Math.floor(shelf.stock / estSales);
+      const capitalTied = Math.round(shelf.stock * (shelf.landedCost || prod.baseCost));
+      const stockPct = Math.round((shelf.stock / shelf.maxCapacity) * 100);
+      const markupPct = Math.round(((shelf.price - shelf.landedCost) / shelf.landedCost) * 100);
+      const isStockout = shelf.stock < 15;
+
+      const coverBadge = isStockout
+        ? '<span class="text-rose-400 font-bold bg-rose-950/80 px-1 py-0.2 rounded border border-rose-800 text-[8px]">🔴 Ruptura</span>'
+        : (daysCover <= 2
+          ? `<span class="text-rose-300 font-bold bg-rose-950/80 px-1 py-0.2 rounded border border-rose-800 text-[8px]">🔴 ${daysCover}d (Risco)</span>`
+          : (daysCover <= 5
+            ? `<span class="text-amber-300 font-bold bg-amber-950/80 px-1 py-0.2 rounded border border-amber-800 text-[8px]">🟡 ${daysCover}d</span>`
+            : `<span class="text-emerald-400 font-bold bg-emerald-950/80 px-1 py-0.2 rounded border border-emerald-800 text-[8px]">🟢 ${daysCover}d</span>`));
+
+      const isWarehouse = !!shelf.supplierId?.startsWith('warehouse_');
+      const isInternalFacility = !!(shelf.supplierId?.startsWith('factory_') || shelf.supplierId?.startsWith('farm_') || shelf.supplierId?.startsWith('mine_'));
+      const isInternal = isInternalFacility || isWarehouse;
+      const macroWholesaleMult = macroCycle ? macroCycle.getWholesaleCostMultiplier(yr) : 1.0;
+      const effectiveUnitCost = (shelf.landedCost || prod.baseCost || 1) * (isInternal ? 1.0 : macroWholesaleMult);
+      const costFill = Math.round((shelf.maxCapacity - shelf.stock) * effectiveUnitCost);
+
+      const profile = (typeof window !== 'undefined' && window.playerProfile) ? window.playerProfile : null;
+      const compName = profile?.companyName || 'Holding';
+
+      let supplierDisplay = '';
+      if (isWarehouse) {
+        supplierDisplay = `<span class="text-emerald-400 font-bold">🏢 [${compName}] Armazém Central (${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'CD'})</span>`;
+      } else if (isInternalFacility) {
+        supplierDisplay = `<span class="text-amber-400 font-bold">🏛️ [${compName}] ${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Produção Própria'}</span>`;
+      } else {
+        supplierDisplay = `<span class="text-sky-300">🚢 Porto: ${shelf.supplierName ? shelf.supplierName.split('(')[0].trim() : 'Porto'}</span>`;
+      }
+
+      const card = document.createElement('div');
+      card.className = `rounded-xl border ${isStockout ? 'border-rose-500/60 shadow-rose-950/20' : 'border-white/[0.08]'} bg-[#0b0e14] p-3 space-y-2.5 shadow-md font-mono`;
+      card.innerHTML = `
+        <div class="flex items-center justify-between border-b border-white/[0.06] pb-1.5">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="text-xs font-bold text-slate-100">${prod.name}</span>
+            <button onclick="openEncyclopediaModal('products', '${prodId}')" class="text-[9px] bg-white/[0.04] text-slate-300 px-1.5 py-0.2 rounded border border-white/[0.08] hover:bg-white/[0.08] cursor-pointer" title="Ver na Enciclopédia">📖 Wiki</button>
+            <span class="text-[9px] bg-[#c9a86a]/15 text-[#c9a86a] px-1.5 py-0.5 rounded border border-[#c9a86a]/30 font-bold">QR: ${shelf.quality}</span>
+            <span class="text-[9px] bg-white/[0.04] text-slate-300 px-1.5 py-0.5 rounded border border-white/[0.08]">⭐ Marca: ${brand}</span>
+            ${rdBadge}
+          </div>
+          <button onclick="removeProductFromStore(${tile.x}, ${tile.y}, '${prodId}')" class="text-[10px] text-slate-500 hover:text-rose-400 font-mono px-1 cursor-pointer">✕</button>
+        </div>
+
+        <div class="bg-[#0d1017] p-2 rounded-lg text-[10px] font-mono flex items-center justify-between border ${isInternal ? 'border-amber-500/40 bg-amber-950/10' : 'border-white/[0.06]'}">
+          <div class="truncate max-w-[210px]">
+            ${supplierDisplay}
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-slate-400">${isInternal ? 'Frete' : 'Custo'}: <strong class="text-emerald-400 font-bold">$${shelf.landedCost.toFixed(2)}</strong></span>
+            <button onclick="openSupplierModal(${tile.x}, ${tile.y}, '${prodId}')" class="bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 px-1.5 py-0.5 rounded text-[9px] font-bold border border-white/[0.08] cursor-pointer">Trocar</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between text-[10px] font-mono text-slate-400 mb-0.5">
+            <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-400'}">Estoque: ${shelf.stock.toLocaleString()} / ${shelf.maxCapacity.toLocaleString()} un</span>
+            <span class="${isStockout ? 'text-rose-400 font-bold' : 'text-slate-500'}">${isStockout ? '⚠ BAIXO' : `${stockPct}%`}</span>
+          </div>
+          <div class="h-1.5 bg-[#080a0d] rounded-full overflow-hidden mb-1.5 border border-white/[0.06]">
+            <div class="stock-bar-fill h-full rounded-full ${isStockout ? 'bg-rose-500' : stockPct > 50 ? 'bg-emerald-500' : 'bg-amber-500'}" style="width:${stockPct}%"></div>
+          </div>
+
+          <!-- Métricas de Capital de Giro & Cobertura -->
+          <div class="flex items-center justify-between text-[9px] font-mono text-slate-400 pb-1 mb-1 border-b border-white/[0.06]">
+            <span class="flex items-center gap-1">Cobertura: ${coverBadge}</span>
+            <span>Imobilizado: <strong class="text-amber-300 font-bold">$${capitalTied.toLocaleString()}</strong></span>
+          </div>
+
+          <div class="flex items-center gap-1.5 text-[9px] font-mono flex-wrap">
+            <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', 100)" class="bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 px-2 py-0.5 rounded border border-white/[0.08] cursor-pointer">+100 un</button>
+            <button onclick="buyInstantStock(${tile.x}, ${tile.y}, '${prodId}', ${shelf.maxCapacity - shelf.stock})" class="bg-[#c9a86a]/15 hover:bg-[#c9a86a]/25 text-[#c9a86a] px-2 py-0.5 rounded border border-[#c9a86a]/30 flex items-center gap-1 cursor-pointer" title="Reposição imediata de estoque">
+              <span>Encher (-$${costFill.toLocaleString()})</span>
+              ${macroWholesaleMult < 1.0 && !isInternal ? '<span class="text-[7px] bg-emerald-950 text-emerald-300 px-1 rounded border border-emerald-800 font-bold">-20% Macro</span>' : ''}
+            </button>
+            <button onclick="openPriceSimulatorModal(${tile.x}, ${tile.y}, '${prodId}')" class="ml-auto text-[#c9a86a] hover:underline font-bold flex items-center gap-0.5 cursor-pointer">📊 Simular 'E se?'</button>
+            <button onclick="openMarketingCentralModal()" class="text-amber-400 hover:text-amber-300 font-bold ml-1 cursor-pointer">📢</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-[10px] font-mono pt-1 border-t border-white/[0.06]">
+          <div>
+            <span class="text-slate-400 block mb-0.5">Preço ($):</span>
+            <input type="number" step="0.50" value="${shelf.price.toFixed(2)}"
+              onchange="updateShelfPrice(${tile.x}, ${tile.y}, '${prodId}', this.value)"
+              class="w-full bg-[#080a0d] border border-white/[0.12] rounded px-2 py-1 text-emerald-400 font-bold text-right focus:outline-none focus:border-[#c9a86a]">
+            <span class="text-[9px] ${markupPct >= 0 ? 'text-emerald-400' : 'text-rose-400'}">Margem: ${markupPct > 0 ? '+' : ''}${markupPct}%</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block mb-0.5">Reposição Diária:</span>
+            <input type="number" step="10" value="${shelf.dailyRestock}"
+              onchange="updateShelfRestock(${tile.x}, ${tile.y}, '${prodId}', this.value)"
+              class="w-full bg-[#080a0d] border border-white/[0.12] rounded px-2 py-1 text-slate-200 font-bold text-right focus:outline-none focus:border-[#c9a86a]">
+          </div>
+        </div>
+      `;
+      panel.appendChild(card);
+    }
+
+    const freeSlots = (store.maxShelves || 4) - Object.keys(store.shelves || {}).length;
+    let extraBtn = '';
+    if (freeSlots > 0) {
+      extraBtn = `
+        <button onclick="openAddProductModal(${tile.x}, ${tile.y})"
+          class="w-full text-center text-xs font-bold text-[#080a0d] bg-[#c9a86a] hover:bg-[#d8b779] font-mono py-2 rounded-xl shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
+          <span>➕ Adicionar Produto às Gôndolas</span>
+          <span class="text-[10px] opacity-80">(${freeSlots} livre${freeSlots > 1 ? 's' : ''})</span>
+        </button>
+      `;
+    }
+    this.renderFacilityFooterActions(tile, extraBtn);
   },
 
   renderRDCenterPanel(tile) {
-    if (typeof window !== 'undefined' && typeof window.renderRDCenterPanel === 'function' && window.renderRDCenterPanel !== this.renderRDCenterPanel) {
-      return window.renderRDCenterPanel(tile);
+    if (!tile || !tile.rdCenter) return;
+    const rd = tile.rdCenter;
+    const iconEl = document.getElementById('facility-icon');
+    if (iconEl) iconEl.innerHTML = `<img src="assets/pesquisa/rd_center.png" class="w-full h-full object-contain p-0.5" onerror="this.outerHTML='🔬'">`;
+    const titleEl = document.getElementById('facility-title');
+    if (titleEl) titleEl.textContent = rd.name;
+    const distName = tile.district?.name || 'Metrópole';
+    const subtitleEl = document.getElementById('facility-subtitle');
+    if (subtitleEl) subtitleEl.textContent = `${distName} · Complexo de P&D (Pesquisa & Inovação)`;
+    const badge = document.getElementById('facility-rent-badge');
+    const rdRent = rd.dailyRent || (tile.district ? tile.district.landRentDaily : 10);
+    const totalRDDaily = rdRent + 150;
+    if (badge) {
+      badge.textContent = `-$${totalRDDaily}/dia (Solo $${rdRent} + Infra $150)`;
+      badge.classList.remove('hidden');
     }
+
+    const labs = (typeof window !== 'undefined' && window.rdLabs) ? window.rdLabs : {};
+    const catalog = (typeof window !== 'undefined' && window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG : {};
+    const rdCats = (typeof window !== 'undefined' && window.RD_CATEGORIES) ? window.RD_CATEGORIES : {};
+    const math = (typeof window !== 'undefined' && window.CoreMath) ? window.CoreMath : null;
+
+    const allProjects = Object.values(labs);
+    const activeProjects = allProjects.filter(p => p.status === 'active' || p.status === 'paused');
+    const completedProjects = allProjects.filter(p => p.status === 'completed');
+    const totalBudget = activeProjects.filter(p => p.status === 'active').reduce((s, p) => s + (p.monthlyBudget || 0), 0);
+    const totalCapacity = (typeof window !== 'undefined' && typeof window.getRDTotalLabCapacity === 'function') ? window.getRDTotalLabCapacity() : 4;
+    const usedSlots = (typeof window !== 'undefined' && typeof window.getRDUsedLabSlots === 'function') ? window.getRDUsedLabSlots() : 0;
+    const freeSlots = Math.max(0, totalCapacity - usedSlots);
+
+    let projectsHtml = '';
+    if (activeProjects.length === 0) {
+      projectsHtml = `
+        <div class="bg-[#0d1017] p-3 rounded-xl border border-dashed border-white/[0.12] text-center space-y-2 font-mono">
+          <p class="text-[11px] text-slate-400">Nenhuma bancada em operação no momento.</p>
+          <button onclick="openRDNewProjectModal()" class="w-full py-2 rounded-lg bg-[#c9a86a] hover:bg-[#d8b779] text-[#080a0d] font-bold text-xs shadow cursor-pointer transition flex items-center justify-center gap-1.5">
+            ➕ Alocar Projeto de Pesquisa (${freeSlots}/${totalCapacity} Bancadas Livres)
+          </button>
+        </div>
+      `;
+    } else {
+      projectsHtml = activeProjects.map(proj => {
+        const prod = catalog[proj.productId];
+        const cat = rdCats[proj.category] || {};
+        const labsCount = proj.labsCount || 1;
+        const minCostSingle = (math && typeof math.calculateRDMonthlyCost === 'function') ? math.calculateRDMonthlyCost(proj.currentQR, prod ? prod.rdBaseCost : 3000) : 3000;
+        const minCostTotal = minCostSingle * labsCount;
+        const pct = Math.min(100, Math.round(((proj.currentQR - proj.startQR) / Math.max(1, proj.targetQR - proj.startQR)) * 100));
+
+        const isActive = proj.status === 'active';
+        const statusBadge = isActive
+          ? '<span class="bg-emerald-950/80 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-700/60 text-[8px] font-bold animate-pulse">🟢 ATIVO</span>'
+          : '<span class="bg-white/[0.04] text-slate-400 px-1.5 py-0.5 rounded border border-white/[0.08] text-[8px] font-bold">⏸ PAUSADO</span>';
+
+        const gainSingle = (math && typeof math.calculateRDQualityGain === 'function') ? math.calculateRDQualityGain(proj.currentQR, proj.targetQR, (proj.monthlyBudget || minCostTotal) / labsCount, minCostSingle) : 1;
+        const gainTotal = gainSingle * labsCount;
+        const monthsLeft = gainTotal > 0 ? Math.ceil((proj.targetQR - proj.currentQR) / gainTotal) : '∞';
+        const barColor = isActive ? 'bg-gradient-to-r from-amber-500 to-[#c9a86a] shadow-sm shadow-amber-500/30' : 'bg-slate-600';
+
+        return `
+          <div class="bg-[#0d1017] border ${isActive ? 'border-[#c9a86a]/40 shadow-md shadow-black/40' : 'border-white/[0.06]'} rounded-xl p-2.5 space-y-2 font-mono text-xs">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm">${cat.icon || '🔬'}</span>
+                <div>
+                  <strong class="text-slate-100 text-[11px] block leading-none">${prod ? prod.name : proj.productId}</strong>
+                  <span class="text-[9px] text-[#c9a86a]">${labsCount} Lab${labsCount > 1 ? 's' : ''} dedicado${labsCount > 1 ? 's' : ''}</span>
+                </div>
+              </div>
+              ${statusBadge}
+            </div>
+
+            <!-- Barra de Progresso do QR -->
+            <div>
+              <div class="flex justify-between text-[9px] text-slate-400 mb-1">
+                <span>QR: <strong class="text-amber-300">${proj.currentQR.toFixed(1)}</strong> → <strong class="text-[#c9a86a]">${proj.targetQR}</strong></span>
+                <span class="font-bold text-slate-300">${pct}% (${monthsLeft === '∞' ? '∞' : `~${monthsLeft}m`})</span>
+              </div>
+              <div class="h-1.5 bg-[#080a0d] rounded-full overflow-hidden border border-white/[0.06]">
+                <div class="${barColor} h-full rounded-full transition-all duration-300" style="width:${pct}%"></div>
+              </div>
+            </div>
+
+            <!-- Resumo Financeiro & Ações Rápidas -->
+            <div class="flex items-center justify-between pt-1 border-t border-white/[0.06] text-[9px]">
+              <span class="text-emerald-400 font-bold">$${(proj.monthlyBudget || 0).toLocaleString('en-US')}/mês</span>
+              <div class="flex items-center gap-1">
+                ${isActive ? `<button onclick="pauseRDProject('${proj.id}')" class="px-1.5 py-0.5 bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 rounded border border-white/[0.08] font-bold cursor-pointer" title="Pausar pesquisa">⏸</button>` : ''}
+                ${!isActive ? `<button onclick="resumeRDProject('${proj.id}')" class="px-1.5 py-0.5 bg-[#c9a86a]/20 hover:bg-[#c9a86a]/30 text-[#c9a86a] rounded border border-[#c9a86a]/40 font-bold cursor-pointer" title="Retomar pesquisa">▶</button>` : ''}
+                <button onclick="adjustRDBudget('${proj.id}')" class="px-1.5 py-0.5 bg-white/[0.04] hover:bg-white/[0.08] text-amber-300 rounded border border-white/[0.08] font-bold cursor-pointer" title="Ajustar verba mensal">💰</button>
+                <button onclick="cancelRDProject('${proj.id}')" class="px-1.5 py-0.5 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded border border-rose-800/60 font-bold cursor-pointer" title="Cancelar pesquisa">✕</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (freeSlots > 0) {
+        projectsHtml += `
+          <button onclick="openRDNewProjectModal()" class="w-full py-1.5 rounded-xl bg-[#0d1017] hover:bg-white/[0.04] text-[#c9a86a] font-bold text-[11px] border border-dashed border-[#c9a86a]/40 cursor-pointer transition flex items-center justify-center gap-1.5">
+            ➕ Alocar Nova Pesquisa (${freeSlots} Bancada${freeSlots > 1 ? 's' : ''} Livre${freeSlots > 1 ? 's' : ''})
+          </button>
+        `;
+      }
+    }
+
+    let patentsHtml = '';
+    if (completedProjects.length > 0) {
+      const sortedCompleted = [...completedProjects].sort((a, b) => (b.currentQR || 0) - (a.currentQR || 0));
+      const maxQR = Math.max(...sortedCompleted.map(p => p.currentQR || 0));
+      const techLevelName = sortedCompleted.length >= 8 || maxQR >= 95 ? 'Nível 4 (Vanguarda Tecnológica)' :
+                           (sortedCompleted.length >= 4 || maxQR >= 85 ? 'Nível 3 (Alta Tecnologia)' :
+                           (sortedCompleted.length >= 2 || maxQR >= 70 ? 'Nível 2 (Industrial Avançado)' : 'Nível 1 (Manufatura Básica)'));
+
+      patentsHtml = `
+        <div class="bg-[#0d1017] p-2.5 rounded-xl border border-white/[0.08] space-y-2 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm">🏆</span>
+              <div>
+                <strong class="text-[#c9a86a] text-xs font-bold block">Acervo de Patentes (${completedProjects.length})</strong>
+                <span class="text-[9px] text-amber-400/80 font-bold">${techLevelName}</span>
+              </div>
+            </div>
+            <button onclick="toggleRDPatentsExpanded()" class="px-2 py-0.5 rounded text-[9px] font-bold bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border border-white/[0.08] cursor-pointer transition">
+              ${this.isRDPatentsExpanded ? '▴ Recolher' : '▾ Ver Todas'}
+            </button>
+          </div>
+
+          <!-- Chips Compactos (Modo Recolhido) -->
+          ${!this.isRDPatentsExpanded ? `
+            <div class="flex items-center gap-1.5 flex-wrap pt-0.5">
+              ${sortedCompleted.slice(0, 6).map(p => {
+                const prod = catalog[p.productId];
+                const name = prod ? prod.name : p.productId;
+                return `
+                  <span class="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.08] text-slate-200 text-[10px] font-bold flex items-center gap-1 shadow-sm" title="Patente Consolidada: QR ${Math.round(p.currentQR)}">
+                    <span>⭐</span>
+                    <span>${name}</span>
+                    <strong class="text-[#c9a86a]">QR ${Math.round(p.currentQR)}</strong>
+                  </span>
+                `;
+              }).join('')}
+              ${sortedCompleted.length > 6 ? `
+                <button onclick="toggleRDPatentsExpanded()" class="text-[9px] text-[#c9a86a] hover:underline font-bold px-1 cursor-pointer">
+                  +${sortedCompleted.length - 6} patentes
+                </button>
+              ` : ''}
+            </div>
+          ` : `
+            <!-- Lista Detalhada Compacta (Modo Expandido) -->
+            <div class="space-y-1 max-h-48 overflow-y-auto custom-scrollbar pt-1">
+              ${sortedCompleted.map(p => {
+                const prod = catalog[p.productId];
+                const name = prod ? prod.name : p.productId;
+                const cat = rdCats[p.category] || {};
+                return `
+                  <div class="flex items-center justify-between p-1.5 rounded-lg bg-[#080a0d] border border-white/[0.06] text-[10px]">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                      <span>${cat.icon || '🔬'}</span>
+                      <strong class="text-slate-200 truncate">${name}</strong>
+                      <span class="text-[8px] bg-white/[0.04] text-slate-400 px-1 py-0.2 rounded border border-white/[0.04]">${p.category}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                      <span class="text-emerald-400 font-bold">⭐ QR ${Math.round(p.currentQR)}</span>
+                      <span class="text-[8px] bg-emerald-950/60 text-emerald-300 px-1.5 py-0.2 rounded border border-emerald-700/50 font-bold">100%</span>
+                      <button onclick="cancelRDProject('${p.id}')" class="text-slate-500 hover:text-rose-400 p-0.5 text-xs cursor-pointer transition" title="Arquivar ou remover patente antiga">
+                        🗑️
+                      </button>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    const contentEl = document.getElementById('facility-content-panel');
+    if (contentEl) {
+      contentEl.innerHTML = `
+        <div class="bg-[#0b0e14] p-3.5 rounded-xl border border-white/[0.08] space-y-3 font-mono text-xs">
+          <div class="flex items-center justify-between border-b border-white/[0.06] pb-2">
+            <div>
+              <span class="font-bold text-[#c9a86a] text-sm block tracking-wide">Laboratório Tecnológico</span>
+              <span class="text-[10px] text-slate-400">Capacidade: <strong>${usedSlots}/${totalCapacity} Bancadas</strong> ativas</span>
+            </div>
+            <span class="text-[10px] bg-[#c9a86a]/15 text-[#c9a86a] px-2 py-0.5 rounded border border-[#c9a86a]/30 font-bold">Nível ${rd.level || 1}</span>
+          </div>
+
+          <!-- Seção de Bancadas em Operação -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold">
+              <span>🔬 BANCADAS EM OPERAÇÃO (${activeProjects.length})</span>
+              <span class="text-emerald-400">$${totalBudget.toLocaleString('en-US')}/mês</span>
+            </div>
+            ${projectsHtml}
+          </div>
+
+          <!-- Seção de Acervo de Patentes & Nível Tecnológico -->
+          ${patentsHtml}
+
+          <!-- Ações Rápidas: Árvore Tecnológica & Central de Patentes -->
+          <div class="pt-2 border-t border-white/[0.06] space-y-2">
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="openTechTreeModal()" class="py-2 px-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-[#c9a86a] font-bold text-[11px] border border-[#c9a86a]/30 shadow cursor-pointer transition flex items-center justify-center gap-1">
+                🧬 Árvore Tech
+              </button>
+              <button onclick="openRDCenterModal(); switchRDTab('market');" class="py-2 px-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 font-bold text-[11px] border border-white/[0.08] shadow cursor-pointer transition flex items-center justify-center gap-1">
+                📜 Mercado Tech
+              </button>
+            </div>
+            <button onclick="openRDCenterModal(); switchRDTab('projects');" class="w-full py-2 rounded-xl bg-[#c9a86a] hover:bg-[#d8b779] text-[#080a0d] font-bold text-xs shadow cursor-pointer transition flex items-center justify-center gap-1.5">
+              🔬 Abrir Central Completa de P&D
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    this.renderFacilityFooterActions(tile);
   },
 
   renderFacilityFooterActions(tile, extraBtn = '') {
@@ -1008,6 +1794,12 @@ if (typeof window !== 'undefined') {
   window.renderTileInspector = FacilityPanel.renderTileInspector.bind(FacilityPanel);
   window.renderIdlePanel = FacilityPanel.renderIdlePanel.bind(FacilityPanel);
   window.renderEmptyLotPanel = FacilityPanel.renderEmptyLotPanel.bind(FacilityPanel);
+  window.renderMinePanel = FacilityPanel.renderMinePanel.bind(FacilityPanel);
+  window.renderFarmPanel = FacilityPanel.renderFarmPanel.bind(FacilityPanel);
+  window.renderFactoryPanel = FacilityPanel.renderFactoryPanel.bind(FacilityPanel);
+  window.setFactoryFacade = FacilityPanel.setFactoryFacade.bind(FacilityPanel);
+  window.renderStorePanel = FacilityPanel.renderStorePanel.bind(FacilityPanel);
+  window.renderRDCenterPanel = FacilityPanel.renderRDCenterPanel.bind(FacilityPanel);
   window.renderFacilityFooterActions = FacilityPanel.renderFacilityFooterActions.bind(FacilityPanel);
   window.toggleRDPatentsExpanded = FacilityPanel.toggleRDPatentsExpanded.bind(FacilityPanel);
   window.showCustomConfirmModal = FacilityPanel.showCustomConfirmModal.bind(FacilityPanel);
