@@ -26,7 +26,11 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 - [x] **Redesign Visual do HUD & Menus (Terminal Executivo Obsidian & Gold - v0.8.5)**: TopBar contínua 44px, pílulas companheiras de navegação de cidades/lentes, dropdown Mais Opções balanceado, menu de pausa ESC e Diretoria Executiva integrados à identidade visual dark fintech / Bloomberg terminal.
 - [x] **Alinhamento Preciso de Coordenadas do Mouse & Minimapa HiDPI (v0.8.5)**: Unificação da instância singleton da câmera, remoção de 307 linhas de listeners legados e validação de 21.504 pontos de projeção isométrica.
 - [x] **Overhaul Visual Integral Obsidian & Emojis Semânticos (v0.8.5)**: Padronização de 14 modais e inspetores para o tema executivo obsidian e catálogo completo de emojis para 99 produtos sem fallbacks.
-- [ ] **Fase 7.0 Desacoplamento Total de Wizards & Grid Engine (Fim do Monolito index.html)**: Extrair assistentes de construção (lojas, fábricas, fazendas, minas) para `client/ui/wizards/`, central de mídia para `client/ui/panels/marketing_panel.js`, e o grid procedural/IA para `client/engine/world_grid.js`, reduzindo o index.html a uma casca limpa de ~200 linhas.
+- [ ] **Fase 7.0 Desacoplamento Total de Wizards & Grid Engine (Fim do Monolito index.html)**:
+  - [x] **Fase 7.0 A (Assistentes & Lojas)**: Extração de assistentes de construção (minas, fazendas, fábricas), gestão de lojas (2 etapas, nichos, prateleiras, compra imediata) e fornecedores para `client/ui/wizards/` (-1.466 linhas do monolito).
+  - [ ] **Fase 7.0 B (Marketing & Mídia)**: Extração da Central de Mídia & IBOPE para `client/ui/panels/marketing_panel.js` (~500 linhas).
+  - [ ] **Fase 7.0 C (Grid Engine)**: Extração da matriz procedural, depósitos geológicos e sparse index para `client/engine/world_grid.js` (~1.200 linhas).
+  - [ ] **Fase 7.0 D (Simulador & HUD Telemetria)**: Extração do simulador "E se?" e instrumentação de debug/telemetria.
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
 - [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
 - [ ] **Fase 5 Mercado Financeiro, Ações & M&A**: Ações corporativas, IPO, distribuição de dividendos, participações cruzadas e aquisições hostis (*Hostile Takeovers*).
@@ -36,6 +40,31 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 19: Desacoplamento de Wizards de Construção, Lojas e Fornecedores (Fase 7.0 A)
+- **Data:** 11/09/2026 — 17:30
+- **Versão Oficial:** `v0.8.5 (bld.20260911.01)` | **Save Schema:** `v0.8.2`
+- **Branch:** `main`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Extração Modular dos Assistentes de Construção (`client/ui/wizards/construction_wizards.js`):**
+   - Extraídos modais de minas naturais (7 recursos com cálculo de payback dinâmico e validação de capital de giro), fazendas agrícolas/pecuárias e plantas industriais.
+   - Gerenciamento de linhas fabris, desbloqueio in-loco de receitas e cálculo econômico de produtividade/margem.
+2. **Extração da Gestão e Wizard de Lojas de Varejo (`client/ui/wizards/store_wizard.js`):**
+   - Assistente de instalação de lojas em duas etapas com validação de licença de nicho corporativa.
+   - Adição de produtos em gôndolas (`#add-product-modal`), navegação por categorias, precificação de margem e cotas de reposição automática.
+   - Compra pontual imediata com débito direto da holding.
+3. **Extração dos Seletores de Fornecedores e Rotas (`client/ui/wizards/supplier_picker.js`):**
+   - Renderização modular de cards de fornecedores locais e portuários.
+   - Seleção de fornecedores para gôndolas, insumos industriais, ração pecuária (milho/trigo vs pastagem livre) e importação marítima.
+4. **Ponte de Compatibilidade Global (`client/main.js`):**
+   - Exportação unificada via `client/ui/wizards/index.js` e binding de mais de 40 métodos legados no objeto `window.*` para preservar 100% dos botões com manipuladores inline no DOM.
+5. **Redução e Verificação do Monolito:**
+   - Redução de **1.466 linhas** em `client/index.html` (de 9.762 para 8.296 linhas).
+   - Validação bem-sucedida de build (`npm run build`) e bateria completa de testes de regressão E2E em navegador headless (`npm run audit-browser` com 6/6 suítes aprovadas).
 
 ---
 

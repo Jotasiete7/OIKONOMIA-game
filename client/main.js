@@ -165,6 +165,9 @@ import { KeyboardSystem } from './input/keyboard.js';
 import { MouseSystem } from './input/mouse.js';
 import { AppLifecycle } from './app/lifecycle.js';
 
+// --- Fase 7.0 A: Assistentes de Construção, Gôndolas & Fornecedores ---
+import { ConstructionWizards, StoreWizard, SupplierPicker } from './ui/wizards/index.js';
+
 // Inicializa captura de erros do Flight Recorder o mais cedo possível
 initTelemetryEngine();
 
@@ -422,6 +425,68 @@ window.closeSaveLoadModal = () => AppLifecycle.closeSaveLoadModal();
 window.renderSavesList = () => AppLifecycle.renderSavesList();
 window.renderSavesCountInMenu = () => AppLifecycle.renderSavesCountInMenu();
 window.updatePlayerProfileHUD = () => AppLifecycle.updatePlayerProfileHUD();
+
+// Re-exposição global (Fase 7.0 A — Wizards de Construção, Lojas & Fornecedores)
+window.ConstructionWizards = ConstructionWizards;
+window.openMineModal = (tile) => ConstructionWizards.openMineModal(tile);
+window.confirmBuildMine = (mineId) => ConstructionWizards.confirmBuildMine(mineId);
+window.confirmBuildMineDirect = (x, y, mineId) => ConstructionWizards.confirmBuildMineDirect(x, y, mineId);
+window.closeMineModal = () => ConstructionWizards.closeMineModal();
+
+window.openFarmModal = (tile) => ConstructionWizards.openFarmModal(tile);
+window.renderFarmTypesList = (s) => ConstructionWizards.renderFarmTypesList(s);
+window.filterFarmTypes = (q) => ConstructionWizards.filterFarmTypes(q);
+window.confirmBuildFarm = (id) => ConstructionWizards.confirmBuildFarm(id);
+window.closeFarmModal = () => ConstructionWizards.closeFarmModal();
+
+window.openFactoryModal = (tile) => ConstructionWizards.openFactoryModal(tile);
+window.confirmBuildFactory = () => ConstructionWizards.confirmBuildFactory();
+window.closeFactoryModal = () => ConstructionWizards.closeFactoryModal();
+window.openFactoryRecipeModal = (x, y) => ConstructionWizards.openFactoryRecipeModal(x, y);
+window.setFactoryRecipeCategoryFilter = (cat) => ConstructionWizards.setFactoryRecipeCategoryFilter(cat);
+window.unlockFactoryRecipeInPlace = (r, p, c) => ConstructionWizards.unlockFactoryRecipeInPlace(r, p, c);
+window.renderFactoryRecipesList = () => ConstructionWizards.renderFactoryRecipesList();
+window.confirmActivateFactoryRecipe = (id) => ConstructionWizards.confirmActivateFactoryRecipe(id);
+window.removeFactoryLine = (x, y, k) => ConstructionWizards.removeFactoryLine(x, y, k);
+window.closeFactoryRecipeModal = () => ConstructionWizards.closeFactoryRecipeModal();
+window.recalculateFactoryLineEconomics = (l, t) => ConstructionWizards.recalculateFactoryLineEconomics(l, t);
+window.getDefaultSupplierForInput = (i, t) => ConstructionWizards.getDefaultSupplierForInput(i, t);
+
+window.StoreWizard = StoreWizard;
+window.openStoreWizard = (tile) => StoreWizard.openStoreWizard(tile);
+window.openStoreModal = (tile) => StoreWizard.openStoreWizard(tile);
+window.selectStoreType = (id) => StoreWizard.selectStoreType(id);
+window.advanceToStep2 = () => StoreWizard.advanceToStep2();
+window.backToStep1 = () => StoreWizard.backToStep1();
+window.filterProductSelectorSearch = (q) => StoreWizard.filterProductSelectorSearch(q);
+window.renderProductSelector = () => StoreWizard.renderProductSelector();
+window.setCategoryTab = (cat) => StoreWizard.setCategoryTab(cat);
+window.toggleProductInWizard = (id) => StoreWizard.toggleProductInWizard(id);
+window.confirmOpenStore = () => StoreWizard.confirmOpenStore();
+window.closeStoreWizard = () => StoreWizard.closeStoreWizard();
+
+window.openAddProductModal = (x, y) => StoreWizard.openAddProductModal(x, y);
+window.setAddProductCategoryTab = (cat) => StoreWizard.setAddProductCategoryTab(cat);
+window.renderAddProductModalList = () => StoreWizard.renderAddProductModalList();
+window.confirmAddNewProductToStore = (id) => StoreWizard.confirmAddNewProductToStore(id);
+window.closeAddProductModal = () => StoreWizard.closeAddProductModal();
+window.removeProductFromStore = (x, y, id) => StoreWizard.removeProductFromStore(x, y, id);
+window.updateShelfPrice = (x, y, id, v) => StoreWizard.updateShelfPrice(x, y, id, v);
+window.updateShelfRestock = (x, y, id, v) => StoreWizard.updateShelfRestock(x, y, id, v);
+window.buyInstantStock = (x, y, id, q) => StoreWizard.buyInstantStock(x, y, id, q);
+
+window.SupplierPicker = SupplierPicker;
+window.renderSupplierOptionCard = (o, c, f) => SupplierPicker.renderSupplierOptionCard(o, c, f);
+window.openSupplierModal = (x, y, id) => SupplierPicker.openSupplierModal(x, y, id);
+window.applySupplierChange = (id) => SupplierPicker.applySupplierChange(id);
+window.closeSupplierModal = () => SupplierPicker.closeSupplierModal();
+window.openFactoryInputSupplierModal = (x, y, l, i) => SupplierPicker.openFactoryInputSupplierModal(x, y, l, i);
+window.applyFactoryInputSupplierChange = (id) => SupplierPicker.applyFactoryInputSupplierChange(id);
+window.openFarmFeedSupplierModal = (x, y) => SupplierPicker.openFarmFeedSupplierModal(x, y);
+window.applyFarmFeedSupplierChange = (s, g) => SupplierPicker.applyFarmFeedSupplierChange(s, g);
+window.disconnectFarmFeed = (x, y) => SupplierPicker.disconnectFarmFeed(x, y);
+window.openPortModal = (port) => SupplierPicker.openPortModal(port);
+window.closePortModal = () => SupplierPicker.closePortModal();
 
 // Proxies reativos globais vinculados a GameState (Single Source of Truth)
 const stateProxyProps = [
