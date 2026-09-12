@@ -30,5 +30,11 @@ archive_legacy/
 client/assets/audio/**/*.wav
 
 # Perfis temporários de teste de navegador
-.edge_temp_profile*/
+.edge_temp*
+
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+
 
