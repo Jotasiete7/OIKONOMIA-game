@@ -55,16 +55,17 @@ export const DIFFICULTY_PRESETS = [
   { id: 'hard',     name: '⚡ Hardcore',       startingCash: 20000,  desc: 'Aporte de $20k. Capital reduzido, disciplina rígida e margem de erro zero.' }
 ];
 
-// Dicas Estratégicas para o Loading
+// Conselhos Estratégicos de Oikonomos para o Carregamento
 export const ECONOMIC_TIPS = [
-  "💡 Terrenos no Downtown (Centro) têm aluguel diário maior, mas tráfego massivo para produtos de alto giro.",
-  "💡 A integração vertical (Minas/Fazendas ➔ Fábricas ➔ Lojas) elimina intermediários e maximiza a rentabilidade.",
-  "💡 Produtos de primeira necessidade (Pão, Leite, Ovos) possuem demanda contínua mesmo durante flutuações.",
-  "💡 Contratar campanhas de publicidade na TV e Rádio expande seu Brand Rating em toda a região metropolitana.",
-  "💡 Portos Marítimos oferecem insumos internacionais com custo de frete baseado na distância até seu lote.",
-  "💡 Acompanhe periodicamente a DRE consolidada para garantir que suas receitas superem custos fixos e aluguéis.",
-  "💡 Desbloqueie Montargis ao atingir $500k de patrimônio e Várzea ao inaugurar sua primeira Fazenda em operação.",
-  "💡 O atalho ESPAÇO pausa e acelera a passagem do tempo. ESC fecha janelas ativas ou abre o Menu de Pausa.",
-  "💡 Salve seus jogos regularmente no navegador ou exporte arquivos .oiko para manter backups no computador.",
-  "💡 Vender ou demolir instalações deficitárias recupera parte do capital investido e zera despesas diárias de solo."
+  "🧐 Oikonomos aconselha: Terrenos no Downtown (Centro) têm aluguel diário maior, mas tráfego massivo para produtos de alto giro.",
+  "🧐 Oikonomos aconselha: A integração vertical (Fazendas/Minas ➔ Fábricas ➔ Lojas) elimina atravessadores e maximiza a margem líquida.",
+  "🧐 Oikonomos aconselha: Produtos de primeira necessidade (Pão, Leite, Ovos) mantêm consumo constante mesmo em períodos de crise.",
+  "🧐 Oikonomos aconselha: Campanhas na TV e no Rádio consolidam o Brand Rating da sua holding em toda a metrópole.",
+  "🧐 Oikonomos aconselha: Portos Marítimos fornecem matérias-primas globais; calcule bem a distância do frete até suas fábricas.",
+  "🧐 Oikonomos aconselha: Examine sua DRE mensal com atenção religiosa; o fluxo de caixa é a alma de qualquer império.",
+  "🧐 Oikonomos aconselha: Expanda para Montargis ao atingir $500k de patrimônio e desbloqueie Várzea com sua primeira colheita.",
+  "🧐 Oikonomos aconselha: A tecla ESPAÇO alterna o tempo da simulação, enquanto o ESC fecha painéis ou abre o Menu de Pausa.",
+  "🧐 Oikonomos aconselha: Mantenha sempre uma reserva de liquidez segura para amortecer oscilações de juros e demanda.",
+  "🧐 Oikonomos aconselha: Fechar ou readequar filiais com prejuízo crônico preserva a saúde financeira do seu conglomerado."
 ];
+

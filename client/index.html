@@ -320,44 +320,77 @@
   <!-- Container de Montagem dos Modais & Overlays Dinâmicos (client/ui/templates/) -->
   <div id="oiko-modals-mount"></div>
 
-  <!-- OVERLAY 1: TELA DE BOOT / CARREGAMENTO AAA                              -->
+  <!-- OVERLAY 0: TELA DE SPLASH (CINEMÁTICA / RÁPIDA / PULÁVEL)               -->
   <!-- ======================================================================= -->
-  <div id="loading-screen" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-between p-8 select-none transition-opacity duration-700">
-    <div class="w-full flex justify-between items-center text-xs font-mono text-slate-500">
-      <div class="flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span>OIKONOMIA SIMULATION ENGINE</span>
-      </div>
-      <span id="loading-version-tag">VERSÃO 0.8.1 (BUILD 20260828.03)</span>
-    </div>
-
-    <!-- Centro: Logo e Apresentação -->
-    <div class="flex flex-col items-center text-center space-y-4 max-w-lg">
-      <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 shadow-2xl shadow-emerald-500/20 flex items-center justify-center animate-bounce">
-        <div class="w-full h-full bg-slate-950 rounded-[22px] flex items-center justify-center text-4xl">🏛️</div>
+  <div id="splash-screen" class="fixed inset-0 z-[110] bg-[#080a0d] flex flex-col items-center justify-center p-8 select-none transition-opacity duration-500 cursor-pointer">
+    <div class="flex flex-col items-center text-center space-y-6 max-w-md">
+      <!-- Brasão com Monóculo & Efeito Ouro -->
+      <div class="relative w-24 h-24 rounded-full bg-gradient-to-b from-[#c9a86a] via-[#856834] to-[#121620] p-1 shadow-2xl shadow-[#c9a86a]/10 flex items-center justify-center">
+        <div class="w-full h-full bg-[#0b0e14] rounded-full flex items-center justify-center border border-white/[0.08]">
+          <span class="text-4xl filter drop-shadow-[0_0_8px_rgba(201,168,106,0.5)]">🧐</span>
+        </div>
+        <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#c9a86a] rounded-full animate-ping opacity-75"></div>
       </div>
       <div>
-        <h1 class="text-4xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-200 to-sky-400 font-sans">
+        <h1 class="text-5xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#c9a86a] via-[#f5e6c8] to-[#9a783e] font-sans drop-shadow-sm">
           OIKONOMIA
         </h1>
-        <p class="text-xs uppercase tracking-widest text-slate-400 font-mono mt-1">Simulador de Império Industrial & Varejo Macroeconômico</p>
+        <p class="text-[11px] uppercase tracking-[0.3em] text-[#94a3b8] font-mono mt-2">
+          Grand Strategy & Macroeconomic Simulation
+        </p>
+      </div>
+      <div class="text-[10px] font-mono text-slate-500 tracking-wider pt-8">
+        <span>Clique ou pressione qualquer tecla para continuar</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY 1: TELA DE BOOT / CARREGAMENTO (OBSIDIAN & OURO)                 -->
+  <!-- ======================================================================= -->
+  <div id="loading-screen" class="fixed inset-0 z-[100] bg-[#080a0d] flex flex-col items-center justify-between p-8 select-none transition-opacity duration-700">
+    <!-- Header Topo -->
+    <div class="w-full flex justify-between items-center text-xs font-mono text-[#94a3b8] border-b border-white/[0.06] pb-4">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-[#c9a86a] animate-pulse"></span>
+        <span class="text-[#c9a86a] font-semibold tracking-wider">OIKONOMIA SIMULATION ENGINE</span>
+      </div>
+      <span id="loading-version-tag" class="text-slate-500">VERSÃO 0.8.5 (BUILD 20260912.01)</span>
+    </div>
+
+    <!-- Centro: Logo, Oikonomos e Barra de Carregamento -->
+    <div class="flex flex-col items-center text-center space-y-4 max-w-xl w-full">
+      <!-- Cameo / Avatar do Mascote -->
+      <div class="relative w-20 h-20 rounded-2xl bg-gradient-to-b from-[#c9a86a]/40 to-[#121620] p-0.5 shadow-2xl shadow-[#c9a86a]/10 flex items-center justify-center">
+        <div class="w-full h-full bg-[#0b0e14] rounded-[14px] flex items-center justify-center overflow-hidden border border-white/[0.08]">
+          <img src="./assets/mascote/oikonomia_master_concept.png" alt="Oikonomos" class="w-full h-full object-cover object-top" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="hidden w-full h-full items-center justify-center text-3xl">🧐</div>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-4xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#c9a86a] via-[#f5e6c8] to-[#9a783e] font-sans">
+          OIKONOMIA
+        </h1>
+        <p class="text-xs uppercase tracking-widest text-[#94a3b8] font-mono mt-1">Simulador de Império Industrial & Varejo Macroeconômico</p>
       </div>
 
-      <!-- Barra de Carregamento -->
-      <div class="w-full bg-slate-900 border border-slate-800 rounded-full h-3 p-0.5 overflow-hidden shadow-inner mt-6">
-        <div id="loading-bar-fill" class="bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400 h-full rounded-full w-0 transition-all duration-300"></div>
+      <!-- Barra de Carregamento Ouro -->
+      <div class="w-full bg-[#0b0e14] border border-white/[0.1] rounded-full h-3 p-0.5 overflow-hidden shadow-inner mt-6">
+        <div id="loading-bar-fill" class="bg-gradient-to-r from-[#856834] via-[#c9a86a] to-[#f3e5be] h-full rounded-full w-0 transition-all duration-300 shadow-[0_0_12px_rgba(201,168,106,0.4)]"></div>
       </div>
-      <div class="flex justify-between w-full text-[11px] font-mono text-slate-400">
-        <span id="loading-status-text">Inicializando malha isométrica 128x128...</span>
-        <span id="loading-pct-text">0%</span>
+      <div class="flex justify-between w-full text-[11px] font-mono text-[#94a3b8]">
+        <span id="loading-status-text">Inicializando malha metropolitana...</span>
+        <span id="loading-pct-text" class="text-[#c9a86a] font-bold">0%</span>
       </div>
     </div>
 
-    <!-- Rodapé: Dicas de Mercado Rotativas -->
-    <div class="w-full max-w-xl bg-slate-900/80 border border-slate-800 rounded-2xl p-4 text-center backdrop-blur-md">
-      <span class="text-[10px] uppercase font-mono tracking-wider text-emerald-400 font-bold block mb-1">Dica Estratégica</span>
-      <p id="loading-tip-text" class="text-xs text-slate-300 font-sans transition-opacity duration-300">
-        💡 Terrenos no Centro Urbano (Downtown) possuem aluguel mais alto, mas tráfego intenso de consumidores.
+    <!-- Rodapé: Conselhos de Oikonomos -->
+    <div class="w-full max-w-xl bg-[#0b0e14]/90 border border-white/[0.08] rounded-2xl p-4 text-center backdrop-blur-md shadow-2xl">
+      <div class="flex items-center justify-center gap-2 mb-1.5">
+        <span class="text-xs">🧐</span>
+        <span class="text-[10px] uppercase font-mono tracking-widest text-[#c9a86a] font-bold">Conselho de Oikonomos</span>
+      </div>
+      <p id="loading-tip-text" class="text-xs text-[#cbd5e1] font-sans transition-opacity duration-300">
+        🧐 Oikonomos aconselha: Terrenos no Centro Urbano (Downtown) possuem aluguel mais alto, mas tráfego intenso de consumidores.
       </p>
     </div>
   </div>

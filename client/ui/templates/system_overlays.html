@@ -1,33 +1,51 @@
-  <!-- OVERLAY 2: MENU PRINCIPAL DE ENTRADA (AAA GRADE)                         -->
+  <!-- OVERLAY 2: MENU PRINCIPAL DE ENTRADA (OBSIDIAN & OURO)                 -->
   <!-- ======================================================================= -->
-  <div id="main-menu-screen" class="fixed inset-0 z-[90] bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-8 select-none hidden">
+  <div id="main-menu-screen" class="fixed inset-0 z-[90] bg-[#080a0d]/98 backdrop-blur-2xl flex flex-col justify-between p-8 select-none hidden">
     <!-- Header do Menu -->
-    <div class="flex justify-between items-center text-xs font-mono text-slate-500">
-      <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50"></span>
-        <span class="text-slate-300 font-bold">OIKONOMIA GRAND STRATEGY</span>
+    <div class="flex justify-between items-center text-xs font-mono text-[#94a3b8] border-b border-white/[0.06] pb-3">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#c9a86a] shadow-lg shadow-[#c9a86a]/50 animate-pulse"></span>
+        <span class="text-[#f1f5f9] font-bold tracking-wider">OIKONOMIA GRAND STRATEGY</span>
       </div>
-      <div class="flex gap-4">
-        <span>4 METRÓPOLES</span>
-        <span>70+ PRODUTOS</span>
-        <span>100% PERSISTENTE</span>
+      <div class="flex gap-4 text-[11px]">
+        <span class="text-slate-400">4 METRÓPOLES</span>
+        <span class="text-slate-600">•</span>
+        <span class="text-slate-400">70+ PRODUTOS</span>
+        <span class="text-slate-600">•</span>
+        <span class="text-[#c9a86a] font-semibold">100% PERSISTENTE</span>
       </div>
     </div>
 
-    <!-- Bloco Central: Hero & Opções -->
-    <div class="flex flex-col md:flex-row items-center justify-between max-w-6xl w-full mx-auto gap-12">
-      <!-- Coluna Esquerda: Branding & Lore -->
+    <!-- Bloco Central: Hero do Oikonomos & Opções Executivas -->
+    <div class="flex flex-col lg:flex-row items-center justify-between max-w-6xl w-full mx-auto gap-8 lg:gap-12 my-auto">
+      <!-- Coluna Esquerda: Branding & Mascote Oikonomos -->
       <div class="flex-1 space-y-4 text-left">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-800 text-emerald-400 text-xs font-mono">
-          <span>✨ Simulação Econômica Profunda</span>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c9a86a]/10 border border-[#c9a86a]/30 text-[#c9a86a] text-xs font-mono">
+          <span>👑 Grande Estratégia & Simulação Macroeconômica</span>
         </div>
-        <h1 class="text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-200 to-sky-300 leading-tight">
+        
+        <h1 class="text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c9a86a] via-[#f5e6c8] to-[#9a783e] leading-tight font-sans drop-shadow-md">
           OIKONOMIA
         </h1>
-        <p class="text-sm text-slate-400 max-w-md leading-relaxed">
-          Comande redes de suprimentos de ponta a ponta. Extraia matérias-primas, manufacture em escala industrial, domine portos marítimos e conquiste as quatro grandes metrópoles.
-        </p>
-        <div class="flex items-center gap-3 pt-2 text-xs font-mono text-slate-500">
+
+        <!-- Card Hero do Fundador Oikonomos -->
+        <div class="flex items-center gap-4 p-4 rounded-2xl bg-[#0b0e14] border border-white/[0.08] shadow-2xl max-w-xl">
+          <div class="relative w-20 h-20 shrink-0 rounded-xl overflow-hidden border border-[#c9a86a]/40 shadow-[0_0_15px_rgba(201,168,106,0.15)] bg-[#121620]">
+            <img src="./assets/mascote/oikonomia_master_concept.png" alt="Oikonomos Patriarca" class="w-full h-full object-cover object-top" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="hidden w-full h-full items-center justify-center text-3xl">🧐</div>
+          </div>
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-[#c9a86a] font-mono uppercase tracking-wider">Oikonomos</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/30 font-mono">Patriarca da Holding</span>
+            </div>
+            <p class="text-xs text-[#cbd5e1] leading-relaxed italic">
+              "Comande cadeias de suprimentos de ponta a ponta. Extraia da terra, manufacture em escala, conquiste portos e erga um império imorredouro."
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 pt-1 text-xs font-mono text-slate-500">
           <span class="flex items-center gap-1">💾 Saves Locais</span>
           <span>•</span>
           <span class="flex items-center gap-1">📦 Exportação .oiko</span>
@@ -36,45 +54,60 @@
         </div>
       </div>
 
-      <!-- Coluna Direita: Botões de Ação do Menu -->
-      <div class="w-full md:w-80 flex flex-col gap-3 font-mono">
-        <button id="btn-menu-continue" onclick="continueLastGame()" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-sm shadow-xl shadow-emerald-900/30 flex items-center justify-between group transition transform active:scale-98 disabled:opacity-40 disabled:pointer-events-none">
-          <span class="flex items-center gap-2">▶ Continuar Empresa</span>
-          <span class="text-xs text-emerald-200 group-hover:translate-x-1 transition">➔</span>
+      <!-- Coluna Direita: Botões de Ação Executiva -->
+      <div class="w-full lg:w-88 flex flex-col gap-3 font-mono">
+        <!-- Continuar Empresa (Gold Foil Primário) -->
+        <button id="btn-menu-continue" onclick="continueLastGame()" class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-[#c9a86a] via-[#dfc489] to-[#c9a86a] hover:from-[#dfc489] hover:to-[#eadaa8] text-[#080a0d] font-black text-sm shadow-xl shadow-[#c9a86a]/20 flex items-center justify-between group transition transform active:scale-98 disabled:opacity-30 disabled:pointer-events-none cursor-pointer">
+          <span class="flex items-center gap-2.5">
+            <span class="text-base">▶</span> Continuar Empresa
+          </span>
+          <span class="text-xs font-bold group-hover:translate-x-1.5 transition">➔</span>
         </button>
 
-        <button onclick="openNewGameWizard()" class="w-full py-3.5 px-6 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500/50 text-slate-100 font-bold text-sm shadow-lg flex items-center justify-between group transition transform active:scale-98">
-          <span class="flex items-center gap-2">🏢 Nova Empresa</span>
-          <span class="text-xs text-slate-400 group-hover:text-emerald-400 group-hover:translate-x-1 transition">➔</span>
+        <!-- Nova Empresa (Obsidian & Borda Dourada Suave) -->
+        <button onclick="openNewGameWizard()" class="w-full py-3.5 px-6 rounded-xl bg-[#0b0e14] hover:bg-[#121620] border border-white/[0.12] hover:border-[#c9a86a]/50 text-slate-100 font-bold text-sm shadow-lg flex items-center justify-between group transition transform active:scale-98 cursor-pointer">
+          <span class="flex items-center gap-2.5">
+            <span>🏢</span> Nova Empresa
+          </span>
+          <span class="text-xs text-[#c9a86a] group-hover:translate-x-1.5 transition">➔</span>
         </button>
 
-        <button onclick="openSaveLoadModal('load')" class="w-full py-3.5 px-6 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-sky-500/50 text-slate-100 font-bold text-sm shadow-lg flex items-center justify-between group transition transform active:scale-98">
-          <span class="flex items-center gap-2">📂 Carregar Jogo (<span id="menu-save-count">0</span>)</span>
-          <span class="text-xs text-slate-400 group-hover:text-sky-400 group-hover:translate-x-1 transition">➔</span>
+        <!-- Carregar Jogo -->
+        <button onclick="openSaveLoadModal('load')" class="w-full py-3.5 px-6 rounded-xl bg-[#0b0e14] hover:bg-[#121620] border border-white/[0.08] hover:border-sky-500/40 text-slate-100 font-bold text-sm shadow-lg flex items-center justify-between group transition transform active:scale-98 cursor-pointer">
+          <span class="flex items-center gap-2.5">
+            <span>📂</span> Carregar Jogo (<span id="menu-save-count" class="text-sky-400">0</span>)
+          </span>
+          <span class="text-xs text-slate-400 group-hover:text-sky-400 group-hover:translate-x-1.5 transition">➔</span>
         </button>
 
-        <button onclick="openSettingsModal()" class="w-full py-3 px-6 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs flex items-center justify-between group transition">
-          <span class="flex items-center gap-2">⚙️ Configurações</span>
+        <!-- Configurações -->
+        <button onclick="openSettingsModal()" class="w-full py-3 px-6 rounded-xl bg-[#0b0e14]/80 hover:bg-[#121620] border border-white/[0.06] hover:border-white/[0.15] text-[#94a3b8] hover:text-[#f1f5f9] text-xs flex items-center justify-between group transition cursor-pointer">
+          <span class="flex items-center gap-2.5">
+            <span>⚙️</span> Configurações de Áudio & Sistema
+          </span>
           <span class="text-xs text-slate-500 group-hover:translate-x-1 transition">➔</span>
         </button>
 
-        <button onclick="toggleDiaryModal()" class="w-full py-3 px-6 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs flex items-center justify-between group transition">
-          <span class="flex items-center gap-2">📖 Manual & Economia</span>
+        <!-- Manual do Jogo -->
+        <button onclick="toggleDiaryModal()" class="w-full py-3 px-6 rounded-xl bg-[#0b0e14]/80 hover:bg-[#121620] border border-white/[0.06] hover:border-white/[0.15] text-[#94a3b8] hover:text-[#f1f5f9] text-xs flex items-center justify-between group transition cursor-pointer">
+          <span class="flex items-center gap-2.5">
+            <span>📖</span> Manual & Fórmulas Econômicas
+          </span>
           <span class="text-xs text-slate-500 group-hover:translate-x-1 transition">➔</span>
         </button>
       </div>
     </div>
 
     <!-- Rodapé: Créditos, Versão & Atalhos -->
-    <div class="flex justify-between items-center text-[11px] font-mono text-slate-500 border-t border-slate-900 pt-4">
-      <div class="flex items-center gap-2">
+    <div class="flex flex-col sm:flex-row justify-between items-center text-[11px] font-mono text-slate-500 border-t border-white/[0.06] pt-3 gap-2">
+      <div class="flex items-center gap-2.5">
         <span class="text-slate-400 font-bold">OIKONOMIA PROJECT © 2026</span>
-        <span id="menu-version-tag" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-emerald-400 font-bold text-[10px]">v0.8.5 Oficial (bld.20260911.07)</span>
+        <span id="menu-version-tag" class="bg-[#0b0e14] px-2.5 py-0.5 rounded border border-[#c9a86a]/30 text-[#c9a86a] font-bold text-[10px]">v0.8.5 Oficial</span>
       </div>
-      <div class="flex gap-4">
-        <span>Atalho: <strong>F3</strong> (Dev Dashboard)</span>
-        <span>Atalho: <strong>1..5 / ESPAÇO</strong> (Velocidade)</span>
-        <span>Atalho: <strong>ESC</strong> (Menu / Fechar)</span>
+      <div class="flex gap-4 text-[10px]">
+        <span>Atalho: <strong class="text-slate-300">F3</strong> (Dev)</span>
+        <span>Atalho: <strong class="text-slate-300">1..5 / ESPAÇO</strong> (Velocidade)</span>
+        <span>Atalho: <strong class="text-slate-300">ESC</strong> (Menu / Pausa)</span>
       </div>
     </div>
   </div>

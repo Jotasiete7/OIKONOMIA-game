@@ -1064,8 +1064,8 @@ export class LifecycleManager {
 
     console.log(
       `%c🏛️ OIKONOMIA ENGINE ${verInfo.fullString}\n%c📦 CoreMath v1.0 | Sparse Index O(k) | Save Schema v${verInfo.saveSchema}\n🌐 Protocolo: ${window.location.protocol} | 60 FPS Canvas Renderer\n🛠️ Pressione F3 a qualquer momento para abrir o Painel de Desenvolvimento.`,
-      "font-weight: bold; font-size: 13px; color: #10b981;",
-      "font-size: 11px; color: #38bdf8;"
+      "font-weight: bold; font-size: 13px; color: #c9a86a;",
+      "font-size: 11px; color: #94a3b8;"
     );
 
     if (typeof window !== 'undefined' && typeof window.logDebug === 'function') {
@@ -1073,52 +1073,84 @@ export class LifecycleManager {
       window.logDebug(`Versão Oficial: ${verInfo.fullString} | Schema: v${verInfo.saveSchema} | Protocolo: ${window.location.protocol}`, 'VERSION');
     }
 
+    const splashScreen = document.getElementById('splash-screen');
     const loadingScreen = document.getElementById('loading-screen');
     const barFill = document.getElementById('loading-bar-fill');
     const pctText = document.getElementById('loading-pct-text');
     const statusText = document.getElementById('loading-status-text');
 
-    if (!loadingScreen) return;
-    loadingScreen.classList.remove('hidden', 'opacity-0');
+    const runLoadingSimulation = () => {
+      if (!loadingScreen) return;
+      loadingScreen.classList.remove('hidden', 'opacity-0');
 
-    let progress = 0;
-    this.rotateLoadingTip();
-    if (this._loadingTipTimer) clearInterval(this._loadingTipTimer);
-    this._loadingTipTimer = setInterval(() => this.rotateLoadingTip(), 2600);
+      let progress = 0;
+      this.rotateLoadingTip();
+      if (this._loadingTipTimer) clearInterval(this._loadingTipTimer);
+      this._loadingTipTimer = setInterval(() => this.rotateLoadingTip(), 2600);
 
-    // Carregamento imersivo de ~6.5 segundos (65 passos de 100ms)
-    const interval = setInterval(() => {
-      progress += (Math.random() * 1.3) + 1.1;
-      if (progress > 100) progress = 100;
+      // Carregamento imersivo com telemetria
+      const interval = setInterval(() => {
+        progress += (Math.random() * 1.5) + 1.2;
+        if (progress > 100) progress = 100;
 
-      const currentPct = Math.floor(progress);
-      if (barFill) barFill.style.width = `${currentPct}%`;
-      if (pctText) pctText.textContent = `${currentPct}%`;
+        const currentPct = Math.floor(progress);
+        if (barFill) barFill.style.width = `${currentPct}%`;
+        if (pctText) pctText.textContent = `${currentPct}%`;
 
-      if (progress < 20 && statusText) statusText.textContent = 'Carregando malha metropolitana e distritos...';
-      else if (progress < 45 && statusText) statusText.textContent = 'Compilando catálogo de 70+ produtos & fórmulas econômicas...';
-      else if (progress < 70 && statusText) statusText.textContent = 'Simulando redes logísticas, portos e fretes...';
-      else if (progress < 90 && statusText) statusText.textContent = 'Indexando dados corporativos e saves locais...';
-      else if (statusText) statusText.textContent = 'Sincronizando mercado financeiro... Tudo pronto!';
+        if (progress < 20 && statusText) statusText.textContent = 'Carregando malha metropolitana e distritos...';
+        else if (progress < 45 && statusText) statusText.textContent = 'Compilando catálogo de 70+ produtos & fórmulas econômicas...';
+        else if (progress < 70 && statusText) statusText.textContent = 'Simulando redes logísticas, portos e fretes...';
+        else if (progress < 90 && statusText) statusText.textContent = 'Indexando dados corporativos e conselhos de Oikonomos...';
+        else if (statusText) statusText.textContent = 'Sincronizando mercado financeiro... Tudo pronto!';
 
-      if (progress >= 100) {
-        clearInterval(interval);
-        if (this._loadingTipTimer) {
-          clearInterval(this._loadingTipTimer);
-          this._loadingTipTimer = null;
-        }
+        if (progress >= 100) {
+          clearInterval(interval);
+          if (this._loadingTipTimer) {
+            clearInterval(this._loadingTipTimer);
+            this._loadingTipTimer = null;
+          }
 
-        // Revela o Menu Principal ANTES do fade-out para evitar que o mapa apareça no fundo
-        this.showMainMenu();
+          // Revela o Menu Principal ANTES do fade-out para evitar que o mapa apareça no fundo
+          this.showMainMenu();
 
-        setTimeout(() => {
-          loadingScreen.classList.add('opacity-0');
           setTimeout(() => {
-            loadingScreen.classList.add('hidden');
-          }, 750);
-        }, 450);
-      }
-    }, 100);
+            loadingScreen.classList.add('opacity-0');
+            setTimeout(() => {
+              loadingScreen.classList.add('hidden');
+            }, 750);
+          }, 450);
+        }
+      }, 100);
+    };
+
+    if (splashScreen) {
+      splashScreen.classList.remove('hidden', 'opacity-0');
+      let splashHandled = false;
+
+      const dismissSplash = () => {
+        if (splashHandled) return;
+        splashHandled = true;
+        window.removeEventListener('keydown', onKey);
+        splashScreen.removeEventListener('click', dismissSplash);
+
+        splashScreen.classList.add('opacity-0');
+        setTimeout(() => {
+          splashScreen.classList.add('hidden');
+          runLoadingSimulation();
+        }, 400);
+      };
+
+      const onKey = () => dismissSplash();
+      window.addEventListener('keydown', onKey);
+      splashScreen.addEventListener('click', dismissSplash);
+
+      // Timeout automático de 2.2 segundos se o usuário não interagir
+      setTimeout(() => {
+        dismissSplash();
+      }, 2200);
+    } else {
+      runLoadingSimulation();
+    }
   }
 
   rotateLoadingTip() {
