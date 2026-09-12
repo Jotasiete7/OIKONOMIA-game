@@ -98,8 +98,8 @@ const MacroCycleSystem = (() => {
     const cy = getCycleYear(year);
     const phase = getPhaseInfo(year);
     return {
-      text: `${phase.emoji} Ano ${cy}/10 · ${phase.name}`,
-      shortText: `${phase.emoji} Ano ${cy} · ${phase.code}`,
+      text: `${phase.emoji} Ciclo ${cy}/10 · ${phase.name}`,
+      shortText: `${phase.emoji} Ciclo ${cy}/10 · ${phase.code}`,
       badgeClass: phase.badgeClass,
       desc: phase.desc
     };

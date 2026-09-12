@@ -3,7 +3,7 @@
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
 > **Última Atualização:** 12 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.5 (bld.20260912.02)`  
+> **Versão Oficial Corrente:** `v0.8.5 (bld.20260912.03)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -36,6 +36,7 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
   - [x] **Fase 7.0 K (Componentização de Modais e Templates HTML)**: Redução de `client/index.html` para 405 linhas com montagem modular de modais em `client/ui/templates/`.
   - [x] **Correção Crítica: Inicialização do Loop de Renderização Isométrica (v0.8.5 bld.20260912.01)**: Auto-inicialização de `startRenderLoop()` no CanvasRenderer, bootstrap e main.js, eliminando o mapa invisível/preto e reativando a telemetria de 60 FPS com teste E2E headless de verificação de pixels.
   - [x] **Modernização do Radar Cartográfico / Minimapa Tático (v0.8.5 bld.20260912.02)**: Cache offscreen de terreno em buffer ImageData (queda de 16.384 fillRects para 1 drawImage por frame), frustum dinâmico e real da câmera via projeção isométrica de 4 cantos sensível ao zoom, paleta Obsidian & Ouro refinada, eliminação do moiré por filtragem bilinear, badges HTML interativos para cidades e teleporte com escala DPI-aware.
+  - [x] **Refinamentos de UX Visual & Clareza Macroeconômica (v0.8.5 bld.20260912.03)**: Rótulo de ciclo decenal ajustado para `Ciclo cy/10 · CODE` eliminando confusão de ano desincronizado, ocultação de emblemas repetitivos sobre prédios próprios (agora exibidos apenas sob hover/seleção) e harmonização concisa do Ticker de notícias.
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
 - [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
 - [ ] **Fase 5 Mercado Financeiro, Ações & M&A**: Ações corporativas, IPO, distribuição de dividendos, participações cruzadas e aquisições hostis (*Hostile Takeovers*).
@@ -45,6 +46,24 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 26: Refinamentos de UX Visual, Clareza Macroeconômica & Despoluição Gráfica
+- **Data:** 12/09/2026 — 18:55
+- **Versão Oficial:** `v0.8.5 (bld.20260912.03)` | **Save Schema:** `v0.8.2`
+- **Branch:** `main`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Clareza Macroeconômica no TopBar (`Ciclo cy/10 · CODE`):**
+   - Atualizado `getHUDLabel` em `client/macro_cycle_system.js` para retornar `${phase.emoji} Ciclo ${cy}/10 · ${phase.code}`.
+   - Elimina a confusão visual de `"Ano 2 · RECOVERY"` ao lado de `"Ano 72"` no relógio, educando o jogador sobre o ciclo decenal de 10 anos.
+2. **Despoluição Visual dos Telhados dos Edifícios:**
+   - Modificada a rotina de renderização em `client/renderer/canvas_renderer.js` para exibir os crachás de logotipo de instalações próprias apenas quando o lote estiver sob o cursor do mouse (`isHovered`), selecionado (`isSelected`) ou com a lente corporativa ativada (`activeLens === 'ownership'`).
+   - Concorrentes e marcos geográficos (portos/mídia) continuam com seus emblemas visíveis como pontos de referência.
+3. **Harmonização do Ticker de Notícias:**
+   - Mensagem de alerta da Diretoria Executiva compactada para `👔 Diretoria: X alerta(s) crítico(s)`, reduzindo a poluição visual na fita rolante e direcionando a atenção para o botão pulsante com contador de alertas no TopBar.
 
 ---
 

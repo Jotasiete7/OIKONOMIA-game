@@ -307,9 +307,16 @@ export function renderMap() {
 
         if (facilityLogo) {
           const isPlayer = !!(tile.store || tile.mine || tile.farm || tile.factory || tile.rdCenter || tile.warehouse);
-          const badgeRadius = isPlayer ? 9.5 : 7.5;
-          const badgeY = sy - (hPx || 16 * camera.zoom) - (isPlayer ? 10 : 8) * camera.zoom;
-          drawBadge(ctx, facilityLogo, sx, badgeY, badgeRadius, camera.zoom);
+          const isHovered = (gx === hoveredTileX && gy === hoveredTileY);
+          const isSelected = (gx === selectedTileX && gy === selectedTileY);
+          const isOwnershipLens = (typeof window !== 'undefined' && window.activeLens === 'ownership');
+          const shouldShowBadge = !isPlayer || isHovered || isSelected || isOwnershipLens;
+
+          if (shouldShowBadge) {
+            const badgeRadius = isPlayer ? 9.5 : 7.5;
+            const badgeY = sy - (hPx || 16 * camera.zoom) - (isPlayer ? 10 : 8) * camera.zoom;
+            drawBadge(ctx, facilityLogo, sx, badgeY, badgeRadius, camera.zoom);
+          }
         }
       }
 

@@ -922,7 +922,7 @@ export function closeMonthEnd(customContext = {}) {
 
     const newCriticals = Object.values(state.advisorState.activeAlerts || {}).filter(a => a.state === 'new' && a.severity === 'critical');
     if (newCriticals.length > 0) {
-      addLog(`👔 DIRETORIA EXECUTIVA: ${newCriticals.length} alerta(s) operacional(is) crítico(s) detectado(s)!`, 'text-rose-400 font-bold', { actionType: 'OPEN_ADVISOR' });
+      addLog(`👔 Diretoria: ${newCriticals.length} alerta(s) crítico(s)`, 'text-rose-400 font-bold', { actionType: 'OPEN_ADVISOR' });
     }
   }
 
