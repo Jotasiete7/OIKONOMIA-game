@@ -211,16 +211,13 @@
 
   </header>
 
-  <!-- 3. BOTTOM-LEFT HUD (RADAR MINIMAP & CONTROLS) -->
-  <div class="absolute bottom-8 left-3 z-30 flex flex-col gap-1 pointer-events-none">
-    <div class="pointer-events-auto relative bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl p-1.5 shadow-2xl">
-      <div class="relative overflow-hidden rounded-lg">
+  <!-- 3. BOTTOM-LEFT HUD (RADAR MINIMAP) -->
+  <div class="absolute bottom-8 left-3 z-30 pointer-events-none">
+    <div class="pointer-events-auto relative w-fit bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl p-1 shadow-2xl">
+      <div class="relative w-fit overflow-hidden rounded-lg">
         <canvas id="minimap-canvas" width="192" height="192" class="w-[180px] h-[180px] sm:w-[192px] sm:h-[192px] border border-slate-800/80 cursor-crosshair block" title="Clique no radar para teletransportar a câmera"></canvas>
         <div id="minimap-city-labels" class="absolute inset-0 pointer-events-none text-[8px] font-mono select-none"></div>
       </div>
-    </div>
-    <div class="bg-slate-900/85 backdrop-blur-sm border border-slate-800/80 rounded-lg px-2 py-1 text-[9px] font-mono text-slate-400 pointer-events-none">
-      🎮 <strong>WASD</strong>: Mover · 🔍 <strong>Scroll / Q-E</strong>: Zoom · 🖱 <strong>Clique</strong>: Lote
     </div>
   </div>
 
