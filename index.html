@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="./assets/logo-C0fl9r-f.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <title>OIKONOMIA — Império Industrial & Varejo Completo (v0.8.5)</title>
+  <script src="./assets/index.js"></script>
+</head>
+
+<body class="bg-slate-950 text-slate-100 font-sans h-screen w-screen overflow-hidden select-none relative m-0 p-0">
+
+  <!-- 0. TOP FINANCIAL & NEWS TICKER BAR (MARQUEE GPU-ACCELERATED + INTERACTIVE) -->
+  <div id="financial-news-ticker" class="fixed top-0 left-0 right-0 h-7 bg-[#060809] border-b border-white/[0.06] flex items-center z-50 overflow-hidden font-mono text-[10px] select-none shadow-sm">
+    <div onclick="TickerSystem.jumpToLatest()" class="flex items-center gap-1.5 px-3 h-full bg-[#c9a86a]/10 hover:bg-[#c9a86a]/20 active:scale-95 border-r border-white/[0.08] text-[#c9a86a] font-bold shrink-0 cursor-pointer transition-all" title="Clique para reiniciar e pular para as notícias mais recentes (Jump to Latest)">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#c9a86a] animate-pulse"></span>
+      <span class="tracking-wider uppercase text-[9px] hidden sm:inline">DIÁRIO CORPORATIVO</span>
+      <span class="sm:hidden">📰</span>
+    </div>
+    <div id="ticker-viewport" class="flex-1 overflow-hidden relative h-full flex items-center cursor-grab active:cursor-grabbing" title="Arraste com o mouse para rolar manualmente">
+      <div id="ticker-track" class="ticker-scroll-track flex items-center whitespace-nowrap h-full"></div>
+    </div>
+  </div>
+
+  <!-- 1. FULLSCREEN CANVAS LAYER -->
+  <div id="canvas-container" class="absolute inset-0 w-full h-full z-0 overflow-hidden bg-slate-950">
+    <canvas id="iso-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+    <div id="iso-tooltip" class="absolute pointer-events-none hidden bg-slate-900 border-2 border-slate-600 rounded-xl px-4 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.9)] text-xs font-mono z-50 text-slate-100 ring-1 ring-white/15"></div>
+  </div>
+
+  <!-- 2. TOP FLOATING HUD BAR (UNIFICADA, ELEGANTE & LIMPA) -->
+  <!-- 2. TOP EXECUTIVE TERMINAL HUD BAR (UNIFICADA, ELEGANTE & CONTÍNUA) -->
+  <header class="oiko-topbar">
+
+    <!-- SEÇÃO 1: BRAND + EMPRESA + AVATAR + SAÚDE DA CADEIA -->
+    <div class="flex items-center gap-2.5 shrink-0 pr-3 border-r border-white/[0.07]">
+      <!-- Squircle com símbolo Ω em gradiente dourado -->
+      <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-[#c9a86a] to-[#8b6914] flex items-center justify-center font-bold text-xs text-[#080a0d] shadow-inner shrink-0" title="OIKONOMIA — Terminal Executivo">
+        Ω
+      </div>
+
+      <!-- Empresa / Jogador / Avatar -->
+      <div id="hud-corp-badge" class="flex items-center gap-1.5 leading-tight">
+        <span id="hud-corp-logo-badge" class="flex items-center justify-center shrink-0"></span>
+        <span id="hud-player-avatar" class="text-xs shrink-0">👨‍💼</span>
+        <div class="leading-none">
+          <div class="flex items-center gap-1">
+            <span id="hud-company-name" class="font-semibold text-xs text-[#c9a86a] tracking-wide truncate max-w-[100px] sm:max-w-[120px]">OikoCorp</span>
+            <span id="hud-version-tag" class="text-[8px] bg-[#c9a86a]/15 text-[#c9a86a] font-mono px-1 rounded border border-[#c9a86a]/30">v0.8.5</span>
+          </div>
+          <span id="hud-player-name" class="text-[8px] text-slate-500 tracking-wider truncate max-w-[90px] block mt-0.5">Arthur Vance</span>
+        </div>
+      </div>
+
+      <!-- Indicador de Saúde da Cadeia Integrada -->
+      <div id="hud-chain-health-badge" onclick="openFacilityDREModal()" class="hidden items-center gap-1 px-1.5 py-0.5 rounded border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.07] text-[9px] cursor-pointer transition" title="Saúde da Cadeia Integrada (Upstream vs Varejo) — Clique para abrir DRE">
+        <span id="hud-chain-icon" class="text-[10px]">⛓️</span>
+        <span id="hud-chain-val" class="font-semibold text-slate-300">--</span>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 2: NAVEGAÇÃO DO MAPA (CIDADES & LENTES DE DADOS) -->
+    <div class="flex items-center gap-1.5 px-2.5 border-r border-white/[0.07] shrink-0">
+      <!-- Seletor Pílula de Cidade -->
+      <div class="relative" id="cities-dropdown-container">
+        <button id="btn-cities-dropdown" onclick="toggleCitiesDropdown()" class="oiko-btn-terminal oiko-btn-gold" title="Alternar Cidade no Mapa">
+          <span id="current-city-label">🏛️ Atenas</span>
+          <span class="text-[8px] opacity-70">▾</span>
+        </button>
+        <div id="cities-dropdown-menu" class="oiko-dropdown-menu hidden w-44">
+          <button id="btn-jump-atenas" onclick="jumpToCity('nova_atenas')" class="oiko-dropdown-item active" title="Capital Financeira & Varejo">
+            <span>🏛️ Nova Atenas</span>
+            <span class="text-[9px] text-[#c9a86a] font-mono">Capital</span>
+          </button>
+          <button id="btn-jump-porto" onclick="jumpToCity('porto_real')" class="oiko-dropdown-item" title="Porto Internacional & Commodities">
+            <span>🚢 Porto Real</span>
+            <span class="text-[9px] text-slate-500 font-mono">Porto</span>
+          </button>
+          <button id="btn-jump-montargis" onclick="jumpToCity('montargis')" class="oiko-dropdown-item text-slate-500" title="Polo Industrial Pesado">
+            <span>🏭 Montargis</span>
+            <span id="lock-montargis" class="text-[9px]">🔒</span>
+          </button>
+          <button id="btn-jump-varzea" onclick="jumpToCity('varzea')" class="oiko-dropdown-item text-slate-500" title="Cinturão Agrícola">
+            <span>🌾 Várzea</span>
+            <span id="lock-varzea" class="text-[9px]">🔒</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Seletor Pílula de Lente de Dados -->
+      <div class="relative" id="lenses-dropdown-container">
+        <button id="btn-lenses-dropdown" onclick="toggleLensesDropdown()" class="oiko-btn-terminal" title="Alternar Lente de Dados no Mapa">
+          <span id="current-lens-icon">⊙</span>
+          <span id="current-lens-label">Terreno</span>
+          <span class="text-[8px] opacity-70">▾</span>
+        </button>
+        <div id="lenses-dropdown-menu" class="oiko-dropdown-menu hidden w-40">
+          <button id="hm-terrain"     onclick="setHeatmap('terrain')"     class="oiko-dropdown-item active"><span>⊙ Terreno</span></button>
+          <button id="hm-opportunity" onclick="setHeatmap('opportunity')" class="oiko-dropdown-item"><span>🎯 Oportunidade</span></button>
+          <button id="hm-traffic"     onclick="setHeatmap('traffic')"     class="oiko-dropdown-item"><span>⬥ Tráfego</span></button>
+          <button id="hm-pop"         onclick="setHeatmap('pop')"         class="oiko-dropdown-item"><span>⬥ População</span></button>
+          <button id="hm-comp"        onclick="setHeatmap('comp')"        class="oiko-dropdown-item"><span>⬥ Varejo</span></button>
+          <button id="hm-ports"       onclick="setHeatmap('ports')"       class="oiko-dropdown-item"><span>⬥ Portos</span></button>
+          <button id="hm-ind"         onclick="setHeatmap('ind')"         class="oiko-dropdown-item"><span>⬥ Indústria</span></button>
+          <button id="hm-media"       onclick="setHeatmap('media')"       class="oiko-dropdown-item"><span>⬥ Mídia</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 3: STATUS MACRO & TRIMESTRE -->
+    <div class="flex items-center gap-1.5 px-2.5 border-r border-white/[0.07] shrink-0">
+      <span id="hud-quarter-badge" class="px-1.5 py-0.5 rounded text-[9px] font-mono font-medium bg-[#818cf8]/10 text-[#818cf8] border border-[#818cf8]/30 cursor-help" title="Trimestre Macroeconômico">Q1</span>
+      <span id="hud-macro-cycle-badge" class="px-1.5 py-0.5 rounded text-[9px] font-mono font-medium bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/30 cursor-help" title="Ciclo Macroeconômico">Retomada</span>
+    </div>
+
+    <!-- ESPAÇO FLEXÍVEL -->
+    <div class="flex-1 min-w-[8px]"></div>
+
+    <!-- SEÇÃO 5: TELEMETRIA FINANCEIRA MESTRE (TABULAR NUMS) -->
+    <div class="flex items-center gap-4 px-3 border-l border-r border-white/[0.07] shrink-0">
+      <div class="text-right">
+        <span class="text-[8px] text-slate-500 uppercase tracking-widest block leading-tight">Caixa</span>
+        <span id="corp-cash" class="text-sm font-semibold text-slate-100 oiko-tabular-nums leading-tight block select-all cursor-help" title="$100,000.00">$100k</span>
+      </div>
+      <div id="month-profit-box" class="text-right">
+        <span class="text-[8px] text-slate-500 uppercase tracking-widest block leading-tight">Lucro/Mês</span>
+        <span id="month-profit" class="text-sm font-semibold text-emerald-400 oiko-tabular-nums leading-tight block select-all cursor-help" title="$0.00">$0.00</span>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 6: RELÓGIO & CONTROLE DE VELOCIDADE (1x a 5x + PAUSA) -->
+    <div class="flex items-center gap-2 px-2.5 shrink-0">
+      <span id="clock-date" class="text-[11px] font-medium text-[#c9a86a] whitespace-nowrap" title="Data da Simulação">01/01 · Ano 1</span>
+      <div class="flex items-center gap-0.5">
+        <button id="btn-p"  onclick="setSpeed(0)" class="oiko-btn-terminal active px-1.5 py-0.5 text-[9px]" title="Pausar / Retomar [Espaço]">⏸</button>
+        <button id="btn-1x" onclick="setSpeed(1)" class="oiko-btn-terminal px-1.5 py-0.5 text-[9px]" title="Velocidade 1x [1]">1×</button>
+        <button id="btn-2x" onclick="setSpeed(2)" class="oiko-btn-terminal px-1.5 py-0.5 text-[9px]" title="Velocidade 2x [2]">2×</button>
+        <button id="btn-3x" onclick="setSpeed(3)" class="oiko-btn-terminal px-1.5 py-0.5 text-[9px]" title="Velocidade 3x [3]">3×</button>
+        <button id="btn-4x" onclick="setSpeed(4)" class="oiko-btn-terminal px-1.5 py-0.5 text-[9px]" title="Velocidade 4x [4]">4×</button>
+        <button id="btn-5x" onclick="setSpeed(5)" class="oiko-btn-terminal px-1.5 py-0.5 text-[9px]" title="Velocidade 5x [5]">5×</button>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 7: AÇÕES EXECUTIVAS HIERARQUIZADAS -->
+    <div class="flex items-center gap-1.5 pl-2.5 border-l border-white/[0.07] shrink-0">
+      <!-- Primária Gold: DRE -->
+      <button onclick="toggleDREModal()" class="oiko-btn-terminal oiko-btn-gold font-bold px-2.5 py-1" title="Demonstrativo de Resultados do Exercício">
+        📊 <span class="hidden xl:inline">DRE</span>
+      </button>
+
+      <!-- Diretoria Executiva / Conselheiro Inteligente (Sessão 16) -->
+      <button id="btn-hud-advisor" onclick="toggleExecutiveBoardModal()" class="oiko-btn-terminal relative" title="Diretoria Executiva & Conselheiro Inteligente (CFO, COO & CMO)">
+        👔 <span class="hidden xl:inline">Diretoria</span>
+        <span id="hud-advisor-badge" class="bg-blue-600 text-white text-[8px] px-1 rounded-full leading-none">0</span>
+      </button>
+
+      <!-- Mídia / Marketing -->
+      <button onclick="openMarketingCentralModal()" class="oiko-btn-terminal relative" title="Central de Publicidade">
+        📢 <span class="hidden xl:inline">Mídia</span>
+        <span id="active-campaigns-badge" class="bg-slate-700 text-slate-200 text-[8px] px-1 rounded-full leading-none">0</span>
+      </button>
+
+      <!-- P&D -->
+      <button onclick="openRDCenterModal()" class="oiko-btn-terminal relative" title="Centro de Pesquisa & Desenvolvimento">
+        🔬 <span class="hidden xl:inline">P&D</span>
+        <span id="active-rd-badge" class="bg-slate-700 text-slate-200 text-[8px] px-1 rounded-full leading-none">0</span>
+      </button>
+
+      <!-- Dropdown Mais Opções -->
+      <div class="relative" id="hud-more-options-container">
+        <button id="btn-more-options" onclick="toggleMoreOptionsMenu()" class="oiko-btn-terminal px-2" title="Mais Opções & Guias">
+          ···
+          <span id="more-menu-badge" class="hidden w-1.5 h-1.5 rounded-full bg-[#c9a86a] ml-1"></span>
+        </button>
+        <div id="hud-more-options-menu" class="oiko-dropdown-menu hidden right-0 w-56 p-1.5 gap-1">
+          <button id="btn-hud-tutorial" onclick="toggleTutorialWidget(); closeMoreOptionsMenu();" class="oiko-dropdown-item flex items-center justify-between">
+            <span class="truncate">🎓 Tutorial do Magnata</span>
+            <span id="hud-tutorial-badge" class="text-[8px] bg-[#c9a86a]/15 text-[#c9a86a] border border-[#c9a86a]/30 px-1.5 py-0.5 rounded shrink-0 font-mono">0/7</span>
+          </button>
+          <button id="btn-menu-tutorial" onclick="toggleTutorialWidget(); closeMoreOptionsMenu();" class="oiko-dropdown-item hidden flex items-center justify-between">
+            <span class="truncate">🎓 Tutorial</span>
+            <span id="menu-tutorial-badge" class="text-[8px] bg-[#c9a86a]/15 text-[#c9a86a] px-1.5 py-0.5 rounded shrink-0 font-mono">Ativo</span>
+          </button>
+          <button onclick="toggleEncyclopediaModal(); closeMoreOptionsMenu();" class="oiko-dropdown-item flex items-center justify-between">
+            <span>📖 Wiki / Enciclopédia</span>
+            <span class="text-[8px] text-slate-500 font-mono">F1</span>
+          </button>
+          <button onclick="toggleDiaryModal(); closeMoreOptionsMenu();" class="oiko-dropdown-item flex items-center justify-between">
+            <span>📑 Diário de Bordo</span>
+          </button>
+          <button onclick="openTechTreeModal(); closeMoreOptionsMenu();" class="oiko-dropdown-item flex items-center justify-between">
+            <span>🧬 Árvore Tecnológica</span>
+          </button>
+          <div class="border-t border-white/[0.08] my-0.5"></div>
+          <button onclick="openBankModal(); closeMoreOptionsMenu();" class="oiko-dropdown-item text-[#c9a86a] flex items-center justify-between">
+            <span>🏦 Banco Central</span>
+            <span id="hud-bank-debt-badge" class="hidden bg-rose-950 text-rose-300 text-[8px] px-1.5 py-0.5 rounded border border-rose-800 shrink-0"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu Principal & Configurações -->
+      <button onclick="togglePauseMenu()" class="oiko-btn-terminal px-2 text-slate-400 hover:text-slate-200" title="Menu Principal & Configurações [ESC]">
+        ⚙️ <span class="hidden 2xl:inline">Menu</span>
+      </button>
+    </div>
+
+  </header>
+
+  <!-- 3. BOTTOM-LEFT HUD (RADAR MINIMAP) -->
+  <div class="absolute bottom-8 left-3 z-30 pointer-events-none">
+    <div class="pointer-events-auto relative w-fit bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-xl p-1 shadow-2xl">
+      <div class="relative w-fit overflow-hidden rounded-lg">
+        <canvas id="minimap-canvas" width="192" height="192" class="w-[180px] h-[180px] sm:w-[192px] sm:h-[192px] border border-slate-800/80 cursor-crosshair block" title="Clique no radar para teletransportar a câmera"></canvas>
+        <div id="minimap-city-labels" class="absolute inset-0 pointer-events-none text-[8px] font-mono select-none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. BOTTOM TELEMETRY & DIAGNOSTICS BAR (PERMANENTE PARA PRINTS & DEBUG) -->
+  <footer id="bottom-telemetry-bar" class="absolute bottom-0 left-0 right-0 z-30 pointer-events-auto bg-slate-950/95 backdrop-blur-md border-t border-slate-800/80 px-3 py-1 text-[10px] font-mono text-slate-400 flex items-center justify-between shadow-2xl select-none">
+    <!-- Esquerda: Lote sob mouse / Inspetor rápido & Botões de Ação -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <span id="telemetry-tile-info" class="text-slate-300 font-bold flex items-center gap-1">
+        📍 <span>Lote (-- , --) · Clique em um lote</span>
+      </span>
+      <span id="telemetry-district-info" class="text-slate-500 hidden sm:inline">| Terreno Padrão</span>
+      <div id="telemetry-actions" class="inline-flex items-center gap-1"></div>
+    </div>
+
+    <!-- Centro: Telemetria da Simulação -->
+    <div class="hidden md:flex items-center gap-3 text-slate-400">
+      <span id="telemetry-facilities-count" title="Total de instalações ativas no Sparse Index">🏢 0 Prédios</span>
+      <span class="text-slate-700">·</span>
+      <span id="telemetry-pop-count" title="População mundial consumidora">👥 45,000 Hab</span>
+      <span class="text-slate-700">·</span>
+      <span id="telemetry-rd-chip" class="text-purple-400 font-bold hidden cursor-pointer hover:underline" onclick="openRDCenterModal()" title="Projetos de P&D em andamento">🔬 0 Pesquisas</span>
+      <span class="text-slate-700">·</span>
+      <span id="telemetry-save-status" class="text-emerald-400" title="Status do último salvamento">💾 Salvo</span>
+      <span class="text-slate-700">·</span>
+      <span id="telemetry-fps" class="text-amber-400 font-bold">⚡ 60 FPS</span>
+    </div>
+
+    <!-- Direita: Micro Rádio, Carimbo Oficial de Versão & Botão Dev -->
+    <div class="flex items-center gap-2">
+      <!-- MICRO RÁDIO OIKOFM -->
+      <div id="hud-micro-radio" class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-700/80 px-2 py-0.5 rounded-lg text-[10px] font-mono shadow-sm">
+        <span class="text-amber-400 text-xs shrink-0 cursor-help" title="Rádio Corporativa OikoFM">📻</span>
+        <span id="radio-track-title" class="text-emerald-300 font-bold truncate max-w-[130px] sm:max-w-[190px] select-none" title="Faixa Atual">BGM 1 — Lounge Corporativo</span>
+        
+        <div class="flex items-center gap-0.5 ml-1 border-l border-slate-800 pl-1">
+          <button onclick="SoundEngine.playPrevTrack()" class="px-1 py-0.5 rounded hover:bg-slate-800 text-slate-300 hover:text-white cursor-pointer transition" title="Voltar Faixa (⏮)">⏮</button>
+          <button id="radio-btn-play-pause" onclick="SoundEngine.toggleBgm()" class="px-1 py-0.5 rounded hover:bg-slate-800 text-emerald-400 font-bold cursor-pointer transition" title="Tocar / Pausar (⏯)">⏸</button>
+          <button onclick="SoundEngine.playNextTrack()" class="px-1 py-0.5 rounded hover:bg-slate-800 text-slate-300 hover:text-white cursor-pointer transition" title="Pular Faixa (⏭)">⏭</button>
+          <button id="radio-btn-repeat" onclick="SoundEngine.toggleRepeatMode()" class="px-1 py-0.5 rounded hover:bg-slate-800 text-slate-400 cursor-pointer transition" title="Alternar Modo de Repetição">🔁</button>
+          <button id="radio-btn-mute" onclick="SoundEngine.toggleMusicMute()" class="px-1 py-0.5 rounded hover:bg-slate-800 text-slate-400 cursor-pointer transition" title="Mutar / Desmutar Música">🔊</button>
+        </div>
+      </div>
+
+      <button onclick="toggleBugReportModal()" class="bg-rose-950/80 hover:bg-rose-900 border border-rose-700/60 text-rose-300 px-2 py-0.5 rounded text-[9px] font-bold flex items-center gap-1 shadow transition cursor-pointer" title="Reportar Bug, Desbalanceamento ou Feedback com Print e Save (Atalho F8)">
+        🐛 <span class="hidden sm:inline">Reportar Bug</span> [F8]
+      </button>
+      <button onclick="toggleDevDashboard()" class="bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-300 px-1.5 py-0.5 rounded text-[9px] font-bold flex items-center gap-1 shadow transition cursor-pointer" title="Abrir Painel de Desenvolvimento & Logs de Debug (Atalho F3)">
+        🛠️ <span class="hidden sm:inline">Dev Dashboard</span> [F3]
+      </button>
+      <span id="telemetry-version-badge" class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-bold text-[9px]" title="Versão Oficial do Jogo & Build">
+        🏛️ OIKONOMIA <span class="text-emerald-400">v0.8.5</span> <span class="text-slate-500 text-[8px]">bld.20260911.07</span>
+      </span>
+    </div>
+  </footer>
+
+  <!-- 5. FLOATING MANAGEMENT CARD (JANELA FLUTUANTE DE GESTÃO - ESTILO CAPITALISM) -->
+  <div id="floating-facility-window" class="fixed top-14 right-3 max-h-[calc(100vh-4.5rem)] w-[430px] z-40 bg-[#0b0e14] backdrop-blur-md border border-white/[0.08] rounded-2xl shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-200 font-mono">
+    <!-- Header do Card -->
+    <div class="bg-[#0d1017] border-b border-white/[0.08] px-4 py-3 flex items-center justify-between drag-handle">
+      <div class="flex items-center gap-2.5">
+        <span class="drag-grip-icon text-slate-500 font-mono" title="Arrastar Janela">⋮⋮</span>
+        <div id="facility-icon" class="w-8 h-8 rounded-xl bg-[#121620] border border-white/[0.08] flex items-center justify-center text-base">🏢</div>
+        <div>
+          <h2 id="facility-title" class="text-xs font-bold text-[#c9a86a]">Gestão de Instalação</h2>
+          <span id="facility-subtitle" class="text-[10px] text-[#94a3b8] block">Lote (0, 0)</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="facility-rent-badge" class="text-[10px] font-bold text-rose-400 font-mono bg-rose-950/60 px-1.5 py-0.5 rounded border border-rose-800 hidden"></span>
+        <button onclick="closeFloatingFacilityWindow()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition" title="Fechar Janela (Esc)">✕</button>
+      </div>
+    </div>
+    
+    <!-- Conteúdo Dinâmico Rolável -->
+    <div id="facility-content-panel" class="p-4 space-y-3 flex-1 overflow-y-auto custom-scrollbar"></div>
+
+    <!-- Rodapé Fixo de Ações (Venda, Demolição & Adição) -->
+    <div id="facility-action-row" class="p-3 bg-[#080a0d] border-t border-white/[0.06] flex flex-col gap-2"></div>
+  </div>
+
+  <!-- 5.1 WIDGET DO TUTORIAL / GUIA DO MAGNATA (PASSO A PASSO) -->
+  <div id="tutorial-guide-widget" class="fixed top-24 left-4 z-40 w-84 bg-[#0b0e14]/95 backdrop-blur-md border border-white/[0.08] rounded-2xl shadow-2xl overflow-hidden flex flex-col font-mono text-xs hidden transition-all">
+    <div class="bg-[#0d1017] border-b border-white/[0.08] px-3.5 py-2.5 flex items-center justify-between drag-handle">
+      <div class="flex items-center gap-2">
+        <span class="text-base">🎓</span>
+        <div>
+          <h3 class="font-bold text-[#c9a86a] text-xs">Guia do Magnata</h3>
+          <span class="text-[9px] text-[#94a3b8]">Primeiros Passos no Mercado</span>
+        </div>
+      </div>
+      <button onclick="toggleTutorialWidget()" class="w-6 h-6 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08]">✕</button>
+    </div>
+    <div id="tutorial-steps-container" class="p-3 space-y-2 max-h-72 overflow-y-auto custom-scrollbar"></div>
+    <div class="p-2.5 bg-[#080a0d] border-t border-white/[0.08] flex justify-between items-center text-[10px]">
+      <span id="tutorial-reward-badge" class="text-[#c9a86a] font-bold">Recompensa: +$5.000 & +5⭐ Marca</span>
+      <button id="tutorial-claim-btn" onclick="claimTutorialReward()" class="px-2.5 py-1 rounded bg-[#c9a86a] hover:bg-[#d8b87a] text-[#080a0d] font-bold disabled:opacity-40 disabled:pointer-events-none cursor-pointer shadow-sm" disabled>Resgatar</button>
+    </div>
+  </div>
+
+  <!-- Container de Montagem dos Modais & Overlays Dinâmicos (client/ui/templates/) -->
+  <div id="oiko-modals-mount"></div>
+
+  <!-- OVERLAY 0: TELA DE SPLASH (CINEMÁTICA / RÁPIDA / PULÁVEL)               -->
+  <!-- ======================================================================= -->
+  <div id="splash-screen" class="fixed inset-0 z-[110] bg-[#080a0d] flex flex-col items-center justify-center p-8 select-none transition-opacity duration-500 cursor-pointer">
+    <div class="flex flex-col items-center text-center space-y-6 max-w-md">
+      <!-- Brasão com Monóculo & Efeito Ouro -->
+      <div class="relative w-24 h-24 rounded-full bg-gradient-to-b from-[#c9a86a] via-[#856834] to-[#121620] p-1 shadow-2xl shadow-[#c9a86a]/10 flex items-center justify-center">
+        <div class="w-full h-full bg-[#0b0e14] rounded-full flex items-center justify-center border border-white/[0.08]">
+          <span class="text-4xl filter drop-shadow-[0_0_8px_rgba(201,168,106,0.5)]">🧐</span>
+        </div>
+        <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#c9a86a] rounded-full animate-ping opacity-75"></div>
+      </div>
+      <div>
+        <h1 class="text-5xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#c9a86a] via-[#f5e6c8] to-[#9a783e] font-sans drop-shadow-sm">
+          OIKONOMIA
+        </h1>
+        <p class="text-[11px] uppercase tracking-[0.3em] text-[#94a3b8] font-mono mt-2">
+          Grand Strategy & Macroeconomic Simulation
+        </p>
+      </div>
+      <div class="text-[10px] font-mono text-slate-500 tracking-wider pt-8">
+        <span>Clique ou pressione qualquer tecla para continuar</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY 1: TELA DE BOOT / CARREGAMENTO (OBSIDIAN & OURO)                 -->
+  <!-- ======================================================================= -->
+  <div id="loading-screen" class="fixed inset-0 z-[100] bg-[#080a0d] flex flex-col items-center justify-between p-8 select-none transition-opacity duration-700">
+    <!-- Header Topo -->
+    <div class="w-full flex justify-between items-center text-xs font-mono text-[#94a3b8] border-b border-white/[0.06] pb-4">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-[#c9a86a] animate-pulse"></span>
+        <span class="text-[#c9a86a] font-semibold tracking-wider">OIKONOMIA SIMULATION ENGINE</span>
+      </div>
+      <span id="loading-version-tag" class="text-slate-500">VERSÃO 0.8.5 (BUILD 20260912.01)</span>
+    </div>
+
+    <!-- Centro: Logo, Oikonomos e Barra de Carregamento -->
+    <div class="flex flex-col items-center text-center space-y-4 max-w-xl w-full">
+      <!-- Cameo / Avatar do Mascote -->
+      <div class="relative w-20 h-20 rounded-2xl bg-gradient-to-b from-[#c9a86a]/40 to-[#121620] p-0.5 shadow-2xl shadow-[#c9a86a]/10 flex items-center justify-center">
+        <div class="w-full h-full bg-[#0b0e14] rounded-[14px] flex items-center justify-center overflow-hidden border border-white/[0.08]">
+          <img src="./assets/oikonomia_master_concept--hqyUNUR.png" alt="Oikonomos" class="w-full h-full object-cover object-top" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="hidden w-full h-full items-center justify-center text-3xl">🧐</div>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-4xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#c9a86a] via-[#f5e6c8] to-[#9a783e] font-sans">
+          OIKONOMIA
+        </h1>
+        <p class="text-xs uppercase tracking-widest text-[#94a3b8] font-mono mt-1">Simulador de Império Industrial & Varejo Macroeconômico</p>
+      </div>
+
+      <!-- Barra de Carregamento Ouro -->
+      <div class="w-full bg-[#0b0e14] border border-white/[0.1] rounded-full h-3 p-0.5 overflow-hidden shadow-inner mt-6">
+        <div id="loading-bar-fill" class="bg-gradient-to-r from-[#856834] via-[#c9a86a] to-[#f3e5be] h-full rounded-full w-0 transition-all duration-300 shadow-[0_0_12px_rgba(201,168,106,0.4)]"></div>
+      </div>
+      <div class="flex justify-between w-full text-[11px] font-mono text-[#94a3b8]">
+        <span id="loading-status-text">Inicializando malha metropolitana...</span>
+        <span id="loading-pct-text" class="text-[#c9a86a] font-bold">0%</span>
+      </div>
+    </div>
+
+    <!-- Rodapé: Conselhos de Oikonomos -->
+    <div class="w-full max-w-xl bg-[#0b0e14]/90 border border-white/[0.08] rounded-2xl p-4 text-center backdrop-blur-md shadow-2xl">
+      <div class="flex items-center justify-center gap-2 mb-1.5">
+        <span class="text-xs">🧐</span>
+        <span class="text-[10px] uppercase font-mono tracking-widest text-[#c9a86a] font-bold">Conselho de Oikonomos</span>
+      </div>
+      <p id="loading-tip-text" class="text-xs text-[#cbd5e1] font-sans transition-opacity duration-300">
+        🧐 Oikonomos aconselha: Terrenos no Centro Urbano (Downtown) possuem aluguel mais alto, mas tráfego intenso de consumidores.
+      </p>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+
+  <!-- OIKONOMIA Engine: Modularizado via client/main.js & client/app/bootstrap.js -->
+
+
+</body>
+</html>
