@@ -22,12 +22,6 @@ function copyStaticAssetsPlugin() {
       if (fs.existsSync(assetsSrc)) {
         fs.cpSync(assetsSrc, assetsDest, { recursive: true });
       }
-      // Copia banking_system.js (IIFE) para a raiz do dist
-      const bankingSrc  = path.resolve('client', 'banking_system.js');
-      const bankingDest = path.resolve('dist', 'banking_system.js');
-      if (fs.existsSync(bankingSrc)) {
-        fs.copyFileSync(bankingSrc, bankingDest);
-      }
     }
   };
 }

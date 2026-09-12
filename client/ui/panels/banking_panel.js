@@ -12,6 +12,11 @@
  */
 
 import GameState from '../../game_state.js';
+import BankingSystem from '../../banking_system.js';
+
+function getBankingSystem() {
+  return BankingSystem || (typeof window !== 'undefined' ? window.BankingSystem : null);
+}
 
 let _bankCurrentTab = 'score';
 let _bankLoanValue  = 20000;
@@ -44,7 +49,7 @@ export function updateBankHUDBadge() {
   const badge = document.getElementById('hud-bank-debt-badge');
   if (!badge) return;
 
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   if (count > 0 && GameState.banking && GameState.banking.totalDebt > 0 && bs) {
     badge.textContent = bs.fmtCurrency(GameState.banking.totalDebt);
     badge.classList.remove('hidden');
@@ -99,7 +104,7 @@ export function calcAverageBrandRating() {
 }
 
 export function calcBankingCreditScore() {
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   if (!bs) return null;
 
   const citiesSet = new Set();
@@ -135,7 +140,7 @@ export function calcBankingCreditScore() {
 }
 
 export function _renderBankScoreTab() {
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   if (!bs) {
     return '<div class="text-center text-rose-400 text-xs font-mono py-8">BankingSystem não carregado.</div>';
   }
@@ -220,7 +225,7 @@ export function _renderBankScoreTab() {
 }
 
 export function _scoreBar(letter, icon, label, value, pct, color) {
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   const valStr = bs ? bs.fmtCurrency(value) : `$${value.toLocaleString()}`;
   return `
     <div class="flex items-center gap-2.5">
@@ -240,7 +245,7 @@ export function _scoreBar(letter, icon, label, value, pct, color) {
 }
 
 export function _getBankTip(score) {
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   const bonus = bs ? bs.TERRITORIAL_BONUS_PER_CITY : 15000;
   if (score.territorial < 30000) return `Expanda para mais 1 cidade para liberar +$${bonus.toLocaleString()} de score territorial.`;
   if (score.tech < 50000) return 'Invista em P&D e desbloqueie mais produtos para aumentar o score tecnológico.';
@@ -250,7 +255,7 @@ export function _getBankTip(score) {
 }
 
 export function _renderBankNewTab() {
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   if (!bs) return '<div class="text-rose-400 text-sm font-mono py-8 text-center">Módulo bancário não carregado.</div>';
 
   const score = calcBankingCreditScore();
@@ -334,7 +339,7 @@ export function _renderBankNewTab() {
 }
 
 export function _bankPreviewHTML(val, inst, total, juros, rate) {
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   return `
     <div class="grid grid-cols-2 gap-4 text-xs md:text-sm font-mono">
       <div class="space-y-2">
@@ -351,7 +356,7 @@ export function _bankPreviewHTML(val, inst, total, juros, rate) {
 
 export function _onBankSlider(val) {
   _bankLoanValue = parseInt(val, 10);
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   const disp = document.getElementById('bank-val-display');
   if (disp && bs) disp.textContent = bs.fmtFull(_bankLoanValue);
   _refreshBankPreview();
@@ -359,7 +364,7 @@ export function _onBankSlider(val) {
 
 export function _onBankPlanSelect(idx) {
   _bankLoanPlan = idx;
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   if (!bs) return;
 
   bs.LOAN_PLANS.forEach((p, i) => {
@@ -376,7 +381,7 @@ export function _onBankPlanSelect(idx) {
 }
 
 export function _refreshBankPreview() {
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   if (!bs) return;
   const score = calcBankingCreditScore();
   if (!score) return;
@@ -391,7 +396,7 @@ export function _refreshBankPreview() {
 }
 
 export function _confirmNewLoan() {
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   if (!bs) return;
   const score = calcBankingCreditScore();
   if (!score) return;
@@ -447,7 +452,7 @@ export function _renderBankActiveTab() {
 }
 
 export function _loanCard(loan) {
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   if (!bs) return '';
 
   const pct = Math.max(0, Math.min(100, ((loan.planMonths - loan.monthsRemaining) / loan.planMonths) * 100));
@@ -502,7 +507,7 @@ export function _loanCard(loan) {
 }
 
 export function _promptEarlyPayoff(loanId, earlyAmt, savings) {
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   const currentCash = GameState.cash ?? ((typeof window !== 'undefined') ? window.cash : 0);
   if (currentCash < earlyAmt) {
     const notice = `Saldo em caixa insuficiente. Você possui ${bs ? bs.fmtFull(currentCash) : '$' + currentCash}, mas a quitação requer ${bs ? bs.fmtFull(earlyAmt) : '$' + earlyAmt}.`;
@@ -530,7 +535,7 @@ export function _confirmEarlyPayoff(loanId, earlyAmt) {
   GameState.banking.activeLoans = GameState.banking.activeLoans.filter(l => l.id !== loanId);
   GameState.banking.totalDebt = GameState.banking.activeLoans.reduce((s, l) => s + (l.remainingBalance || 0), 0);
 
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   if (typeof window !== 'undefined' && window.TickerSystem && window.TickerSystem.pushFromLog && bs) {
     window.TickerSystem.pushFromLog(
       `🏦 [BANCO] Empréstimo de ${bs.fmtFull(loan.principal)} quitado antecipadamente por ${bs.fmtFull(earlyAmt)}!`,
@@ -545,7 +550,7 @@ export function _confirmEarlyPayoff(loanId, earlyAmt) {
 
 export function _renderBankHistoryTab() {
   const history = GameState.banking ? (GameState.banking.loanHistory || []) : [];
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
 
   if (history.length === 0) {
     return `<div class="flex flex-col items-center justify-center py-12 gap-3">
@@ -593,7 +598,7 @@ export function processBankingInstallments() {
   if (!GameState.banking || !Array.isArray(GameState.banking.activeLoans)) return;
   if (GameState.banking.activeLoans.length === 0) return;
 
-  const bs = (typeof window !== 'undefined' && window.BankingSystem) ? window.BankingSystem : null;
+  const bs = getBankingSystem();
   if (!bs) return;
 
   const macroPhase = (typeof window !== 'undefined' && window.MacroCycleSystem)

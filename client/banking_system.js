@@ -2,10 +2,10 @@
  * banking_system.js — Motor Bancário Corporativo (Banco Central de Nova Atenas)
  * OIKONOMIA v0.8.5
  *
- * Módulo IIFE puro — sem dependências de DOM.
- * Exposto via window.BankingSystem para uso em index.html.
+ * Módulo ES puro — sem dependências de DOM.
+ * Exposto como export ESM e via window.BankingSystem para compatibilidade retroativa.
  */
-const BankingSystem = (() => {
+export const BankingSystem = (() => {
   'use strict';
 
   // ═══════════════════════════════════════════════════════════
@@ -266,4 +266,24 @@ const BankingSystem = (() => {
   };
 })();
 
+// Re-exporta membros individuais para conveniência
+export const {
+  LOAN_PLANS,
+  RATING_TIERS,
+  MAX_ACTIVE_LOANS,
+  TERRITORIAL_BONUS_PER_CITY,
+  CREDIT_LIMIT_RATIO,
+  calcCreditScore,
+  getCreditRatingLabel,
+  calcMonthlyInstallment,
+  calcEarlyPayoffAmount,
+  createLoanObject,
+  processMonthlyInstallment,
+  getEffectiveRate,
+  fmtCurrency,
+  fmtFull,
+} = BankingSystem;
+
 if (typeof window !== 'undefined') window.BankingSystem = BankingSystem;
+
+export default BankingSystem;
