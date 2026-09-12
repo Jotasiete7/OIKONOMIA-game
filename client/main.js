@@ -160,7 +160,7 @@ import TickerUI from './ui/ticker.js';
 // --- Fase 6.3: Motor de Renderização Canvas & Isometria ---
 import IsoMath, { gridToScreen, screenToGrid, drawDiamond, drawBuilding } from './renderer/iso_math.js';
 import CameraController, { camera, changeZoom, focusOnTile as cameraFocusOnTile, jumpToCity as cameraJumpToCity, resetCamera } from './renderer/camera.js';
-import MinimapSystem, { renderMinimap, initMinimapEvents } from './renderer/minimap.js';
+import MinimapSystem, { renderMinimap, initMinimapEvents, invalidateMinimap } from './renderer/minimap.js';
 import CanvasRenderer, { renderMap, resizeCanvas, scheduleRender, startRenderLoop, stopRenderLoop, getCurrentFps } from './renderer/canvas_renderer.js';
 
 // --- Fase 6.4: Controladores dos Painéis Modais Especializados ---
@@ -476,6 +476,7 @@ window.resetCamera = resetCamera;
 window.MinimapSystem = MinimapSystem;
 window.renderMinimap = renderMinimap;
 window.initMinimapEvents = initMinimapEvents;
+window.invalidateMinimap = invalidateMinimap;
 
 window.CanvasRenderer = CanvasRenderer;
 window.renderMap = renderMap;

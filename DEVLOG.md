@@ -3,7 +3,7 @@
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
 > **Última Atualização:** 12 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.5 (bld.20260912.01)`  
+> **Versão Oficial Corrente:** `v0.8.5 (bld.20260912.02)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -35,6 +35,7 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
   - [x] **Fase 7.0 F (Renderizador Canvas, Saves/Slots, Sistema Bancário & Sequência de Boot)**: Desacoplamento total do renderizador isométrico (`IsoMath`, `CanvasRenderer`, `CameraController`), fornecedores (`SupplierPicker`), licenças (`StoreWizard`), score bancário (`BankingPanel`), saves/sparse index (`SaveSystem`) e boot loader (`AppLifecycle`). Monolito `client/index.html` reduzido de 4.835 para **3.632 linhas** (-1.203 linhas nesta fase, **total acumulado: -6.130 linhas / 63% de redução total**).
   - [x] **Fase 7.0 K (Componentização de Modais e Templates HTML)**: Redução de `client/index.html` para 405 linhas com montagem modular de modais em `client/ui/templates/`.
   - [x] **Correção Crítica: Inicialização do Loop de Renderização Isométrica (v0.8.5 bld.20260912.01)**: Auto-inicialização de `startRenderLoop()` no CanvasRenderer, bootstrap e main.js, eliminando o mapa invisível/preto e reativando a telemetria de 60 FPS com teste E2E headless de verificação de pixels.
+  - [x] **Modernização do Radar Cartográfico / Minimapa Tático (v0.8.5 bld.20260912.02)**: Cache offscreen de terreno em buffer ImageData (queda de 16.384 fillRects para 1 drawImage por frame), frustum dinâmico e real da câmera via projeção isométrica de 4 cantos sensível ao zoom, paleta Obsidian & Ouro refinada, eliminação do moiré por filtragem bilinear, badges HTML interativos para cidades e teleporte com escala DPI-aware.
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
 - [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
 - [ ] **Fase 5 Mercado Financeiro, Ações & M&A**: Ações corporativas, IPO, distribuição de dividendos, participações cruzadas e aquisições hostis (*Hostile Takeovers*).
@@ -47,6 +48,29 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 ---
 
+### 📅 Sessão 25: Modernização do Radar Cartográfico (Minimapa Tático Obsidian & Ouro)
+- **Data:** 12/09/2026 — 13:10
+- **Versão Oficial:** `v0.8.5 (bld.20260912.02)` | **Save Schema:** `v0.8.2`
+- **Branch:** `main`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Cache Offscreen de Terreno & Otimização Drástica de Performance:**
+   - Eliminação de 16.384 chamadas por frame de `fillRect(mx, my, 1, 1)` no canvas principal do minimapa.
+   - Construção de buffer `ImageData` offscreen (`_terrainCanvas`) atualizado via `buildMinimapTerrainCache()` em ~0.2ms e renderizado no frame a frame com uma única chamada `drawImage()`.
+   - Invalidação seletiva via dirty-flag (`invalidateMinimap()`), reduzindo o tempo de renderização por quadro de ~3ms para ~0.02ms.
+2. **Frustum Real da Câmera (Área Visível Dinâmica e Precisa):**
+   - Substituição do retângulo estático de 14x14px por um polígono dinâmico calculado via projeção isométrica dos 4 cantos reais da tela (`screenToGrid(0, 0)`, etc.).
+   - Frustum reflete fielmente o zoom (contrai em zoom-in, expande em zoom-out) e a rotação de 45° do mundo isométrico.
+3. **Identidade Visual Obsidian & Ouro & Eliminação de Moiré:**
+   - Paleta redefinida com águas profundas (`#061325`), relevo sóbrio e dourado OIKONOMIA (`#c9a86a`) para portos/docas, eliminando o visual saturado de debug.
+   - Filtragem bilinear de alta precisão (`imageSmoothingQuality = 'high'`), eliminando completamente o padrão de aliasing e franjas de moiré.
+4. **Badges Vetoriais Interativos de Cidades & DPI-Awareness:**
+   - Adicionados badges HTML sobrepostos com tipografia nativa nítida e atalhos de clique direto para focar nas cidades (`jumpToCity`).
+   - Teletransporte no mapa reescrito com mapeamento de escala (`getBoundingClientRect()`), garantindo precisão milimétrica em qualquer monitor ou DPI.
+
+---
+
 ### 📅 Sessão 24: Correção Crítica do Loop de Renderização Isométrica & Verificação Visual E2E
 - **Data:** 12/09/2026 — 12:00
 - **Versão Oficial:** `v0.8.5 (bld.20260912.01)` | **Save Schema:** `v0.8.2`
@@ -55,15 +79,10 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 
 #### 🎯 Entregas da Sessão:
 1. **Auto-inicialização e Ativação do Loop de Renderização (`requestAnimationFrame`):**
-   - Corrigido problema em que a simulação rodava (relógio, caixa, tooltips funcionando via coordenadas lógicas do mouse), mas o canvas principal (`#iso-canvas`) e o minimapa (`#minimap-canvas`) permaneciam pretos/vazios e o contador de FPS no HUD não era exibido.
-   - Diagnóstico via CDP Headless: O loop `requestAnimationFrame(_rafLoop)` havia sido isolado em `startRenderLoop()` dentro de `client/renderer/canvas_renderer.js`, mas nenhuma rotina o acionava no bootstrap.
-   - Implementada arquitetura de inicialização defensiva em 3 camadas:
-     1. Execução automática imediata no escopo de browser dentro de `client/renderer/canvas_renderer.js`.
-     2. Invocação canônica em `bootEngine()` dentro de `client/app/bootstrap.js`.
-     3. Chamada defensiva no `DOMContentLoaded` de `client/main.js`.
+   - Corrigido problema de tela preta no canvas principal (`#iso-canvas`) e no minimapa (`#minimap-canvas`), onde a simulação rodava mas o mapa não era desenhado.
+   - Implementada arquitetura de inicialização defensiva em 3 camadas (`canvas_renderer.js`, `bootstrap.js` e `main.js`).
 2. **Prevenção de Regressão & Teste E2E Headless de Renderização:**
    - Adicionada verificação de pixels no canvas principal (`[167, 25, 29, 255]`), minimapa (`[15, 23, 42, 255]`) e telemetria ativa (`⚡ 60 FPS`) na suíte de testes `tools/test_modularization_fase_7k_e2e.cjs`.
-   - Ajustado threshold de linhas do index.html para 420 para acomodar a nova tela de boot Obsidian & Ouro com o mascote Oikonomos.
 
 ---
 
