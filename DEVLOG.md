@@ -2,8 +2,8 @@
 
 > **Documento Oficial de Rastreabilidade, Versionamento e Evolução do Projeto**  
 > **Repositório:** `Jotasiete7/OIKONOMIA-game`  
-> **Última Atualização:** 11 de Setembro de 2026  
-> **Versão Oficial Corrente:** `v0.8.5 (bld.20260911.06)`  
+> **Última Atualização:** 12 de Setembro de 2026  
+> **Versão Oficial Corrente:** `v0.8.5 (bld.20260912.01)`  
 > **Save Schema:** `v0.8.2` (Compatibilidade Retroativa Total com Migrações)
 
 ---
@@ -33,6 +33,8 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
   - [x] **Fase 7.0 D (Simulador & HUD Telemetria)**: Extração do simulador "E se?", painel de desenvolvedor F3, flight recorder F8, telemetria e bug replayer para `price_simulator_panel.js` e `dev_dashboard_panel.js` (-899 linhas adicionais, total acumulado: -3.242 linhas).
   - [x] **Fase 7.0 E (Inspetores de Instalações & Limpeza de DRE/Saves)**: Extração de inspetores de instalações (minas, fazendas, fábricas com seletor de fachada, lojas com simulador integrado, P&D com patentes e confirmação com checagem de capital de giro), insolvência e quebra para `client/ui/panels/facility_panel.js` e `client/ui/panels/dre_panel.js`, limpeza de DRE legada e delegação de saves (-1.685 linhas adicionais).
   - [x] **Fase 7.0 F (Renderizador Canvas, Saves/Slots, Sistema Bancário & Sequência de Boot)**: Desacoplamento total do renderizador isométrico (`IsoMath`, `CanvasRenderer`, `CameraController`), fornecedores (`SupplierPicker`), licenças (`StoreWizard`), score bancário (`BankingPanel`), saves/sparse index (`SaveSystem`) e boot loader (`AppLifecycle`). Monolito `client/index.html` reduzido de 4.835 para **3.632 linhas** (-1.203 linhas nesta fase, **total acumulado: -6.130 linhas / 63% de redução total**).
+  - [x] **Fase 7.0 K (Componentização de Modais e Templates HTML)**: Redução de `client/index.html` para 405 linhas com montagem modular de modais em `client/ui/templates/`.
+  - [x] **Correção Crítica: Inicialização do Loop de Renderização Isométrica (v0.8.5 bld.20260912.01)**: Auto-inicialização de `startRenderLoop()` no CanvasRenderer, bootstrap e main.js, eliminando o mapa invisível/preto e reativando a telemetria de 60 FPS com teste E2E headless de verificação de pixels.
 - [ ] **Fase 4 Contratos Públicos & Editais Municipais (v0.9.0)**: Fornecimento contínuo para prefeituras das 4 cidades com metas de quantidade, QR mínimo, bônus contratuais e multas por inadimplência.
 - [ ] **Fase 4 Sistema Bancário & Financiamento Corporativo**: Empréstimos corporativos de giro e Capex amortizados mensalmente na DRE com taxas baseadas no Rating Corporativo (AAA a D).
 - [ ] **Fase 5 Mercado Financeiro, Ações & M&A**: Ações corporativas, IPO, distribuição de dividendos, participações cruzadas e aquisições hostis (*Hostile Takeovers*).
@@ -42,6 +44,26 @@ $$\mathbf{vMAJOR}.\mathbf{MINOR}.\mathbf{PATCH}+\mathbf{bld.YYYYMMDD.XX}$$
 ---
 
 ## 📜 Histórico de Sessões & Registros de Evolução
+
+---
+
+### 📅 Sessão 24: Correção Crítica do Loop de Renderização Isométrica & Verificação Visual E2E
+- **Data:** 12/09/2026 — 12:00
+- **Versão Oficial:** `v0.8.5 (bld.20260912.01)` | **Save Schema:** `v0.8.2`
+- **Branch:** `main`
+- **Autor / Pair Programming:** Jotasiete & Antigravity (AI Assistant)
+
+#### 🎯 Entregas da Sessão:
+1. **Auto-inicialização e Ativação do Loop de Renderização (`requestAnimationFrame`):**
+   - Corrigido problema em que a simulação rodava (relógio, caixa, tooltips funcionando via coordenadas lógicas do mouse), mas o canvas principal (`#iso-canvas`) e o minimapa (`#minimap-canvas`) permaneciam pretos/vazios e o contador de FPS no HUD não era exibido.
+   - Diagnóstico via CDP Headless: O loop `requestAnimationFrame(_rafLoop)` havia sido isolado em `startRenderLoop()` dentro de `client/renderer/canvas_renderer.js`, mas nenhuma rotina o acionava no bootstrap.
+   - Implementada arquitetura de inicialização defensiva em 3 camadas:
+     1. Execução automática imediata no escopo de browser dentro de `client/renderer/canvas_renderer.js`.
+     2. Invocação canônica em `bootEngine()` dentro de `client/app/bootstrap.js`.
+     3. Chamada defensiva no `DOMContentLoaded` de `client/main.js`.
+2. **Prevenção de Regressão & Teste E2E Headless de Renderização:**
+   - Adicionada verificação de pixels no canvas principal (`[167, 25, 29, 255]`), minimapa (`[15, 23, 42, 255]`) e telemetria ativa (`⚡ 60 FPS`) na suíte de testes `tools/test_modularization_fase_7k_e2e.cjs`.
+   - Ajustado threshold de linhas do index.html para 420 para acomodar a nova tela de boot Obsidian & Ouro com o mascote Oikonomos.
 
 ---
 

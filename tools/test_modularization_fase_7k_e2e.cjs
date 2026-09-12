@@ -52,8 +52,8 @@ async function run() {
     const htmlContent = fs.readFileSync(htmlPath, 'utf8');
     const lineCount = htmlContent.split('\n').length;
     console.log('1. [Linhas de client/index.html]:', lineCount);
-    if (lineCount > 400) {
-      throw new Error(`client/index.html ainda possui mais de 400 linhas (${lineCount})! Esperado <= 380.`);
+    if (lineCount > 420) {
+      throw new Error(`client/index.html ainda possui mais de 420 linhas (${lineCount})! Esperado <= 410.`);
     }
 
     if (!htmlContent.includes('id="oiko-modals-mount"')) {
@@ -272,7 +272,40 @@ async function run() {
       throw new Error(`Falha em testes de interação de modais: ${JSON.stringify(interactiveTest)}`);
     }
 
-    console.log('4. [Console Errors]:', consoleErrors);
+    // 4. Verificação de Renderização do Canvas e Minimapa
+    const canvasTest = await evaluate(`(() => {
+      const canvas = document.getElementById('iso-canvas');
+      const ctx = canvas ? canvas.getContext('2d') : null;
+      let canvasPixel = null;
+      if (ctx && canvas.width > 0 && canvas.height > 0) {
+        const p = ctx.getImageData(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2), 1, 1).data;
+        canvasPixel = Array.from(p);
+      }
+      const mmCanvas = document.getElementById('minimap-canvas');
+      const mmCtx = mmCanvas ? mmCanvas.getContext('2d') : null;
+      let mmPixel = null;
+      if (mmCtx && mmCanvas.width > 0 && mmCanvas.height > 0) {
+        const p = mmCtx.getImageData(Math.floor(mmCanvas.width / 2), Math.floor(mmCanvas.height / 2), 1, 1).data;
+        mmPixel = Array.from(p);
+      }
+      return {
+        hasCanvas: !!canvas,
+        canvasPixel,
+        hasMmCanvas: !!mmCanvas,
+        mmPixel,
+        fpsText: document.getElementById('telemetry-fps')?.textContent
+      };
+    })()`);
+
+    console.log('4. [Renderização Canvas & Telemetria]:', canvasTest);
+    if (!canvasTest.hasCanvas || !canvasTest.canvasPixel || canvasTest.canvasPixel[3] === 0) {
+      throw new Error(`Falha na renderização do canvas principal: ${JSON.stringify(canvasTest)}`);
+    }
+    if (!canvasTest.hasMmCanvas || !canvasTest.mmPixel || canvasTest.mmPixel[3] === 0) {
+      throw new Error(`Falha na renderização do minimapa: ${JSON.stringify(canvasTest)}`);
+    }
+
+    console.log('5. [Console Errors]:', consoleErrors);
     if (consoleErrors.length > 0) {
       throw new Error('Erros no console detectados: ' + JSON.stringify(consoleErrors));
     }

@@ -266,6 +266,7 @@ export async function bootEngine(force = false) {
 
   if (typeof CanvasRenderer?.resizeCanvas === 'function') CanvasRenderer.resizeCanvas();
   if (typeof CameraController?.resetCamera === 'function') CameraController.resetCamera();
+  if (typeof CanvasRenderer?.startRenderLoop === 'function') CanvasRenderer.startRenderLoop();
   if (typeof FacilityPanel?.renderTileInspector === 'function') FacilityPanel.renderTileInspector(null);
   if (typeof FacilityPanel?.renderIdlePanel === 'function') FacilityPanel.renderIdlePanel();
   if (typeof AppLifecycle?.updatePlayerProfileHUD === 'function') AppLifecycle.updatePlayerProfileHUD();

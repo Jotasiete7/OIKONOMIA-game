@@ -394,7 +394,12 @@ if (typeof window !== 'undefined') {
   window.renderMap = renderMap;
   window.scheduleRender = scheduleRender;
   window.resizeCanvas = resizeCanvas;
+  window.startRenderLoop = startRenderLoop;
+  window.stopRenderLoop = stopRenderLoop;
+  window.getCurrentFps = getCurrentFps;
   window._needsRender = true;
+  startRenderLoop();
 }
 
 export default CanvasRenderer;
+

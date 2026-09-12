@@ -693,10 +693,12 @@ if (typeof window !== 'undefined') {
       document.addEventListener('DOMContentLoaded', () => {
         mountModalTemplates();
         bootEngine();
+        if (typeof startRenderLoop === 'function') startRenderLoop();
       });
     } else {
       mountModalTemplates();
       bootEngine();
+      if (typeof startRenderLoop === 'function') startRenderLoop();
     }
   }
 }
