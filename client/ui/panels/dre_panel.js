@@ -87,6 +87,23 @@ export function renderCashFlowView(customData = null) {
     opCashEl.className = operatingCash >= 0 ? 'text-emerald-400 text-sm font-bold tracking-tight' : 'text-rose-400 text-sm font-bold tracking-tight';
   }
 
+  // Caixa inicial do período = saldo atual menos lucro líquido (dedução contábil regressiva)
+  // Diferencia DFC da DRE: DRE mostra lucro (accrual), DFC mostra fluxo com saldo de abertura/encerramento
+  const beginningCash = currentCash - (d.net || 0);
+  const netChange = currentCash - beginningCash; // == d.net
+
+  const beginEl = document.getElementById('dfc-beginning-cash');
+  const netChangeEl = document.getElementById('dfc-net-change');
+
+  if (beginEl) {
+    beginEl.textContent = (beginningCash >= 0 ? '$' : '-$') + Math.abs(beginningCash).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    beginEl.className = beginningCash >= 0 ? 'text-slate-200 font-bold tracking-tight' : 'text-rose-400 font-bold tracking-tight';
+  }
+  if (netChangeEl) {
+    netChangeEl.textContent = (netChange >= 0 ? '+$' : '-$') + Math.abs(netChange).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    netChangeEl.className = netChange >= 0 ? 'text-emerald-400 font-mono tracking-tight' : 'text-rose-400 font-mono tracking-tight';
+  }
+
   if (loansEl) {
     if (totalDebt > 0) {
       loansEl.textContent = '-$' + totalDebt.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' (Passivo)';
