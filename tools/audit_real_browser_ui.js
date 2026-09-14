@@ -632,6 +632,7 @@ async function runBrowserAudit() {
     await cdp.captureScreenshot('screenshot_07_left_rail_executive.png');
 
     // ─────────────────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
     // TESTE REAL 8: Fichário de Relatórios Executivo (Caderno Ampliado & Abas)
     // ─────────────────────────────────────────────────────────────────────────
     console.log('\n--- TESTE REAL 8: Fichário de Relatórios Executivo (Caderno DRE/Balanço) ---');
@@ -645,26 +646,57 @@ async function runBrowserAudit() {
         const ledgerVisible = ledgerModal && !ledgerModal.classList.contains('hidden');
         const ledgerText = ledgerModal ? ledgerModal.innerText : '';
 
-        // 2. Testa navegação de abas (Balanço, Caixa, Despesas)
-        let balanceTabOk = false;
-        if (window.ReportsLedger && typeof window.ReportsLedger.switchTab === 'function') {
-          window.ReportsLedger.switchTab('balance');
-          balanceTabOk = ledgerModal.innerText.includes('Balanço') || ledgerModal.innerText.includes('Relatório');
-          window.ReportsLedger.switchTab('dre');
+        // 2. Testa navegação de abas no Fichário e no Modal Contábil Unificado (DRE / DFC / Balanço)
+        let dreViewOk = false;
+        let cashflowViewOk = false;
+        let balanceViewOk = false;
+
+        // Testa visão DRE
+        if (typeof window.openDREModal === 'function') {
+          window.openDREModal('dre');
+          const vDRE = document.getElementById('dre-view-dre');
+          const vDFC = document.getElementById('dre-view-cashflow');
+          const vBal = document.getElementById('dre-view-balance');
+          dreViewOk = !!(vDRE && !vDRE.classList.contains('hidden') && vDFC.classList.contains('hidden') && vBal.classList.contains('hidden'));
         }
 
-        // 3. Testa navegação fluida: atalho para Simulador de Cenários
+        // Testa visão Fluxo de Caixa (DFC)
+        if (typeof window.switchDREView === 'function') {
+          window.switchDREView('cashflow');
+          const vDRE = document.getElementById('dre-view-dre');
+          const vDFC = document.getElementById('dre-view-cashflow');
+          const vBal = document.getElementById('dre-view-balance');
+          const dfcContent = (vDFC ? (vDFC.textContent + ' ' + vDFC.innerText) : '').toLowerCase();
+          cashflowViewOk = !!(vDFC && !vDFC.classList.contains('hidden') && vDRE.classList.contains('hidden') && vBal.classList.contains('hidden') && (dfcContent.includes('atividades operacionais') || dfcContent.includes('caixa')));
+        }
+
+        // Testa visão Balanço Patrimonial
+        if (typeof window.switchDREView === 'function') {
+          window.switchDREView('balance');
+          const vDRE = document.getElementById('dre-view-dre');
+          const vDFC = document.getElementById('dre-view-cashflow');
+          const vBal = document.getElementById('dre-view-balance');
+          const balContent = (vBal ? (vBal.textContent + ' ' + vBal.innerText) : '').toLowerCase();
+          balanceViewOk = !!(vBal && !vBal.classList.contains('hidden') && vDRE.classList.contains('hidden') && vDFC.classList.contains('hidden') && (balContent.includes('total do ativo') || balContent.includes('patrimônio líquido')));
+        }
+
+        // 3. Testa navegação fluida: atalho para Simulador de Cenários a partir do DRE
+        if (typeof window.switchDREView === 'function') window.switchDREView('dre');
         let simModalVisible = false;
         let returnBtnPresent = false;
         if (typeof window.triggerPriceSimulationFromDRE === 'function') {
           window.triggerPriceSimulationFromDRE();
           const simModal = document.getElementById('price-simulator-modal');
-          simModalVisible = simModal && !simModal.classList.contains('hidden');
+          simModalVisible = !!(simModal && !simModal.classList.contains('hidden'));
           returnBtnPresent = simModal ? (simModal.innerText.includes('Fichário') || !!simModal.querySelector('button[title*="Fichário"]')) : false;
           if (typeof window.closePriceSimulatorModal === 'function') window.closePriceSimulatorModal();
         }
 
-        // 4. Fecha o Fichário
+        // 4. Fecha DRE e Fichário
+        if (typeof window.toggleDREModal === 'function') {
+          const dreModal = document.getElementById('dre-modal');
+          if (dreModal && !dreModal.classList.contains('hidden')) window.toggleDREModal();
+        }
         if (window.ReportsLedger && typeof window.ReportsLedger.close === 'function') {
           window.ReportsLedger.close();
         }
@@ -672,7 +704,9 @@ async function runBrowserAudit() {
         return {
           ledgerVisible,
           hasLedgerContent: ledgerText.includes('Fichário') || ledgerText.includes('CFO') || ledgerText.includes('DRE'),
-          balanceTabOk,
+          dreViewOk,
+          cashflowViewOk,
+          balanceViewOk,
           simModalVisible,
           returnBtnPresent
         };
@@ -680,8 +714,10 @@ async function runBrowserAudit() {
     `);
 
     console.log(`[T8.1] Fichário de Relatórios Aberto no DOM: ${test8.ledgerVisible && test8.hasLedgerContent ? '✅ PASSOU (Caderno Executivo DRE)' : '❌ FALHOU'}`);
-    console.log(`[T8.2] Alternância de Abas Contábeis (Balanço/DRE): ${test8.balanceTabOk ? '✅ PASSOU' : '⚠️ Verificado'}`);
-    console.log(`[T8.3] Atalho para Simulador com Botão "← Fichário": ${test8.simModalVisible && test8.returnBtnPresent ? '✅ PASSOU (Navegação bidirecional fluida)' : '❌ FALHOU'}`);
+    console.log(`[T8.2] Visão DRE Consolidada Ativa: ${test8.dreViewOk ? '✅ PASSOU' : '❌ FALHOU'}`);
+    console.log(`[T8.3] Visão DFC (Fluxo de Caixa) com Conteúdo Real: ${test8.cashflowViewOk ? '✅ PASSOU' : '❌ FALHOU'}`);
+    console.log(`[T8.4] Visão Balanço Patrimonial com Ativos & PL: ${test8.balanceViewOk ? '✅ PASSOU' : '❌ FALHOU'}`);
+    console.log(`[T8.5] Atalho para Simulador com Botão "← Fichário": ${test8.simModalVisible && test8.returnBtnPresent ? '✅ PASSOU (Navegação bidirecional fluida)' : '❌ FALHOU'}`);
     await cdp.captureScreenshot('screenshot_08_reports_ledger.png');
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -692,7 +728,13 @@ async function runBrowserAudit() {
       (() => {
         const btn = document.getElementById('oikonomos-advisor-btn');
         const pop = document.getElementById('oikonomos-popover');
-        const hasAvatar = btn && !!btn.querySelector('img');
+        const img = btn ? btn.querySelector('img') : null;
+        const fallbackSpan = btn ? btn.querySelector('span') : null;
+        const avatarImgPresent = !!img;
+        const avatarSrcValid = !!(img && img.src && (img.src.includes('oikonomos_avatar') || img.src.includes('assets/')));
+        const avatarLoadedReal = !!(img && img.complete && img.naturalWidth > 0);
+        const fallbackHidden = fallbackSpan ? (fallbackSpan.style.display === 'none' || fallbackSpan.classList.contains('hidden') || getComputedStyle(fallbackSpan).display === 'none') : true;
+        const hasAvatar = avatarImgPresent && avatarSrcValid && avatarLoadedReal && fallbackHidden;
 
         // Abre popover
         if (window.OikonomosBtn && typeof window.OikonomosBtn.open === 'function') {
@@ -734,7 +776,7 @@ async function runBrowserAudit() {
       })()
     `);
 
-    console.log(`[T9.1] Botão do Oikonomos com Avatar Oficial: ${test9.hasAvatar ? '✅ PASSOU' : '❌ FALHOU'}`);
+    console.log(`[T9.1] Avatar do Oikonomos Carregado (naturalWidth > 0, fallback oculto): ${test9.hasAvatar ? '✅ PASSOU' : '❌ FALHOU'}`);
     console.log(`[T9.2] Popover Aberto com Aba "🚨 Diagnóstico": ${test9.popVisible && test9.hasDiagText ? '✅ PASSOU' : '❌ FALHOU'}`);
     console.log(`[T9.3] Aba "💡 Dica do Mentor" com Rotação de Sabedoria: ${test9.hasTipText && test9.tipsRotated ? '✅ PASSOU' : '❌ FALHOU'}`);
     console.log(`[T9.4] Fechamento Seguro do Popover: ${test9.popClosed ? '✅ PASSOU' : '❌ FALHOU'}`);

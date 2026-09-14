@@ -1,16 +1,16 @@
-  <!-- 6. GAVETA FLUTUANTE DRE (DESIGN EXECUTIVO) -->
+  <!-- 6. GAVETA FLUTUANTE DRE / DFC / BALANÇO (DESIGN EXECUTIVO) -->
   <div id="dre-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center hidden" onclick="if(event.target===this)toggleDREModal()">
     <div class="bg-[#0b0e14] border border-white/[0.08] rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] w-full max-w-lg mx-4 overflow-hidden flex flex-col font-mono" onclick="event.stopPropagation()">
       <div class="bg-[#0d1017] px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between drag-handle select-none shrink-0">
         <div class="flex items-center gap-2.5">
           <span class="drag-grip-icon text-slate-500 font-mono text-sm" title="Arrastar Janela">⋮⋮</span>
-          <div class="w-8 h-8 rounded-lg bg-[#c9a86a]/10 border border-[#c9a86a]/25 flex items-center justify-center text-sm shadow-inner shrink-0">📊</div>
+          <div id="dre-header-icon" class="w-8 h-8 rounded-lg bg-[#c9a86a]/10 border border-[#c9a86a]/25 flex items-center justify-center text-sm shadow-inner shrink-0">📊</div>
           <div>
-            <h3 class="text-xs font-semibold text-[#f1f5f9] tracking-wide flex items-center gap-2">
+            <h3 id="dre-header-title" class="text-xs font-semibold text-[#f1f5f9] tracking-wide flex items-center gap-2">
               Demonstrativo de Resultados (DRE Consolidada)
               <span class="text-[9px] bg-[#c9a86a]/15 text-[#c9a86a] font-mono px-1.5 py-0.5 rounded border border-[#c9a86a]/30 font-normal">Holding</span>
             </h3>
-            <span class="text-[9px] text-slate-400 font-mono block mt-0.5">Visão consolidada de receitas brutas, custos de insumo, fixos e resultado</span>
+            <span id="dre-header-subtitle" class="text-[9px] text-slate-400 font-mono block mt-0.5">Visão consolidada de receitas brutas, custos de insumo, fixos e resultado</span>
           </div>
         </div>
         <div class="flex items-center gap-2">
@@ -19,7 +19,23 @@
           </button>
           <button onclick="toggleDREModal()" class="w-7 h-7 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-slate-400 hover:text-white text-xs font-mono transition flex items-center justify-center cursor-pointer" title="Fechar [Esc]">✕</button>
         </div>
-      <div class="p-5 space-y-3 font-mono text-xs bg-[#080a0d]">
+      </div>
+
+      <!-- Abas da Central Financeira: DRE / Fluxo de Caixa / Balanço -->
+      <div class="flex items-center gap-1 px-5 pt-2 pb-0 bg-[#080a0d] border-b border-white/[0.06] text-[10px] select-none">
+        <button id="dre-tab-btn-dre" onclick="switchDREView('dre')" class="px-2.5 py-1 rounded-t-lg bg-[#c9a86a]/15 text-[#c9a86a] font-bold border-t border-x border-[#c9a86a]/40 cursor-pointer transition">
+          📊 DRE Consolidada
+        </button>
+        <button id="dre-tab-btn-cashflow" onclick="switchDREView('cashflow')" class="px-2.5 py-1 rounded-t-lg text-slate-400 hover:text-slate-200 border-t border-x border-transparent hover:border-white/[0.08] cursor-pointer transition">
+          💧 Fluxo de Caixa (DFC)
+        </button>
+        <button id="dre-tab-btn-balance" onclick="switchDREView('balance')" class="px-2.5 py-1 rounded-t-lg text-slate-400 hover:text-slate-200 border-t border-x border-transparent hover:border-white/[0.08] cursor-pointer transition">
+          ⚖️ Balanço Patrimonial
+        </button>
+      </div>
+
+      <!-- 1. VISÃO DRE CONSOLIDADA -->
+      <div id="dre-view-dre" class="p-5 space-y-3 font-mono text-xs bg-[#080a0d]">
         <div class="flex justify-between items-center text-slate-300 py-1.5 border-b border-white/[0.04]">
           <span class="text-slate-400 font-medium">(+) Receita Bruta (Varejo):</span>
           <strong id="dre-gross-sales" class="text-emerald-400 font-bold tracking-tight">+$0.00</strong>
@@ -56,6 +72,88 @@
               <span>🏢</span> DRE por Prédio
             </button>
           </div>
+        </div>
+      </div>
+
+      <!-- 2. VISÃO FLUXO DE CAIXA (DFC) -->
+      <div id="dre-view-cashflow" class="p-5 space-y-3 font-mono text-xs bg-[#080a0d] hidden">
+        <div class="text-[10px] text-[#c9a86a] uppercase tracking-widest font-bold pb-1 border-b border-white/[0.06]">
+          Atividades Operacionais
+        </div>
+        <div class="flex justify-between items-center text-slate-300 py-1 border-b border-white/[0.04]">
+          <span class="text-slate-400">(+) Recebimentos de Clientes (Vendas):</span>
+          <strong id="dfc-operating-inflow" class="text-emerald-400 font-bold tracking-tight">+$0.00</strong>
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1 border-b border-white/[0.04]">
+          <span>(-) Pagamentos a Fornecedores (CPV + Fretes):</span>
+          <strong id="dfc-operating-cogs" class="text-rose-400 font-bold tracking-tight">-$0.00</strong>
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1 border-b border-white/[0.04]">
+          <span>(-) Despesas Fixas (Salários + Aluguéis de Solo):</span>
+          <strong id="dfc-operating-opex" class="text-rose-400 font-bold tracking-tight">-$0.00</strong>
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1 border-b border-white/[0.04]">
+          <span>(-) Campanhas de Marketing & Mídia:</span>
+          <strong id="dfc-operating-mkt" class="text-rose-400 font-bold tracking-tight">-$0.00</strong>
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1 border-b border-white/[0.04]">
+          <span>(-) Juros Bancários Pagos:</span>
+          <strong id="dfc-operating-financial" class="text-rose-400 font-bold tracking-tight">-$0.00</strong>
+        </div>
+        <div class="border border-white/[0.08] bg-[#121620] p-2.5 rounded-xl flex justify-between items-center font-bold">
+          <span class="text-slate-300 text-[11px] uppercase">Geração de Caixa Operacional:</span>
+          <strong id="dfc-net-operating-cash" class="text-emerald-400 text-sm font-bold tracking-tight">$0.00</strong>
+        </div>
+
+        <div class="text-[10px] text-[#c9a86a] uppercase tracking-widest font-bold pt-1 pb-1 border-b border-white/[0.06]">
+          Atividades de Financiamento & Saldo Final
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1 border-b border-white/[0.04]">
+          <span>(+/-) Empréstimos & Dívidas Bancárias:</span>
+          <strong id="dfc-financing-loans" class="text-slate-200 font-mono tracking-tight">$0.00</strong>
+        </div>
+        <div class="border border-[#c9a86a]/30 bg-[#c9a86a]/10 p-3 rounded-xl flex justify-between items-center shadow-sm">
+          <span class="text-[#c9a86a] font-bold text-xs uppercase tracking-wider">SALDO TOTAL EM CAIXA (LÍQUIDO):</span>
+          <strong id="dfc-ending-cash" class="text-emerald-300 text-base font-bold tracking-tight">$0.00</strong>
+        </div>
+      </div>
+
+      <!-- 3. VISÃO BALANÇO PATRIMONIAL -->
+      <div id="dre-view-balance" class="p-5 space-y-3 font-mono text-xs bg-[#080a0d] hidden">
+        <div class="text-[10px] text-[#c9a86a] uppercase tracking-widest font-bold pb-1 border-b border-white/[0.06]">
+          Ativo (Bens e Direitos)
+        </div>
+        <div class="flex justify-between items-center text-slate-300 py-1 border-b border-white/[0.04]">
+          <span class="text-slate-400">(+) Ativo Circulante — Caixa & Bancos:</span>
+          <strong id="bal-cash" class="text-emerald-400 font-bold tracking-tight">$0.00</strong>
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1 border-b border-white/[0.04]">
+          <span>(+) Ativo Circulante — Estoques (Lojas / Fábricas):</span>
+          <strong id="bal-inventories" class="text-slate-200 font-bold tracking-tight">$0.00</strong>
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1 border-b border-white/[0.04]">
+          <span>(+) Ativo Imobilizado — Terrenos Comerciais & Rurais:</span>
+          <strong id="bal-land" class="text-slate-200 font-bold tracking-tight">$0.00</strong>
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1 border-b border-white/[0.04]">
+          <span>(+) Ativo Imobilizado — Obras, Prédios & Instalações:</span>
+          <strong id="bal-facilities" class="text-slate-200 font-bold tracking-tight">$0.00</strong>
+        </div>
+        <div class="border border-white/[0.08] bg-[#121620] p-2.5 rounded-xl flex justify-between items-center font-bold">
+          <span class="text-slate-300 text-[11px] uppercase">TOTAL DO ATIVO:</span>
+          <strong id="bal-total-assets" class="text-emerald-400 text-sm font-bold tracking-tight">$0.00</strong>
+        </div>
+
+        <div class="text-[10px] text-[#c9a86a] uppercase tracking-widest font-bold pt-1 pb-1 border-b border-white/[0.06]">
+          Passivo & Patrimônio Líquido
+        </div>
+        <div class="flex justify-between items-center text-slate-400 py-1 border-b border-white/[0.04]">
+          <span>(-) Passivo Exigível — Dívidas Bancárias / Cheque Especial:</span>
+          <strong id="bal-total-debt" class="text-rose-400 font-bold tracking-tight">-$0.00</strong>
+        </div>
+        <div class="border border-[#c9a86a]/30 bg-[#c9a86a]/10 p-3 rounded-xl flex justify-between items-center shadow-sm">
+          <span class="text-[#c9a86a] font-bold text-xs uppercase tracking-wider">PATRIMÔNIO LÍQUIDO CONSOLIDADO:</span>
+          <strong id="bal-net-worth" class="text-emerald-300 text-base font-bold tracking-tight">$0.00</strong>
         </div>
       </div>
     </div>

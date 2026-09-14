@@ -13,7 +13,20 @@ import GameState from '../../game_state.js';
 import { STORE_TYPES } from '../../data_catalogs.js';
 import MacroCycleSystem from '../../macro_cycle_system.js';
 
+let lastDREData = {
+  gross: 0,
+  cogs: 0,
+  rent: 0,
+  mkt: 0,
+  net: 0,
+  financial: 0,
+  netWorth: 0
+};
+let currentDREView = 'dre';
+
 export function syncDREValues(gross, cogs, rent, mkt, net, financial = 0, netWorth = 0) {
+  lastDREData = { gross, cogs, rent, mkt, net, financial, netWorth };
+
   const gEl = document.getElementById('dre-gross-sales');
   const cEl = document.getElementById('dre-cogs');
   const rEl = document.getElementById('dre-rent');
@@ -35,6 +48,152 @@ export function syncDREValues(gross, cogs, rent, mkt, net, financial = 0, netWor
     nwEl.textContent = (netWorth >= 0 ? '$' : '-$') + Math.abs(netWorth).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     nwEl.className = netWorth >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold';
   }
+
+  // Mantém visões secundárias sincronizadas se ativas
+  if (currentDREView === 'cashflow') {
+    renderCashFlowView();
+  } else if (currentDREView === 'balance') {
+    renderBalanceSheetView();
+  }
+}
+
+export function renderCashFlowView(customData = null) {
+  const d = customData || lastDREData;
+  const currentCash = (typeof GameState !== 'undefined' && GameState.cash !== undefined)
+    ? GameState.cash
+    : ((typeof window !== 'undefined' && window.cash !== undefined) ? window.cash : 0);
+  const totalDebt = (typeof GameState !== 'undefined' && GameState.banking?.totalDebt !== undefined)
+    ? GameState.banking.totalDebt
+    : ((typeof window !== 'undefined' && window.totalDebt !== undefined) ? window.totalDebt : 0);
+
+  const inEl = document.getElementById('dfc-operating-inflow');
+  const cogsEl = document.getElementById('dfc-operating-cogs');
+  const opexEl = document.getElementById('dfc-operating-opex');
+  const mktEl = document.getElementById('dfc-operating-mkt');
+  const finEl = document.getElementById('dfc-operating-financial');
+  const opCashEl = document.getElementById('dfc-net-operating-cash');
+  const loansEl = document.getElementById('dfc-financing-loans');
+  const endCashEl = document.getElementById('dfc-ending-cash');
+
+  if (inEl) inEl.textContent = '+$' + (d.gross || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (cogsEl) cogsEl.textContent = '-$' + (d.cogs || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (opexEl) opexEl.textContent = '-$' + (d.rent || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (mktEl) mktEl.textContent = '-$' + (d.mkt || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (finEl) finEl.textContent = '-$' + (d.financial || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const operatingCash = (d.gross || 0) - (d.cogs || 0) - (d.rent || 0) - (d.mkt || 0) - (d.financial || 0);
+  if (opCashEl) {
+    opCashEl.textContent = (operatingCash >= 0 ? '+$' : '-$') + Math.abs(operatingCash).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    opCashEl.className = operatingCash >= 0 ? 'text-emerald-400 text-sm font-bold tracking-tight' : 'text-rose-400 text-sm font-bold tracking-tight';
+  }
+
+  if (loansEl) {
+    if (totalDebt > 0) {
+      loansEl.textContent = '-$' + totalDebt.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' (Passivo)';
+      loansEl.className = 'text-amber-400 font-mono tracking-tight';
+    } else {
+      loansEl.textContent = '$0.00 (Sem dívidas ativas)';
+      loansEl.className = 'text-slate-400 font-mono tracking-tight';
+    }
+  }
+
+  if (endCashEl) {
+    endCashEl.textContent = (currentCash >= 0 ? '+$' : '-$') + Math.abs(currentCash).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    endCashEl.className = currentCash >= 0 ? 'text-emerald-300 text-base font-bold tracking-tight' : 'text-rose-400 text-base font-bold tracking-tight';
+  }
+}
+
+export function renderBalanceSheetView() {
+  const nw = calculateCorporateNetWorth();
+
+  const cashEl = document.getElementById('bal-cash');
+  const invEl = document.getElementById('bal-inventories');
+  const landEl = document.getElementById('bal-land');
+  const facEl = document.getElementById('bal-facilities');
+  const assetsEl = document.getElementById('bal-total-assets');
+  const debtEl = document.getElementById('bal-total-debt');
+  const nwEl = document.getElementById('bal-net-worth');
+
+  if (cashEl) {
+    cashEl.textContent = (nw.cash >= 0 ? '$' : '-$') + Math.abs(nw.cash).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    cashEl.className = nw.cash >= 0 ? 'text-emerald-400 font-bold tracking-tight' : 'text-rose-400 font-bold tracking-tight';
+  }
+  if (invEl) invEl.textContent = '$' + nw.inventoryTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (landEl) landEl.textContent = '$' + nw.landTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (facEl) facEl.textContent = '$' + nw.facilitiesTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (assetsEl) {
+    assetsEl.textContent = '$' + nw.totalAssets.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    assetsEl.className = 'text-emerald-400 text-sm font-bold tracking-tight';
+  }
+  if (debtEl) {
+    debtEl.textContent = (nw.totalLiabilities > 0 ? '-$' : '$') + nw.totalLiabilities.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    debtEl.className = nw.totalLiabilities > 0 ? 'text-rose-400 font-bold tracking-tight' : 'text-slate-400 font-bold tracking-tight';
+  }
+  if (nwEl) {
+    nwEl.textContent = (nw.netWorth >= 0 ? '$' : '-$') + Math.abs(nw.netWorth).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    nwEl.className = nw.netWorth >= 0 ? 'text-emerald-300 text-base font-bold tracking-tight' : 'text-rose-400 text-base font-bold tracking-tight';
+  }
+}
+
+export function switchDREView(viewName = 'dre') {
+  currentDREView = (viewName === 'cashflow' || viewName === 'balance') ? viewName : 'dre';
+
+  const viewDRE = document.getElementById('dre-view-dre');
+  const viewCashFlow = document.getElementById('dre-view-cashflow');
+  const viewBalance = document.getElementById('dre-view-balance');
+
+  const btnDRE = document.getElementById('dre-tab-btn-dre');
+  const btnCashFlow = document.getElementById('dre-tab-btn-cashflow');
+  const btnBalance = document.getElementById('dre-tab-btn-balance');
+
+  const headerTitle = document.getElementById('dre-header-title');
+  const headerSubtitle = document.getElementById('dre-header-subtitle');
+  const headerIcon = document.getElementById('dre-header-icon');
+
+  const activeBtnClass = 'px-2.5 py-1 rounded-t-lg bg-[#c9a86a]/15 text-[#c9a86a] font-bold border-t border-x border-[#c9a86a]/40 cursor-pointer transition';
+  const inactiveBtnClass = 'px-2.5 py-1 rounded-t-lg text-slate-400 hover:text-slate-200 border-t border-x border-transparent hover:border-white/[0.08] cursor-pointer transition';
+
+  if (viewDRE) viewDRE.classList.add('hidden');
+  if (viewCashFlow) viewCashFlow.classList.add('hidden');
+  if (viewBalance) viewBalance.classList.add('hidden');
+
+  if (btnDRE) btnDRE.className = inactiveBtnClass;
+  if (btnCashFlow) btnCashFlow.className = inactiveBtnClass;
+  if (btnBalance) btnBalance.className = inactiveBtnClass;
+
+  if (currentDREView === 'cashflow') {
+    if (viewCashFlow) viewCashFlow.classList.remove('hidden');
+    if (btnCashFlow) btnCashFlow.className = activeBtnClass;
+    if (headerIcon) headerIcon.textContent = '💧';
+    if (headerTitle) {
+      headerTitle.innerHTML = 'Demonstrativo de Fluxo de Caixa (DFC) <span class="text-[9px] bg-sky-500/15 text-sky-400 font-mono px-1.5 py-0.5 rounded border border-sky-500/30 font-normal">Liquidez</span>';
+    }
+    if (headerSubtitle) {
+      headerSubtitle.textContent = 'Entradas e saídas de caixa operacionais, investimentos e saldo líquido';
+    }
+    renderCashFlowView();
+  } else if (currentDREView === 'balance') {
+    if (viewBalance) viewBalance.classList.remove('hidden');
+    if (btnBalance) btnBalance.className = activeBtnClass;
+    if (headerIcon) headerIcon.textContent = '⚖️';
+    if (headerTitle) {
+      headerTitle.innerHTML = 'Balanço Patrimonial Consolidado <span class="text-[9px] bg-amber-500/15 text-amber-400 font-mono px-1.5 py-0.5 rounded border border-amber-500/30 font-normal">Patrimônio</span>';
+    }
+    if (headerSubtitle) {
+      headerSubtitle.textContent = 'Estrutura de Ativos (caixa, estoques, imóveis), Passivos e Patrimônio Líquido';
+    }
+    renderBalanceSheetView();
+  } else {
+    if (viewDRE) viewDRE.classList.remove('hidden');
+    if (btnDRE) btnDRE.className = activeBtnClass;
+    if (headerIcon) headerIcon.textContent = '📊';
+    if (headerTitle) {
+      headerTitle.innerHTML = 'Demonstrativo de Resultados (DRE Consolidada) <span class="text-[9px] bg-[#c9a86a]/15 text-[#c9a86a] font-mono px-1.5 py-0.5 rounded border border-[#c9a86a]/30 font-normal">Holding</span>';
+    }
+    if (headerSubtitle) {
+      headerSubtitle.textContent = 'Visão consolidada de receitas brutas, custos de insumo, fixos e resultado';
+    }
+  }
 }
 
 export function openFacilityDREModal() {
@@ -49,9 +208,33 @@ export function closeFacilityDREModal() {
   if (m) m.classList.add('hidden');
 }
 
-export function toggleDREModal() {
+export function openDREModal(viewName = 'dre') {
   const m = document.getElementById('dre-modal');
-  if (m) m.classList.toggle('hidden');
+  if (!m) return;
+  switchDREView(viewName || 'dre');
+  m.classList.remove('hidden');
+}
+
+export function toggleDREModal(viewName = null) {
+  const m = document.getElementById('dre-modal');
+  if (!m) return;
+  if (viewName) {
+    if (m.classList.contains('hidden')) {
+      switchDREView(viewName);
+      m.classList.remove('hidden');
+    } else {
+      if (currentDREView === viewName) {
+        m.classList.add('hidden');
+      } else {
+        switchDREView(viewName);
+      }
+    }
+  } else {
+    m.classList.toggle('hidden');
+    if (!m.classList.contains('hidden')) {
+      switchDREView(currentDREView || 'dre');
+    }
+  }
 }
 
 export function triggerPriceSimulationFromDRE() {
@@ -434,6 +617,10 @@ export function showBankruptcyModal(nwObj) {
 
 export const DREPanel = {
   syncDREValues,
+  renderCashFlowView,
+  renderBalanceSheetView,
+  switchDREView,
+  openDREModal,
   openFacilityDREModal,
   closeFacilityDREModal,
   toggleDREModal,
@@ -448,6 +635,10 @@ export const DREPanel = {
 if (typeof window !== 'undefined') {
   window.DREPanel = DREPanel;
   window.syncDREValues = syncDREValues;
+  window.renderCashFlowView = renderCashFlowView;
+  window.renderBalanceSheetView = renderBalanceSheetView;
+  window.switchDREView = switchDREView;
+  window.openDREModal = openDREModal;
   window.openFacilityDREModal = openFacilityDREModal;
   window.closeFacilityDREModal = closeFacilityDREModal;
   window.toggleDREModal = toggleDREModal;

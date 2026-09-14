@@ -78,9 +78,13 @@ export function bindGlobalPanelMethods() {
 
   // DRE & Finanças Corporativas (DREPanel)
   window.syncDREValues = (g, c, r, m, n, f, nw) => DREPanel.syncDREValues(g, c, r, m, n, f, nw);
+  window.renderCashFlowView = (d) => DREPanel.renderCashFlowView(d);
+  window.renderBalanceSheetView = () => DREPanel.renderBalanceSheetView();
+  window.switchDREView = (v) => DREPanel.switchDREView(v);
+  window.openDREModal = (v) => DREPanel.openDREModal(v);
   window.openFacilityDREModal = () => DREPanel.openFacilityDREModal();
   window.closeFacilityDREModal = () => DREPanel.closeFacilityDREModal();
-  window.toggleDREModal = () => DREPanel.toggleDREModal();
+  window.toggleDREModal = (v) => DREPanel.toggleDREModal(v);
   window.triggerPriceSimulationFromDRE = () => DREPanel.triggerPriceSimulationFromDRE();
   window.calculateCorporateNetWorth = () => DREPanel.calculateCorporateNetWorth();
   window.renderFacilityDRETable = () => DREPanel.renderFacilityDRETable();

@@ -695,6 +695,8 @@ if (typeof window !== 'undefined') {
   window.initMasterData = initMasterData;
   window.initInteractionState = initInteractionState;
   window.bindGlobalPanelMethods = bindGlobalPanelMethods;
+  window.openDREModal = (v) => DREPanel.openDREModal(v);
+  window.switchDREView = (v) => DREPanel.switchDREView(v);
 
   window.__OIKO_MODULES_READY__ = true;
   window.dispatchEvent(new CustomEvent('oiko:ready'));
