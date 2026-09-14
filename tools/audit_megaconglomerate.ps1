@@ -4,7 +4,7 @@
 
 param(
     [string]$EdgePath = "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-    [string]$GameUrl = "file:///D:/OIKONOMIA%20PROJETO/client/index.html"
+    [string]$GameUrl = "file:///D:/OIKONOMIA%20PROJETO/dist/index.html"
 )
 
 $ErrorActionPreference = "Stop"
@@ -16,6 +16,7 @@ Write-Host "================================================================`n" 
 $proc = Start-Process -FilePath $EdgePath -ArgumentList @(
     "--headless=new",
     "--remote-debugging-port=9222",
+    "--allow-file-access-from-files",
     "--disable-gpu",
     "--no-first-run",
     "--no-default-browser-check",
@@ -87,7 +88,25 @@ try {
     $null = Send-CDP "Runtime.enable"
     $null = Send-CDP "DOM.enable"
     $null = Send-CDP "Page.navigate" @{ url = $GameUrl }
-    Start-Sleep -Milliseconds 2000
+    Start-Sleep -Milliseconds 2500
+
+    $waitModules = @"
+      new Promise((resolve) => {
+        if (window.__OIKO_MODULES_READY__ || typeof window.StoreWizard !== 'undefined') {
+          if (typeof syncGlobalModuleBindings === 'function') syncGlobalModuleBindings();
+          return resolve(true);
+        }
+        window.addEventListener('oiko:ready', () => {
+          if (typeof syncGlobalModuleBindings === 'function') syncGlobalModuleBindings();
+          resolve(true);
+        }, { once: true });
+        setTimeout(() => {
+          if (typeof syncGlobalModuleBindings === 'function') syncGlobalModuleBindings();
+          resolve(true);
+        }, 3500);
+      })
+"@
+    $null = Eval-JS $waitModules
 
     Write-Host "Injetando Holding Megaconglomerada no DOM..." -ForegroundColor Yellow
     $runnerCode = [System.IO.File]::ReadAllText("d:\OIKONOMIA PROJETO\tools\audit_megaconglomerate_runner.js", [System.Text.Encoding]::UTF8)

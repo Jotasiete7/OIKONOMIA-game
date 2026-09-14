@@ -139,7 +139,7 @@
     "finalYear": 2027,
     "finalCash": 326425,
     "dreVisible": true,
-    "dreTextSample": "⋮⋮\n📊 Demonstrativo de Resultados (DRE Consolidada)\n✕\n(+) Receita Bruta (Varejo):\n+$0,00\n(-) Custo das Mercadorias (CPV + Frete):\n-$0,00\n(-) Aluguéis "
+    "dreTextSample": "⋮⋮\n📊\nDemonstrativo de Resultados (DRE Consolidada)\nHolding\nVisão consolidada de receitas brutas, custos de insumo, fixos e resultado\n←\nFichário\n✕\n(+)"
   },
   "system2": {
     "testMontargisLockBefore": true,

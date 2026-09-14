@@ -1,6 +1,6 @@
 ﻿{
-    "version":  "v0.8.3 (bld.20260831.02)",
-    "timestamp":  "2026-09-01T13:45:17.455Z",
+    "version":  "v0.8.5 (bld.20260911.07)",
+    "timestamp":  "2026-09-14T10:52:45.286Z",
     "phases":  {
                    "phase1_difficulties":  {
                                                "totalPresets":  3,
@@ -88,9 +88,9 @@
                                                                    {
                                                                        "element":  "PriceSimulator",
                                                                        "simOpen":  true,
-                                                                       "salesText":  "90 un/dia",
+                                                                       "salesText":  "185 un/dia",
                                                                        "marginText":  "+378%",
-                                                                       "profitText":  "+$6,939/mês",
+                                                                       "profitText":  "+$14,232/mês",
                                                                        "newPriceApplied":  false
                                                                    },
                                                                    {
@@ -102,10 +102,10 @@
                                                                    {
                                                                        "element":  "RDReturnCalculator",
                                                                        "roiBoxVisible":  true,
-                                                                       "calcVolume":  "4.260 un/mês",
+                                                                       "calcVolume":  "4.292 un/mês",
                                                                        "calcStores":  "2 lojas",
-                                                                       "calcGain":  "+$1,278/mês",
-                                                                       "calcPayback":  "119.3 meses",
+                                                                       "calcGain":  "+$1,288/mês",
+                                                                       "calcPayback":  "118.4 meses",
                                                                        "verdict":  "🔴 Longo Prazo (Baixa Escala)"
                                                                    },
                                                                    {
@@ -119,32 +119,32 @@
                                               "totalDaysSimulated":  1095,
                                               "nanDetected":  false,
                                               "infinityDetected":  false,
-                                              "lowestCash":  2626491,
-                                              "peakCash":  3500000,
-                                              "finalCash":  2626491,
+                                              "lowestCash":  3500000,
+                                              "peakCash":  3628320,
+                                              "finalCash":  3628320,
                                               "bankruptOccurred":  false,
                                               "yearlyReports":  [
                                                                     {
                                                                         "yearCompleted":  1,
                                                                         "currentDate":  "Dia 6 / Mês 1 / Ano 2",
-                                                                        "cash":  3214686,
-                                                                        "netWorth":  3579244,
+                                                                        "cash":  3518450,
+                                                                        "netWorth":  3882693,
                                                                         "historyEntries":  12,
                                                                         "brandRatingBread":  10
                                                                     },
                                                                     {
                                                                         "yearCompleted":  2,
                                                                         "currentDate":  "Dia 11 / Mês 1 / Ano 3",
-                                                                        "cash":  2921007,
-                                                                        "netWorth":  3285233,
+                                                                        "cash":  3531683,
+                                                                        "netWorth":  3895954,
                                                                         "historyEntries":  24,
                                                                         "brandRatingBread":  10
                                                                     },
                                                                     {
                                                                         "yearCompleted":  3,
                                                                         "currentDate":  "Dia 16 / Mês 1 / Ano 4",
-                                                                        "cash":  2626491,
-                                                                        "netWorth":  2990716,
+                                                                        "cash":  3628320,
+                                                                        "netWorth":  3992603,
                                                                         "historyEntries":  24,
                                                                         "brandRatingBread":  10
                                                                     }
@@ -152,11 +152,11 @@
                                               "historyLedgerCount":  24
                                           },
                    "phase5_corporate_analyst":  {
-                                                    "analystSummary":  "📉 Atenção Executiva: O Lucro Líquido recuou -$6,72 (0%) comparado ao mês anterior. Destaque operacional: 🏪 Kombini de Bairro (Nova Atenas) gerou +$22.043,14 de margem limpa. Ponto de atenção: 🏭 Complexo Industrial Metropolitano teve prejuízo de -$24.240 (verifique custos de solo ou reposição).",
-                                                    "analystBadge":  "Mês 12 vs Mês 11",
+                                                    "analystSummary":  "\n            Aguardando fechamento do primeiro ciclo mensal para análise de variância comparativa.\n          ",
+                                                    "analystBadge":  "Análise Mensal",
                                                     "renderedHistoryBars":  24,
-                                                    "totalRevenue":  "+$47,495",
-                                                    "totalNetProfit":  "-$24,212"
+                                                    "totalRevenue":  "+$57,006",
+                                                    "totalNetProfit":  "-$7,760"
                                                 }
                }
 }

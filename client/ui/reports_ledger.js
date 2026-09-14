@@ -167,6 +167,7 @@ export function initReportsLedger() {
 }
 
 export const ReportsLedger = {
+  open: openOnDRE,
   openOnDRE,
   switchTab,
   openCurrentTab,

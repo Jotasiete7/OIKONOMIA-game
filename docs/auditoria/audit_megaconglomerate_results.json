@@ -1,6 +1,6 @@
 ﻿{
-    "version":  "v0.8.3 (bld.20260831.02)",
-    "timestamp":  "2026-09-01T14:19:19.215Z",
+    "version":  "v0.8.5 (bld.20260911.07)",
+    "timestamp":  "2026-09-14T10:52:11.069Z",
     "conglomerateSetup":  {
                               "totalFacilitiesBuilt":  23,
                               "activeSparseTiles":  23,
@@ -34,40 +34,40 @@
                              "totalDays":  1095,
                              "startingCash":  10000000,
                              "lowestCash":  10000000,
-                             "peakCash":  18837275,
-                             "finalCash":  18837275,
-                             "netProfitTotal3Years":  8837275,
+                             "peakCash":  20044822,
+                             "finalCash":  20044822,
+                             "netProfitTotal3Years":  10044822,
                              "bankruptOccurred":  false,
                              "yearlyData":  [
                                                 {
                                                     "yearCompleted":  1,
                                                     "currentDate":  "Dia 6 / Mês 1 / Ano 2",
-                                                    "cash":  13003334,
-                                                    "netWorth":  14868230,
-                                                    "annualGrowthRatePct":  30
+                                                    "cash":  13210717,
+                                                    "netWorth":  15051589,
+                                                    "annualGrowthRatePct":  32.1
                                                 },
                                                 {
                                                     "yearCompleted":  2,
                                                     "currentDate":  "Dia 11 / Mês 1 / Ano 3",
-                                                    "cash":  15920304,
-                                                    "netWorth":  17785200,
-                                                    "annualGrowthRatePct":  59.2
+                                                    "cash":  16361483,
+                                                    "netWorth":  18203696,
+                                                    "annualGrowthRatePct":  63.6
                                                 },
                                                 {
                                                     "yearCompleted":  3,
                                                     "currentDate":  "Dia 16 / Mês 1 / Ano 4",
-                                                    "cash":  18837275,
-                                                    "netWorth":  20702171,
-                                                    "annualGrowthRatePct":  88.4
+                                                    "cash":  20044822,
+                                                    "netWorth":  21887035,
+                                                    "annualGrowthRatePct":  100.4
                                                 }
                                             ]
                          },
     "dreConsolidated":  {
-                            "revenueMonthly":  "+$547,845",
+                            "revenueMonthly":  "+$630,150",
                             "cogsMonthly":  "",
                             "opexMonthly":  "",
-                            "netProfitMonthly":  "+$239,751",
-                            "analystVerdict":  "📈 Desempenho em Alta: O Lucro Líquido aumentou +$0 (+0%) em relação ao mês anterior (Receita: +$0). Destaque operacional: 🚗 Showroom Titan Motors gerou +$259.650 de margem limpa. Ponto de atenção: 🏭 Polo Agroindustrial de Alimentos teve prejuízo de -$18.240 (verifique custos de solo ou reposição).",
-                            "analystBadge":  "Mês 12 vs Mês 11"
+                            "netProfitMonthly":  "+$302,740",
+                            "analystVerdict":  "\n            Aguardando fechamento do primeiro ciclo mensal para análise de variância comparativa.\n          ",
+                            "analystBadge":  "Análise Mensal"
                         }
 }

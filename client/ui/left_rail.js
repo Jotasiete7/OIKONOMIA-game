@@ -1,4 +1,4 @@
-﻿/**
+/**
  * left_rail.js — Trilho Executivo Esquerdo (Navegação por Domínios)
  * OIKONOMIA v0.9 (Fase HUD Redesign)
  *
@@ -196,14 +196,7 @@ function toggleDomain(domainId) {
 function close() {
   if (!_panelEl) return;
   _panelEl.classList.remove('open');
-
-  // Aguardar transição antes de ocultar
-  const onEnd = () => {
-    _panelEl.classList.add('hidden');
-    _panelEl.removeEventListener('transitionend', onEnd);
-  };
-  _panelEl.addEventListener('transitionend', onEnd, { once: true });
-
+  _panelEl.classList.add('hidden');
   _activeDomain = null;
 
   DOMAINS.forEach(d => {

@@ -467,6 +467,9 @@ window.updateHUD = updateHUD;
 window.updateUI = updateHUD;
 window.updateAdvisorHUDChip = updateAdvisorHUDChip;
 window.TickerUI = TickerUI;
+window.LeftRail = LeftRail;
+window.ReportsLedger = ReportsLedger;
+window.OikonomosBtn = OikonomosBtn;
 
 // Re-exposição global (Fase 6.3 — Motor Gráfico Canvas & Isometria)
 window.IsoMath = IsoMath;
