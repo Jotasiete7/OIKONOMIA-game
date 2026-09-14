@@ -313,6 +313,8 @@ export class LifecycleManager {
   resumeGame() {
     const modal = document.getElementById('pause-menu-modal');
     if (modal) modal.classList.add('hidden');
+    const menu = document.getElementById('main-menu-screen');
+    if (menu) menu.classList.add('hidden');
     this.currentAppScreen = 'PLAYING';
     window.currentAppScreen = 'PLAYING';
 
@@ -1021,6 +1023,31 @@ export class LifecycleManager {
     const saves = getSavesFn();
     const countEl = document.getElementById('menu-save-count');
     if (countEl) countEl.textContent = saves.length;
+
+    const btnContinue = document.getElementById('btn-menu-continue');
+    const continueTitle = document.getElementById('btn-menu-continue-title');
+    const continueSub = document.getElementById('btn-menu-continue-subtitle');
+
+    if (saves.length > 0) {
+      const topSave = saves[0];
+      const compName = topSave.companyName || topSave.playerProfile?.companyName || 'Empresa Salva';
+      const year = topSave.year || 1;
+      const month = topSave.month || 1;
+      const pName = topSave.playerName || topSave.playerProfile?.playerName || '';
+      if (continueTitle) continueTitle.textContent = `Continuar: ${compName}`;
+      if (continueSub) continueSub.textContent = `Ano ${year}, Mês ${month}${pName ? ' • ' + pName : ''}`;
+      if (btnContinue) {
+        btnContinue.disabled = false;
+        btnContinue.title = `Carregar save mais recente: ${compName} (Ano ${year}, Mês ${month})`;
+      }
+    } else {
+      if (continueTitle) continueTitle.textContent = 'Continuar Empresa';
+      if (continueSub) continueSub.textContent = 'Nenhum save prévio no disco';
+      if (btnContinue) {
+        btnContinue.disabled = true;
+        btnContinue.title = 'Nenhum save encontrado. Clique em "Começar Outra Empresa"';
+      }
+    }
   }
 
   // ===========================================================================

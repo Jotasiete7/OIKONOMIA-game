@@ -57,25 +57,37 @@
       <!-- Coluna Direita: Botões de Ação Executiva -->
       <div class="w-full lg:w-88 flex flex-col gap-3 font-mono">
         <!-- Continuar Empresa (Gold Foil Primário) -->
-        <button id="btn-menu-continue" onclick="continueLastGame()" class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-[#c9a86a] via-[#dfc489] to-[#c9a86a] hover:from-[#dfc489] hover:to-[#eadaa8] text-[#080a0d] font-black text-sm shadow-xl shadow-[#c9a86a]/20 flex items-center justify-between group transition transform active:scale-98 disabled:opacity-30 disabled:pointer-events-none cursor-pointer">
-          <span class="flex items-center gap-2.5">
-            <span class="text-base">▶</span> Continuar Empresa
+        <button id="btn-menu-continue" onclick="continueLastGame()" class="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#c9a86a] via-[#dfc489] to-[#c9a86a] hover:from-[#dfc489] hover:to-[#eadaa8] text-[#080a0d] font-bold text-xs shadow-xl shadow-[#c9a86a]/20 flex items-center justify-between group transition transform active:scale-98 disabled:opacity-30 disabled:pointer-events-none cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-base font-black">▶</span>
+            <span class="flex flex-col text-left">
+              <span id="btn-menu-continue-title" class="font-black text-sm tracking-wide">Continuar Empresa</span>
+              <span id="btn-menu-continue-subtitle" class="text-[10px] font-normal text-slate-900/80 font-mono">Carregar último progresso salvo</span>
+            </span>
           </span>
           <span class="text-xs font-bold group-hover:translate-x-1.5 transition">➔</span>
         </button>
 
-        <!-- Nova Empresa (Obsidian & Borda Dourada Suave) -->
-        <button onclick="openNewGameWizard()" class="w-full py-3.5 px-6 rounded-xl bg-[#0b0e14] hover:bg-[#121620] border border-white/[0.12] hover:border-[#c9a86a]/50 text-slate-100 font-bold text-sm shadow-lg flex items-center justify-between group transition transform active:scale-98 cursor-pointer">
-          <span class="flex items-center gap-2.5">
-            <span>🏢</span> Nova Empresa
+        <!-- Nova Empresa (Começar Outra Empresa) -->
+        <button onclick="openNewGameWizard()" class="w-full py-3 px-5 rounded-xl bg-[#0b0e14] hover:bg-[#121620] border border-white/[0.14] hover:border-[#c9a86a]/60 text-slate-100 font-bold text-xs shadow-lg flex items-center justify-between group transition transform active:scale-98 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-base text-[#c9a86a]">🏢</span>
+            <span class="flex flex-col text-left">
+              <span class="text-xs font-bold tracking-wide">Começar Outra Empresa</span>
+              <span class="text-[10px] text-slate-400 font-normal font-mono">Fundar nova holding e escolher novo perfil</span>
+            </span>
           </span>
           <span class="text-xs text-[#c9a86a] group-hover:translate-x-1.5 transition">➔</span>
         </button>
 
-        <!-- Carregar Jogo -->
-        <button onclick="openSaveLoadModal('load')" class="w-full py-3.5 px-6 rounded-xl bg-[#0b0e14] hover:bg-[#121620] border border-white/[0.08] hover:border-sky-500/40 text-slate-100 font-bold text-sm shadow-lg flex items-center justify-between group transition transform active:scale-98 cursor-pointer">
-          <span class="flex items-center gap-2.5">
-            <span>📂</span> Carregar Jogo (<span id="menu-save-count" class="text-sky-400">0</span>)
+        <!-- Escolher Save / Carregar Jogo -->
+        <button onclick="openSaveLoadModal('load')" class="w-full py-3 px-5 rounded-xl bg-[#0b0e14] hover:bg-[#121620] border border-white/[0.1] hover:border-sky-500/50 text-slate-100 font-bold text-xs shadow-lg flex items-center justify-between group transition transform active:scale-98 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-base text-sky-400">📂</span>
+            <span class="flex flex-col text-left">
+              <span class="text-xs font-bold tracking-wide">Escolher Save / Carregar Jogo (<span id="menu-save-count" class="text-sky-400 font-mono">0</span>)</span>
+              <span class="text-[10px] text-slate-400 font-normal font-mono">Ver lista de todos os slots e backups</span>
+            </span>
           </span>
           <span class="text-xs text-slate-400 group-hover:text-sky-400 group-hover:translate-x-1.5 transition">➔</span>
         </button>
@@ -256,8 +268,18 @@
           <span id="quicksave-status-badge" class="text-[10px] text-[#c9a86a]"></span>
         </button>
 
+        <button onclick="openSaveLoadModal('load')" class="w-full py-2.5 px-4 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-sky-500/40 text-slate-200 flex items-center justify-between transition cursor-pointer">
+          <span class="flex items-center gap-2"><span>📂</span> <span>Trocar / Carregar Outro Save</span></span>
+          <span class="text-sky-400 text-xs">➔</span>
+        </button>
+
+        <button onclick="openNewGameWizard()" class="w-full py-2.5 px-4 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-[#c9a86a]/40 text-slate-200 flex items-center justify-between transition cursor-pointer">
+          <span class="flex items-center gap-2"><span>🏢</span> <span>Começar Outra Empresa</span></span>
+          <span class="text-[#c9a86a] text-xs">➔</span>
+        </button>
+
         <button onclick="openSaveLoadModal('save')" class="w-full py-2.5 px-4 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.15] text-slate-300 hover:text-slate-100 flex items-center justify-between transition cursor-pointer">
-          <span>📂 Gerenciar Slots de Salvar / Carregar</span>
+          <span>💾 Gerenciar Slots de Salvar / Exportar</span>
           <span class="text-slate-500">➔</span>
         </button>
 

@@ -216,7 +216,7 @@ export function handleGlobalEscape() {
   }
   if (closedAny) return;
 
-  // Prioridade 6: Menu de Pausa
+  // Prioridade 6: Menu de Pausa & Retomada no Menu Principal
   const screen = typeof window !== 'undefined' ? window.currentAppScreen : null;
   if (screen === 'PAUSED') {
     if (typeof window !== 'undefined' && typeof window.resumeGame === 'function') {
@@ -225,6 +225,25 @@ export function handleGlobalEscape() {
   } else if (screen === 'PLAYING') {
     if (typeof window !== 'undefined' && typeof window.pauseGameAndShowMenu === 'function') {
       window.pauseGameAndShowMenu();
+    }
+  } else if (screen === 'MAIN_MENU') {
+    // Se o jogador estiver no Menu Principal e já houver uma partida iniciada/em memória, retoma pelo ESC
+    const hasActiveSession = Boolean(
+      typeof window !== 'undefined' &&
+      window.worldGrid &&
+      window.worldGrid.length > 0 &&
+      window.cash !== undefined &&
+      window.day !== undefined
+    );
+    if (hasActiveSession && typeof window.resumeGame === 'function') {
+      window.resumeGame();
+    } else {
+      // Feedback visual se estiver na raiz sem partida ativa
+      const btn = document.getElementById('btn-menu-continue');
+      if (btn && !btn.disabled) {
+        btn.classList.add('ring-2', 'ring-[#c9a86a]');
+        setTimeout(() => btn.classList.remove('ring-2', 'ring-[#c9a86a]'), 300);
+      }
     }
   }
 }
