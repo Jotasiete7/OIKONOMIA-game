@@ -203,41 +203,47 @@ export const StoreWizard = {
 
       return `
         <div onclick="selectStoreType('${st.id}')"
-          class="store-type-card cursor-pointer rounded-xl border p-3 flex flex-col gap-1.5 transition
+          class="store-type-card cursor-pointer rounded-xl border p-3 flex flex-col justify-between transition min-h-[170px]
             ${isSelected ? 'border-[#c9a86a] bg-[#c9a86a]/10 ring-1 ring-[#c9a86a]' : 'border-white/[0.08] bg-[#0b0e14] hover:border-white/[0.16] shadow-md'}">
-          <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-lg bg-[#0d1017] border border-white/[0.08] p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
-              <img src="assets/lojas/${st.id}.png" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
-              <span class="text-lg hidden">${st.emoji}</span>
-            </div>
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center justify-between">
-                <div class="text-xs font-bold text-slate-100 truncate">${st.name}</div>
-                ${hasLicense ? `
-                  <span class="text-[9px] bg-emerald-950/60 text-emerald-300 border border-emerald-700/60 px-1.5 py-0.2 rounded-full font-mono font-bold">✓ Homologado</span>
-                ` : `
-                  <span class="text-[9px] bg-amber-950/60 text-amber-300 border border-amber-700/60 px-1.5 py-0.2 rounded-full font-mono font-bold">📜 Requer Licença</span>
-                `}
+          <div class="space-y-2">
+            <div class="flex items-start gap-2.5">
+              <div class="w-10 h-10 rounded-lg bg-[#0d1017] border border-white/[0.08] p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
+                <img src="assets/lojas/${st.id}.png" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
+                <span class="text-xl hidden">${st.emoji}</span>
               </div>
-              <div class="text-[10px] font-bold text-emerald-400 font-mono mt-0.5">
-                Obra: $${st.cost.toLocaleString('en-US')} ${!hasLicense && licCost > 0 ? `<span class="text-amber-400 font-bold">+ Licença: $${licCost.toLocaleString('en-US')}</span>` : ''}
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between gap-1">
+                  <div class="text-xs font-bold text-slate-100 truncate" title="${st.name}">${st.name}</div>
+                  ${hasLicense ? `
+                    <span class="text-[8px] bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 px-1.5 py-0.5 rounded font-mono font-semibold shrink-0">✓ Homologado</span>
+                  ` : `
+                    <span class="text-[8px] bg-amber-950/80 text-amber-300 border border-amber-700/60 px-1.5 py-0.5 rounded font-mono font-semibold shrink-0">📜 Licença</span>
+                  `}
+                </div>
+                <div class="text-[10px] font-bold text-emerald-400 font-mono mt-0.5">
+                  Obra: $${st.cost.toLocaleString('en-US')} ${!hasLicense && licCost > 0 ? `<span class="text-amber-400 font-normal">(+Licença: $${licCost.toLocaleString('en-US')})</span>` : ''}
+                </div>
               </div>
             </div>
-          </div>
-          <div class="text-[10px] font-mono text-slate-400 flex items-center justify-between">
-            <span>📦 ${st.maxShelves} gôndolas</span>
-            <span>Aluguel: <strong class="text-rose-400">$${actualRent}/dia</strong></span>
-          </div>
-          <div class="text-[9px] font-mono text-[#c9a86a] bg-[#c9a86a]/10 p-1.5 rounded-lg border border-[#c9a86a]/20 flex items-center justify-between">
-            <span>⏱ Payback: <strong>${paybackMonthsMin} a ${paybackMonthsMax} meses</strong></span>
-            <span class="text-slate-400">ROI Est.: <strong class="text-emerald-400 font-bold">~${estRoi}%/ano</strong></span>
-          </div>
-          ${!hasLicense && lic && lic.cost > 0 ? `
-            <div class="text-[9px] text-amber-300/90 bg-amber-950/40 border border-amber-800/60 rounded p-1.5 font-mono leading-tight">
-              ${lic.icon} <strong>${lic.name}</strong>: ${lic.desc} (Taxa única corporativa: <strong class="text-amber-300">$${lic.cost.toLocaleString('en-US')}</strong>)
+
+            <div class="text-[10px] font-mono text-slate-400 flex items-center justify-between border-t border-white/[0.04] pt-1.5">
+              <span>📦 ${st.maxShelves} gôndolas</span>
+              <span>Aluguel: <strong class="text-rose-400">$${actualRent}/dia</strong></span>
             </div>
-          ` : ''}
-          <div class="text-[9px] text-slate-400 border-t border-white/[0.06] pt-1 leading-tight">${st.desc}</div>
+
+            <div class="text-[9px] font-mono text-[#c9a86a] bg-[#c9a86a]/10 p-1.5 rounded-lg border border-[#c9a86a]/20 flex items-center justify-between">
+              <span>Payback: <strong>${paybackMonthsMin}-${paybackMonthsMax}m</strong></span>
+              <span class="text-slate-400">ROI: <strong class="text-emerald-400 font-bold">~${estRoi}%/ano</strong></span>
+            </div>
+
+            ${!hasLicense && lic && lic.cost > 0 ? `
+              <div class="text-[9px] text-amber-300/90 bg-amber-950/40 border border-amber-800/60 rounded p-1.5 font-mono leading-tight">
+                ⚠️ Requer <strong>${lic.name}</strong> ($${lic.cost.toLocaleString('en-US')}).
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="text-[9px] text-slate-400 border-t border-white/[0.06] pt-1.5 leading-tight mt-1 line-clamp-2">${st.desc}</div>
         </div>
       `;
     }).join('');

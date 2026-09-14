@@ -206,7 +206,11 @@ export function handleGlobalEscape() {
     }
     const el = document.getElementById(id);
     if (el && !el.classList.contains('hidden')) {
-      el.classList.add('hidden');
+      if (id === 'store-modal' && typeof window !== 'undefined' && typeof window.closeStoreWizard === 'function') {
+        window.closeStoreWizard();
+      } else {
+        el.classList.add('hidden');
+      }
       closedAny = true;
     }
   }

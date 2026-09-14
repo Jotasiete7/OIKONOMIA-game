@@ -1,13 +1,18 @@
-﻿/**
+/**
  * oikonomos_btn.js — Botão Persistente do Conselheiro Oikonomos
  * OIKONOMIA v0.9 (Fase HUD Redesign)
  *
  * Botão circular fixo no canto inferior direito (junto ao minimap).
- * Ao clicar, exibe um popover com o conselho mais urgente do AdvisorSystem.
- * Reaproveira a análise já existente — não cria sistema de análise paralelo.
+ * Ao clicar, exibe um popover com abas:
+ * 1. Diagnóstico: alerta corporativo urgente do AdvisorSystem
+ * 2. Dica do Mentor: sabedoria econômica e boas práticas de gestão
  */
 
+import { ECONOMIC_TIPS } from '../game_config.js';
+
 let _isOpen = false;
+let _currentTab = 'diagnosis'; // 'diagnosis' | 'tips'
+let _currentTipIndex = 0;
 
 function _getPopover() {
   return document.getElementById('oikonomos-popover');
@@ -35,7 +40,7 @@ function _fetchLatestAdvice() {
     });
 
     if (!alerts || alerts.length === 0) {
-      return '✅ Nenhuma irregularidade crítica detectada. Continue expandindo!';
+      return '✅ Nenhuma irregularidade crítica detectada. A operação está estável. Continue expandindo!';
     }
 
     // Pegar o alerta de maior prioridade (primeiro da lista, já ordenado por severidade)
@@ -48,12 +53,67 @@ function _fetchLatestAdvice() {
   }
 }
 
+function _getNextTip() {
+  const tips = (ECONOMIC_TIPS && ECONOMIC_TIPS.length > 0) ? ECONOMIC_TIPS : [
+    "🧐 Oikonomos aconselha: Mantenha sempre uma reserva de liquidez segura para amortecer oscilações de juros e demanda.",
+    "🧐 Oikonomos aconselha: A integração vertical (Fazendas/Minas ➔ Fábricas ➔ Lojas) elimina atravessadores e maximiza a margem líquida."
+  ];
+  const tip = tips[_currentTipIndex % tips.length];
+  _currentTipIndex = (_currentTipIndex + 1) % tips.length;
+  return tip;
+}
+
+export function setTab(tabId) {
+  _currentTab = tabId || 'diagnosis';
+  const tabDiag = document.getElementById('oiko-tab-diagnosis');
+  const tabTips = document.getElementById('oiko-tab-tips');
+  const txt = _getAdviceText();
+
+  const activeClasses = ['bg-[#c9a86a]/15', 'text-[#c9a86a]', 'font-bold', 'border-[#c9a86a]/30'];
+  const inactiveClasses = ['text-slate-400', 'border-transparent'];
+
+  if (_currentTab === 'diagnosis') {
+    if (tabDiag) {
+      tabDiag.classList.remove(...inactiveClasses);
+      tabDiag.classList.add(...activeClasses);
+    }
+    if (tabTips) {
+      tabTips.classList.remove(...activeClasses);
+      tabTips.classList.add(...inactiveClasses);
+    }
+    if (txt) {
+      txt.onclick = null;
+      txt.textContent = _fetchLatestAdvice();
+    }
+  } else {
+    if (tabTips) {
+      tabTips.classList.remove(...inactiveClasses);
+      tabTips.classList.add(...activeClasses);
+    }
+    if (tabDiag) {
+      tabDiag.classList.remove(...activeClasses);
+      tabDiag.classList.add(...inactiveClasses);
+    }
+    if (txt) {
+      const renderTip = () => {
+        txt.innerHTML = `${_getNextTip()} <div class="mt-2 text-[9px] text-[#c9a86a]/70 hover:text-[#c9a86a] cursor-pointer flex items-center gap-1 select-none"><span>↻</span> <u>Outra dica do mentor</u></div>`;
+      };
+      renderTip();
+      txt.onclick = (e) => {
+        if (_currentTab === 'tips') {
+          e.stopPropagation();
+          renderTip();
+        }
+      };
+    }
+  }
+}
+
 export function open() {
   const pop = _getPopover();
-  const txt = _getAdviceText();
   if (!pop) return;
 
-  if (txt) txt.textContent = _fetchLatestAdvice();
+  setTab(_currentTab);
   pop.classList.remove('hidden');
   _isOpen = true;
 }
@@ -63,6 +123,8 @@ export function close() {
   if (!pop) return;
   pop.classList.add('hidden');
   _isOpen = false;
+  const txt = _getAdviceText();
+  if (txt) txt.onclick = null;
 }
 
 export function toggle() {
@@ -99,6 +161,7 @@ export const OikonomosBtn = {
   close,
   toggle,
   isOpen,
+  setTab,
   initOikonomosBtn
 };
 

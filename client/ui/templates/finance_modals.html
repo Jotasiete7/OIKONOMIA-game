@@ -13,8 +13,12 @@
             <span class="text-[9px] text-slate-400 font-mono block mt-0.5">Visão consolidada de receitas brutas, custos de insumo, fixos e resultado</span>
           </div>
         </div>
-        <button onclick="toggleDREModal()" class="w-7 h-7 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-slate-400 hover:text-white text-xs font-mono transition flex items-center justify-center cursor-pointer" title="Fechar [Esc]">✕</button>
-      </div>
+        <div class="flex items-center gap-2">
+          <button onclick="toggleDREModal(); if(window.ReportsLedger) ReportsLedger.openOnDRE('dre');" class="px-2 py-1 rounded bg-white/[0.05] hover:bg-[#c9a86a]/20 border border-white/[0.08] hover:border-[#c9a86a]/40 text-slate-300 hover:text-[#c9a86a] text-[10px] font-mono transition flex items-center gap-1 cursor-pointer" title="Voltar para o Fichário de Relatórios">
+            <span>←</span> Fichário
+          </button>
+          <button onclick="toggleDREModal()" class="w-7 h-7 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-slate-400 hover:text-white text-xs font-mono transition flex items-center justify-center cursor-pointer" title="Fechar [Esc]">✕</button>
+        </div>
       <div class="p-5 space-y-3 font-mono text-xs bg-[#080a0d]">
         <div class="flex justify-between items-center text-slate-300 py-1.5 border-b border-white/[0.04]">
           <span class="text-slate-400 font-medium">(+) Receita Bruta (Varejo):</span>
@@ -156,8 +160,12 @@
             <p id="sim-product-subtitle" class="text-[10px] text-[#94a3b8]">Projeção matemática em tempo real</p>
           </div>
         </div>
-        <button onclick="closePriceSimulatorModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
-      </div>
+        <div class="flex items-center gap-2">
+          <button onclick="closePriceSimulatorModal(); if(window.ReportsLedger) ReportsLedger.openOnDRE('dre');" class="px-2 py-1 rounded bg-white/[0.05] hover:bg-[#c9a86a]/20 border border-white/[0.08] hover:border-[#c9a86a]/40 text-slate-300 hover:text-[#c9a86a] text-[10px] font-mono transition flex items-center gap-1 cursor-pointer" title="Voltar para o Fichário de Relatórios">
+            <span>←</span> Fichário
+          </button>
+          <button onclick="closePriceSimulatorModal()" class="w-7 h-7 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#94a3b8] hover:text-[#f1f5f9] text-xs font-bold flex items-center justify-center border border-white/[0.08] cursor-pointer transition">✕</button>
+        </div>
 
       <div class="bg-[#080a0d] p-5 space-y-4 overflow-y-auto custom-scrollbar flex-1">
         <!-- Controle de Preço do Sandbox -->
