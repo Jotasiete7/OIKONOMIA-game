@@ -42,6 +42,18 @@ export function closeMoreOptionsMenu() {
   if (menu) menu.classList.add('hidden');
 }
 
+export function toggleLeftRail(domainId) {
+  if (typeof window !== 'undefined' && window.LeftRail) {
+    window.LeftRail.toggleDomain(domainId);
+  }
+}
+
+export function closeLeftRail() {
+  if (typeof window !== 'undefined' && window.LeftRail) {
+    window.LeftRail.close();
+  }
+}
+
 export function initDropdownClickOutside() {
   if (typeof window === 'undefined') return;
   

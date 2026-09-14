@@ -162,3 +162,434 @@ canvas {
 @media (max-width: 768px) {
   #floating-lenses-bar { display: none; }
 }
+
+/* ==========================================================================
+   OIKONOMIA v0.9 — HUD Redesign: Novos Componentes
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CURSOR CUSTOMIZADO — elimina cursor nativo do SO
+   -------------------------------------------------------------------------- */
+*,
+body {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><polygon points="2,1 2,13 6,9 9,14 11,13 8,8 13,8" fill="%230b0e14" stroke="%23c9a86a" stroke-width="1.2"/></svg>') 2 1, auto;
+}
+
+button,
+[role="button"],
+.cursor-pointer,
+a,
+select,
+label[for],
+.oiko-btn-terminal,
+.oiko-dropdown-item,
+.oiko-rail-icon-btn,
+.oiko-rail-item-btn,
+.oiko-ledger-tab,
+canvas#minimap-canvas {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><polygon points="2,1 2,13 6,9 9,14 11,13 8,8 13,8" fill="%23c9a86a" stroke="%23c9a86a" stroke-width="0.8"/></svg>') 2 1, pointer;
+}
+
+.drag-handle,
+canvas#iso-canvas {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><text y="15" font-size="14" fill="%23c9a86a" opacity="0.7">✥</text></svg>') 9 9, grab;
+}
+
+canvas#iso-canvas:active,
+.drag-handle:active {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><text y="15" font-size="14" fill="%23c9a86a">✥</text></svg>') 9 9, grabbing;
+}
+
+/* --------------------------------------------------------------------------
+   TOOLTIP CUSTOMIZADO — substitui title="" nativo
+   -------------------------------------------------------------------------- */
+.oiko-custom-tooltip {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  background: var(--oiko-bg-1);
+  border: 1px solid var(--oiko-border-mid);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-family: var(--oiko-font-mono);
+  font-size: 10px;
+  color: var(--oiko-text-2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+  max-width: 260px;
+  white-space: normal;
+  line-height: 1.4;
+}
+
+.oiko-custom-tooltip.hidden {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   TRILHO ESQUERDO EXECUTIVO
+   -------------------------------------------------------------------------- */
+.oiko-left-rail {
+  position: fixed;
+  left: 0;
+  top: 72px; /* abaixo do ticker (28px) + topbar (44px) */
+  bottom: 28px; /* acima do footer */
+  z-index: 25;
+  display: flex;
+  flex-direction: row;
+  pointer-events: none;
+}
+
+.oiko-rail-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  width: 52px;
+  background: var(--oiko-bg-1);
+  border-right: 1px solid var(--oiko-border);
+  pointer-events: auto;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.oiko-rail-icon-btn {
+  width: 44px;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 4px;
+  border-radius: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--oiko-text-3);
+  font-family: var(--oiko-font-mono);
+  transition: all 0.15s ease;
+  /* Chanfro no canto superior direito — identidade, não rounded-xl */
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+}
+
+.oiko-rail-icon-btn:hover {
+  background: var(--oiko-bg-3);
+  color: var(--oiko-text-2);
+  border-color: var(--oiko-border);
+}
+
+.oiko-rail-icon-btn.active {
+  background: var(--oiko-gold-dim);
+  border-color: var(--oiko-gold-border);
+  color: var(--oiko-gold);
+}
+
+.oiko-rail-label {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* Painel lateral do trilho */
+.oiko-rail-panel {
+  width: 0;
+  overflow: hidden;
+  background: var(--oiko-bg-1);
+  border-right: 1px solid var(--oiko-border);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: width 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 200ms ease;
+}
+
+.oiko-rail-panel.open {
+  width: 300px;
+  opacity: 1;
+}
+
+.oiko-rail-panel.hidden {
+  display: flex; /* override .hidden para que a transição funcione */
+  width: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.oiko-rail-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--oiko-border);
+  background: var(--oiko-bg-0);
+  flex-shrink: 0;
+  min-width: 300px;
+}
+
+.oiko-rail-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.oiko-rail-item-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--oiko-text-2);
+  font-family: var(--oiko-font-mono);
+  font-size: 11px;
+  text-align: left;
+  transition: all 0.12s ease;
+  clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%);
+}
+
+.oiko-rail-item-btn:hover {
+  background: var(--oiko-gold-dim);
+  border-color: var(--oiko-gold-border);
+  color: var(--oiko-gold);
+  transform: translateX(2px);
+}
+
+/* --------------------------------------------------------------------------
+   FICHÁRIO DE RELATÓRIOS
+   -------------------------------------------------------------------------- */
+.oiko-ledger-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.oiko-ledger-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(520px, 92vw);
+  max-height: min(600px, 90vh);
+  background: var(--oiko-bg-1);
+  border: 1px solid var(--oiko-border-mid);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Chanfros dourados nos cantos — identidade, não rounded */
+  clip-path: polygon(
+    0 0, calc(100% - 14px) 0, 100% 14px,
+    100% 100%, 14px 100%, 0 calc(100% - 14px)
+  );
+}
+
+.oiko-ledger-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 14px 14px 0;
+  border-color: transparent var(--oiko-gold) transparent transparent;
+  opacity: 0.6;
+}
+
+.oiko-ledger-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--oiko-border);
+  background: var(--oiko-bg-0);
+  flex-shrink: 0;
+}
+
+.oiko-ledger-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--oiko-border);
+  background: var(--oiko-bg-0);
+  flex-shrink: 0;
+}
+
+.oiko-ledger-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 10px;
+  font-family: var(--oiko-font-mono);
+  font-size: 10px;
+  color: var(--oiko-text-3);
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  transition: all 0.12s ease;
+}
+
+.oiko-ledger-tab:hover {
+  color: var(--oiko-text-2);
+  background: var(--oiko-bg-3);
+}
+
+.oiko-ledger-tab.active {
+  color: var(--tab-color, var(--oiko-gold));
+  border-bottom-color: var(--tab-color, var(--oiko-gold));
+  background: rgba(255,255,255,0.03);
+  font-weight: 600;
+}
+
+.oiko-ledger-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   COCKPIT GAUGE — arco decorativo SVG estático
+   -------------------------------------------------------------------------- */
+.oiko-cockpit-gauge {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.oiko-cockpit-gauge svg.gauge-arc {
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  transform: translateY(-50%);
+  opacity: 0.18;
+  pointer-events: none;
+  margin-right: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   JUICE — Microanimações de Feedback
+   -------------------------------------------------------------------------- */
+@keyframes oiko-pop-in {
+  0%   { transform: scale(0.85); opacity: 0.6; }
+  60%  { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+@keyframes oiko-float-up {
+  0%   { transform: translateY(0);    opacity: 1; }
+  70%  { transform: translateY(-20px); opacity: 0.8; }
+  100% { transform: translateY(-32px); opacity: 0; }
+}
+
+@keyframes oiko-glow-pulse {
+  0%, 100% { box-shadow: 0 0 4px var(--oiko-gold-glow); }
+  50%       { box-shadow: 0 0 12px var(--oiko-gold-glow), 0 0 24px var(--oiko-gold-glow); }
+}
+
+.oiko-pop-in {
+  animation: oiko-pop-in 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.oiko-float-up {
+  position: absolute;
+  pointer-events: none;
+  animation: oiko-float-up 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  font-family: var(--oiko-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--oiko-green);
+  white-space: nowrap;
+  z-index: 100;
+}
+
+/* Hover nos botões do cockpit — glow sutil */
+.oiko-btn-terminal:hover {
+  box-shadow: 0 0 6px rgba(201, 168, 106, 0.12);
+}
+
+.oiko-btn-terminal.oiko-btn-gold:hover,
+.oiko-btn-terminal.active:hover {
+  box-shadow: 0 0 10px var(--oiko-gold-glow), 0 0 20px rgba(201, 168, 106, 0.08);
+}
+
+/* Trilho: botão ativo pulsa suavemente */
+.oiko-rail-icon-btn.active {
+  animation: oiko-glow-pulse 2.5s ease-in-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   SLOT FIXO TICKER CRÍTICO
+   -------------------------------------------------------------------------- */
+#ticker-critical-slot {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px 0 8px;
+  height: 100%;
+  background: rgba(244, 63, 94, 0.08);
+  border-left: 1px solid rgba(244, 63, 94, 0.2);
+  border-right: 1px solid rgba(244, 63, 94, 0.2);
+  flex-shrink: 0;
+  max-width: 320px;
+}
+
+#ticker-critical-slot.visible {
+  display: flex;
+}
+
+#ticker-critical-slot .crit-text {
+  font-family: var(--oiko-font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  color: #fda4af;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+#ticker-critical-slot .crit-text:hover {
+  color: #fff;
+}
+
+#ticker-critical-slot .crit-dismiss {
+  background: none;
+  border: none;
+  color: rgba(244, 63, 94, 0.5);
+  font-size: 9px;
+  padding: 0 2px;
+  flex-shrink: 0;
+  transition: color 0.12s;
+}
+
+#ticker-critical-slot .crit-dismiss:hover {
+  color: #f43f5e;
+}
+
+/* --------------------------------------------------------------------------
+   PREFERS-REDUCED-MOTION — desligar animações decorativas
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .oiko-pop-in,
+  .oiko-float-up,
+  .oiko-rail-panel,
+  .oiko-rail-icon-btn.active {
+    animation: none !important;
+    transition: none !important;
+  }
+  .oiko-rail-panel.open {
+    width: 300px !important;
+    opacity: 1 !important;
+  }
+}
+

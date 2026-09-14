@@ -38,13 +38,13 @@ const PALETTE_RGB = {
   road: [82, 96, 113],           // #526071 (Malha viária em ardósia metálica)
   port: [201, 168, 106],         // #c9a86a (Doca / Porto em Ouro Oikonomia)
 
-  // Instalações Industriais & Comerciais (Tons Executivos Dessaturados)
-  store: [16, 185, 129],         // #10b981 (Varejo esmeralda)
-  factory: [194, 65, 12],        // #c2410c (Manufatura cobre/ferrugem)
-  farm: [217, 119, 6],           // #d97706 (Agropecuária âmbar dourado)
-  mine: [2, 132, 199],           // #0284c7 (Mineração safira profunda)
-  rdCenter: [124, 58, 237],      // #7c3aed (P&D violeta tecnológico)
-  warehouse: [56, 189, 248],     // #38bdf8 (Hub logístico / CD azul celeste)
+  // Instalações Industriais & Comerciais (Tons Executivos Dessaturados — diferenciação por brilho, não por matiz)
+  store: [18, 95, 65],           // #12605f (Varejo: verde-musgo escuro)
+  factory: [105, 45, 12],        // #692d0c (Manufatura: cobre queimado escuro)
+  farm: [105, 72, 14],           // #69480e (Agropecuária: âmbar terroso escuro)
+  mine: [14, 68, 105],           // #0e4469 (Mineração: safira apagada escura)
+  rdCenter: [58, 32, 105],       // #3a2069 (P&D: violeta escuro)
+  warehouse: [18, 78, 112],      // #124e70 (Hub logístico: azul-ardósia escuro)
 
   // Zonas Urbanas
   downtown: [153, 27, 27],       // #991b1b (Distrito Central / CBD rubi corporativo)

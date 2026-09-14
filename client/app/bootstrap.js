@@ -29,6 +29,13 @@ import { DevDashboardPanel } from '../ui/panels/dev_dashboard_panel.js';
 import { mountModalTemplates } from '../ui/templates/index.js';
 import TickerSystem from '../ticker_system.js';
 
+// HUD Redesign v0.9 — novos módulos
+import { TooltipSystem } from '../ui/tooltip.js';
+import { LeftRail } from '../ui/left_rail.js';
+import { ReportsLedger } from '../ui/reports_ledger.js';
+import { OikonomosBtn } from '../ui/oikonomos_btn.js';
+import { AudioPopover } from '../ui/audio_popover.js';
+
 // Inicializa variáveis globais de estado de interação de tile no window
 export function initInteractionState() {
   if (typeof window === 'undefined') return;
@@ -74,6 +81,7 @@ export function bindGlobalPanelMethods() {
   window.openFacilityDREModal = () => DREPanel.openFacilityDREModal();
   window.closeFacilityDREModal = () => DREPanel.closeFacilityDREModal();
   window.toggleDREModal = () => DREPanel.toggleDREModal();
+  window.triggerPriceSimulationFromDRE = () => DREPanel.triggerPriceSimulationFromDRE();
   window.calculateCorporateNetWorth = () => DREPanel.calculateCorporateNetWorth();
   window.renderFacilityDRETable = () => DREPanel.renderFacilityDRETable();
   window.openInsolvencyModal = (nwObj) => DREPanel.openInsolvencyModal(nwObj);
@@ -276,6 +284,23 @@ export async function bootEngine(force = false) {
 
   if (TickerSystem && typeof TickerSystem.init === 'function') {
     TickerSystem.init('ticker-track');
+  }
+
+  // --- HUD Redesign v0.9: inicializar novos módulos de UI ---
+  if (TooltipSystem && typeof TooltipSystem.initTooltipSystem === 'function') {
+    TooltipSystem.initTooltipSystem();
+  }
+  if (LeftRail && typeof LeftRail.initLeftRail === 'function') {
+    LeftRail.initLeftRail();
+  }
+  if (ReportsLedger && typeof ReportsLedger.initReportsLedger === 'function') {
+    ReportsLedger.initReportsLedger();
+  }
+  if (OikonomosBtn && typeof OikonomosBtn.initOikonomosBtn === 'function') {
+    OikonomosBtn.initOikonomosBtn();
+  }
+  if (AudioPopover && typeof AudioPopover.initAudioPopover === 'function') {
+    AudioPopover.initAudioPopover();
   }
 
   if (KeyboardSystem && typeof KeyboardSystem.init === 'function') {

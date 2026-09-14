@@ -26,9 +26,12 @@ function copyStaticAssetsPlugin() {
   };
 }
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   root: 'client',        // onde está o index.html
   base: './',            // caminhos relativos para funcionar sem servidor web
+  define: {
+    __DEV__: JSON.stringify(mode === 'development'),
+  },
   plugins: [tailwindcss(), copyStaticAssetsPlugin(), makeClassicScriptPlugin()],
   build: {
     outDir: '../dist',   // saída fora da pasta client
@@ -47,4 +50,4 @@ export default defineConfig({
     strictPort: true,    // Impede o Vite de mudar para 5174/5175 e fragmentar o localStorage
     open: true,          // abre o navegador automaticamente ao rodar npm run dev
   },
-});
+}));

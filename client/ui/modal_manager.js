@@ -173,6 +173,31 @@ export function handleGlobalEscape() {
     return;
   }
 
+  // Prioridade 4.1: Popovers e painéis voláteis da HUD (Oikonomos / Áudio)
+  if (typeof window !== 'undefined') {
+    if (typeof window.closeOikonomosPopover === 'function' && window.OikonomosBtn && window.OikonomosBtn.isOpen()) {
+      window.closeOikonomosPopover();
+      return;
+    }
+    if (typeof window.closeAudioPopover === 'function') {
+      const pop = document.getElementById('audio-popover');
+      if (pop && !pop.classList.contains('hidden')) {
+        window.closeAudioPopover();
+        return;
+      }
+    }
+    // Fichário de Relatórios (domínio CFO)
+    if (window.ReportsLedger && typeof window.ReportsLedger.isOpen === 'function' && window.ReportsLedger.isOpen()) {
+      window.ReportsLedger.close();
+      return;
+    }
+    // Trilho Esquerdo Executivo
+    if (window.LeftRail && typeof window.LeftRail.isOpen === 'function' && window.LeftRail.isOpen()) {
+      window.LeftRail.close();
+      return;
+    }
+  }
+
   // Prioridade 5: Modais em jogo e janelas flutuantes
   let closedAny = false;
   for (const id of ALL_IN_GAME_MODALS) {

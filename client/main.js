@@ -157,6 +157,13 @@ import ModalManager, {
 import HUDSystem, { setSpeed, updateHUD, updateAdvisorHUDChip, addLog, addGameLog } from './ui/hud.js';
 import TickerUI from './ui/ticker.js';
 
+// --- Fase 6.2.1: HUD Redesign v0.9 — Novos módulos de UI ---
+import TooltipSystem, { initTooltipSystem } from './ui/tooltip.js';
+import LeftRail, { initLeftRail } from './ui/left_rail.js';
+import ReportsLedger, { initReportsLedger } from './ui/reports_ledger.js';
+import OikonomosBtn, { initOikonomosBtn } from './ui/oikonomos_btn.js';
+import AudioPopover, { initAudioPopover } from './ui/audio_popover.js';
+
 // --- Fase 6.3: Motor de Renderização Canvas & Isometria ---
 import IsoMath, { gridToScreen, screenToGrid, drawDiamond, drawBuilding } from './renderer/iso_math.js';
 import CameraController, { camera, changeZoom, focusOnTile as cameraFocusOnTile, jumpToCity as cameraJumpToCity, resetCamera } from './renderer/camera.js';

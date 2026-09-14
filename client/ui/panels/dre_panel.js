@@ -54,6 +54,33 @@ export function toggleDREModal() {
   if (m) m.classList.toggle('hidden');
 }
 
+export function triggerPriceSimulationFromDRE() {
+  const sim = (typeof window !== 'undefined' && window.PriceSimulatorPanel) ? window.PriceSimulatorPanel : null;
+  if (!sim || typeof sim.openPriceSimulatorModal !== 'function') return;
+
+  const facSet = (typeof window !== 'undefined' && window.activeFacilitySet) ? window.activeFacilitySet : null;
+  if (!facSet) return;
+
+  // Procura uma loja com produtos nas prateleiras para simular
+  for (const [coordKey, tile] of facSet.entries()) {
+    if (tile.store && tile.store.shelves) {
+      const prodIds = Object.keys(tile.store.shelves);
+      if (prodIds.length > 0) {
+        const [xStr, yStr] = coordKey.split(',');
+        const x = Number(xStr);
+        const y = Number(yStr);
+        sim.openPriceSimulatorModal(x, y, prodIds[0]);
+        return;
+      }
+    }
+  }
+
+  // Fallback: se não tiver loja, avisa o jogador no HUD
+  if (typeof window !== 'undefined' && typeof window.addGameLog === 'function') {
+    window.addGameLog('💡 Para simular cenários de preço, tenha ao menos uma loja ativa com produtos.', 'text-amber-400');
+  }
+}
+
 export function calculateCorporateNetWorth() {
   let landTotal = 0;
   let facilitiesTotal = 0;
@@ -410,6 +437,7 @@ export const DREPanel = {
   openFacilityDREModal,
   closeFacilityDREModal,
   toggleDREModal,
+  triggerPriceSimulationFromDRE,
   calculateCorporateNetWorth,
   renderFacilityDRETable,
   openInsolvencyModal,
@@ -423,6 +451,7 @@ if (typeof window !== 'undefined') {
   window.openFacilityDREModal = openFacilityDREModal;
   window.closeFacilityDREModal = closeFacilityDREModal;
   window.toggleDREModal = toggleDREModal;
+  window.triggerPriceSimulationFromDRE = triggerPriceSimulationFromDRE;
   window.calculateCorporateNetWorth = calculateCorporateNetWorth;
   window.renderFacilityDRETable = renderFacilityDRETable;
   window.openInsolvencyModal = openInsolvencyModal;

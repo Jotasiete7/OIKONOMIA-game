@@ -157,7 +157,9 @@ export class KeyboardController {
       return;
     }
 
-    // Atalhos Executivos de Função (F1 a F4 & F8)
+    // Atalhos Executivos de Função (F1–F4)
+    // F3 / F8 (Dev Dashboard / Bug Report) foram removidos dos atalhos acessíveis ao jogador.
+    // Acesso de desenvolvimento: Ctrl+Shift+D / Ctrl+Shift+B (apenas em modo dev).
     if (k === 'f1') {
       e.preventDefault();
       const fn = window.toggleEncyclopediaModal || window.openEncyclopediaModal || window.EncyclopediaPanel?.renderEncyclopediaModal;
@@ -172,17 +174,32 @@ export class KeyboardController {
     }
     if (k === 'f3') {
       e.preventDefault();
-      const fn = window.toggleDevDashboard || window.openDevDashboard || window.DevDashboardPanel?.toggleDevDashboard;
+      // F3 → Banco Central (alta importância, baixo uso, agora com atalho dedicado)
+      const fn = window.openBankModal || window.toggleBankModal || window.BankingPanel?.openBankModal;
       if (typeof fn === 'function') fn();
       return;
     }
     if (k === 'f4') {
       e.preventDefault();
-      const fn = window.toggleDREModal || window.openDREModal || window.DREPanel?.renderDREModal;
+      // F4 → Fichário de Relatórios, aba DRE (ou DRE direto como fallback)
+      const ledgerFn = window.openReportsLedger || window.ReportsLedger?.openOnDRE;
+      if (typeof ledgerFn === 'function') {
+        ledgerFn('dre');
+      } else {
+        const fn = window.toggleDREModal || window.openDREModal || window.DREPanel?.renderDREModal;
+        if (typeof fn === 'function') fn();
+      }
+      return;
+    }
+
+    // Atalhos de desenvolvedor (apenas build de desenvolvimento)
+    if (e.ctrlKey && e.shiftKey && k === 'd') {
+      e.preventDefault();
+      const fn = window.toggleDevDashboard || window.openDevDashboard || window.DevDashboardPanel?.toggleDevDashboard;
       if (typeof fn === 'function') fn();
       return;
     }
-    if (k === 'f8') {
+    if (e.ctrlKey && e.shiftKey && k === 'b') {
       e.preventDefault();
       const fn = window.toggleBugReportModal || window.openBugReportModal || window.DevDashboardPanel?.toggleBugReportModal;
       if (typeof fn === 'function') fn();

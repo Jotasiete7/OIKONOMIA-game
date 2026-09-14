@@ -40,13 +40,18 @@
           <span class="text-slate-200 tracking-wide text-xs uppercase">LUCRO LÍQUIDO CONSOLIDADO:</span>
           <strong id="dre-net-profit" class="text-emerald-400 text-base font-bold tracking-tight">$0.00</strong>
         </div>
-        <div class="pt-2 flex items-center justify-between gap-2 border-t border-white/[0.06]">
+        <div class="pt-2 flex items-center justify-between gap-2 border-t border-white/[0.06] flex-wrap">
           <div class="text-[11px] text-slate-400 font-mono">
             Patrimônio Líquido: <strong id="dre-net-worth" class="text-[#c9a86a] font-bold">$0.00</strong>
           </div>
-          <button onclick="openFacilityDREModal()" class="px-3 py-1.5 rounded-lg bg-[#c9a86a]/15 hover:bg-[#c9a86a]/25 border border-[#c9a86a]/40 text-[#c9a86a] text-xs font-mono font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
-            <span>🏢</span> DRE Detalhada por Prédio
-          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="triggerPriceSimulationFromDRE()" class="px-2.5 py-1.5 rounded-lg bg-indigo-950/60 hover:bg-indigo-900/80 border border-indigo-500/40 text-indigo-300 hover:text-indigo-100 text-xs font-mono font-semibold transition flex items-center gap-1 cursor-pointer shadow-sm" data-tip="Simulador 'E se?' de precificação e margens" title="Simular Cenário de Preços">
+              <span>🎯</span> Simular Cenário
+            </button>
+            <button onclick="openFacilityDREModal()" class="px-3 py-1.5 rounded-lg bg-[#c9a86a]/15 hover:bg-[#c9a86a]/25 border border-[#c9a86a]/40 text-[#c9a86a] text-xs font-mono font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
+              <span>🏢</span> DRE por Prédio
+            </button>
+          </div>
         </div>
       </div>
     </div>

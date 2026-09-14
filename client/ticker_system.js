@@ -217,6 +217,7 @@ const TickerSystem = (() => {
     if (!_pendingRender) return;
     _pendingRender = false;
     _render();
+    _updateCriticalSlot();
   }
 
   function _render() {
@@ -225,23 +226,14 @@ const TickerSystem = (() => {
       const placeholder = '<div class="ticker-item text-slate-400">🏛️ OIKONOMIA Corp — Pregão aberto e simulação em andamento</div><span class="mx-6 text-slate-600">•</span>';
       _domTrack.innerHTML = placeholder + placeholder;
     } else {
-      const html = _items.map(it => {
+      // Alertas críticos vão para o slot fixo; rotineiros permanecem na faixa
+      const routineItems = _items.filter(it => !it.isAlert);
+      const displayItems = routineItems.length > 0 ? routineItems : _items;
+
+      const html = displayItems.map(it => {
         const clickAttr = it.actionType
-          ? `onclick="TickerSystem.handleClick('${it.actionType}')" style="cursor:pointer" title="Clique para abrir detalhes"`
+          ? `onclick="TickerSystem.handleClick('${it.actionType}')" style="cursor:pointer" data-tip="Clique para abrir detalhes"`
           : '';
-
-        // Renderização com Smart Alert Pill se for evento crítico
-        if (it.isAlert) {
-          const isDanger = it.colorClass.includes('rose') || it.text.includes('FALÊNCIA') || it.text.includes('Stockout');
-          const alertBadge = isDanger
-            ? 'bg-rose-950/70 border border-rose-500/60 text-rose-300 shadow-[0_0_8px_rgba(244,63,94,0.3)]'
-            : 'bg-amber-950/70 border border-amber-500/60 text-amber-300 shadow-[0_0_8px_rgba(245,158,11,0.25)]';
-          const alertIcon = isDanger
-            ? '<span class="animate-pulse mr-1">🚨</span>'
-            : '<span class="animate-pulse mr-1">🔥</span>';
-
-          return `<div class="ticker-item px-2 py-0.5 rounded-md ${alertBadge} font-bold" ${clickAttr}>${alertIcon}${it.text}</div><span class="mx-6 text-slate-600">•</span>`;
-        }
 
         return `<div class="ticker-item ${it.colorClass}" ${clickAttr}>${it.text}</div><span class="mx-6 text-slate-600">•</span>`;
       }).join('');
@@ -254,6 +246,48 @@ const TickerSystem = (() => {
     });
   }
 
+  // Slot fixo para o alerta crítico mais recente não-dispensado
+  let _dismissedAlertIds = new Set();
+
+  function _updateCriticalSlot() {
+    const slot = document.getElementById('ticker-critical-slot');
+    if (!slot) return;
+
+    const critAlerts = _items.filter(it => it.isAlert && !_dismissedAlertIds.has(it.id));
+    if (critAlerts.length === 0) {
+      slot.classList.remove('visible');
+      return;
+    }
+
+    const top = critAlerts[0];
+    slot.classList.add('visible');
+
+    const icon = top.colorClass.includes('rose') ? '🚨' : '🔥';
+    const actionAttr = top.actionType
+      ? `onclick="TickerSystem.handleClick('${top.actionType}')"`
+      : 'onclick="TickerSystem.openAdvisor()"';
+
+    slot.innerHTML = `
+      <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse shrink-0"></span>
+      <span class="crit-text" ${actionAttr}>${icon} ${top.text}</span>
+      <button class="crit-dismiss" onclick="TickerSystem.dismissCritical('${top.id}')" data-tip="Dispensar alerta">✕</button>
+    `;
+  }
+
+  function dismissCritical(alertId) {
+    _dismissedAlertIds.add(alertId);
+    _updateCriticalSlot();
+  }
+
+  function getLatestCriticalAlert() {
+    return _items.find(it => it.isAlert && !_dismissedAlertIds.has(it.id)) || null;
+  }
+
+  function openAdvisor() {
+    const fn = window.toggleExecutiveBoardModal;
+    if (typeof fn === 'function') fn();
+  }
+
   function handleClick(actionType) {
     if (_hasMoved) return; // Se estava arrastando a fita, não dispara o clique acidentalmente
     if (actionType === 'OPEN_DRE' && typeof toggleDREModal === 'function') {
@@ -261,6 +295,10 @@ const TickerSystem = (() => {
     }
     if (actionType === 'OPEN_RD' && typeof openTechTreeModal === 'function') {
       openTechTreeModal();
+    }
+    if (actionType === 'OPEN_BANK' || actionType === 'OPEN_ADVISOR') {
+      const fn = window.toggleExecutiveBoardModal || window.openBankModal;
+      if (typeof fn === 'function') fn();
     }
   }
 
@@ -272,7 +310,10 @@ const TickerSystem = (() => {
     setSpeed,
     getSpeed,
     jumpToLatest,
-    handleClick
+    handleClick,
+    dismissCritical,
+    getLatestCriticalAlert,
+    openAdvisor
   };
 })();
 
